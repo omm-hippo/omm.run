@@ -2,7 +2,13 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
-export default defineCloudflareConfig({
-	incrementalCache: staticAssetsIncrementalCache,
-	enableCacheInterception: true,
-});
+export default {
+	...defineCloudflareConfig({
+		incrementalCache: staticAssetsIncrementalCache,
+		enableCacheInterception: true,
+	}),
+	// Without this, `opennextjs-cloudflare build` re-runs the project's own
+	// "build" npm script (`next build && opennextjs-cloudflare build`),
+	// recursing into itself forever.
+	buildCommand: "next build",
+};
