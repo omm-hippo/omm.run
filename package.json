@@ -23,5 +23,12 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@11.12.0"
+  "packageManager": "pnpm@11.12.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver",
+      "workerd"
+    ]
+  }
 }
