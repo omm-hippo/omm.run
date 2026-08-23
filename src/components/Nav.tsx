@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   LOCALES,
@@ -17,11 +17,41 @@ import {
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 
-/** Real published version — omm-hippo origin/main `pyproject.toml`
- *  `version = "0.2.148"`, which is also the v0.2.148 tag. */
-const VERSION = "v0.2.148";
+/** Fallback shown until the live fetch below resolves, or if it fails. Keep
+ *  this roughly current — it's a fallback, not a source of truth. */
+const FALLBACK_VERSION = "v0.2.148";
 const REPO = "https://github.com/omm-hippo/omm";
 const WIKI = `${REPO}/wiki`;
+const PYPROJECT_RAW_URL =
+  "https://raw.githubusercontent.com/omm-hippo/omm/main/pyproject.toml";
+
+/** Reads `version = "X.Y.Z"` straight off origin/main's `pyproject.toml` so
+ *  the badge never drifts from what's actually published. Client-side only:
+ *  raw.githubusercontent.com is a CDN, not the rate-limited GitHub API, so a
+ *  per-visitor fetch is fine. Falls back to FALLBACK_VERSION on any failure. */
+function useLiveVersion(): string {
+  const [version, setVersion] = useState(FALLBACK_VERSION);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(PYPROJECT_RAW_URL, { cache: "no-store" })
+      .then((res) => (res.ok ? res.text() : Promise.reject(res.status)))
+      .then((text) => {
+        const match = text.match(/^version\s*=\s*"([^"]+)"/m);
+        if (match && !cancelled) setVersion(`v${match[1]}`);
+      })
+      .catch(() => {
+        /* keep FALLBACK_VERSION */
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return version;
+}
 
 /** Section ids are owned by the other section components. */
 /* Absolute so the same nav works from /install/* as well as from "/". */
@@ -93,6 +123,7 @@ export default function Nav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const t = getDictionary(locale).nav;
   const close = () => setOpen(false);
+  const version = useLiveVersion();
 
   return (
     <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92">
@@ -104,7 +135,7 @@ export default function Nav({ locale }: { locale: Locale }) {
         >
           <span className="font-mono text-[15px] font-medium lowercase text-ink-0">omm</span>
           <span className="rounded-sm border border-line-1 px-1.5 py-0.5 font-mono text-[11px] leading-none text-ink-3">
-            {VERSION}
+            {version}
           </span>
         </Link>
 
