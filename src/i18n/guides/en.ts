@@ -164,12 +164,11 @@ export const GUIDES_EN: GuideTextSet = {
         "Automated — winget",
         "Automated on 64-bit x86 (AMD64)",
         "Automated on 64-bit x86",
-        "Manual — install it yourself, omm still links to it",
-        "Manual — install it yourself, omm still links to it",
+        "Automated on 64-bit x86 (AMD64)",
+        "Automated on 64-bit x86 (AMD64)",
       ],
       notes: [
-        MANUAL_MEANS,
-        "AnythingLLM has no winget package any more — the community manifest was withdrawn in 2025 — and no winget package targets the current Msty Studio app rather than its retired predecessor. That is why neither is automated on Windows.",
+        "Neither AnythingLLM nor Msty Studio has a winget package — AnythingLLM's community manifest was withdrawn in 2025, and no winget package targets the current Msty Studio app rather than its retired predecessor. On 64-bit Windows, omm downloads each vendor's own installer directly instead and runs it silently; on ARM Windows it prints the download link.",
         WIZARD_LISTS_INSTALLED,
         "On Windows, Ollama is detected through its HTTP API first, so a freshly installed tray app is found even before this terminal receives the new PATH.",
       ],
@@ -232,7 +231,10 @@ export const GUIDES_EN: GuideTextSet = {
         why: "The staging clone could not reach github.com. Usually a proxy, a firewall, or no network.",
         fix: "Confirm you can open github.com in a browser from this machine, then run the install command again.",
       },
-      UNRELATED_PIPX,
+      {
+        why: "A pipx environment named omm already exists, and the installer does not recognize it as an omm install — often because OMM_HOME moved after that install, or its source checkout was deleted. Your models and settings under OMM_HOME are unaffected either way.",
+        fix: "Run pipx uninstall omm, then run the install command again.",
+      },
       UNVERIFIED_PIPX,
       {
         why: "OMM_HOME points at a drive root or at your user profile itself. Uninstalling from there could not be made safe.",
@@ -275,10 +277,10 @@ export const GUIDES_EN: GuideTextSet = {
     },
 
     before: {
-      body: "The installer's automatic dependency bootstrap uses apt, which does not exist on macOS. On a Mac it therefore expects Python and git to already be there.",
+      body: "The installer fills in whatever is missing through Homebrew. If Homebrew itself isn't installed, it bootstraps Homebrew first, using Homebrew's own official installer (export OMM_AUTO_INSTALL_HOMEBREW=0 first if you'd rather install Homebrew yourself).",
       requirements: [
-        "Required, and this is the one that usually bites. The python3 that comes with macOS is older than 3.10 on most systems. Install a current Python from python.org, or with Homebrew, before running the installer.",
-        "Required. macOS ships a git stub that opens Apple's Command Line Tools installer the first time you run it; accept that dialog, or run xcode-select --install yourself.",
+        "The python3 that comes with macOS is usually older than 3.10. If no Python 3.10+ is found, the installer installs one through Homebrew, bootstrapping Homebrew itself first if needed.",
+        "macOS ships a git stub that opens Apple's Command Line Tools installer the first time you run it; accepting that dialog satisfies this on its own. If git is still missing after that, the installer installs it through Homebrew the same way it does Python.",
         "The installer installs pipx for you through the exact Python it validated, retrying with --break-system-packages when a Homebrew or PEP 668 Python refuses a plain --user install.",
       ],
     },
@@ -363,16 +365,20 @@ export const GUIDES_EN: GuideTextSet = {
     trouble: [
       CURL_SILENT,
       {
-        why: "No python3 or python of version 3.10 or newer was found. On macOS the installer cannot fix this itself — its automatic bootstrap is apt-based and apt does not exist here.",
+        why: "No Python 3.10+ was found, and the installer's own Homebrew-based bootstrap could not supply one either — most often because Homebrew itself failed to install.",
         fix: "Install Python 3.10 or newer from python.org, or with Homebrew, open a new terminal window, then run the install command again.",
       },
       {
-        why: "omm is installed from a verified Git checkout. On a Mac without the Xcode Command Line Tools there is no usable git.",
+        why: "omm is installed from a verified Git checkout, and no usable git was found even after the installer tried to install one through Homebrew.",
         fix: "Run xcode-select --install, let it finish, then run the install command again. If macOS opened its own Command Line Tools dialog, accepting that has the same effect.",
       },
       {
         why: OLD_GIT.why,
         fix: "Update git — brew install git, or reinstall the Command Line Tools — then run the install command again.",
+      },
+      {
+        why: "Homebrew itself could not be installed automatically — its own installer failed, or curl/bin/bash (which it needs to bootstrap) were unavailable. Setting OMM_AUTO_INSTALL_HOMEBREW=0 without Homebrew already present hits the same wall.",
+        fix: "Install Homebrew yourself from https://brew.sh/, or unset OMM_AUTO_INSTALL_HOMEBREW, then run the install command again.",
       },
       BAD_SIGNATURE,
       {
@@ -425,13 +431,13 @@ export const GUIDES_EN: GuideTextSet = {
     },
 
     before: {
-      body: "The installer's automatic dependency bootstrap is apt-only. On Debian and Ubuntu it can install everything it needs; anywhere else it checks and reports rather than installing.",
+      body: "The installer's automatic dependency bootstrap works with apt-get, dnf, yum, pacman or apk — whichever it finds on the system. On a distribution with none of those, such as openSUSE, it checks and reports rather than installing.",
       requirements: [
-        "Required. On a system with apt the installer runs apt-get install python3 python3-venv python3-pip when python3 is missing. Elsewhere, install it yourself first.",
-        "Required, because omm is installed from a verified Git checkout. With apt present the installer adds git and ca-certificates for you.",
-        "Needed by pipx, and packaged separately on Debian and Ubuntu. Without it pipx fails with a confusing ensurepip is not available, so the installer bootstraps it explicitly.",
-        "No apt, so no bootstrap. Install Python 3.10+ and git with your own package manager first — for example sudo dnf install python3 git or sudo pacman -S python git.",
-        "The apt step runs directly as root, or through sudo when it is available. Without either it is skipped, and the installer then reports the missing dependency instead.",
+        "Required. When python3 is missing, the installer installs it — with its venv and pip pieces — through whichever of those package managers is present. On an unsupported distribution, install it yourself first.",
+        "Required, because omm is installed from a verified Git checkout. The installer adds git for you through the same package manager, wherever one is present.",
+        "Needed by pipx, and packaged separately on some distributions (Debian and Ubuntu among them). Without it pipx fails with a confusing ensurepip is not available, so the installer bootstraps the right venv/pip package explicitly.",
+        "None of apt-get, dnf, yum, pacman or apk was found, so there is no automatic bootstrap here. Install Python 3.10+ and git with your own package manager first — for example sudo zypper install python3 git on openSUSE.",
+        "This package-manager step runs directly as root, or through sudo when it is available. Without either it is skipped, and the installer then reports the missing dependency instead.",
       ],
     },
 
@@ -500,16 +506,16 @@ export const GUIDES_EN: GuideTextSet = {
     trouble: [
       CURL_SILENT,
       {
-        why: "No python3 or python of version 3.10 or newer was found. The installer's automatic bootstrap only runs where apt-get exists, and even there it gives up quietly if apt fails.",
-        fix: "Install Python 3.10 or newer with your distribution's package manager — sudo apt install python3 python3-venv python3-pip, sudo dnf install python3, sudo pacman -S python — then run the install command again.",
+        why: "No python3 or python of version 3.10 or newer was found. The installer's automatic bootstrap only runs where apt-get, dnf, yum, pacman or apk exists, and even there it gives up quietly if that package manager fails.",
+        fix: "Install Python 3.10 or newer with your distribution's package manager — sudo apt install python3 python3-venv python3-pip, sudo dnf install python3, sudo pacman -S python, sudo apk add python3 — then run the install command again.",
       },
       {
-        why: "omm is installed from a verified Git checkout, and git was neither present nor installable through apt here.",
+        why: "omm is installed from a verified Git checkout, and git was neither present nor installable through any of the supported package managers here.",
         fix: "Install git with your own package manager, then run the install command again.",
       },
       {
-        why: "Informational. On Debian and Ubuntu, ensurepip lives in a separate package; without it pipx fails with ensurepip is not available.",
-        fix: "Nothing, if the install continues. On a non-apt distribution install the equivalent package yourself — python3-virtualenv or your distribution's python3 venv package.",
+        why: "Informational. On some distributions (Debian and Ubuntu among them), ensurepip lives in a separate package; without it pipx fails with ensurepip is not available.",
+        fix: "Nothing, if the install continues. On an unsupported distribution install the equivalent package yourself — python3-virtualenv or your distribution's python3 venv package.",
       },
       {
         why: OLD_GIT.why,

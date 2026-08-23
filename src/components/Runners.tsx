@@ -46,11 +46,17 @@ const ROWS: RunnerRow[] = [
   },
   {
     runner: "AnythingLLM",
-    automated: [{ os: "macOS", note: "Homebrew" }],
+    automated: [
+      { os: "macOS", note: "Homebrew" },
+      { os: "Windows", note: "x86_64" },
+    ],
   },
   {
     runner: "Msty",
-    automated: [{ os: "macOS", note: "Homebrew" }],
+    automated: [
+      { os: "macOS", note: "Homebrew" },
+      { os: "Windows", note: "x86_64" },
+    ],
   },
   {
     runner: "KoboldCpp",

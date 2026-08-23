@@ -141,8 +141,8 @@ export const en = {
       "—",
       "—",
       "wherever that package manager isn't installed",
-      "Windows, Linux",
-      "Windows, Linux",
+      "Linux, ARM Windows",
+      "Linux, ARM Windows",
       "Intel Mac, other architectures",
       "ARM Linux/Windows",
     ],
@@ -177,7 +177,7 @@ export const en = {
       unix: {
         notes: [
           "Open a new shell afterward so your PATH picks up omm.",
-          "Requires Python 3.10+. On Debian and Ubuntu the script installs python3, python3-venv, git and pipx for you through apt; on macOS and other distributions it checks for Python 3.10+ and git and stops if they are missing.",
+          "Requires Python 3.10+. On macOS the script uses Homebrew — bootstrapping it first if it is missing — to install Python and git; on Linux it installs them through whichever supported package manager is present (apt-get, dnf, yum, pacman or apk), and on an unsupported distribution it checks for Python 3.10+ and git and stops if they are missing.",
         ],
         alternatives: [
           "macOS · Homebrew Tap",
