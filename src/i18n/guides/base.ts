@@ -16,7 +16,7 @@ export type Slug = "windows" | "macos" | "linux";
 
 export const GUIDE_ORDER: readonly Slug[] = ["windows", "macos", "linux"];
 
-const RAW = "https://raw.githubusercontent.com/omm-hippo/omm/main";
+const RAW = "https://omm.run";
 
 const PYTHON_DOWNLOADS = {
   label: "python.org/downloads",

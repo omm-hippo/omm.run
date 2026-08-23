@@ -79,7 +79,7 @@ const UNRECOGNIZED_HOME = {
 
 const CURL_SILENT = {
   why: "curl -fsSL is deliberately quiet: -s hides its progress and errors, -f makes it exit silently on an HTTP error. A blocked network or a proxy therefore looks like nothing happening.",
-  fix: "Download the script on its own first so you can read the error, then run it: curl -fL https://raw.githubusercontent.com/omm-hippo/omm/main/install.sh -o install.sh && sh install.sh",
+  fix: "Download the script on its own first so you can read the error, then run it: curl -fL https://omm.run/install.sh -o install.sh && sh install.sh",
 } as const;
 
 const PIPX_UNINSPECTABLE = {

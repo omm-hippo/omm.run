@@ -118,7 +118,7 @@ const CURL_SILENT = {
      message, so this is one of the few entries that is translated. */
   see: "아무 일도 일어나지 않습니다. 명령이 곧바로 끝나고 omm은 나타나지 않습니다.",
   why: "curl -fsSL은 의도적으로 조용합니다: -s는 진행 상황과 오류를 숨기고, -f는 HTTP 오류가 발생해도 조용히 종료시킵니다. 그래서 네트워크가 차단되었거나 프록시가 있으면 아무 일도 일어나지 않는 것처럼 보입니다.",
-  fix: "먼저 스크립트만 따로 다운로드해 오류를 확인한 뒤 실행하세요: curl -fL https://raw.githubusercontent.com/omm-hippo/omm/main/install.sh -o install.sh && sh install.sh",
+  fix: "먼저 스크립트만 따로 다운로드해 오류를 확인한 뒤 실행하세요: curl -fL https://omm.run/install.sh -o install.sh && sh install.sh",
 } as const;
 
 const PIPX_UNINSPECTABLE = {

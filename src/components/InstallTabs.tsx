@@ -35,7 +35,7 @@ const PLATFORMS: readonly Platform[] = [
     label: "macOS / Linux",
     prompt: "$",
     command:
-      "curl -fsSL https://raw.githubusercontent.com/omm-hippo/omm/main/install.sh | sh",
+      "curl -fsSL https://omm.run/install.sh | sh",
     alternatives: [
       "brew install omm-hippo/omm/omm",
       "pipx install omm-model",
@@ -47,7 +47,7 @@ const PLATFORMS: readonly Platform[] = [
     label: "Windows",
     prompt: "PS >",
     command:
-      "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://raw.githubusercontent.com/omm-hippo/omm/main/install.ps1 | iex",
+      "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://omm.run/install.ps1 | iex",
     alternatives: ["pipx install omm-model"],
     guides: ["windows"],
   },

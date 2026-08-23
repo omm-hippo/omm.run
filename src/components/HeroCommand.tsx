@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 /** Verbatim from design/FACTS.md (README install line, macOS/Linux). */
 const COMMAND =
-  "curl -fsSL https://raw.githubusercontent.com/omm-hippo/omm/main/install.sh | sh";
+  "curl -fsSL https://omm.run/install.sh | sh";
 
 export default function HeroCommand({
   copy: copyLabel,

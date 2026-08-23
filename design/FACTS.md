@@ -62,8 +62,8 @@ For `omm install` / `omm list` output formats: read the actual omm source (`omm-
 - Signed catalogs: `omm setting catalog-trust` enables Ed25519 verification for recommendation downloads; artifacts snapshotted before replacement; `omm setting catalog-rollback` restores. (README ~238-239)
 - Installers: versioned staging clone, verify signed commit against bootstrap trust anchor, then switch pipx. (README ~30)
 - Install commands (verbatim from README):
-  - macOS/Linux: `curl -fsSL https://raw.githubusercontent.com/omm-hippo/omm/main/install.sh | sh`
-  - Windows: `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://raw.githubusercontent.com/omm-hippo/omm/main/install.ps1 | iex`
+  - macOS/Linux: `curl -fsSL https://omm.run/install.sh | sh`
+  - Windows: `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://omm.run/install.ps1 | iex`
   - Windows caveat verbatim: "This must run before irm: script-internal TLS settings are too late for its first download."
   - Both: open a new shell afterward so PATH picks up `omm`. Requires Python 3.10+.
 - License: MIT. Repo: github.com/omm-hippo/omm. CLI aliases: rm/ls/up. Exit codes 0/1/2. `--json` safe to pipe.
