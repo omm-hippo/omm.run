@@ -95,6 +95,7 @@ function LanguageToggle({
           <Link
             key={candidate}
             href={switchLocalePath(pathname, candidate)}
+            prefetch={false}
             /* hrefLang describes the destination. No `lang` here: both chips
                are Latin, and marking one of them Korean would hand it the
                `:lang(ko)` tracking and make the pair look uneven. */
@@ -145,7 +146,7 @@ export default function Nav({ locale }: { locale: Locale }) {
               {t.sections[index]}
             </a>
           ))}
-          <Link href={localeHref("/install", locale)} className={LINK}>
+          <Link href={localeHref("/install", locale)} prefetch={false} className={LINK}>
             {t.guides}
           </Link>
           <a href={WIKI} className={LINK} target="_blank" rel="noreferrer">
