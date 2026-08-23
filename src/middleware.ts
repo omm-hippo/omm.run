@@ -32,7 +32,14 @@ function withPrefix(pathname: string, locale: Locale): string {
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, hostname } = request.nextUrl;
+
+  if (hostname === "www.omm.run") {
+    const url = request.nextUrl.clone();
+    url.hostname = "omm.run";
+    return NextResponse.redirect(url, 308);
+  }
+
   const first = pathname.split("/")[1] ?? "";
 
   if (first === DEFAULT_LOCALE) {
