@@ -47,7 +47,7 @@ export const ko = {
 
   hero: {
     eyebrow: "MIT · Python 3.10+ · Windows, macOS, Linux",
-    heading: "GGUF 파일은 허브 하나로, 러너 일곱 개는 자동으로 연결됩니다.",
+    heading: "GGUF 파일은 허브 하나에, 러너 일곱 개는 자동으로 연결됩니다.",
     lede: "디스크에는 모델마다 사본을 하나만 두고 Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui에 그대로 링크하며, 무엇이든 내려받기 전에 남은 메모리부터 확인합니다.",
     cta: "omm 설치하기",
   },
@@ -72,7 +72,7 @@ export const ko = {
   features: {
     hub: {
       eyebrow: "허브 하나",
-      title: "디스크에는 파일 하나뿐이지만, 러너 일곱 개는 저마다 자기 것이라 여깁니다.",
+      title: "모델 하나, 러너 일곱 개가 동시에.",
       body: [
         "omm은 GGUF 파일을 ",
         { code: "~/.omm/models" },
@@ -81,7 +81,7 @@ export const ko = {
     },
     localfit: {
       eyebrow: "Localfit",
-      title: "대역폭을 쓰기 전에 모델이 들어갈지부터 확인합니다.",
+      title: "모델을 받기 전에, PC에 맞는지부터 확인합니다.",
       body: [
         "스캔은 전체 RAM, 현재 가용량, GPU 메모리를 읽은 다음, 운영체제와 스캔 이후 실행될 앱을 위해 전체 RAM의 10%를(최소 1 GB는 남기고) 따로 떼어 둡니다. 안전 예산은 이렇게 뺀 나머지 값과 전체 RAM의 80% 중 더 작은 쪽입니다. 스캔을 다시 실행하면 두 값 모두 새로 계산됩니다.",
       ],
@@ -95,7 +95,7 @@ export const ko = {
     },
     catalogs: {
       eyebrow: "서명된 카탈로그",
-      title: "교체된 카탈로그도 해시까지 그대로 보관됩니다.",
+      title: "지운 카탈로그도 해시까지, 그대로 복원.",
       body: [
         { code: "catalog-trust" },
         "는 Ed25519 공개 키와 매니페스트 URL을 고정해 두고, 해시나 서명이 일치하지 않는 추천 아티팩트는 모두 거부합니다. 교체된 스냅샷은 자체 sha256 이름으로 그대로 보관되므로, ",
@@ -155,7 +155,7 @@ export const ko = {
 
   install: {
     label: "설치",
-    heading: "한 줄이면 끝입니다. 무엇이든 설치하기 전에 서명된 커밋부터 검증합니다.",
+    heading: "한 줄이면 끝, 설치 전엔 서명 검증부터 안전하게.",
     lede: "Windows 10 22H2 이상, macOS 또는 Linux에서 Python 3.10+가 필요합니다. 스크립트가 빠진 부분을 알아서 채운 다음, omm을 격리된 pipx CLI로 설치합니다.",
     whatItDoes: "설치 스크립트가 하는 일",
     steps: [
