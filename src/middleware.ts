@@ -31,7 +31,7 @@ function withPrefix(pathname: string, locale: Locale): string {
   return pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const first = pathname.split("/")[1] ?? "";
 
