@@ -290,4 +290,37 @@ export const ko = {
       body: "호환 프로그램 목록과 더 긴 형식의 문서.",
     },
   },
+
+  commandsChooser: {
+    metaTitle: "omm 명령어",
+    metaDescription:
+      "omm 명령어별 전체 레퍼런스 페이지: 모든 옵션, 초급부터 스크립팅까지 실제 예제, 실제 캡처한 실행 결과, 각 명령이 실제로 출력하는 에러까지 다룹니다.",
+    label: "명령어",
+    heading: "전체 레퍼런스를 볼 명령어를 고르세요.",
+    lede: "각 페이지는 명령이 무엇을 위한 것이고 언제 쓰는지, 모든 옵션, 실제 예제 5개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러와 대처법까지 다룹니다.",
+  },
+
+  commands: {
+    breadcrumbAria: "탐색 경로",
+    onThisPage: "이 페이지의 내용",
+    sections: [
+      "개요",
+      "옵션",
+      "예제",
+      "실제 실행 예시",
+      "관련 명령어",
+      "문제가 생겼다면",
+    ],
+    optionsIntro: "이 명령이 받는 모든 옵션과, 생략했을 때의 기본값입니다.",
+    optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
+    examplesIntro: "기본 검색부터 스크립트에 넣을 만한 형태까지.",
+    troubleBody:
+      "아래 메시지는 모두 이 명령이 실제로 출력하는 것들입니다. 해당하는 메시지를 찾아 원인을 읽고, 마지막 줄대로 하면 됩니다.",
+    troubleWhy: "원인",
+    troubleFix: "대처",
+    troubleSource: "출처",
+    stillStuck: "그래도 해결되지 않는다면, 화면에 뜬 메시지 그대로를 첨부해 이슈를 등록하세요.",
+    comingSoon: "준비 중",
+    elsewhere: "전체 명령어",
+  },
 } as const satisfies Dictionary;

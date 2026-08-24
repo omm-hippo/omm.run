@@ -298,4 +298,37 @@ export const en = {
       body: "Compatible programs and the longer-form documentation.",
     },
   },
+
+  commandsChooser: {
+    metaTitle: "omm commands",
+    metaDescription:
+      "Full reference pages for omm's commands: every flag, real examples from basic to scripted, a real captured run, and the errors each one actually prints.",
+    label: "Commands",
+    heading: "Pick the command you want the full reference for.",
+    lede: "Each page covers what the command is for and when to reach for it, every flag, five real examples, a real captured run, and the errors it actually prints with what to do about them.",
+  },
+
+  commands: {
+    breadcrumbAria: "Breadcrumb",
+    onThisPage: "On this page",
+    sections: [
+      "Overview",
+      "Options",
+      "Examples",
+      "A real run",
+      "Related commands",
+      "If something goes wrong",
+    ],
+    optionsIntro: "Every flag this command accepts, and what it defaults to when you leave it out.",
+    optionsColumns: { flag: "Flag", argument: "Argument", default: "Default" },
+    examplesIntro: "From a plain search to something you'd put in a script.",
+    troubleBody:
+      "Every message below is one this command actually prints. Find yours, read why it happened, then do the last line.",
+    troubleWhy: "why",
+    troubleFix: "what to do",
+    troubleSource: "source",
+    stillStuck: "Still stuck? Open an issue with the exact message you saw.",
+    comingSoon: "coming soon",
+    elsewhere: "All commands",
+  },
 } as const;
