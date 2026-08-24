@@ -108,7 +108,7 @@ export default function CommandSearch({
                 setQuery("");
                 inputRef.current?.focus();
               }}
-              className="text-label shrink-0 rounded-sm px-1.5 py-1 text-ink-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-3 hover:text-ink-0"
+              className="text-label min-h-11 min-w-11 shrink-0 rounded-sm px-2 py-2 text-ink-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-3 hover:text-ink-0"
             >
               {text.clear}
             </button>

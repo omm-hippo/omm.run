@@ -3,11 +3,19 @@ import type { Slug } from "@/components/commands/commands";
 
 type Props = {
   readonly slug: Slug;
-  readonly command: string;
-  readonly output: string;
-  readonly footnote: string;
+  readonly recordedCommand: string;
+  readonly recordedExitCode: number;
+  readonly documentedCommand: string;
+  readonly documentedOutput: string;
+  readonly documentedFootnote: string;
   readonly label: string;
+  readonly documentedLabel: string;
   readonly transcriptLabel: string;
+  readonly recordedCommandLabel: string;
+  readonly exitCodeLabel: string;
+  readonly safeSuccessNote: string;
+  readonly safeGuardNote: string;
+  readonly documentedCaptureLabel: string;
 };
 
 /**
@@ -20,11 +28,19 @@ type Props = {
  */
 export default function CommandDemo({
   slug,
-  command,
-  output,
-  footnote,
+  recordedCommand,
+  recordedExitCode,
+  documentedCommand,
+  documentedOutput,
+  documentedFootnote,
   label,
+  documentedLabel,
   transcriptLabel,
+  recordedCommandLabel,
+  exitCodeLabel,
+  safeSuccessNote,
+  safeGuardNote,
+  documentedCaptureLabel,
 }: Props) {
   const base = `/demos/commands/${slug}`;
 
@@ -42,22 +58,34 @@ export default function CommandDemo({
         <source src={`${base}.mp4`} type="video/mp4" />
       </video>
 
-      <p className="text-small">
-        <a
-          href={`${base}.txt`}
-          target="_blank"
-          rel="noreferrer"
-          className="border-b border-line-1 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
-        >
-          {transcriptLabel}
-        </a>
-      </p>
+      <div className="border-l-2 border-accent pl-4">
+        <p className="text-label">{recordedCommandLabel}</p>
+        <code className="text-terminal mt-2 block overflow-x-auto text-ink-0">
+          {recordedCommand}
+        </code>
+        <p className="text-small mt-3">
+          {exitCodeLabel}: <code className="text-ink-1">{recordedExitCode}</code>
+          {" · "}
+          {recordedExitCode === 0 ? safeSuccessNote : safeGuardNote}
+        </p>
+        <p className="text-small mt-3">
+          <a
+            href={`${base}.txt`}
+            target="_blank"
+            rel="noreferrer"
+            className="border-b border-line-1 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
+          >
+            {transcriptLabel}
+          </a>
+        </p>
+      </div>
 
+      <p className="text-label mt-3">{documentedCaptureLabel}</p>
       <CommandCapture
-        command={command}
-        output={output}
-        footnote={footnote}
-        label={label}
+        command={documentedCommand}
+        output={documentedOutput}
+        footnote={documentedFootnote}
+        label={documentedLabel}
       />
     </div>
   );

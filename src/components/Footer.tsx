@@ -24,7 +24,7 @@ const DOCS_HREFS = [
 const COMMANDS = [
   { label: "omm search", href: "/commands/search", internal: true },
   { label: "omm scan", href: `${REPO}#usage`, internal: false },
-  { label: "omm install", href: `${REPO}#usage`, internal: false },
+  { label: "omm install", href: "/commands/install", internal: true },
   { label: "omm list", href: `${REPO}#usage`, internal: false },
   { label: "omm benchmark", href: `${REPO}#self-hosted-benchmark-data`, internal: false },
   { label: "omm setting", href: `${REPO}#signed-recommendation-data`, internal: false },

@@ -324,7 +324,7 @@ export const ko = {
       "개요",
       "옵션",
       "예제",
-      "실제 실행 예시",
+      "실제 CLI 실행 녹화",
       "관련 명령어",
       "문제가 생겼다면",
     ],
@@ -332,7 +332,13 @@ export const ko = {
     optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
     examplesIntro: "기본 검색부터 스크립트에 넣을 만한 형태까지.",
     captureAria: "{command} 실행 녹화",
+    demoRecordedCommand: "이 영상에서 실제로 실행한 명령",
+    demoExitCode: "종료 코드",
+    demoSafeSuccess: "외부 네트워크를 차단한 격리 환경에서 읽기 전용으로 캡처했습니다.",
+    demoSafeGuard:
+      "격리 환경의 안전한 로컬 가드에서 의도적으로 종료했으며 다운로드·모델 실행·벤치마크·업로드를 시작하지 않았습니다.",
     demoTranscript: "실제 프로세스 원문 transcript 열기(.txt)",
+    documentedCapture: "확장 문서 캡처 (별도의 참고 실행)",
     troubleBody:
       "아래 메시지는 모두 이 명령이 실제로 출력하는 것들입니다. 해당하는 메시지를 찾아 원인을 읽고, 마지막 줄대로 하면 됩니다.",
     troubleWhy: "원인",

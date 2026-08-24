@@ -6,6 +6,7 @@ import { getCommandLinks, type Command } from "@/components/commands/commands";
 import Reveal from "@/components/Reveal";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary } from "@/i18n/dictionaries";
+import demoManifest from "../../../public/demos/commands/manifest.json";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -63,7 +64,13 @@ export default function CommandDocPage({
   const dictionary = getDictionary(locale);
   const t = dictionary.commands;
   const ui = dictionary.ui;
+  const allCommands = getCommandLinks(locale);
   const others = getCommandLinks(locale).filter((link) => link.slug !== command.slug);
+  const demo = demoManifest.assets.find((asset) => asset.slug === command.slug);
+
+  if (!demo) {
+    throw new Error(`Missing command demo metadata for ${command.slug}`);
+  }
 
   const sections = SECTION_IDS.map((id, index) => ({
     id,
@@ -112,24 +119,44 @@ export default function CommandDocPage({
 
       <div className="mx-auto w-full max-w-page px-5 md:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <nav aria-label={t.onThisPage} className="hidden lg:col-span-3 lg:block">
+          <aside className="hidden lg:col-span-3 lg:block">
             <div className="sticky top-14 py-12">
-              <p className="text-label">{t.onThisPage}</p>
-              <ul className="mt-4 flex flex-col">
-                {sections.map((section) => (
-                  <li key={section.id}>
-                    <a
-                      href={`#${section.id}`}
-                      className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0"
-                    >
-                      <span className="font-mono text-ink-3">{section.n} </span>
-                      {section.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <nav aria-label={t.onThisPage}>
+                <p className="text-label">{t.onThisPage}</p>
+                <ul className="mt-4 flex flex-col">
+                  {sections.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0"
+                      >
+                        <span className="font-mono text-ink-3">{section.n} </span>
+                        {section.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <nav aria-label={t.elsewhere} className="mt-10">
+                <p className="text-label">{t.elsewhere}</p>
+                <ul className="mt-4 flex flex-col">
+                  {allCommands.map((link) => (
+                    <li key={link.slug}>
+                      <Link
+                        href={localeHref(link.href, locale)}
+                        prefetch={false}
+                        aria-current={link.slug === command.slug ? "page" : undefined}
+                        className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0 aria-[current=page]:text-ink-0"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
-          </nav>
+          </aside>
 
           <div className="lg:col-span-8 lg:col-start-5">
             {/* 01 — overview */}
@@ -205,11 +232,19 @@ export default function CommandDocPage({
                 <div className="mt-8">
                   <CommandDemo
                     slug={command.slug}
-                    command={command.capture.title}
-                    output={command.capture.text}
-                    footnote={command.capture.footnote}
-                    label={fill(t.captureAria, { command: command.capture.title })}
+                    recordedCommand={demo.command}
+                    recordedExitCode={demo.exitCode}
+                    documentedCommand={command.capture.title}
+                    documentedOutput={command.capture.text}
+                    documentedFootnote={command.capture.footnote}
+                    label={fill(t.captureAria, { command: demo.command })}
+                    documentedLabel={fill(t.captureAria, { command: command.capture.title })}
                     transcriptLabel={t.demoTranscript}
+                    recordedCommandLabel={t.demoRecordedCommand}
+                    exitCodeLabel={t.demoExitCode}
+                    safeSuccessNote={t.demoSafeSuccess}
+                    safeGuardNote={t.demoSafeGuard}
+                    documentedCaptureLabel={t.documentedCapture}
                   />
                 </div>
               </Reveal>

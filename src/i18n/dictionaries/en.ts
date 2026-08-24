@@ -332,7 +332,7 @@ export const en = {
       "Overview",
       "Options",
       "Examples",
-      "A real run",
+      "Recorded CLI run",
       "Related commands",
       "If something goes wrong",
     ],
@@ -341,7 +341,13 @@ export const en = {
     examplesIntro: "From a plain search to something you'd put in a script.",
     /** `{command}` is the captured command, e.g. "omm search qwen --limit 5". */
     captureAria: "Terminal recording of {command}",
+    demoRecordedCommand: "Command recorded in this video",
+    demoExitCode: "exit code",
+    demoSafeSuccess: "Read-only capture in an isolated environment with outbound network access blocked.",
+    demoSafeGuard:
+      "Intentional safe local guard in an isolated environment; no download, model run, benchmark, or upload was started.",
     demoTranscript: "Open the exact real-process transcript (.txt)",
+    documentedCapture: "Extended documented capture (separate reference run)",
     troubleBody:
       "Every message below is one this command actually prints. Find yours, read why it happened, then do the last line.",
     troubleWhy: "why",
