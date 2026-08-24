@@ -132,6 +132,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           href={localeHref("/", locale)}
           className="flex shrink-0 items-center gap-2"
           onClick={close}
+          prefetch={false}
         >
           <span className="font-mono text-[15px] font-medium lowercase text-ink-0">omm</span>
           <span className="rounded-sm border border-line-1 px-1.5 py-0.5 font-mono text-[11px] leading-none text-ink-3">
@@ -161,6 +162,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           <Link
             href={localeHref("/#install", locale)}
             className="focus-ring-neutral rounded-md bg-accent px-4 py-1.5 text-small font-medium text-accent-ink transition-colors duration-[120ms] ease-micro hover:bg-accent-press"
+            prefetch={false}
           >
             {t.install}
           </Link>
@@ -195,6 +197,7 @@ export default function Nav({ locale }: { locale: Locale }) {
               href={localeHref("/install", locale)}
               onClick={close}
               className="border-b border-line-0 py-3 text-small text-ink-2"
+              prefetch={false}
             >
               {t.installGuides}
             </Link>
@@ -202,6 +205,7 @@ export default function Nav({ locale }: { locale: Locale }) {
               href={localeHref("/commands", locale)}
               onClick={close}
               className="border-b border-line-0 py-3 text-small text-ink-2"
+              prefetch={false}
             >
               {t.commands}
             </Link>
@@ -225,6 +229,7 @@ export default function Nav({ locale }: { locale: Locale }) {
               href={localeHref("/#install", locale)}
               onClick={close}
               className="focus-ring-neutral mt-4 mb-2 rounded-md bg-accent px-4 py-2 text-center text-small font-medium text-accent-ink"
+              prefetch={false}
             >
               {t.install}
             </Link>

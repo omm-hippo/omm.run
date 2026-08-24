@@ -91,6 +91,7 @@ export default function Footer({ locale }: { locale: Locale }) {
                     <Link
                       href={localeHref(entry.href, locale)}
                       className={LINK_CLASS}
+                      prefetch={false}
                     >
                       {t.docs.links[index]}
                     </Link>
@@ -110,6 +111,7 @@ export default function Footer({ locale }: { locale: Locale }) {
                     <Link
                       href={localeHref(command.href, locale)}
                       className={`${LINK_CLASS} font-mono`}
+                      prefetch={false}
                     >
                       {command.label}
                     </Link>

@@ -238,6 +238,7 @@ export default function InstallTabs({ t, ui, guides }: Props) {
                     key={guide.href}
                     href={guide.href}
                     className="text-small border-b border-line-1 pb-0.5 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
+                    prefetch={false}
                   >
                     {guide.label} →
                   </Link>

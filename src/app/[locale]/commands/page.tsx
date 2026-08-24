@@ -72,6 +72,7 @@ export default async function CommandsChooser({
                   <Link
                     href={localeHref(link.href, locale)}
                     className="grid grid-cols-1 gap-2 px-2 py-6 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
+                    prefetch={false}
                   >
                     <span className="text-h3 font-mono">{link.name}</span>
                     <span className="text-small max-w-[62ch]">{link.summary}</span>

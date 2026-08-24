@@ -77,11 +77,11 @@ export default function CommandDocPage({
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">
-            <Link href={localeHref("/", locale)} className="hover:text-ink-1">
+            <Link href={localeHref("/", locale)} className="hover:text-ink-1" prefetch={false}>
               omm
             </Link>
             <span className="text-ink-3"> / </span>
-            <Link href={localeHref("/commands", locale)} className="hover:text-ink-1">
+            <Link href={localeHref("/commands", locale)} className="hover:text-ink-1" prefetch={false}>
               commands
             </Link>
             <span className="text-ink-3"> / </span>
@@ -286,6 +286,7 @@ export default function CommandDocPage({
                       <Link
                         href={localeHref(other.href, locale)}
                         className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
+                        prefetch={false}
                       >
                         <span className="text-ink-0">{other.name}</span>
                         <span className="text-small">{other.summary}</span>
