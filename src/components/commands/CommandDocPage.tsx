@@ -1,11 +1,12 @@
 import Link from "next/link";
 
 import CommandBlock from "@/components/install/CommandBlock";
-import CommandCapture from "@/components/commands/CommandCapture";
+import CommandDemo from "@/components/commands/CommandDemo";
 import { getCommandLinks, type Command } from "@/components/commands/commands";
 import Reveal from "@/components/Reveal";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary } from "@/i18n/dictionaries";
+import demoManifest from "../../../public/demos/commands/manifest.json";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -63,7 +64,13 @@ export default function CommandDocPage({
   const dictionary = getDictionary(locale);
   const t = dictionary.commands;
   const ui = dictionary.ui;
+  const allCommands = getCommandLinks(locale);
   const others = getCommandLinks(locale).filter((link) => link.slug !== command.slug);
+  const demo = demoManifest.assets.find((asset) => asset.slug === command.slug);
+
+  if (!demo) {
+    throw new Error(`Missing command demo metadata for ${command.slug}`);
+  }
 
   const sections = SECTION_IDS.map((id, index) => ({
     id,
@@ -112,24 +119,44 @@ export default function CommandDocPage({
 
       <div className="mx-auto w-full max-w-page px-5 md:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <nav aria-label={t.onThisPage} className="hidden lg:col-span-3 lg:block">
+          <aside className="hidden lg:col-span-3 lg:block">
             <div className="sticky top-14 py-12">
-              <p className="text-label">{t.onThisPage}</p>
-              <ul className="mt-4 flex flex-col">
-                {sections.map((section) => (
-                  <li key={section.id}>
-                    <a
-                      href={`#${section.id}`}
-                      className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0"
-                    >
-                      <span className="font-mono text-ink-3">{section.n} </span>
-                      {section.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <nav aria-label={t.onThisPage}>
+                <p className="text-label">{t.onThisPage}</p>
+                <ul className="mt-4 flex flex-col">
+                  {sections.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0"
+                      >
+                        <span className="font-mono text-ink-3">{section.n} </span>
+                        {section.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <nav aria-label={t.elsewhere} className="mt-10">
+                <p className="text-label">{t.elsewhere}</p>
+                <ul className="mt-4 flex flex-col">
+                  {allCommands.map((link) => (
+                    <li key={link.slug}>
+                      <Link
+                        href={localeHref(link.href, locale)}
+                        prefetch={false}
+                        aria-current={link.slug === command.slug ? "page" : undefined}
+                        className="text-small block border-b border-line-0 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:text-ink-0 aria-[current=page]:text-ink-0"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
-          </nav>
+          </aside>
 
           <div className="lg:col-span-8 lg:col-start-5">
             {/* 01 — overview */}
@@ -203,11 +230,21 @@ export default function CommandDocPage({
               <Reveal>
                 <SectionHead n="04" id="capture" title={t.sections[3]} />
                 <div className="mt-8">
-                  <CommandCapture
-                    command={command.capture.title}
-                    output={command.capture.text}
-                    footnote={command.capture.footnote}
-                    label={fill(t.captureAria, { command: command.capture.title })}
+                  <CommandDemo
+                    slug={command.slug}
+                    recordedCommand={demo.command}
+                    recordedExitCode={demo.exitCode}
+                    documentedCommand={command.capture.title}
+                    documentedOutput={command.capture.text}
+                    documentedFootnote={command.capture.footnote}
+                    label={fill(t.captureAria, { command: demo.command })}
+                    documentedLabel={fill(t.captureAria, { command: command.capture.title })}
+                    transcriptLabel={t.demoTranscript}
+                    recordedCommandLabel={t.demoRecordedCommand}
+                    exitCodeLabel={t.demoExitCode}
+                    safeSuccessNote={t.demoSafeSuccess}
+                    safeGuardNote={t.demoSafeGuard}
+                    documentedCaptureLabel={t.documentedCapture}
                   />
                 </div>
               </Reveal>
@@ -224,15 +261,26 @@ export default function CommandDocPage({
                 <ul className="mt-6 flex flex-col border-t border-line-0">
                   {command.related.map((entry) => (
                     <li key={entry.label} className="border-b border-line-0">
-                      <a
-                        href={entry.href}
-                        target={entry.internal ? undefined : "_blank"}
-                        rel={entry.internal ? undefined : "noreferrer"}
-                        className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
-                      >
-                        <span className="text-terminal text-ink-0">{entry.label}</span>
-                        <span className="text-small">{entry.blurb}</span>
-                      </a>
+                      {entry.internal ? (
+                        <Link
+                          href={localeHref(entry.href, locale)}
+                          prefetch={false}
+                          className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
+                        >
+                          <span className="text-terminal text-ink-0">{entry.label}</span>
+                          <span className="text-small">{entry.blurb}</span>
+                        </Link>
+                      ) : (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
+                        >
+                          <span className="text-terminal text-ink-0">{entry.label}</span>
+                          <span className="text-small">{entry.blurb}</span>
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>

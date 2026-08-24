@@ -251,16 +251,37 @@ they list the field names `omm scan` prints instead of inventing a table.
 
 ## Command doc pages (`/commands`, `/commands/search`)
 
-Source of truth for these pages is the omm product repo at
-`~/Project/Localfit` (remote `origin` = `github.com/omm-hippo/omm`). Content
-lives in `src/i18n/commands/` — `base.ts` for everything language-independent
-(options, example commands, captured output, verbatim errors and their
-file:line), `en.ts`/`ko.ts` for prose — assembled by
+Source of truth for these pages is `github.com/omm-hippo/omm`. The current
+line references and option contract were refreshed against `main` at
+`e66db6f82e83` (`pyproject.toml` version `0.2.167`) on 2026-08-24. Content lives
+in `src/i18n/commands/` — `base.ts` for everything language-independent
+(options, example commands, captured output, verbatim errors, file:line and a
+stable `sourceAnchor`), `en.ts`/`ko.ts` for prose — assembled by
 `src/components/commands/commands.ts`.
+
+The pages remain static at runtime; neither the browser nor Worker fetches the
+product repo. `OMM_SOURCE_DIR=<local checkout> npm run check:command-docs`
+parses the product's Python AST without importing it and checks the six command
+signatures, command options, all four global flags and aliases, automatic
+`--help`, defaults, `--json`/`--yes` capability sets, and every troubleshooting
+citation anchor. CI checks out `omm-hippo/omm` explicitly at
+`refs/heads/main`, and its daily schedule catches upstream drift without adding
+production traffic. See `docs/command-docs-sync.md`.
+
+Each page also embeds a self-hosted, silent H.264 MP4 (1280×720) and poster,
+with the text capture still visible below it. These six videos are rendered
+only from stdout/stderr captured from the real `omm` console process at
+`e66db6f82e83`; the exact argv, exit code, safety path, duration, byte count,
+SHA-256, and source provenance are recorded in
+`public/demos/commands/manifest.json`. Captures use disposable HOME/OMM_HOME
+state, route CLI outbound traffic to an unused loopback proxy, disable
+telemetry, and stop on read-only output or an early local guard. They perform
+no model/engine download, model execution, benchmark, or upload, and make zero
+requests to `omm.run` or OMM Workers endpoints.
 
 ### `search`
 - Command definition, options, and validation errors:
-  `src/omm/cli.py:6293-6467`.
+  `src/omm/cli.py:6290-6461`.
 - README one-liner: `README.md:331`; shared scripting notes (global `--json`
   flag, safe-to-pipe guarantee): `README.md:401-403`; numeric-index reuse
   between `search`/`list`/`install`: `README.md:354`.
@@ -270,18 +291,18 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
     the first six of 60 results.
   - `omm search qwen --provider bogus` →
     `--provider must be one of: curated, huggingface, modelscope (got 'bogus').`
-    (exit 2, `cli.py:6320-6323`)
+    (exit 2, `cli.py:6318-6320`)
   - `omm search qwen --skip-ms --provider modelscope` →
     `--skip-ms conflicts with --provider modelscope.`
-    (exit 2, `cli.py:6326`)
+    (exit 2, `cli.py:6323`)
   - `omm search zzzznonexistentmodelxyz` →
     `No models found matching 'zzzznonexistentmodelxyz'.`
-    (exit 1, `cli.py:6362`)
+    (exit 1, `cli.py:6359`)
 
 ### `install`
-- Command definition, options, and errors: `src/omm/cli.py:4768-4889`;
-  `Unknown model` message: `src/omm/hub.py:371`; disk-space check:
-  `src/omm/cli.py:3477-3488`.
+- Command definition, options, and errors: `src/omm/cli.py:4765-4886`;
+  `Unknown model` message: `src/omm/hub.py:370-374`; disk-space check:
+  `src/omm/cli.py:3479-3485`.
 - The "a real run" block is a **format-accurate reconstruction, not a
   literal capture** — actually downloading a model is out of scope for this
   page. It reuses the site's own already-verified install demo: filename
@@ -289,26 +310,26 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   Ollama/LM Studio/Jan link summary, all from the sanctioned demo state
   `Terminal.tsx` and this file's "Real `omm scan --no-color` capture" section
   already document. Download/checksum/summary line formats:
-  `src/omm/downloader.py:107-170`, `src/omm/cli.py:4880-4889`.
+  `src/omm/downloader.py:107-170`, `src/omm/cli.py:4877-4886`.
 
 ### `run`
-- Command definition and options: `src/omm/cli.py:5517-5565`.
+- Command definition and options: `src/omm/cli.py:5514-5562`.
 - Real capture, 2026-08-24, this dev machine: `omm run totally-fake-model-xyz`
   → `totally-fake-model-xyz is not installed via omm. See \`omm list\`.`
-  (exit 1, `cli.py:5536`).
+  (exit 1, `cli.py:5533`).
 - `Ollama is not installed...`: `src/omm/launcher.py:170`. `` `ollama run
   {tag}` exited with code... ``: `src/omm/launcher.py:177-183` (quoted from
   source, not executed — both require an environment state this page can't
   safely reproduce).
 - The "a real run" block's startup banner is a **format-accurate
-  reconstruction** of `src/omm/cli.py:5541-5551`, naming a model genuinely
+  reconstruction** of `src/omm/cli.py:5538-5548`, naming a model genuinely
   installed on this dev machine (`omm info qwen2.5-0.5b-instruct-q4_k_m.gguf
   --json`, 2026-08-24) — the chat itself is a live conversation, not
   reproduced.
 
 ### `recommend`
-- Command definition: `src/omm/cli.py:2880-2932` (trained-model path) and
-  `2934-2969` (static-rules fallback). No command-specific options exist
+- Command definition: `src/omm/cli.py:2877-2929` (trained-model path) and
+  `2931-2966` (static-rules fallback). No command-specific options exist
   beyond the two global flags its own docstring calls out.
 - The "a real run" block's hardware panel and table header (`10 compatible
   models found` / the `This PC` box / `MODEL STATUS SPEED BEST FOR`) are a
@@ -321,30 +342,30 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   **format-accurate reconstruction** from a real `omm recommend --json` run
   the same day, using the real row format (`recommend_ui.py:290-305`,
   `build_rows` badge rules at `recommend_ui.py:172-204`).
-- `No model is predicted to run on this hardware.`: `cli.py:2916`.
-  `No model in the current rules fits this hardware.`: `cli.py:2952`.
+- `No model is predicted to run on this hardware.`: `cli.py:2913`.
+  `No model in the current rules fits this hardware.`: `cli.py:2949`.
 
 ### `contribute`
-- Command definition: `src/omm/cli.py:8412-8543` (start of the real
-  consent-notice block quoted verbatim on the page) through `8600`.
-- Upload-policy-disabled error: `cli.py:8433-8436`. No-engine error:
-  `cli.py:8456-8459`. Disk-space preflight error: `cli.py:7871-7879`.
+- Command definition: `src/omm/cli.py:8405-8540` (including the real
+  consent-notice block quoted verbatim on the page).
+- Upload-policy-disabled error: `cli.py:8425-8429`. No-engine error:
+  `cli.py:8447-8453`. Disk-space preflight error: `cli.py:7864-7871`.
 - The "a real run" block is a **verbatim quote of the real consent notice**
-  `omm contribute` prints before it downloads anything (`cli.py:8518-8543`,
+  `omm contribute` prints before it downloads anything (`cli.py:8512-8540`,
   Ollama-engine branch, upload policy shown as its default `ask`) — not a
   capture of a full run, since a real run repeatedly downloads, benchmarks,
   uploads and deletes real models, which this page does not trigger.
 
 ### `setup`
 - Command definition: `src/omm/cli.py:1072-1077`, delegating to
-  `src/omm/onboarding.py`'s `run_wizard` (`:315-339`). Takes no
+  `src/omm/onboarding.py`'s `run_wizard` (`:275-298`). Takes no
   command-specific options.
 - Banner/hardware-table format: `onboarding.py:42-91`. Engine checklist
   format and its `[*]`/`[ ]` indicators: `onboarding.py:139-162, 207-250`.
-  Completion step: `onboarding.py:275-313`.
+  Completion summary: `onboarding.py:287-298`.
 - `Engine selection requires an interactive terminal...`: `onboarding.py:
-  221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
-  `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
+  220-225`. `{label} isn't auto-installable yet...`: `onboarding.py:257-262`.
+  `Only {free_gb} GB is free on the drive...`: `onboarding.py:86-91`.
 - The "a real run" block is a **real capture**, `omm setup --no-color` with
   stdin closed, 2026-08-24, this dev machine — the banner and hardware table
   (`print_banner`/`print_hardware_summary`, `onboarding.py:42-91`) print via
@@ -352,10 +373,10 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   both are captured verbatim (ASCII banner included — this dev machine's
   terminal is wide enough to clear `_ASCII_ART_WIDTH`; the `omm home` row is
   shown with a representative path, `/Users/you/...`, rather than this
-  machine's real username). The runner checklist and tab-completion prompt
-  that follow are drawn directly to the terminal by questionary/
-  prompt_toolkit, the same reason `recommend`'s picker rows never appear in
-  captured stdout (see that section above) — not reproduced, rather than
+  machine's real username). The runner checklist that follows is drawn
+  directly to the terminal by questionary/prompt_toolkit, the same reason
+  `recommend`'s picker rows never appear in captured stdout (see that section
+  above) — not reproduced, rather than
   guessed at. An earlier version of this page fabricated a plausible-looking
   checklist here; this replaces it with only what was actually captured.
 

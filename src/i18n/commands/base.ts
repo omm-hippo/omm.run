@@ -36,6 +36,9 @@ export type Trouble = {
   readonly see: string;
   /** Where the string comes from, shown to the reader. */
   readonly source: string;
+  /** Stable literal shared by `see` and the cited source lines. The command
+   *  doc verifier uses this to catch stale line numbers and removed errors. */
+  readonly sourceAnchor: string;
 };
 
 export type Related = {
@@ -61,6 +64,10 @@ export const COMMAND_BASE = {
       },
       { name: "--skip-ms", argument: null, default: "off" },
       { name: "--json", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
     ],
 
     examples: [
@@ -90,15 +97,18 @@ Install with: omm install <number>  (e.g. omm install 1)`,
     trouble: [
       {
         see: "--provider must be one of: curated, huggingface, modelscope (got 'bogus').",
-        source: "src/omm/cli.py:6320-6323",
+        source: "src/omm/cli.py:6318-6320",
+        sourceAnchor: "--provider must be one of: curated",
       },
       {
         see: "--skip-ms conflicts with --provider modelscope.",
-        source: "src/omm/cli.py:6326",
+        source: "src/omm/cli.py:6323",
+        sourceAnchor: "--skip-ms conflicts with --provider modelscope.",
       },
       {
         see: "No models found matching 'zzzznonexistentmodelxyz'.",
-        source: "src/omm/cli.py:6362",
+        source: "src/omm/cli.py:6359",
+        sourceAnchor: "No models found matching",
       },
     ],
 
@@ -119,6 +129,11 @@ Install with: omm install <number>  (e.g. omm install 1)`,
       { name: "--upload / --no-upload", argument: null, default: "current upload policy" },
       { name: "--force", argument: null, default: "off" },
       { name: "--verify-runtime / --no-verify-runtime", argument: null, default: "asks first" },
+      { name: "--json", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
     ],
 
     examples: [
@@ -144,11 +159,13 @@ Verifying checksum...
     trouble: [
       {
         see: "Unknown model 'zzzz-totally-fake-model-name-xyz'. Use a curated name (tinyllama-1.1b-q4, llama3.1-8b-instruct-q4, mistral-7b-instruct-q4), an 'org/repo:file.gguf' ref (optionally prefixed 'hf:' or 'ms:'), or a direct URL.",
-        source: "src/omm/hub.py:371",
+        source: "src/omm/hub.py:370-374",
+        sourceAnchor: "Unknown model",
       },
       {
         see: "Not enough disk space: /Users/you/.omm/models needs up to 5.2 GiB (central model download) but only 3.1 GiB is free.",
-        source: "src/omm/cli.py:3477-3488",
+        source: "src/omm/cli.py:3479-3485",
+        sourceAnchor: "Not enough disk space",
       },
     ],
 
@@ -165,7 +182,12 @@ Verifying checksum...
 
     options: [
       { name: "[name]", argument: null, default: "picks interactively" },
-      { name: "--engine", argument: "NAME", default: "auto-picks a linked engine" },
+      { name: "--engine, -e", argument: "NAME", default: "auto-picks a linked engine" },
+      { name: "--json", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
     ],
 
     examples: [
@@ -188,15 +210,18 @@ Chat ended.`,
     trouble: [
       {
         see: "totally-fake-model-xyz is not installed via omm. See `omm list`.",
-        source: "src/omm/cli.py:5536",
+        source: "src/omm/cli.py:5533",
+        sourceAnchor: "is not installed via omm. See `omm list`.",
       },
       {
         see: "Ollama is not installed. Install it from https://ollama.com/download.",
         source: "src/omm/launcher.py:170",
+        sourceAnchor: "Ollama is not installed.",
       },
       {
         see: "`ollama run mistral-7b-instruct-v0.2.q4_k_m` exited with code 1. Try `omm link --engine ollama` to repair the model's Ollama link.",
         source: "src/omm/launcher.py:177-183",
+        sourceAnchor: "exited with code",
       },
     ],
 
@@ -213,7 +238,10 @@ Chat ended.`,
 
     options: [
       { name: "--json", argument: null, default: "off" },
-      { name: "--yes", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
     ],
 
     examples: [
@@ -241,11 +269,13 @@ Recommended models
     trouble: [
       {
         see: "No model is predicted to run on this hardware.",
-        source: "src/omm/cli.py:2916",
+        source: "src/omm/cli.py:2913",
+        sourceAnchor: "No model is predicted to run on this hardware.",
       },
       {
         see: "No model in the current rules fits this hardware.",
-        source: "src/omm/cli.py:2952",
+        source: "src/omm/cli.py:2949",
+        sourceAnchor: "No model in the current rules fits this hardware.",
       },
     ],
 
@@ -262,7 +292,11 @@ Recommended models
 
     options: [
       { name: "--report-errors", argument: null, default: "off" },
-      { name: "--yes", argument: null, default: "off" },
+      { name: "--json", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
     ],
 
     examples: [
@@ -289,15 +323,18 @@ Start contributing compute now? [y/N]`,
     trouble: [
       {
         see: "omm contribute requires benchmark uploads to be enabled. Run `omm setting upload --enable` or `--ask` first.",
-        source: "src/omm/cli.py:8433-8436",
+        source: "src/omm/cli.py:8425-8429",
+        sourceAnchor: "requires benchmark uploads to be enabled",
       },
       {
         see: "Neither Ollama nor LM Studio is installed or available. Install one of them, start it once, then retry `omm contribute`.",
-        source: "src/omm/cli.py:8456-8459",
+        source: "src/omm/cli.py:8447-8453",
+        sourceAnchor: "Neither Ollama nor LM Studio is installed or available.",
       },
       {
         see: "omm contribute will not start with low disk space. Keep at least 10 GiB free on every model volume before an unattended run. /Users/you/.omm/models: 3.2 GiB free.",
-        source: "src/omm/cli.py:7871-7879",
+        source: "src/omm/cli.py:7864-7871",
+        sourceAnchor: "will not start with low disk space",
       },
     ],
 
@@ -320,11 +357,18 @@ Start contributing compute now? [y/N]`,
     name: "omm setup",
     href: "/commands/setup",
 
-    options: [{ name: "--quiet", argument: null, default: "off" }],
+    options: [
+      { name: "--json", argument: null, default: "off" },
+      { name: "--yes, -y", argument: null, default: "off" },
+      { name: "--quiet, -q", argument: null, default: "off" },
+      { name: "--no-color", argument: null, default: "off" },
+      { name: "--help", argument: null, default: "off" },
+    ],
 
     examples: [
       { prompt: "$", command: "omm setup" },
       { prompt: "$", command: "omm setup --quiet" },
+      { prompt: "$", command: "omm setup --no-color" },
     ],
 
     capture: {
@@ -347,21 +391,24 @@ Let's get you set up.
  GPU             Apple M2
  omm home        /Users/you/.omm  (147.3 GB free)
 
-[ ...interactive runner checklist, then an optional tab-completion prompt, not reproduced here... ]`,
+[ ...interactive runner checklist, not reproduced here... ]`,
     },
 
     trouble: [
       {
         see: "Engine selection requires an interactive terminal. Re-run this command from a real terminal.",
-        source: "src/omm/onboarding.py:221-224",
+        source: "src/omm/onboarding.py:220-225",
+        sourceAnchor: "Engine selection requires an interactive terminal.",
       },
       {
         see: "AnythingLLM isn't auto-installable yet. Install it yourself, then re-run `omm setup` or `omm link`. See https://github.com/omm-hippo/omm/wiki/Compatible-Programs",
-        source: "src/omm/onboarding.py:258-261",
+        source: "src/omm/onboarding.py:257-262",
+        sourceAnchor: "isn't auto-installable yet.",
       },
       {
-        see: "Couldn't enable tab-completion automatically. Run `omm --install-completion` to set it up manually.",
-        source: "src/omm/onboarding.py:303-305",
+        see: "Only 3.2 GB is free on the drive holding omm's home. Models and runners install there - set OMM_HOME to a roomier drive (e.g. `OMM_HOME=D:\\omm`, see README) before installing anything.",
+        source: "src/omm/onboarding.py:86-91",
+        sourceAnchor: "is free on the drive holding omm's home.",
       },
     ],
 

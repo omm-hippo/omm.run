@@ -1,0 +1,9 @@
+$ omm search llama --skip-ms --limit 4 --no-color
+
+==> Llama
+  [1] llama3.1-8b-instruct-q4  Curated default
+
+==> TinyLlama
+  [2] tinyllama-1.1b-q4  Curated default
+  [3] ms:Xorbits/TinyLlama-1.1B-Chat-v0.3-GGUF  414 downloads on ModelScope
+  [4] ms:lefromage/TinyLlama-1.1B-Chat-v1.0-Q4_K_M-GGUF  496 downloads on ModelScope

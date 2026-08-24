@@ -1,0 +1,3 @@
+$ omm run demo-model.gguf --no-color
+
+demo-model.gguf is not installed via omm. See `omm list`.

@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Command documentation source check
+
+The command pages stay static at runtime and are checked against a local
+`omm-hippo/omm` source checkout before publication:
+
+```bash
+OMM_SOURCE_DIR=/absolute/path/to/omm npm run check:issue6
+```
+
+This also checks localized search behavior and the hashes/container signatures
+for all six self-hosted CLI demos. See
+[docs/command-docs-sync.md](docs/command-docs-sync.md) for the checked contract,
+drift errors, and CI behavior.
+
 ## Getting Started
 
 First, run the development server:

@@ -1,0 +1,104 @@
+$ omm recommend --json --no-color
+
+[
+  {
+    "rank": 1,
+    "ref": "unsloth/gpt-oss-20b-GGUF:gpt-oss-20b-Q4_K_M.gguf",
+    "name": "gpt oss 20b",
+    "predicted_tokens_per_second": 19.06041009929411,
+    "memory_required_gb": 13.2,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 566,543 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 2,
+    "ref": "MaziyarPanahi/Qwen3-14B-GGUF:Qwen3-14B.Q4_K_M.gguf",
+    "name": "Qwen3 14B",
+    "predicted_tokens_per_second": 7.121084410872701,
+    "memory_required_gb": 9.24,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 302,288 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 3,
+    "ref": "ms:Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:qwen2.5-coder-14b-instruct-q4_k_m.gguf",
+    "name": "qwen2.5 coder 14b instruct",
+    "predicted_tokens_per_second": 7.121084410872701,
+    "memory_required_gb": 9.24,
+    "use_case": "Coding",
+    "description": "Popular on Hugging Face with 47,628 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 4,
+    "ref": "ms:Qwen/Qwen1.5-14B-Chat-GGUF:qwen1_5-14b-chat-q4_k_m.gguf",
+    "name": "qwen1 5 14b chat",
+    "predicted_tokens_per_second": 7.121084410872701,
+    "memory_required_gb": 9.24,
+    "use_case": "General chat",
+    "description": "Popular on Hugging Face with 7,209 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 5,
+    "ref": "ms:Xorbits/Qwen-14B-Chat-GGUF:Qwen-14B-Chat.Q4_K_M.gguf",
+    "name": "Qwen 14B Chat",
+    "predicted_tokens_per_second": 7.121084410872701,
+    "memory_required_gb": 9.24,
+    "use_case": "General chat",
+    "description": "Popular on Hugging Face with 8,018 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 6,
+    "ref": "ms:douyamv/Qwen3.8-27B-abliterated-GGUF:qwen3.8-27b-abliterated-q2_k.gguf",
+    "name": "qwen3.8 27b abliterated",
+    "predicted_tokens_per_second": 6.8482472880400085,
+    "memory_required_gb": 8.91,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 1,209 downloads.",
+    "warning": "Specialized or uncensored variant. Review its model card and behavior before installing."
+  },
+  {
+    "rank": 7,
+    "ref": "yuxinlu1/gemma-4-12B-coder-fable5-composer2.5-v1-GGUF:gemma4-coding-Q4_K_M.gguf",
+    "name": "gemma4 coding",
+    "predicted_tokens_per_second": 8.732029704197378,
+    "memory_required_gb": 7.92,
+    "use_case": "Coding",
+    "description": "Popular on Hugging Face with 421,650 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 8,
+    "ref": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF:gemma4-v2-Q4_K_M.gguf",
+    "name": "gemma4 v2",
+    "predicted_tokens_per_second": 8.732029704197378,
+    "memory_required_gb": 7.92,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 400,069 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 9,
+    "ref": "ornith-ai/Ornith-1.0-9B-GGUF:ornith-1.0-9b-Q4_K_M.gguf",
+    "name": "ornith 1.0 9b",
+    "predicted_tokens_per_second": 14.00514205815667,
+    "memory_required_gb": 5.94,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 5,025,073 downloads.",
+    "warning": null
+  },
+  {
+    "rank": 10,
+    "ref": "ms:unsloth/Qwen3.5-9B-GGUF:Qwen3.5-9B-Q4_K_M.gguf",
+    "name": "Qwen3.5 9B",
+    "predicted_tokens_per_second": 14.00514205815667,
+    "memory_required_gb": 5.94,
+    "use_case": "General purpose",
+    "description": "Popular on Hugging Face with 106,163 downloads.",
+    "warning": null
+  }
+]

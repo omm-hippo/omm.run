@@ -2,7 +2,7 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
-export default {
+const cloudflareConfig = {
 	...defineCloudflareConfig({
 		incrementalCache: staticAssetsIncrementalCache,
 		enableCacheInterception: true,
@@ -12,3 +12,5 @@ export default {
 	// recursing into itself forever.
 	buildCommand: "next build",
 };
+
+export default cloudflareConfig;

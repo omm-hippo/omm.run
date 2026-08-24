@@ -297,7 +297,24 @@ export const ko = {
       "omm 명령어별 전체 레퍼런스 페이지: 모든 옵션, 초급부터 스크립팅까지 실제 예제, 실제 캡처한 실행 결과, 각 명령이 실제로 출력하는 에러까지 다룹니다.",
     label: "명령어",
     heading: "전체 레퍼런스를 볼 명령어를 고르세요.",
-    lede: "각 페이지는 명령이 무엇을 위한 것이고 언제 쓰는지, 모든 옵션, 실제 예제 5개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러와 대처법까지 다룹니다.",
+    lede: "각 페이지는 명령이 무엇을 위한 것이고 언제 쓰는지, 모든 옵션, 실제 예제 3~5개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러와 대처법까지 다룹니다.",
+    search: {
+      label: "전체 명령어 문서 검색",
+      placeholder: "--json, 디스크 공간, 러너 등을 검색하세요",
+      hint: "명령어 이름, 용도, 옵션, 실제 오류 대처법을 검색합니다. /로 포커스하고 Escape로 지울 수 있습니다.",
+      clear: "지우기",
+      resultCount: "명령어 {count}개",
+      noResultsTitle: "일치하는 명령어 문서가 없습니다.",
+      noResultsBody: "명령어 이름, --json 같은 옵션, 또는 더 짧은 오류 문구로 다시 검색해 보세요.",
+      matchPrefix: "일치 항목",
+      matchLabels: {
+        name: "이름",
+        summary: "요약",
+        use: "용도",
+        options: "옵션",
+        errors: "오류",
+      },
+    },
   },
 
   commands: {
@@ -307,7 +324,7 @@ export const ko = {
       "개요",
       "옵션",
       "예제",
-      "실제 실행 예시",
+      "실제 CLI 실행 녹화",
       "관련 명령어",
       "문제가 생겼다면",
     ],
@@ -315,6 +332,13 @@ export const ko = {
     optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
     examplesIntro: "기본 검색부터 스크립트에 넣을 만한 형태까지.",
     captureAria: "{command} 실행 녹화",
+    demoRecordedCommand: "이 영상에서 실제로 실행한 명령",
+    demoExitCode: "종료 코드",
+    demoSafeSuccess: "외부 네트워크를 차단한 격리 환경에서 읽기 전용으로 캡처했습니다.",
+    demoSafeGuard:
+      "격리 환경의 안전한 로컬 가드에서 의도적으로 종료했으며 다운로드·모델 실행·벤치마크·업로드를 시작하지 않았습니다.",
+    demoTranscript: "실제 프로세스 원문 transcript 열기(.txt)",
+    documentedCapture: "확장 문서 캡처 (별도의 참고 실행)",
     troubleBody:
       "아래 메시지는 모두 이 명령이 실제로 출력하는 것들입니다. 해당하는 메시지를 찾아 원인을 읽고, 마지막 줄대로 하면 됩니다.",
     troubleWhy: "원인",

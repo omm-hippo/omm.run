@@ -25,6 +25,10 @@ export const COMMANDS_EN: CommandTextSet = {
       "Only show results from this source: curated (omm's built-in/cached catalog, not a real host), huggingface, or modelscope.",
       "Don't query ModelScope. Its results need one extra network request per candidate repo, which can noticeably slow down search.",
       "Print structured JSON to stdout instead of a formatted list — the only thing written to stdout, so it's safe to pipe.",
+      "Accepted as a global flag, but search has no confirmation prompt to skip; omm prints a warning and ignores it.",
+      "Suppress progress bars and background status or hint lines. Errors and search results still print.",
+      "Disable colored terminal output.",
+      "Print search's usage, arguments and options, then exit.",
     ],
 
     exampleCaptions: [
@@ -76,6 +80,11 @@ export const COMMANDS_EN: CommandTextSet = {
       "Send (or skip sending) this machine's benchmark result to the telemetry server without asking. Left unset, the current omm setting upload policy decides.",
       "Re-download even if this model is already installed.",
       "Run (or skip) a short local load/generation check after linking. Left unset, install asks before loading a model that isn't already running.",
+      "Accepted as a global flag, but install has no JSON output mode; omm prints a warning and ignores it.",
+      "Skip confirmation prompts, including hardware-fit and runtime-load consent, for non-interactive installation.",
+      "Suppress progress bars and background status or hint lines. Errors and the final install result still print.",
+      "Disable colored terminal output.",
+      "Print install's usage, arguments and options, then exit.",
     ],
 
     exampleCaptions: [
@@ -87,7 +96,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real download, checksum and link-summary lines (src/omm/downloader.py:107-170, src/omm/cli.py:4880-4889) — not a literal capture, since actually downloading a 4.4 GB file isn't something this page does. Filename, byte count and the three linked runners match the site's own verified install demo (design/FACTS.md).",
+      "Format-accurate reproduction of the real download, checksum and link-summary lines (src/omm/downloader.py:107-170, src/omm/cli.py:4877-4886) — not a literal capture, since actually downloading a 4.4 GB file isn't something this page does. Filename, byte count and the three linked runners match the site's own verified install demo (design/FACTS.md).",
 
     trouble: [
       {
@@ -120,6 +129,11 @@ export const COMMANDS_EN: CommandTextSet = {
     optionDescriptions: [
       "An installed model's filename (see omm list). Left out, run offers an interactive pick from what's installed.",
       "Which linked runner to use: ollama, lmstudio, jan, koboldcpp, textgenwebui, anythingllm, or mstystudio. Left out, run picks one automatically.",
+      "Accepted as a global flag, but run has no JSON output mode; omm prints a warning and ignores it.",
+      "Accepted as a global flag, but run has no confirmation prompt to skip; omm prints a warning and ignores it.",
+      "Suppress background status or hint lines. Errors and the launch result still print.",
+      "Disable colored terminal output.",
+      "Print run's usage, arguments and options, then exit.",
     ],
 
     exampleCaptions: [
@@ -129,7 +143,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real startup banner (src/omm/cli.py:5541-5551) for a model genuinely installed on this dev machine — not a literal capture, since the chat itself is a live conversation this page can't script or reproduce.",
+      "Format-accurate reproduction of the real startup banner (src/omm/cli.py:5538-5548) for a model genuinely installed on this dev machine — not a literal capture, since the chat itself is a live conversation this page can't script or reproduce.",
 
     trouble: [
       {
@@ -155,7 +169,7 @@ export const COMMANDS_EN: CommandTextSet = {
   recommend: {
     metaTitle: "omm recommend — a model that fits this machine",
     metaDescription:
-      "Full reference for omm recommend: both flags, three real examples, a real ranked-candidate capture, and the two errors it actually prints.",
+      "Full reference for omm recommend: every flag, three real examples, a real ranked-candidate capture, and the two errors it actually prints.",
     heading: "omm recommend",
     lede: "Rank models by a predictor trained on real install telemetry — falling back to static rules when the trained model can't be fetched — and offer to install the top pick.",
     summary: "Get a model suggestion ranked for this machine's hardware, with an offer to install it.",
@@ -166,6 +180,9 @@ export const COMMANDS_EN: CommandTextSet = {
     optionDescriptions: [
       "Print the ranked candidates as JSON and install nothing.",
       "Skip the interactive picker and install the top-ranked candidate immediately.",
+      "Suppress background status or hint lines. Errors and the ranked result still print.",
+      "Disable colored terminal output.",
+      "Print recommend's usage and options, then exit.",
     ],
 
     exampleCaptions: [
@@ -197,7 +214,7 @@ export const COMMANDS_EN: CommandTextSet = {
   contribute: {
     metaTitle: "omm contribute — grow the recommendation dataset",
     metaDescription:
-      "Full reference for omm contribute: both meaningful flags, four real examples, the real consent notice it prints before starting, and the three errors it actually prints.",
+      "Full reference for omm contribute: every flag, four real examples, the real consent notice it prints before starting, and the three errors it actually prints.",
     heading: "omm contribute",
     lede: "Repeatedly install, benchmark, and upload telemetry for hardware-fit models — deleting each one afterward — to grow the training data behind omm recommend.",
     summary: "Benchmark models in a loop, uploading telemetry to improve recommend for hardware like yours.",
@@ -207,7 +224,11 @@ export const COMMANDS_EN: CommandTextSet = {
 
     optionDescriptions: [
       "Send scrubbed error reports from this run only. Doesn't change the saved policy, and is ignored if error reports are explicitly turned off.",
+      "Accepted as a global flag, but contribute has no JSON output mode; omm prints a warning and ignores it.",
       "Skip the 'Start contributing compute now?' confirmation and every per-model prompt — required for an unattended run.",
+      "Suppress progress bars and background status or hint lines. Errors and benchmark results still print.",
+      "Disable colored terminal output.",
+      "Print contribute's usage and options, then exit.",
     ],
 
     exampleCaptions: [
@@ -218,7 +239,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Verbatim reproduction of the real consent notice omm contribute prints before it downloads anything (src/omm/cli.py:8518-8543), for the Ollama engine and its upload policy shown as 'ask' — not a literal full-run capture, since a real run downloads, benchmarks, uploads and deletes real models in a loop, which this page won't trigger.",
+      "Verbatim reproduction of the real consent notice omm contribute prints before it downloads anything (src/omm/cli.py:8512-8540), for the Ollama engine and its upload policy shown as 'ask' — not a literal full-run capture, since a real run downloads, benchmarks, uploads and deletes real models in a loop, which this page won't trigger.",
 
     trouble: [
       {
@@ -244,25 +265,30 @@ export const COMMANDS_EN: CommandTextSet = {
   setup: {
     metaTitle: "omm setup — the first-run wizard, any time",
     metaDescription:
-      "Full reference for omm setup: its one meaningful flag, both examples, a real hardware-scan-backed capture of the wizard, and the three messages it actually prints.",
+      "Full reference for omm setup: every accepted flag, three examples, a real hardware-scan-backed capture of the wizard, and three messages it actually prints.",
     heading: "omm setup",
     lede: "Re-run the first-time setup wizard — a hardware scan followed by a checklist of local AI runners to install — any time, not just on first run.",
     summary: "Re-run the hardware scan and runner-install checklist, any time.",
 
     overviewBody:
-      "setup is what runs automatically the first time omm is used, and it's also the command to reach for later: to pick up a runner you skipped, to re-check your hardware summary, or to turn shell tab-completion on. It takes no arguments — everything it does is an interactive step: a hardware summary, a checklist of runners (already-installed ones shown but not selectable), and an offer to enable tab-completion. It needs a real terminal; running it with no TTY attached fails immediately instead of hanging.",
+      "setup is what runs automatically the first time omm is used, and it's also the command to reach for later: to pick up a runner you skipped or to re-check your hardware summary. It takes no arguments — its main steps are a hardware summary and a checklist of runners (already-installed ones shown but not selectable). It needs a real terminal; running it with no TTY attached fails immediately instead of hanging.",
 
     optionDescriptions: [
+      "Accepted as a global flag, but setup has no JSON output mode; omm prints a warning and ignores it.",
+      "Accepted as a global flag, but setup has no confirmation prompt to skip; omm prints a warning and ignores it.",
       "Suppress the engine-install progress lines while the wizard installs the runners you picked. Prompts, warnings and the final summary still print.",
+      "Disable colored terminal output.",
+      "Print setup's usage and options, then exit.",
     ],
 
     exampleCaptions: [
-      "The full wizard: hardware summary, runner checklist, tab-completion offer.",
+      "The full wizard: hardware summary followed by the runner checklist.",
       "Same wizard, without the per-line progress output while runners install.",
+      "Plain-text output without terminal colors — useful for limited terminals and logs.",
     ],
 
     captureFootnote:
-      "Real omm setup capture, 2026-08-24, this dev machine — the banner and hardware table print via console.print and are captured verbatim. The runner checklist and tab-completion prompt that follow are drawn directly to the terminal by questionary (the same reason recommend's picker rows never appear in plain captured output), so they aren't reproduced here.",
+      "Real omm setup capture, 2026-08-24, this dev machine — the banner and hardware table print via console.print and are captured verbatim. The runner checklist that follows is drawn directly to the terminal by questionary (the same reason recommend's picker rows never appear in plain captured output), so it isn't reproduced here.",
 
     trouble: [
       {
@@ -274,8 +300,8 @@ export const COMMANDS_EN: CommandTextSet = {
         fix: "Install it yourself from the compatible-programs list, then re-run omm setup or omm link so omm picks it up.",
       },
       {
-        why: "Enabling tab-completion writes to your shell's config, which can fail for reasons specific to that shell or its config file's permissions.",
-        fix: "Run omm --install-completion yourself to see the underlying error, or set it up manually.",
+        why: "The drive that holds OMM_HOME has less than 10 GB free, which is too tight for installing typical model files and runners safely.",
+        fix: "Free space there or point OMM_HOME at a roomier drive before installing anything.",
       },
     ],
 
