@@ -345,19 +345,32 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
 - `Engine selection requires an interactive terminal...`: `onboarding.py:
   221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
   `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
-- The "a real run" block is a **real capture**, `omm setup --no-color` with
-  stdin closed, 2026-08-24, this dev machine — the banner and hardware table
-  (`print_banner`/`print_hardware_summary`, `onboarding.py:42-91`) print via
-  `console.print` before the wizard reaches its first interactive prompt, so
-  both are captured verbatim (ASCII banner included — this dev machine's
-  terminal is wide enough to clear `_ASCII_ART_WIDTH`; the `omm home` row is
-  shown with a representative path, `/Users/you/...`, rather than this
-  machine's real username). The runner checklist and tab-completion prompt
-  that follow are drawn directly to the terminal by questionary/
-  prompt_toolkit, the same reason `recommend`'s picker rows never appear in
-  captured stdout (see that section above) — not reproduced, rather than
-  guessed at. An earlier version of this page fabricated a plausible-looking
-  checklist here; this replaces it with only what was actually captured.
+- The "a real run" block is a **real, end-to-end driven capture**,
+  2026-08-24, this dev machine: `omm setup --no-color` spawned under a real
+  pty (Python `pexpect`) with `OMM_HOME` pointed at a throwaway scratch
+  directory (never this machine's real `~/.omm` — the theme pick and
+  `onboarding_completed` flag it writes to config land in the scratch dir
+  only), then driven through every prompt exactly as `_build_picker_key_bindings`
+  and `_build_empty_selection_validator` define them (`onboarding.py:230-261,
+  117-136`): Enter accepts the highlighted (default `dark`) theme, Enter
+  twice past the runner checklist confirms zero runners selected, `n`
+  declines tab-completion. Because the theme picker and checklist are
+  `prompt_toolkit`/questionary screens drawn straight to the terminal (the
+  same reason `recommend`'s picker rows never appear in plain stdout — see
+  that section above), the raw byte stream was rendered through a real
+  terminal emulator (`pyte`) rather than read as plain text, and the
+  resulting frames — banner, theme preview, hardware table (`omm home` shown
+  as a representative path, `/Users/you/...`, not this machine's real
+  username), and the runner checklist with its real "- Ollama (installed)"
+  vs "[ ] LM Studio" row formatting — are transcribed from those frames. The
+  automated capture's tail (past "done") was cut short by the driver script's
+  own timeout, so the closing three lines are quoted verbatim from
+  `onboarding.py:328-339` rather than transcribed from that run — matching,
+  not guessed, since a subsequent frame already confirmed the line
+  immediately preceding them (`Enable tab-completion for install/remove any
+  time...`, `onboarding.py:287-289`). An earlier version of this page
+  fabricated a plausible-looking checklist without running anything; this
+  replaces it with an actually-driven session.
 
 All six commands from issue #6's scope now have pages. Next candidates for
 this same treatment, if the command list grows: `list`, `info`, `upgrade`,

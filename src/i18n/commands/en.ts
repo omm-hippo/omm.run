@@ -262,7 +262,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm setup capture, 2026-08-24, this dev machine — the banner and hardware table print via console.print and are captured verbatim. The runner checklist and tab-completion prompt that follow are drawn directly to the terminal by questionary (the same reason recommend's picker rows never appear in plain captured output), so they aren't reproduced here.",
+      "Real omm setup run, 2026-08-24, this dev machine, driven end to end through a real terminal (accepting the default theme, selecting no runners, declining tab-completion) against a throwaway OMM_HOME so nothing here touched this machine's real config. The theme picker and runner checklist are questionary screens rendered straight to the terminal, captured through a terminal emulator rather than plain stdout — the same reason recommend's picker rows can't be captured any other way. The closing three lines are quoted verbatim from onboarding.py's own completion message.",
 
     trouble: [
       {

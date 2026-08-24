@@ -337,6 +337,15 @@ Start contributing compute now? [y/N]`,
  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝
 Let's get you set up.
 
+Preview - how each kind of omm message will look:
+error / warning / success / accent / muted / value / heading / label / rule
+
+Pick a color theme for omm's output:
+  light
+❯ dark
+  high-contrast
+  no-color
+
                 Your machine
  Field           Value
  OS              macOS 27.0
@@ -347,7 +356,23 @@ Let's get you set up.
  GPU             Apple M2
  omm home        /Users/you/.omm  (147.3 GB free)
 
-[ ...interactive runner checklist, then an optional tab-completion prompt, not reproduced here... ]`,
+? Install any local AI runners you'd like to use? (space to select, enter to confirm)
+   - Ollama (installed)
+ » [ ] LM Studio
+   [ ] Jan
+   - AnythingLLM (installed)
+   [ ] Msty
+   [ ] text-generation-webui
+   [ ] KoboldCpp
+
+? Install any local AI runners you'd like to use? (space to select, enter to confirm) done
+Enable tab-completion for install/remove any time: \`omm --install-completion\`.
+
+Setup complete. Run \`omm setting\` any time to change telemetry, upload, or update-channel settings.
+
+Next: \`omm recommend\` picks a model that fits this PC and installs it, then \`omm run\` starts chatting with it.
+
+Error reports are off unless you turn them on: \`omm setting error-reports --ask\` (see docs/error-reports.md).`,
     },
 
     trouble: [
