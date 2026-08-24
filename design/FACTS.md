@@ -248,3 +248,35 @@ The only capture reproduced is the existing real `omm scan --no-color`
 Windows 11 run recorded above, shown on the Windows page with a caption saying
 it was taken under heavy load. The macOS and Linux pages have no capture, so
 they list the field names `omm scan` prints instead of inventing a table.
+
+## Command doc pages (`/commands`, `/commands/search`)
+
+Source of truth for these pages is the omm product repo at
+`~/Project/Localfit` (remote `origin` = `github.com/omm-hippo/omm`). Content
+lives in `src/i18n/commands/` — `base.ts` for everything language-independent
+(options, example commands, captured output, verbatim errors and their
+file:line), `en.ts`/`ko.ts` for prose — assembled by
+`src/components/commands/commands.ts`.
+
+### `search`
+- Command definition, options, and validation errors:
+  `src/omm/cli.py:6293-6467`.
+- README one-liner: `README.md:331`; shared scripting notes (global `--json`
+  flag, safe-to-pipe guarantee): `README.md:401-403`; numeric-index reuse
+  between `search`/`list`/`install`: `README.md:354`.
+- Real captures, 2026-08-24, this dev machine, via `~/Project/Localfit`'s own
+  `.venv` (`omm search ... --no-color`):
+  - `omm search qwen --limit 5` — the page's "a real run" block, verbatim.
+  - `omm search qwen --provider bogus` →
+    `--provider must be one of: curated, huggingface, modelscope (got 'bogus').`
+    (exit 2, `cli.py:6320-6323`)
+  - `omm search qwen --skip-ms --provider modelscope` →
+    `--skip-ms conflicts with --provider modelscope.`
+    (exit 2, `cli.py:6326`)
+  - `omm search zzzznonexistentmodelxyz` →
+    `No models found matching 'zzzznonexistentmodelxyz'.`
+    (exit 1, `cli.py:6362`)
+- The other five commands from issue #6's scope (`install`, `run`,
+  `recommend`, `contribute`, `setup`) are listed on `/commands` as
+  "coming soon" placeholders with no page yet — same rule applies when they
+  are written: real source or a real capture, cited here, before it ships.

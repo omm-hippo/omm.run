@@ -18,13 +18,16 @@ const DOCS_HREFS = [
   { href: `${REPO}/wiki/Compatible-Programs`, internal: false },
 ] as const;
 
-/** Command names are the product's own vocabulary — never translated. */
+/** Command names are the product's own vocabulary — never translated.
+ *  `internal: true` once `/commands/<slug>` exists; external entries point
+ *  at the README section covering that command until then. */
 const COMMANDS = [
-  { label: "omm scan", href: `${REPO}#usage` },
-  { label: "omm install", href: `${REPO}#usage` },
-  { label: "omm list", href: `${REPO}#usage` },
-  { label: "omm benchmark", href: `${REPO}#self-hosted-benchmark-data` },
-  { label: "omm setting", href: `${REPO}#signed-recommendation-data` },
+  { label: "omm search", href: "/commands/search", internal: true },
+  { label: "omm scan", href: `${REPO}#usage`, internal: false },
+  { label: "omm install", href: `${REPO}#usage`, internal: false },
+  { label: "omm list", href: `${REPO}#usage`, internal: false },
+  { label: "omm benchmark", href: `${REPO}#self-hosted-benchmark-data`, internal: false },
+  { label: "omm setting", href: `${REPO}#signed-recommendation-data`, internal: false },
 ] as const;
 
 const PROJECT_HREFS = [
@@ -103,12 +106,18 @@ export default function Footer({ locale }: { locale: Locale }) {
             <Column title={t.commands.title}>
               {COMMANDS.map((command) => (
                 <li key={command.label}>
-                  <a
-                    href={command.href}
-                    className={`${LINK_CLASS} font-mono`}
-                  >
-                    {command.label}
-                  </a>
+                  {command.internal ? (
+                    <Link
+                      href={localeHref(command.href, locale)}
+                      className={`${LINK_CLASS} font-mono`}
+                    >
+                      {command.label}
+                    </Link>
+                  ) : (
+                    <a href={command.href} className={`${LINK_CLASS} font-mono`}>
+                      {command.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </Column>
