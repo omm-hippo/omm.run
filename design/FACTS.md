@@ -266,7 +266,8 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   between `search`/`list`/`install`: `README.md:354`.
 - Real captures, 2026-08-24, this dev machine, via `~/Project/Localfit`'s own
   `.venv` (`omm search ... --no-color`):
-  - `omm search qwen --limit 5` — the page's "a real run" block, verbatim.
+  - `omm search qwen` — the page's "a real run" block, verbatim, trimmed to
+    the first six of 60 results.
   - `omm search qwen --provider bogus` →
     `--provider must be one of: curated, huggingface, modelscope (got 'bogus').`
     (exit 2, `cli.py:6320-6323`)
@@ -276,6 +277,7 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   - `omm search zzzznonexistentmodelxyz` →
     `No models found matching 'zzzznonexistentmodelxyz'.`
     (exit 1, `cli.py:6362`)
+
 ### `install`
 - Command definition, options, and errors: `src/omm/cli.py:4768-4889`;
   `Unknown model` message: `src/omm/hub.py:371`; disk-space check:
@@ -308,9 +310,17 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
 - Command definition: `src/omm/cli.py:2880-2932` (trained-model path) and
   `2934-2969` (static-rules fallback). No command-specific options exist
   beyond the two global flags its own docstring calls out.
-- Real capture, 2026-08-24, this dev machine: `omm recommend --json`
-  (read-only per its own docstring — installs nothing), trimmed to the top
-  2 of 10 ranked candidates for length.
+- The "a real run" block's hardware panel and table header (`10 compatible
+  models found` / the `This PC` box / `MODEL STATUS SPEED BEST FOR`) are a
+  **real capture**, `omm recommend --no-color` with stdin closed, 2026-08-24,
+  this dev machine — safe because a non-interactive terminal makes the
+  picker refuse before installing anything (`recommend_ui.py:220-268`
+  prints the panel/header via `console.print`; the picker itself is drawn by
+  questionary/prompt_toolkit directly to the terminal, so its rows never
+  appear in captured stdout). The two model rows shown are a
+  **format-accurate reconstruction** from a real `omm recommend --json` run
+  the same day, using the real row format (`recommend_ui.py:290-305`,
+  `build_rows` badge rules at `recommend_ui.py:172-204`).
 - `No model is predicted to run on this hardware.`: `cli.py:2916`.
   `No model in the current rules fits this hardware.`: `cli.py:2952`.
 

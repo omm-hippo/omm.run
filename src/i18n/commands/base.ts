@@ -72,7 +72,7 @@ export const COMMAND_BASE = {
     ],
 
     capture: {
-      title: "omm search qwen --limit 5",
+      title: "omm search qwen",
       text: `==> DeepSeek
   [1] ms:Jackrong/DeepSeek-V4-Pro-Qwen3.5-9B-MTP-GGUF  2,438 downloads on ModelScope
 
@@ -81,6 +81,8 @@ export const COMMAND_BASE = {
   [3] JonathanColetti/Qwen3.8-27B-Uncensored-GGUF  (predicted not to run on this hardware)
   [4] MaziyarPanahi/Qwen3-4B-GGUF  346,358 downloads on HuggingFace
   [5] bartowski/Qwen2.5-7B-Instruct-GGUF  309,173 downloads on HuggingFace
+  [6] MaziyarPanahi/Qwen3-0.6B-GGUF  305,573 downloads on HuggingFace
+  … 54 more results, across Other and Qwen
 
 Install with: omm install <number>  (e.g. omm install 1)`,
     },
@@ -221,30 +223,19 @@ Chat ended.`,
     ],
 
     capture: {
-      title: "omm recommend --json",
-      text: `[
-  {
-    "rank": 1,
-    "ref": "ornith-ai/Ornith-1.0-9B-GGUF:ornith-1.0-9b-Q4_K_M.gguf",
-    "name": "ornith 1.0 9b",
-    "predicted_tokens_per_second": 13.87,
-    "memory_required_gb": 5.94,
-    "use_case": "General purpose",
-    "description": "Popular on Hugging Face with 5,025,073 downloads.",
-    "warning": null
-  },
-  {
-    "rank": 2,
-    "ref": "ms:unsloth/Qwen3.5-9B-GGUF:Qwen3.5-9B-Q4_K_M.gguf",
-    "name": "Qwen3.5 9B",
-    "predicted_tokens_per_second": 13.87,
-    "memory_required_gb": 5.94,
-    "use_case": "General purpose",
-    "description": "Popular on Hugging Face with 106,163 downloads.",
-    "warning": null
-  },
-  … 8 more ranked candidates
-]`,
+      title: "omm recommend",
+      text: `10 compatible models found
+╭─ This PC ────────────────────────────────────────────────────────────────────╮
+│ CPU  Apple M2                                                                │
+│ RAM  8.0 GB                                                                  │
+│ GPU  Apple M2  ·  8.0 GB                                                     │
+│ MODEL MEMORY  6.4 GB                                                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Recommended models
+   MODEL                                        STATUS     SPEED        BEST FOR
+ ❯ ornith 1.0 9b                                 BEST FIT   ~14 tok/s    General purpose
+   Qwen3.5 9B                                    POPULAR    ~14 tok/s    General purpose
+   … 8 more, ↑↓ move · Enter select · Esc cancel`,
     },
 
     trouble: [

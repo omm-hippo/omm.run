@@ -36,7 +36,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm search qwen --limit 5 capture, 2026-08-24, this dev machine. HuggingFace and ModelScope rankings change constantly, so a fresh run will list different repos.",
+      "Real omm search qwen capture, 2026-08-24, this dev machine, trimmed to the first six of 60 results for length. HuggingFace and ModelScope rankings change constantly, so a fresh run will list different repos.",
 
     trouble: [
       {
@@ -175,7 +175,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm recommend --json capture, 2026-08-24, this dev machine, trimmed to the top two of ten ranked candidates. A fresh run reflects whatever this machine's live memory budget and the current candidate catalog produce.",
+      "The hardware panel and table header are a real omm recommend capture, 2026-08-24, this dev machine. The two model rows are a format-accurate reconstruction from a real omm recommend --json run the same day — the arrow-key picker draws its rows directly to the terminal, so they never appear in plain captured output. A fresh run reflects this machine's live memory budget and the current candidate catalog.",
 
     trouble: [
       {

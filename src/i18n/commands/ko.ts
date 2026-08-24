@@ -36,7 +36,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm search qwen --limit 5 캡처입니다. HuggingFace·ModelScope 순위는 계속 바뀌므로 다시 실행하면 다른 저장소가 나옵니다.",
+      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm search qwen 캡처입니다. 전체 60개 결과 중 앞 6개만 남겼습니다. HuggingFace·ModelScope 순위는 계속 바뀌므로 다시 실행하면 다른 저장소가 나옵니다.",
 
     trouble: [
       {
@@ -175,7 +175,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm recommend --json 캡처입니다. 순위 10개 중 상위 2개만 남겼습니다. 다시 실행하면 이 머신의 실시간 메모리 예산과 현재 후보 카탈로그에 따라 결과가 달라집니다.",
+      "하드웨어 패널과 표 머리글은 2026-08-24 이 개발 머신에서 실제로 실행한 omm recommend 캡처입니다. 모델 행 2개는 같은 날 실행한 실제 omm recommend --json 결과를 형식 그대로 재구성한 것입니다 — 화살표 선택 목록은 터미널에 직접 그려지는 방식이라 일반 캡처에는 찍히지 않습니다. 다시 실행하면 이 머신의 실시간 메모리 예산과 현재 후보 카탈로그에 따라 결과가 달라집니다.",
 
     trouble: [
       {
