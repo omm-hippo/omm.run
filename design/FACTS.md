@@ -276,7 +276,72 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   - `omm search zzzznonexistentmodelxyz` →
     `No models found matching 'zzzznonexistentmodelxyz'.`
     (exit 1, `cli.py:6362`)
-- The other five commands from issue #6's scope (`install`, `run`,
-  `recommend`, `contribute`, `setup`) are listed on `/commands` as
-  "coming soon" placeholders with no page yet — same rule applies when they
-  are written: real source or a real capture, cited here, before it ships.
+### `install`
+- Command definition, options, and errors: `src/omm/cli.py:4768-4889`;
+  `Unknown model` message: `src/omm/hub.py:371`; disk-space check:
+  `src/omm/cli.py:3477-3488`.
+- The "a real run" block is a **format-accurate reconstruction, not a
+  literal capture** — actually downloading a model is out of scope for this
+  page. It reuses the site's own already-verified install demo: filename
+  `mistral-7b-instruct-v0.2.Q4_K_M.gguf`, `4,368,439,584` bytes, and the
+  Ollama/LM Studio/Jan link summary, all from the sanctioned demo state
+  `Terminal.tsx` and this file's "Real `omm scan --no-color` capture" section
+  already document. Download/checksum/summary line formats:
+  `src/omm/downloader.py:107-170`, `src/omm/cli.py:4880-4889`.
+
+### `run`
+- Command definition and options: `src/omm/cli.py:5517-5565`.
+- Real capture, 2026-08-24, this dev machine: `omm run totally-fake-model-xyz`
+  → `totally-fake-model-xyz is not installed via omm. See \`omm list\`.`
+  (exit 1, `cli.py:5536`).
+- `Ollama is not installed...`: `src/omm/launcher.py:170`. `` `ollama run
+  {tag}` exited with code... ``: `src/omm/launcher.py:177-183` (quoted from
+  source, not executed — both require an environment state this page can't
+  safely reproduce).
+- The "a real run" block's startup banner is a **format-accurate
+  reconstruction** of `src/omm/cli.py:5541-5551`, naming a model genuinely
+  installed on this dev machine (`omm info qwen2.5-0.5b-instruct-q4_k_m.gguf
+  --json`, 2026-08-24) — the chat itself is a live conversation, not
+  reproduced.
+
+### `recommend`
+- Command definition: `src/omm/cli.py:2880-2932` (trained-model path) and
+  `2934-2969` (static-rules fallback). No command-specific options exist
+  beyond the two global flags its own docstring calls out.
+- Real capture, 2026-08-24, this dev machine: `omm recommend --json`
+  (read-only per its own docstring — installs nothing), trimmed to the top
+  2 of 10 ranked candidates for length.
+- `No model is predicted to run on this hardware.`: `cli.py:2916`.
+  `No model in the current rules fits this hardware.`: `cli.py:2952`.
+
+### `contribute`
+- Command definition: `src/omm/cli.py:8412-8543` (start of the real
+  consent-notice block quoted verbatim on the page) through `8600`.
+- Upload-policy-disabled error: `cli.py:8433-8436`. No-engine error:
+  `cli.py:8456-8459`. Disk-space preflight error: `cli.py:7871-7879`.
+- The "a real run" block is a **verbatim quote of the real consent notice**
+  `omm contribute` prints before it downloads anything (`cli.py:8518-8543`,
+  Ollama-engine branch, upload policy shown as its default `ask`) — not a
+  capture of a full run, since a real run repeatedly downloads, benchmarks,
+  uploads and deletes real models, which this page does not trigger.
+
+### `setup`
+- Command definition: `src/omm/cli.py:1072-1077`, delegating to
+  `src/omm/onboarding.py`'s `run_wizard` (`:315-339`). Takes no
+  command-specific options.
+- Banner/hardware-table format: `onboarding.py:42-91`. Engine checklist
+  format and its `[*]`/`[ ]` indicators: `onboarding.py:139-162, 207-250`.
+  Completion step: `onboarding.py:275-313`.
+- `Engine selection requires an interactive terminal...`: `onboarding.py:
+  221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
+  `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
+- The "a real run" block is a **format-accurate reconstruction**, not a
+  literal capture — running the wizard for real writes to this machine's
+  actual config (`config_mod.update_config`), which this page does not do.
+  Its hardware table uses a real `omm scan --json` run on this dev machine,
+  2026-08-24 (macOS 27.0, Apple M2, 8.0 GB RAM), and a real, read-only free
+  disk space check on this machine's `~/.omm`.
+
+All six commands from issue #6's scope now have pages. Next candidates for
+this same treatment, if the command list grows: `list`, `info`, `upgrade`,
+`uninstall`, `benchmark`, `setting`.
