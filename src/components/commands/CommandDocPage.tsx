@@ -1,10 +1,11 @@
 import Link from "next/link";
 
 import CommandBlock from "@/components/install/CommandBlock";
+import CommandCapture from "@/components/commands/CommandCapture";
 import { getCommandLinks, type Command } from "@/components/commands/commands";
 import Reveal from "@/components/Reveal";
 import { localeHref, type Locale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
+import { fill, getDictionary } from "@/i18n/dictionaries";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -201,19 +202,14 @@ export default function CommandDocPage({
             >
               <Reveal>
                 <SectionHead n="04" id="capture" title={t.sections[3]} />
-                <figure className="mt-8">
-                  <div className="overflow-hidden rounded-lg border border-line-1 bg-bg-1">
-                    <div className="border-b border-line-0 bg-bg-2 px-4 py-2">
-                      <span className="text-label">{command.capture.title}</span>
-                    </div>
-                    <pre className="text-terminal overflow-x-auto p-5 text-ink-1">
-                      <code>{command.capture.text}</code>
-                    </pre>
-                  </div>
-                  <figcaption className="text-small mt-3 max-w-[68ch] text-ink-3">
-                    {command.capture.footnote}
-                  </figcaption>
-                </figure>
+                <div className="mt-8">
+                  <CommandCapture
+                    command={command.capture.title}
+                    output={command.capture.text}
+                    footnote={command.capture.footnote}
+                    label={fill(t.captureAria, { command: command.capture.title })}
+                  />
+                </div>
               </Reveal>
             </section>
 

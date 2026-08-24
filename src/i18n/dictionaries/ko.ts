@@ -36,7 +36,7 @@ export const ko = {
 
   nav: {
     sections: ["문제", "기능", "러너", "설치"],
-    installGuides: "설치 가이드",
+    installGuides: "가이드",
     commands: "명령어",
     github: "GitHub",
     install: "설치",
@@ -314,6 +314,7 @@ export const ko = {
     optionsIntro: "이 명령이 받는 모든 옵션과, 생략했을 때의 기본값입니다.",
     optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
     examplesIntro: "기본 검색부터 스크립트에 넣을 만한 형태까지.",
+    captureAria: "{command} 실행 녹화",
     troubleBody:
       "아래 메시지는 모두 이 명령이 실제로 출력하는 것들입니다. 해당하는 메시지를 찾아 원인을 읽고, 마지막 줄대로 하면 됩니다.",
     troubleWhy: "원인",

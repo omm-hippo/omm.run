@@ -29,7 +29,7 @@ export const en = {
   nav: {
     /** Aligned with the section anchors in `Nav.tsx`. */
     sections: ["Problem", "Features", "Runners", "Install"],
-    installGuides: "Install guide",
+    installGuides: "Guide",
     commands: "Commands",
     github: "GitHub",
     install: "Install",
@@ -322,6 +322,8 @@ export const en = {
     optionsIntro: "Every flag this command accepts, and what it defaults to when you leave it out.",
     optionsColumns: { flag: "Flag", argument: "Argument", default: "Default" },
     examplesIntro: "From a plain search to something you'd put in a script.",
+    /** `{command}` is the captured command, e.g. "omm search qwen --limit 5". */
+    captureAria: "Terminal recording of {command}",
     troubleBody:
       "Every message below is one this command actually prints. Find yours, read why it happened, then do the last line.",
     troubleWhy: "why",
