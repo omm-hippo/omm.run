@@ -21,7 +21,6 @@ import { getDictionary } from "@/i18n/dictionaries";
  *  this roughly current — it's a fallback, not a source of truth. */
 const FALLBACK_VERSION = "v0.2.148";
 const REPO = "https://github.com/omm-hippo/omm";
-const WIKI = `${REPO}/wiki`;
 const PYPROJECT_RAW_URL =
   "https://raw.githubusercontent.com/omm-hippo/omm/main/pyproject.toml";
 
@@ -147,11 +146,11 @@ export default function Nav({ locale }: { locale: Locale }) {
             </a>
           ))}
           <Link href={localeHref("/install", locale)} prefetch={false} className={LINK}>
-            {t.guides}
+            {t.installGuides}
           </Link>
-          <a href={WIKI} className={LINK} target="_blank" rel="noreferrer">
-            {t.docs}
-          </a>
+          <Link href={localeHref("/commands", locale)} prefetch={false} className={LINK}>
+            {t.commands}
+          </Link>
         </nav>
 
         <div className="ml-auto hidden items-center gap-6 md:flex">
@@ -197,16 +196,15 @@ export default function Nav({ locale }: { locale: Locale }) {
               onClick={close}
               className="border-b border-line-0 py-3 text-small text-ink-2"
             >
-              {t.guides}
+              {t.installGuides}
             </Link>
-            <a
-              href={WIKI}
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href={localeHref("/commands", locale)}
+              onClick={close}
               className="border-b border-line-0 py-3 text-small text-ink-2"
             >
-              {t.docs}
-            </a>
+              {t.commands}
+            </Link>
             <a
               href={REPO}
               target="_blank"

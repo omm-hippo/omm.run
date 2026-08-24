@@ -36,8 +36,8 @@ export const ko = {
 
   nav: {
     sections: ["문제", "기능", "러너", "설치"],
-    guides: "가이드",
-    docs: "문서",
+    installGuides: "설치 가이드",
+    commands: "명령어",
     github: "GitHub",
     install: "설치",
     menu: "메뉴",
