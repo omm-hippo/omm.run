@@ -262,7 +262,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "마법사의 실제 배너·표 형식 그대로 재구성한 것입니다(src/omm/onboarding.py:42-84, 227-238), 2026-08-24 이 개발 머신에서 실제로 실행한 omm scan --json 결과를 기준으로 합니다 — 마법사는 대화형이고 실제로 실행하면 이 머신의 실제 설정 파일에 쓰기 때문에 문자 그대로의 캡처는 아닙니다.",
+      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm setup 캡처입니다 — 배너와 하드웨어 표는 console.print로 출력되는 부분이라 그대로 캡처했습니다. 뒤이어 나오는 러너 체크리스트와 자동 완성 제안은 questionary가 터미널에 직접 그리는 부분이라(recommend의 선택 목록이 일반 캡처에 안 찍히는 것과 같은 이유) 여기 옮기지 않았습니다.",
 
     trouble: [
       {

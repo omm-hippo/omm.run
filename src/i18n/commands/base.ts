@@ -329,26 +329,25 @@ Start contributing compute now? [y/N]`,
 
     capture: {
       title: "omm setup",
-      text: `omm - local LLM package manager
+      text: ` ██████╗ ███╗   ███╗███╗   ███╗
+██╔═══██╗████╗ ████║████╗ ████║
+██║   ██║██╔████╔██║██╔████╔██║
+██║   ██║██║╚██╔╝██║██║╚██╔╝██║
+╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝
 Let's get you set up.
 
-               Your machine
- Field          Value
- OS             macOS 27.0
- CPU            Apple M2
- RAM (total)    8.0 GB
- Model budget   0.7 GB
- GPU            Apple M2
- omm home       ~/.omm  (147.3 GB free)
+                Your machine
+ Field           Value
+ OS              macOS 27.0
+ CPU             Apple M2
+ RAM (total)     8.0 GB
+ Model budget    6.4 GB
+ Free right now  0.4 GB (close other apps before running big models)
+ GPU             Apple M2
+ omm home        /Users/you/.omm  (147.3 GB free)
 
-? Install any local AI runners you'd like to use? (space to select, enter to confirm)
- [*] Ollama (installed)
- [*] AnythingLLM (installed)
- [ ] LM Studio
- [ ] Jan
- [ ] Msty
- [ ] KoboldCpp
- [ ] text-generation-webui`,
+[ ...interactive runner checklist, then an optional tab-completion prompt, not reproduced here... ]`,
     },
 
     trouble: [

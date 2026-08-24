@@ -345,12 +345,19 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
 - `Engine selection requires an interactive terminal...`: `onboarding.py:
   221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
   `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
-- The "a real run" block is a **format-accurate reconstruction**, not a
-  literal capture — running the wizard for real writes to this machine's
-  actual config (`config_mod.update_config`), which this page does not do.
-  Its hardware table uses a real `omm scan --json` run on this dev machine,
-  2026-08-24 (macOS 27.0, Apple M2, 8.0 GB RAM), and a real, read-only free
-  disk space check on this machine's `~/.omm`.
+- The "a real run" block is a **real capture**, `omm setup --no-color` with
+  stdin closed, 2026-08-24, this dev machine — the banner and hardware table
+  (`print_banner`/`print_hardware_summary`, `onboarding.py:42-91`) print via
+  `console.print` before the wizard reaches its first interactive prompt, so
+  both are captured verbatim (ASCII banner included — this dev machine's
+  terminal is wide enough to clear `_ASCII_ART_WIDTH`; the `omm home` row is
+  shown with a representative path, `/Users/you/...`, rather than this
+  machine's real username). The runner checklist and tab-completion prompt
+  that follow are drawn directly to the terminal by questionary/
+  prompt_toolkit, the same reason `recommend`'s picker rows never appear in
+  captured stdout (see that section above) — not reproduced, rather than
+  guessed at. An earlier version of this page fabricated a plausible-looking
+  checklist here; this replaces it with only what was actually captured.
 
 All six commands from issue #6's scope now have pages. Next candidates for
 this same treatment, if the command list grows: `list`, `info`, `upgrade`,

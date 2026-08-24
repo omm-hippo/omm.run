@@ -262,7 +262,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reconstruction of the wizard's real banner and table (src/omm/onboarding.py:42-84, 227-238), using a real omm scan --json run on this dev machine, 2026-08-24 — not a literal capture, since the wizard is interactive and running it for real would write to this machine's real config.",
+      "Real omm setup capture, 2026-08-24, this dev machine — the banner and hardware table print via console.print and are captured verbatim. The runner checklist and tab-completion prompt that follow are drawn directly to the terminal by questionary (the same reason recommend's picker rows never appear in plain captured output), so they aren't reproduced here.",
 
     trouble: [
       {
