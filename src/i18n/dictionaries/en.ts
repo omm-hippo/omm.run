@@ -330,7 +330,6 @@ export const en = {
     troubleFix: "what to do",
     troubleSource: "source",
     stillStuck: "Still stuck? Open an issue with the exact message you saw.",
-    comingSoon: "coming soon",
     elsewhere: "All commands",
   },
 } as const;

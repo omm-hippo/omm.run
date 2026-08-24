@@ -8,7 +8,29 @@
  * source behind every option, message and captured line below.
  */
 
-export type Slug = "search" | "install" | "run" | "recommend" | "contribute" | "setup";
+export type Slug =
+  | "search"
+  | "install"
+  | "run"
+  | "recommend"
+  | "contribute"
+  | "setup"
+  | "scan"
+  | "tune"
+  | "fit"
+  | "help"
+  | "import"
+  | "uninstall"
+  | "list"
+  | "info"
+  | "upgrade"
+  | "link"
+  | "autoremove"
+  | "cleanup"
+  | "verify"
+  | "benchmark"
+  | "update"
+  | "setting";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -17,6 +39,22 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "recommend",
   "contribute",
   "setup",
+  "scan",
+  "tune",
+  "fit",
+  "help",
+  "import",
+  "uninstall",
+  "list",
+  "info",
+  "upgrade",
+  "link",
+  "autoremove",
+  "cleanup",
+  "verify",
+  "benchmark",
+  "update",
+  "setting",
 ];
 
 export type Option = {
@@ -393,6 +431,673 @@ Error reports are off unless you turn them on: \`omm setting error-reports --ask
     related: [
       { label: "omm recommend", href: "/commands/recommend", internal: true },
       { label: "omm engine install", href: "https://github.com/omm-hippo/omm#usage", internal: false },
+    ],
+  },
+
+  scan: {
+    slug: "scan",
+    name: "omm scan",
+    href: "/commands/scan",
+
+    options: [{ name: "--json", argument: null, default: "off" }],
+
+    examples: [
+      { prompt: "$", command: "omm scan" },
+      { prompt: "$", command: "omm scan --json" },
+      { prompt: "$", command: "omm scan --quiet" },
+    ],
+
+    capture: {
+      title: "omm scan",
+      text: `                 omm hardware scan
+ Field                   Value
+ OS                      macOS 27.0
+ CPU                     Apple M2
+ RAM (total)             8.0 GB
+ RAM (available)         1.1 GB
+ Safe model budget now   0.1 GB
+ Reserved for apps/OS    1.0 GB+
+ omm hub storage         1.6 GB
+ Saved via omm import    0.0 GB
+ Memory type             Unified (Apple Silicon)
+ GPU                     Apple M2
+
+    Local AI runners
+ Program      Status
+ Ollama       installed
+ AnythingLLM  installed
++ 5 program(s) not installed — see the compatibility list:
+https://github.com/omm-hippo/omm/wiki/Compatible-Programs
+
+                                Local AI models
+ Model                           Location   Engine(s)            Managed by omm
+ qwen2.5-0.5b-instruct-q4_k_m.…  (omm hub)  ollama, anythingllm  yes
+ qwen1_5-1_8b-chat-q4_k_m.gguf   (omm hub)  ollama, anythingllm  yes`,
+    },
+
+    trouble: [
+      {
+        see: "Some omm-hub models aren't linked into an installed engine yet. Run: omm link",
+        source: "src/omm/cli.py:1059-1064",
+      },
+      {
+        see: "Found model file(s) outside the omm hub. Run: omm import",
+        source: "src/omm/cli.py:1065-1069",
+      },
+    ],
+
+    related: [
+      { label: "omm setup", href: "/commands/setup", internal: true },
+      { label: "omm list", href: "/commands/list", internal: true },
+    ],
+  },
+
+  tune: {
+    slug: "tune",
+    name: "omm tune",
+    href: "/commands/tune",
+
+    options: [{ name: "<name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+      { prompt: "$", command: "omm tune mistral-7b-instruct-q4" },
+    ],
+
+    capture: {
+      title: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `qwen2.5-0.5b-instruct-q4_k_m.gguf
+       Recommended safe runtime profile
+ Setting                    Starting value
+ Context length             2,048 tokens
+ GPU offload                all layers
+ CPU threads                8
+ Batch size                 256
+ Safe model budget now      0.2 GB
+ Estimated memory headroom  -0.4 GB
+These are conservative starting values; benchmark before treating them as
+optimal.`,
+    },
+
+    trouble: [
+      {
+        see: "Unknown model 'zzzz-totally-fake-model-name-xyz'. Use a curated name (tinyllama-1.1b-q4, llama3.1-8b-instruct-q4, mistral-7b-instruct-q4), an 'org/repo:file.gguf' ref (optionally prefixed 'hf:' or 'ms:'), or a direct URL.",
+        source: "src/omm/hub.py:371",
+      },
+    ],
+
+    related: [
+      { label: "omm install", href: "/commands/install", internal: true },
+      { label: "omm fit", href: "/commands/fit", internal: true },
+    ],
+  },
+
+  fit: {
+    slug: "fit",
+    name: "omm fit",
+    href: "/commands/fit",
+
+    options: [{ name: "<name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm fit qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm fit qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+      { prompt: "$", command: "omm fit mistral-7b-instruct-q4" },
+    ],
+
+    capture: {
+      title: "omm fit qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `╭─ qwen2.5-0.5b-instruct-q4_k_m.gguf ────────────────────────────────────────╮
+│                                                                            │
+│  RAM 8.0 GB  ·  APPLE M2  ·  MACOS 27.0                                    │
+│                                                                            │
+│                                                           0.46 GB MODEL ┃  │
+│  ██████████████████████████████████████████████████████████┊██▓▓▓▓▓▓▓▓▓██  │
+│  in use                                                       reserved     │
+│                                                                            │
+│  In use by other apps                                              6.8 GB  │
+│  Reserved for apps/OS                                             1.0 GB+  │
+│  Safe model budget - the smaller of the two                        0.2 GB  │
+│  Install cap - 80% of total RAM                                    6.4 GB  │
+│  This model - 0.46 GB file + runtime overhead                      0.5 GB  │
+│                                                                            │
+│  !  Fits this PC, but not right now - free 0.4 GB more (close other apps)  │
+│  before running it                                                         │
+│                                                                            │
+╰────────────────────────────────────────────────────────────────────────────╯`,
+    },
+
+    trouble: [
+      {
+        see: "Could not determine the size of oversized-405b-q4_k_m.gguf (not installed, and the provider did not report a file size).",
+        source: "src/omm/cli.py:5608-5611",
+      },
+      {
+        see: "--json has no effect on `omm fit` - ignoring it.",
+        source: "src/omm/cli.py global_flags decorator",
+      },
+    ],
+
+    related: [
+      { label: "omm tune", href: "/commands/tune", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  help: {
+    slug: "help",
+    name: "omm help",
+    href: "/commands/help",
+
+    options: [
+      { name: "[command]", argument: null, default: "none — shows general help" },
+      { name: "--all", argument: null, default: "off" },
+      { name: "--flags", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm help" },
+      { prompt: "$", command: "omm help search" },
+      { prompt: "$", command: "omm help --all" },
+      { prompt: "$", command: "omm help --all --flags" },
+    ],
+
+    capture: {
+      title: "omm help",
+      text: `Example usage:
+  omm search TEXT
+  omm install MODEL
+  omm list
+  omm recommend
+  omm uninstall MODEL
+
+Tuning & quality:
+  omm tune MODEL
+  omm benchmark MODEL...
+  omm contribute
+
+Maintenance:
+  omm scan
+  omm doctor
+  omm setup
+  omm engine install
+  omm upgrade [MODEL]
+  omm setting
+
+Further help:
+  omm help COMMAND      Show help for one command
+  omm help --all        List every command
+  https://github.com/omm-hippo/omm`,
+    },
+
+    trouble: [
+      {
+        see: "No such command 'zzzz-not-a-real-command'. See `omm help`.",
+        source: "src/omm/cli.py:795-796",
+      },
+    ],
+
+    related: [
+      { label: "omm search", href: "/commands/search", internal: true },
+      { label: "omm setup", href: "/commands/setup", internal: true },
+    ],
+  },
+
+  import: {
+    slug: "import",
+    name: "omm import",
+    href: "/commands/import",
+
+    options: [{ name: "[path]", argument: null, default: "none — scans the usual app directories" }],
+
+    examples: [
+      { prompt: "$", command: "omm import" },
+      { prompt: "$", command: "omm import ~/Downloads" },
+      { prompt: "$", command: "omm import --yes" },
+    ],
+
+    capture: {
+      title: "omm import",
+      text: `No externally-managed .gguf files found.`,
+    },
+
+    trouble: [
+      {
+        see: "Not a directory: /definitely/not/a/real/directory",
+        source: "src/omm/cli.py:1490",
+      },
+    ],
+
+    related: [
+      { label: "omm scan", href: "/commands/scan", internal: true },
+      { label: "omm list", href: "/commands/list", internal: true },
+    ],
+  },
+
+  uninstall: {
+    slug: "uninstall",
+    name: "omm uninstall",
+    href: "/commands/uninstall",
+
+    options: [
+      { name: "<name> | all", argument: null, default: "required" },
+      { name: "--dry-run", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm uninstall qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm uninstall qwen2.5-0.5b-instruct-q4_k_m.gguf --dry-run" },
+      { prompt: "$", command: "omm uninstall all --dry-run" },
+      { prompt: "$", command: "omm uninstall 1" },
+    ],
+
+    capture: {
+      title: "omm uninstall qwen2.5-0.5b-instruct-q4_k_m.gguf --dry-run",
+      text: `Would uninstall: qwen2.5-0.5b-instruct-q4_k_m.gguf`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz is not installed via omm. See `omm list`.",
+        source: "src/omm/cli.py:5008-5013",
+      },
+      {
+        see: "Run `omm search` or `omm list` first to install/uninstall by number.",
+        source: "src/omm/cli.py:3057-3059",
+      },
+    ],
+
+    related: [
+      { label: "omm list", href: "/commands/list", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  list: {
+    slug: "list",
+    name: "omm list",
+    href: "/commands/list",
+
+    options: [{ name: "--engine", argument: "NAME", default: "every engine" }],
+
+    examples: [
+      { prompt: "$", command: "omm list" },
+      { prompt: "$", command: "omm list --engine ollama" },
+      { prompt: "$", command: "omm list --json" },
+    ],
+
+    capture: {
+      title: "omm list",
+      text: `                               omm models
+ #   Filename                            Size  Links
+ 1   qwen2.5-0.5b-instruct-q4_k_m.gguf  0.46 GB  Ollama, AnythingLLM
+ 2   qwen1_5-1_8b-chat-q4_k_m.gguf      1.13 GB  Ollama, AnythingLLM`,
+    },
+
+    trouble: [
+      {
+        see: "--engine must be one of: anythingllm, jan, koboldcpp, lmstudio, mstystudio, ollama, textgenwebui (got 'bogus').",
+        source: "src/omm/cli.py:909-911",
+      },
+    ],
+
+    related: [
+      { label: "omm info", href: "/commands/info", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  info: {
+    slug: "info",
+    name: "omm info",
+    href: "/commands/info",
+
+    options: [{ name: "<name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm info qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm info qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+      { prompt: "$", command: "omm info 1" },
+    ],
+
+    capture: {
+      title: "omm info qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `                   qwen2.5-0.5b-instruct-q4_k_m.gguf
+ Repo                 Qwen/Qwen2.5-0.5B-Instruct-GGUF
+ Version              74a4da8
+ Size                 0.46 GB
+ Installed at         2026-08-22T11:11:59Z
+ ollama verification  failed (server_unavailable)
+ Ollama               ollama run qwen2.5-0.5b-instruct-q4_k_m:latest
+ AnythingLLM          linked (visible in AnythingLLM)
+
+╭─ qwen2.5-0.5b-instruct-q4_k_m.gguf ────────────────────────────────────────╮
+│  RAM 8.0 GB  ·  APPLE M2  ·  MACOS 27.0                                    │
+│                                                           0.46 GB MODEL ┃  │
+│  ██████████████████████████████████████████████████████████┊███▓▓▓▓▓▓▓▓▓█  │
+│  in use                                                        reserved    │
+│  In use by other apps                                              6.9 GB  │
+│  Reserved for apps/OS                                             1.0 GB+  │
+│  Safe model budget - the smaller of the two                        0.1 GB  │
+│  Install cap - 80% of total RAM                                    6.4 GB  │
+│  This model - 0.46 GB file + runtime overhead                      0.5 GB  │
+│  !  Fits this PC, but not right now - free 0.4 GB more (close other apps)  │
+│     before running it                                                      │
+╰────────────────────────────────────────────────────────────────────────────╯
++ 5 program(s) not installed — see the compatibility list:
+https://github.com/omm-hippo/omm/wiki/Compatible-Programs`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz is not installed via omm. See `omm list`.",
+        source: "src/omm/cli.py:5276",
+      },
+    ],
+
+    related: [
+      { label: "omm list", href: "/commands/list", internal: true },
+      { label: "omm fit", href: "/commands/fit", internal: true },
+    ],
+  },
+
+  upgrade: {
+    slug: "upgrade",
+    name: "omm upgrade",
+    href: "/commands/upgrade",
+
+    options: [
+      { name: "[name] | all", argument: null, default: "all installed models" },
+      { name: "--dry-run", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm upgrade" },
+      { prompt: "$", command: "omm upgrade qwen2.5-0.5b-instruct-q4_k_m.gguf --dry-run" },
+      { prompt: "$", command: "omm upgrade --dry-run" },
+    ],
+
+    capture: {
+      title: "omm upgrade --dry-run",
+      text: `Would check for updates: qwen2.5-0.5b-instruct-q4_k_m.gguf
+Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz is not installed via omm. See `omm list`.",
+        source: "src/omm/cli.py:5676",
+      },
+    ],
+
+    related: [
+      { label: "omm list", href: "/commands/list", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  link: {
+    slug: "link",
+    name: "omm link",
+    href: "/commands/link",
+
+    options: [
+      { name: "[directory]", argument: null, default: "none — repairs known app links" },
+      { name: "--engine", argument: "NAME", default: "every engine" },
+      { name: "--force", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm link" },
+      { prompt: "$", command: "omm link --engine ollama" },
+      { prompt: "$", command: "omm link ~/my-runner/models" },
+    ],
+
+    capture: {
+      title: "omm link",
+      text: `2 model(s) relinked/verified. 0 skipped (conflict). 0 skipped (missing).`,
+    },
+
+    trouble: [
+      {
+        see: "--engine must be one of: anythingllm, jan, koboldcpp, lmstudio, mstystudio, ollama, textgenwebui (got 'bogus').",
+        source: "src/omm/cli.py:909-911",
+      },
+      {
+        see: "--engine only applies without a directory argument.",
+        source: "src/omm/cli.py:6501-6502",
+      },
+    ],
+
+    related: [
+      { label: "omm scan", href: "/commands/scan", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  autoremove: {
+    slug: "autoremove",
+    name: "omm autoremove",
+    href: "/commands/autoremove",
+
+    options: [],
+
+    examples: [
+      { prompt: "$", command: "omm autoremove" },
+      { prompt: "$", command: "omm autoremove --quiet" },
+    ],
+
+    capture: {
+      title: "omm autoremove",
+      text: `No broken symlinks found.`,
+    },
+
+    trouble: [
+      {
+        see: "Removed 3 broken Ollama link(s).",
+        source: "src/omm/cli.py:6692-6693",
+      },
+    ],
+
+    related: [
+      { label: "omm cleanup", href: "/commands/cleanup", internal: true },
+      { label: "omm scan", href: "/commands/scan", internal: true },
+    ],
+  },
+
+  cleanup: {
+    slug: "cleanup",
+    name: "omm cleanup",
+    href: "/commands/cleanup",
+
+    options: [],
+
+    examples: [
+      { prompt: "$", command: "omm cleanup" },
+      { prompt: "$", command: "omm cleanup --quiet" },
+    ],
+
+    capture: {
+      title: "omm cleanup",
+      text: `No leftover install files found.`,
+    },
+
+    trouble: [
+      {
+        see: "Cleaned up 2 incomplete install file(s).",
+        source: "src/omm/cli.py:6709",
+      },
+    ],
+
+    related: [
+      { label: "omm autoremove", href: "/commands/autoremove", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  verify: {
+    slug: "verify",
+    name: "omm verify",
+    href: "/commands/verify",
+
+    options: [
+      { name: "<name>", argument: null, default: "required" },
+      { name: "--engine", argument: "ollama | lmstudio", default: "auto-picks" },
+      { name: "--keep-loaded", argument: null, default: "off" },
+      { name: "--yes / -y", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf --engine ollama --yes" },
+      { prompt: "$", command: "omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf --keep-loaded" },
+    ],
+
+    capture: {
+      title: "omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `Verifying qwen2.5-0.5b-instruct-q4_k_m.gguf with Ollama...
+Compatible: local text generation succeeded (test load released).`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz is not installed via omm. See `omm list`.",
+        source: "src/omm/cli.py:5157",
+      },
+      {
+        see: "--engine must be ollama or lmstudio.",
+        source: "src/omm/cli.py:5081-5163",
+      },
+    ],
+
+    related: [
+      { label: "omm run", href: "/commands/run", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  benchmark: {
+    slug: "benchmark",
+    name: "omm benchmark",
+    href: "/commands/benchmark",
+
+    options: [
+      { name: "<name>...", argument: null, default: "required, or 'all'" },
+      { name: "--pack", argument: "PATH", default: "the built-in pack" },
+      { name: "--output", argument: "PATH", default: "an auto-generated path" },
+      { name: "--speed-runs", argument: "1-10", default: "3" },
+      { name: "--confirm-performance-timeout", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm benchmark all" },
+      { prompt: "$", command: "omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf --speed-runs 5" },
+    ],
+
+    capture: {
+      title: "omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `Benchmarking qwen2.5-0.5b-instruct-q4_k_m.gguf (1/1)...`,
+    },
+
+    trouble: [
+      {
+        see: "Neither Ollama nor LM Studio is installed or available. Install one of them, start it once, then retry `omm benchmark`.",
+        source: "src/omm/cli.py:6825-6827",
+      },
+      {
+        see: "`all` must be the only argument.",
+        source: "src/omm/cli.py:6820",
+      },
+    ],
+
+    related: [
+      { label: "omm contribute", href: "/commands/contribute", internal: true },
+      { label: "omm run", href: "/commands/run", internal: true },
+    ],
+  },
+
+  update: {
+    slug: "update",
+    name: "omm update",
+    href: "/commands/update",
+
+    options: [],
+
+    examples: [
+      { prompt: "$", command: "omm update" },
+      { prompt: "$", command: "omm update --quiet" },
+    ],
+
+    capture: {
+      title: "omm update",
+      text: `omm is already up to date - v0.2.148 (7860ded)`,
+    },
+
+    trouble: [
+      {
+        see: "Update failed:",
+        source: "src/omm/cli.py:2542-2544",
+      },
+    ],
+
+    related: [
+      { label: "omm setting", href: "/commands/setting", internal: true },
+      { label: "omm setup", href: "/commands/setup", internal: true },
+    ],
+  },
+
+  setting: {
+    slug: "setting",
+    name: "omm setting",
+    href: "/commands/setting",
+
+    options: [
+      { name: "setting telemetry --endpoint URL", argument: null, default: "not configured" },
+      { name: "setting upload --enable|--disable|--ask", argument: null, default: "ask" },
+      { name: "setting error-reports --enable|--disable|--ask", argument: null, default: "never" },
+      { name: "setting memory-guard --policy ask|block|observe", argument: null, default: "ask" },
+      { name: "setting version --stable|--beta", argument: null, default: "stable" },
+      { name: "setting theme --set NAME", argument: null, default: "dark" },
+      { name: "setting calibrate [name]", argument: null, default: "smallest Ollama model" },
+      { name: "setting catalog-trust --manifest-url URL --public-key KEY", argument: null, default: "unset" },
+      { name: "setting catalog-status", argument: null, default: "—" },
+      { name: "setting catalog-rollback", argument: null, default: "—" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm setting" },
+      { prompt: "$", command: "omm setting theme" },
+      { prompt: "$", command: "omm setting upload" },
+      { prompt: "$", command: "omm setting theme --set dark" },
+      { prompt: "$", command: "omm setting catalog-status" },
+    ],
+
+    capture: {
+      title: "omm setting theme",
+      text: `  Color theme
+ Theme  dark`,
+    },
+
+    trouble: [
+      {
+        see: "Choose only one of --enable, --disable, or --ask.",
+        source: "src/omm/cli.py:5798",
+      },
+      {
+        see: "The signed catalog manifest must use HTTPS.",
+        source: "src/omm/cli.py:6104",
+      },
+      {
+        see: "--policy must be ask, block, or observe.",
+        source: "src/omm/cli.py:5901",
+      },
+    ],
+
+    related: [
+      { label: "omm setup", href: "/commands/setup", internal: true },
+      { label: "omm contribute", href: "/commands/contribute", internal: true },
     ],
   },
 } as const satisfies Record<

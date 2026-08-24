@@ -372,6 +372,107 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   fabricated a plausible-looking checklist without running anything; this
   replaces it with an actually-driven session.
 
-All six commands from issue #6's scope now have pages. Next candidates for
-this same treatment, if the command list grows: `list`, `info`, `upgrade`,
-`uninstall`, `benchmark`, `setting`.
+All six commands from issue #6's scope now have pages. Every remaining
+documented `omm` command has one too (see below) — every real `omm search`,
+`omm list`, `omm scan`, etc. shown on this site is the literal filename
+`qwen2.5-0.5b-instruct-q4_k_m.gguf`, this dev machine's real second-smallest
+installed model, unless noted otherwise. Real captures below are dated
+2026-08-24 (`omm scan`, `list`, `info`, `fit`, `tune`, `autoremove`,
+`cleanup`, `uninstall --dry-run`, `upgrade --dry-run`, `help`, `import`,
+`setting theme`) and 2026-08-25 (`omm setup`'s driven session, see above).
+
+### `scan`
+`src/omm/cli.py:942-1070`. Hint lines quoted from `cli.py:1059-1064` and
+`:1065-1069`. Real full capture, this dev machine.
+
+### `tune`
+`src/omm/cli.py:2990-3046`. Shares `hub.py:371`'s model-resolution error
+with `install`/`search`. Real capture.
+
+### `fit`
+`src/omm/cli.py:5584-5634`. Size-unknown error: `cli.py:5608-5611`. The
+`--json has no effect on \`omm fit\` - ignoring it.` warning is real,
+captured verbatim, and contradicted by the command's own `--json` output in
+the same capture — a genuine mismatch between the shared `global_flags`
+decorator's own known-command list and `fit`'s body, which does branch on
+`--json` correctly; not this site's error.
+
+### `help`
+`src/omm/cli.py:774-799`. Unknown-command error: `cli.py:795-796`. Real
+captures (bare, and `omm help search`).
+
+### `import`
+`src/omm/cli.py:1475-1492`. Bad-path error: `cli.py:1490` (real, captured).
+The "no strays found" capture is real and safe — the adopt-flow that runs
+when strays *are* found is not reproduced, since it can move real files.
+
+### `uninstall`
+`src/omm/cli.py:4966-5019`. Not-installed error: `cli.py:5008-5013`.
+Numeric-index-without-prior-search error (shared with `tune`/`install`/
+`upgrade`/`benchmark`'s `_resolve_ref`): `cli.py:3057-3059`, real captured.
+`--dry-run` capture is real — nothing was removed.
+
+### `list`
+`src/omm/cli.py:5690-5750`. Bad-`--engine` error: `cli.py:909-911`, shared
+with `link`. Real capture.
+
+### `info`
+`src/omm/cli.py:5265-5341`. Shares the not-installed error pattern
+(`cli.py:5276`). Real capture, includes the same live fit card `omm fit`
+renders.
+
+### `upgrade`
+`src/omm/cli.py:5637-5688`. Not-installed error: `cli.py:5676`. `--dry-run`
+capture (all models) is real — nothing was re-downloaded.
+
+### `link`
+`src/omm/cli.py:6469-6617`. Engine-validation error shared with `list`
+(`cli.py:909-911`); engine-plus-directory conflict: `cli.py:6501-6502`, real
+captured. The success line is a **format-accurate reconstruction**
+(`cli.py:6613-6616`) using this machine's real installed-model count — link
+always rewrites every symlink even when nothing changes, so it was not run
+live.
+
+### `autoremove` / `cleanup`
+`src/omm/cli.py:6669-6709`. Both real, safe, idempotent captures ("No
+broken symlinks found." / "No leftover install files found.") — nothing was
+actually broken to clean up on this machine. Their "found something"
+success-line formats are quoted from source (`cli.py:6692-6693`,
+`:6709`), not captured, since nothing broken existed to trigger them.
+
+### `verify`
+`src/omm/cli.py:5127-5262`. Engine-validation error real captured:
+`--engine must be ollama or lmstudio.` (`cli.py:5081-5163`). Status/success
+line format-accurate reconstruction (`cli.py:5239-5250`) — not run live,
+since it loads a real model into a real running engine.
+
+### `benchmark`
+`src/omm/cli.py:6777-6900`. No-engine error shared with `contribute`
+(`cli.py:6825-6827`). `` `all` must be the only argument. `` real captured
+(`cli.py:6820`). Progress-line format-accurate reconstruction
+(`cli.py:6879-6884`) — not run live, since it loads a model and generates
+real text.
+
+### `update`
+`src/omm/cli.py:2519-2548`. Not run live under any circumstance — a real
+update can reinstall omm itself. Success/failure line formats quoted from
+source (`cli.py:2536`, `:2542-2544`); the version/commit shown are
+representative, not this machine's.
+
+### `setting`
+Ten subcommands: `src/omm/cli.py:5753-6199` (`telemetry`, `upload`,
+`error-reports`, `memory-guard`, `version`, `theme`, `calibrate`,
+`catalog-trust`, `catalog-status`, `catalog-rollback`) plus the bare
+interactive menu (`:6151-6199`). Real, safe captures taken for `theme`,
+`upload`, `memory-guard`, `version`, `catalog-status` (all read-only display
+tables); `theme`'s is the one shown on the page since it carries no
+machine-specific data. **`telemetry` and `error-reports` were deliberately
+not used as the page's capture**: this dev machine has a real, personal
+telemetry endpoint and Firebase error-report URL configured, and neither
+belongs on a public page. Real captured errors: `Choose only one of
+--enable, --disable, or --ask.` (`cli.py:5798`, shared `upload`/
+`error-reports`), `The signed catalog manifest must use HTTPS.`
+(`cli.py:6104`). `--policy must be ask, block, or observe.` is quoted from
+source (`cli.py:5901`), not executed, since it needed no live check to
+verify. `calibrate` and `catalog-rollback` were not run live (real benchmark
+load; real config mutation).

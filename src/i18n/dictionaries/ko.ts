@@ -321,7 +321,6 @@ export const ko = {
     troubleFix: "대처",
     troubleSource: "출처",
     stillStuck: "그래도 해결되지 않는다면, 화면에 뜬 메시지 그대로를 첨부해 이슈를 등록하세요.",
-    comingSoon: "준비 중",
     elsewhere: "전체 명령어",
   },
 } as const satisfies Dictionary;

@@ -33,28 +33,13 @@ export async function generateMetadata({
   };
 }
 
-/** The full scope from issue #6. Names are the product's own vocabulary and
- *  stay untranslated, same rule as Footer.tsx's COMMANDS list. Rows whose
- *  name isn't in `getCommandLinks()` yet render as inactive "coming soon"
- *  placeholders instead of a link. */
-const ALL_COMMAND_NAMES = [
-  "omm search",
-  "omm install",
-  "omm run",
-  "omm recommend",
-  "omm contribute",
-  "omm setup",
-] as const;
-
 export default async function CommandsChooser({
   params,
 }: PageProps<"/[locale]/commands">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const { commandsChooser, commands } = getDictionary(locale);
+  const { commandsChooser } = getDictionary(locale);
   const links = getCommandLinks(locale);
-  const builtNames = new Set(links.map((link) => link.name));
-  const planned = ALL_COMMAND_NAMES.filter((name) => !builtNames.has(name));
 
   return (
     <main className="relative border-b border-line-0 bg-bg-0">
@@ -77,15 +62,6 @@ export default async function CommandsChooser({
                     <span className="text-h3 font-mono">{link.name}</span>
                     <span className="text-small max-w-[62ch]">{link.summary}</span>
                   </Link>
-                </li>
-              ))}
-              {planned.map((name) => (
-                <li
-                  key={name}
-                  className="grid grid-cols-1 gap-2 border-b border-line-0 px-2 py-6 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
-                >
-                  <span className="text-h3 font-mono text-ink-3">{name}</span>
-                  <span className="text-small text-ink-3">{commands.comingSoon}</span>
                 </li>
               ))}
             </ul>
