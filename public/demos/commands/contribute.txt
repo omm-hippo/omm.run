@@ -1,4 +1,17 @@
 $ omm contribute --no-color
 
-omm contribute requires benchmark uploads to be enabled. Run `omm setting upload --enable` or
-`--ask` first.
+Disk preflight passed: 50.2 GiB free on the tightest model volume. Each candidate is checked
+again before download.
+omm contribute - before you start:
+  - Downloads, benchmarks, and deletes GGUF models repeatedly until you press Esc
+  - Uses real bandwidth, disk space, and compute; runs unattended (no per-model confirmation)
+  - Uploads every benchmark result per your current upload policy (ask)
+  - Reserves space per candidate (central GGUF + worst-case engine copy + headroom); skips
+anything that won't fit
+  - Uses a fixed 1024-token context and 128-token batch for comparable results
+  - Gates committed runtime memory before download; monitors paging and measurement stability
+while running
+  - Defers transient memory shortages up to three times instead of losing the candidate
+  - Each benchmark has a 10-minute cutoff, with a status line every 30s
+? Start contributing compute now? No
+Cancelled.

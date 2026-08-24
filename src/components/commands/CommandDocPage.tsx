@@ -9,6 +9,11 @@ import { fill, getDictionary } from "@/i18n/dictionaries";
 import demoManifest from "../../../public/demos/commands/manifest.json";
 
 const REPO = "https://github.com/omm-hippo/omm";
+type DemoOutcome = "success" | "cancelled" | "guard";
+
+function isDemoOutcome(value: string): value is DemoOutcome {
+  return value === "success" || value === "cancelled" || value === "guard";
+}
 
 const SECTION_IDS = [
   "overview",
@@ -68,8 +73,8 @@ export default function CommandDocPage({
   const others = getCommandLinks(locale).filter((link) => link.slug !== command.slug);
   const demo = demoManifest.assets.find((asset) => asset.slug === command.slug);
 
-  if (!demo) {
-    throw new Error(`Missing command demo metadata for ${command.slug}`);
+  if (!demo || !isDemoOutcome(demo.outcome)) {
+    throw new Error(`Invalid or missing command demo metadata for ${command.slug}`);
   }
 
   const sections = SECTION_IDS.map((id, index) => ({
@@ -234,15 +239,23 @@ export default function CommandDocPage({
                     slug={command.slug}
                     recordedCommand={demo.command}
                     recordedExitCode={demo.exitCode}
+                    recordedOutcome={demo.outcome}
                     documentedCommand={command.capture.title}
                     documentedOutput={command.capture.text}
                     documentedFootnote={command.capture.footnote}
                     label={fill(t.captureAria, { command: demo.command })}
-                    documentedLabel={fill(t.captureAria, { command: command.capture.title })}
+                    documentedLabel={fill(t.documentedCaptureAria, {
+                      command: command.capture.title,
+                    })}
                     transcriptLabel={t.demoTranscript}
                     recordedCommandLabel={t.demoRecordedCommand}
                     exitCodeLabel={t.demoExitCode}
+                    outcomeLabel={t.demoOutcome}
+                    successLabel={t.demoOutcomeSuccess}
+                    cancelledLabel={t.demoOutcomeCancelled}
+                    guardLabel={t.demoOutcomeGuard}
                     safeSuccessNote={t.demoSafeSuccess}
+                    safeCancelledNote={t.demoSafeCancelled}
                     safeGuardNote={t.demoSafeGuard}
                     documentedCaptureLabel={t.documentedCapture}
                   />

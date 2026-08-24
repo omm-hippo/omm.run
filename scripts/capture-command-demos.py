@@ -10,19 +10,30 @@ either a caller-provided clean clone or a fresh clone of omm-hippo/omm.
 from __future__ import annotations
 
 import argparse
+import codecs
+import fcntl
 import hashlib
 import json
 import math
 import os
+import pty
 import re
+import select
 import shlex
 import shutil
+import struct
 import subprocess
+import sys
 import tempfile
+import termios
+import threading
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from typing import Iterator
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,11 +52,22 @@ CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
 
 @dataclass(frozen=True)
+class InputStep:
+    pattern: str
+    response: bytes
+    label: str
+
+
+@dataclass(frozen=True)
 class Demo:
     slug: str
     argv: tuple[str, ...]
     expected_exit_code: int
+    outcome: str
     safety_path: str
+    input_steps: tuple[InputStep, ...] = ()
+    context_label: str = "real CLI capture"
+    fixture: str | None = None
 
     @property
     def command(self) -> str:
@@ -57,29 +79,43 @@ DEMOS = (
         "search",
         ("search", "llama", "--skip-ms", "--limit", "4", "--no-color"),
         0,
+        "success",
         "Read-only search against the built-in catalog and catalog copied from the exact source commit. "
         "All CLI outbound HTTP(S) is routed to an unused loopback proxy, so live "
         "Hugging Face, ModelScope, omm.run, and Workers endpoints are not reached.",
     ),
     Demo(
         "install",
-        ("install", "zzzz-totally-fake-model-name-xyz", "--no-color"),
-        1,
-        "The local model-reference parser rejects the deliberately invalid name "
-        "before the downloader, checksum, linking, or runtime code can run. Any "
-        "best-effort suggestion lookup is contained by the unused loopback proxy.",
+        (
+            "install",
+            "hf:example/oversized-405b-gguf:oversized-405b-q4_k_m.gguf",
+            "--no-color",
+        ),
+        0,
+        "cancelled",
+        "A syntactically valid but deliberately non-published 405B fixture reference "
+        "reaches OMM's real hardware-fit warning. The captured 'n' response cancels "
+        "before provider metadata, downloader, checksum, linking, or runtime code.",
+        (InputStep("Install anyway?", b"n\r", "n - cancel at hardware-fit warning"),),
+        "fixture ref · cancelled before download",
+        "Syntactically valid example/oversized-405b reference; no remote model is claimed to exist.",
     ),
     Demo(
         "run",
-        ("run", "demo-model.gguf", "--no-color"),
+        ("run", "--no-color"),
         1,
-        "The isolated registry is empty, so the command exits at the local "
-        "not-installed guard before selecting or launching any runner.",
+        "cancelled",
+        "Two metadata-only model names are placed in the isolated registry to exercise "
+        "the real model picker. Escape cancels before engine selection or launcher code.",
+        (InputStep("Which model do you want to run?", b"\x1b", "Escape - cancel model picker"),),
+        "metadata fixture · cancelled before launch",
+        "Two isolated registry names only; no model files, engine links, or runnable weights exist.",
     ),
     Demo(
         "recommend",
         ("recommend", "--json", "--no-color"),
         0,
+        "success",
         "JSON mode is read-only and never enters the interactive installer. The "
         "recommendation artifact is copied from the exact source commit and remote "
         "model/rules URLs are disabled in the isolated config.",
@@ -87,18 +123,29 @@ DEMOS = (
     Demo(
         "contribute",
         ("contribute", "--no-color"),
-        1,
-        "The isolated config sets telemetry_send_policy=never. The command exits at "
-        "that first guard before engine detection, downloads, benchmarking, model "
-        "execution, deletion, or telemetry/error-report upload.",
+        0,
+        "cancelled",
+        "A temporary empty loopback Ollama API fixture permits only GET /api/tags so "
+        "the real safety notice can render. The captured 'n' response cancels at "
+        "'Start contributing compute now?' before downloads, benchmarks, model "
+        "execution, deletion, POST requests, or uploads.",
+        (InputStep("Start contributing compute now?", b"n\r", "n - cancel before compute"),),
+        "empty local API fixture · cancelled before compute",
+        "Temporary GET-only loopback API on 127.0.0.1:11434; capture aborts if the port is occupied or any POST occurs.",
     ),
     Demo(
         "setup",
         ("setup", "--no-color"),
         1,
-        "stdin is explicitly closed. The real wizard prints its banner and isolated "
-        "hardware summary, then exits at the non-interactive engine-selection guard "
-        "before selection or any engine installer can run.",
+        "cancelled",
+        "A pseudo-TTY accepts the recommended theme, renders the real hardware summary "
+        "and engine checklist, then sends Escape. No engine is selected and the installer "
+        "is never entered.",
+        (
+            InputStep("Pick a color theme for omm's output:", b"\r", "Enter - accept recommended theme"),
+            InputStep("Install any local AI runners you'd like to use?", b"\x1b", "Escape - cancel engine checklist"),
+        ),
+        "interactive wizard · cancelled before install",
     ),
 )
 
@@ -175,15 +222,18 @@ def project_version(source: Path) -> str:
 
 def prepare_runtime(workspace: Path, source: Path, commit: str) -> tuple[Path, Path, dict[str, str]]:
     venv = workspace / "venv"
+    capture_libraries = workspace / "capture-libraries"
     uv_env = {**os.environ, "UV_CACHE_DIR": str(workspace / "uv-cache")}
     python_request = os.environ.get("OMM_DEMO_PYTHON", ">=3.10")
     for argv in (
         ["uv", "venv", "--quiet", str(venv), "--python", python_request],
         ["uv", "pip", "install", "--quiet", "--python", str(venv / "bin" / "python"), "-e", str(source)],
+        ["uv", "pip", "install", "--quiet", "--target", str(capture_libraries), "pyte==0.8.2"],
     ):
         result = run(argv, env=uv_env)
         if result.returncode != 0:
             raise SystemExit(f"Isolated runtime setup failed: {shlex.join(argv)}")
+    sys.path.insert(0, str(capture_libraries))
 
     demo_home = workspace / "home"
     omm_home = demo_home / ".omm-demo"
@@ -273,8 +323,7 @@ def normalize_transcript(raw: str, replacements: dict[str, str]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def capture_demo(demo: Demo, env: dict[str, str], workspace: Path) -> tuple[int, str]:
-    result = run(["omm", *demo.argv], cwd=workspace, env=env, capture=True)
+def replacement_map(env: dict[str, str], workspace: Path) -> dict[str, str]:
     replacements: dict[str, str] = {}
     for key in ("OMM_HOME", "HOME", "TMPDIR", "XDG_CACHE_HOME"):
         value = env[key]
@@ -282,20 +331,263 @@ def capture_demo(demo: Demo, env: dict[str, str], workspace: Path) -> tuple[int,
         replacements[str(Path(value).resolve())] = f"${key}"
     replacements[str(workspace)] = "$CAPTURE_ROOT"
     replacements[str(workspace.resolve())] = "$CAPTURE_ROOT"
-    transcript = normalize_transcript(result.stdout or "", replacements)
-    if result.returncode != demo.expected_exit_code:
+    return replacements
+
+
+def replace_paths(text: str, replacements: dict[str, str]) -> str:
+    for original, placeholder in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
+        text = text.replace(original, placeholder)
+    return text
+
+
+class _FixtureHandler(BaseHTTPRequestHandler):
+    requests_seen: list[tuple[str, str]] = []
+
+    def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        self.requests_seen.append(("GET", self.path))
+        if self.path == "/api/tags":
+            payload = {"models": []}
+        elif self.path == "/api/ps":
+            payload = {"models": []}
+        elif self.path == "/api/version":
+            payload = {"version": "0.0.0-empty-capture-fixture"}
+        else:
+            self.send_response(404)
+            self.end_headers()
+            return
+        encoded = json.dumps(payload).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+        self.wfile.write(encoded)
+
+    def do_POST(self) -> None:  # noqa: N802 - reject every state-changing/runtime path
+        self.requests_seen.append(("POST", self.path))
+        self.send_response(409)
+        self.end_headers()
+
+    def log_message(self, _format: str, *args: object) -> None:
+        return
+
+
+@contextmanager
+def demo_fixture(
+    demo: Demo, env: dict[str, str], omm_home: Path
+) -> Iterator[tuple[dict[str, str], dict[str, object] | None]]:
+    demo_env = dict(env)
+    config_path = omm_home / "config.json"
+    registry_path = omm_home / "models.json"
+    original_config = config_path.read_bytes()
+    original_registry = registry_path.read_bytes() if registry_path.exists() else None
+    server: ThreadingHTTPServer | None = None
+    server_thread: threading.Thread | None = None
+    fixture_record: dict[str, object] | None = (
+        {"description": demo.fixture} if demo.fixture is not None else None
+    )
+    try:
+        if demo.slug == "run":
+            registry_path.write_text(
+                json.dumps(
+                    {
+                        "fixture-alpha.gguf": {"linked": {}},
+                        "fixture-beta.gguf": {"linked": {}},
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            fixture_record = {
+                "description": demo.fixture,
+                "kind": "metadata-only isolated registry",
+                "entries": ["fixture-alpha.gguf", "fixture-beta.gguf"],
+                "modelFilesCreated": False,
+            }
+        elif demo.slug == "contribute":
+            config = json.loads(original_config)
+            config.update(
+                telemetry_send_policy="ask",
+                telemetry_endpoint=None,
+                telemetry_backend="local",
+                error_report_send_policy="never",
+            )
+            config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+            registry_path.write_text("{}\n", encoding="utf-8")
+            _FixtureHandler.requests_seen = []
+            try:
+                server = ThreadingHTTPServer(("127.0.0.1", 11434), _FixtureHandler)
+            except OSError as error:
+                raise SystemExit(
+                    "contribute fixture requires unused 127.0.0.1:11434; refusing to "
+                    f"contact or replace an existing runtime ({error})"
+                ) from error
+            server.daemon_threads = True
+            server_thread = threading.Thread(target=server.serve_forever, daemon=True)
+            server_thread.start()
+            demo_env["NO_PROXY"] = "localhost,127.0.0.1"
+            demo_env["no_proxy"] = "localhost,127.0.0.1"
+            fixture_record = {
+                "description": demo.fixture,
+                "kind": "empty GET-only loopback Ollama API",
+                "address": "127.0.0.1:11434",
+                "allowedRequests": ["GET /api/tags", "GET /api/ps", "GET /api/version"],
+            }
+        yield demo_env, fixture_record
+    finally:
+        if server is not None:
+            server.shutdown()
+            server.server_close()
+            if server_thread is not None:
+                server_thread.join(timeout=2)
+            unexpected = [
+                request
+                for request in _FixtureHandler.requests_seen
+                if request[0] != "GET"
+                or request[1] not in {"/api/tags", "/api/ps", "/api/version"}
+            ]
+            if fixture_record is not None:
+                fixture_record["requestsObserved"] = [
+                    f"{method} {path}" for method, path in _FixtureHandler.requests_seen
+                ]
+                fixture_record["postRequestsObserved"] = sum(
+                    method == "POST" for method, _path in _FixtureHandler.requests_seen
+                )
+            if unexpected:
+                raise SystemExit(
+                    f"contribute fixture observed forbidden runtime requests: {unexpected}"
+                )
+        config_path.write_bytes(original_config)
+        if original_registry is None:
+            registry_path.unlink(missing_ok=True)
+        else:
+            registry_path.write_bytes(original_registry)
+
+
+def terminal_screen_lines(screen: object, replacements: dict[str, str]) -> list[str]:
+    lines = [replace_paths(line.rstrip(), replacements) for line in screen.display]
+    while lines and not lines[0]:
+        lines.pop(0)
+    while lines and not lines[-1]:
+        lines.pop()
+    return lines
+
+
+def capture_interactive(
+    demo: Demo,
+    env: dict[str, str],
+    workspace: Path,
+    replacements: dict[str, str],
+) -> tuple[int, str, list[list[str]], list[str]]:
+    import pyte
+
+    columns, rows = 96, 22
+    interactive_env = {**env, "TERM": "xterm-256color", "COLUMNS": str(columns), "LINES": str(rows)}
+    master, slave = pty.openpty()
+    fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", rows, columns, 0, 0))
+    process = subprocess.Popen(
+        ["omm", *demo.argv],
+        cwd=workspace,
+        env=interactive_env,
+        stdin=slave,
+        stdout=slave,
+        stderr=slave,
+        close_fds=True,
+    )
+    os.close(slave)
+    screen = pyte.Screen(columns, rows)
+    stream = pyte.Stream(screen)
+    decoder = codecs.getincrementaldecoder("utf-8")("replace")
+    raw = bytearray()
+    snapshots: list[list[str]] = []
+    sent_labels: list[str] = []
+    next_step = 0
+    cpr_answered = False
+    deadline = time.monotonic() + 30
+    try:
+        while time.monotonic() < deadline:
+            readable, _, _ = select.select([master], [], [], 0.1)
+            if readable:
+                try:
+                    chunk = os.read(master, 65_536)
+                except OSError:
+                    break
+                if not chunk:
+                    break
+                raw.extend(chunk)
+                stream.feed(decoder.decode(chunk))
+                if not cpr_answered and b"\x1b[6n" in chunk:
+                    # prompt_toolkit asks a real terminal for the cursor position
+                    # before accepting keys. Answer as a minimal VT100 terminal so
+                    # the scripted input is not consumed as the CPR response.
+                    os.write(master, b"\x1b[1;1R")
+                    cpr_answered = True
+                    continue
+                current = terminal_screen_lines(screen, replacements)
+                if current and (not snapshots or current != snapshots[-1]):
+                    snapshots.append(current)
+                if next_step < len(demo.input_steps):
+                    step = demo.input_steps[next_step]
+                    if step.pattern.encode("utf-8") in raw:
+                        os.write(master, step.response)
+                        sent_labels.append(step.label)
+                        next_step += 1
+            if process.poll() is not None:
+                break
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=2)
+            diagnostic = normalize_transcript(raw.decode("utf-8", "replace"), replacements)
+            raise SystemExit(
+                f"{demo.slug}: interactive capture timed out after inputs {sent_labels}; "
+                f"captured output:\n{diagnostic[-4000:]}"
+            )
+    finally:
+        os.close(master)
+    if next_step != len(demo.input_steps):
+        missing = [step.pattern for step in demo.input_steps[next_step:]]
+        raise SystemExit(f"{demo.slug}: interactive prompt(s) not observed: {missing}")
+    if process.returncode != demo.expected_exit_code:
         raise SystemExit(
-            f"{demo.slug}: expected exit {demo.expected_exit_code}, got {result.returncode}\n{transcript}"
+            f"{demo.slug}: expected exit {demo.expected_exit_code}, got {process.returncode}"
         )
-    return result.returncode, transcript
+    final_lines = snapshots[-1] if snapshots else []
+    transcript = "\n".join(final_lines) + "\n"
+    if len(snapshots) > 10:
+        indices = sorted({round(index * (len(snapshots) - 1) / 9) for index in range(10)})
+        snapshots = [snapshots[index] for index in indices]
+    return process.returncode, transcript, snapshots, sent_labels
+
+
+def capture_demo(
+    demo: Demo, env: dict[str, str], workspace: Path, omm_home: Path
+) -> tuple[int, str, list[list[str]] | None, list[str], dict[str, object] | None]:
+    replacements = replacement_map(env, workspace)
+    with demo_fixture(demo, env, omm_home) as (demo_env, fixture_record):
+        if demo.input_steps:
+            exit_code, transcript, snapshots, input_events = capture_interactive(
+                demo, demo_env, workspace, replacements
+            )
+            return exit_code, transcript, snapshots, input_events, fixture_record
+        result = run(["omm", *demo.argv], cwd=workspace, env=demo_env, capture=True)
+        transcript = normalize_transcript(result.stdout or "", replacements)
+        if result.returncode != demo.expected_exit_code:
+            raise SystemExit(
+                f"{demo.slug}: expected exit {demo.expected_exit_code}, got {result.returncode}\n{transcript}"
+            )
+        return result.returncode, transcript, None, [], fixture_record
 
 
 def visible_lines(command: str, transcript: str) -> list[str]:
     return [f"$ {command}", "", *transcript.rstrip("\n").splitlines()]
 
 
-def render_png(slug: str, lines: list[str], destination: Path) -> None:
-    title = f"omm {slug}  ·  real CLI capture"
+def render_png(demo: Demo, lines: list[str], destination: Path) -> None:
+    title = f"omm {demo.slug}  ·  {demo.context_label}"
     argv = [
         "magick",
         "-size",
@@ -361,7 +653,7 @@ def render_png(slug: str, lines: list[str], destination: Path) -> None:
     argv.append(str(destination))
     converted = run(argv, capture=True)
     if converted.returncode != 0:
-        raise SystemExit(f"ImageMagick failed for {slug}:\n{converted.stdout}")
+        raise SystemExit(f"ImageMagick failed for {demo.slug}:\n{converted.stdout}")
 
 
 def reveal_counts(total: int) -> list[int]:
@@ -375,23 +667,35 @@ def reveal_counts(total: int) -> list[int]:
     return list(dict.fromkeys(min(total, count) for count in counts))
 
 
-def render_asset(demo: Demo, transcript: str, frame_root: Path) -> tuple[Path, Path, Path]:
+def render_asset(
+    demo: Demo,
+    transcript: str,
+    frame_root: Path,
+    terminal_snapshots: list[list[str]] | None = None,
+) -> tuple[Path, Path, Path]:
     all_lines = visible_lines(demo.command, transcript)
     demo_frames = frame_root / demo.slug
     demo_frames.mkdir(parents=True)
     frame_paths: list[Path] = []
-    counts = reveal_counts(len(all_lines))
-    for index, count in enumerate(counts):
-        shown = all_lines[:count]
-        window = shown[-MAX_VISIBLE_LINES:]
+    if terminal_snapshots:
+        rendered_windows = [
+            ([f"$ {demo.command}", "", *snapshot])[-MAX_VISIBLE_LINES:]
+            for snapshot in terminal_snapshots
+        ]
+    else:
+        rendered_windows = []
+        for count in reveal_counts(len(all_lines)):
+            shown = all_lines[:count]
+            rendered_windows.append(shown[-MAX_VISIBLE_LINES:])
+    for index, window in enumerate(rendered_windows):
         png = demo_frames / f"frame-{index:02d}.png"
-        render_png(demo.slug, window, png)
+        render_png(demo, window, png)
         frame_paths.append(png)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     poster = OUTPUT_DIR / f"{demo.slug}.png"
     poster_lines = all_lines[:MAX_VISIBLE_LINES]
-    render_png(demo.slug, poster_lines, poster)
+    render_png(demo, poster_lines, poster)
 
     concat = demo_frames / "frames.ffconcat"
     concat_lines = ["ffconcat version 1.0"]
@@ -516,9 +820,24 @@ def verify_manifest(*, probe_when_available: bool = True) -> None:
         raise SystemExit(
             f"Manifest slugs differ: expected {sorted(expected_slugs)}, got {sorted(map(str, actual_slugs))}"
         )
+    expected_outcomes = {demo.slug: demo.outcome for demo in DEMOS}
+    expected_demos = {demo.slug: demo for demo in DEMOS}
 
     for asset in assets:
         slug = asset["slug"]
+        demo = expected_demos[slug]
+        if asset.get("command") != demo.command:
+            raise SystemExit(
+                f"{slug}: command mismatch ({asset.get('command')!r} != {demo.command!r})"
+            )
+        if asset.get("expectedExitCode") != demo.expected_exit_code:
+            raise SystemExit(f"{slug}: expectedExitCode differs from the capture contract")
+        if asset.get("outcome") != expected_outcomes[slug]:
+            raise SystemExit(
+                f"{slug}: outcome mismatch ({asset.get('outcome')!r} != {expected_outcomes[slug]!r})"
+            )
+        if asset.get("outcome") == "success" and asset.get("exitCode") != 0:
+            raise SystemExit(f"{slug}: success outcome requires exitCode 0")
         records = (
             ("src", "bytes", "sha256"),
             ("poster", "posterBytes", "posterSha256"),
@@ -583,8 +902,9 @@ def write_manifest(
             "captureScript": "scripts/capture-command-demos.py",
             "processEvidence": (
                 "Each transcript is stdout+stderr captured from the real omm console "
-                "script installed editable from this commit. Videos reveal only those "
-                "captured transcript lines; no command result text is synthesized."
+                "script installed editable from this commit. Interactive videos use "
+                "VT100 screen checkpoints reconstructed from those real process bytes "
+                "and record the exact input events; no command result text is synthesized."
             ),
             "sourcePathPolicy": (
                 "The source clone, virtualenv, HOME, OMM_HOME, XDG cache, uv cache, and "
@@ -595,8 +915,15 @@ def write_manifest(
         "safety": {
             "liveOmmRunRequests": 0,
             "liveWorkersDevRequests": 0,
-            "cliNetworkPolicy": "HTTP(S) and ALL_PROXY forced to unused 127.0.0.1:9",
-            "telemetryPolicy": "never",
+            "cliNetworkPolicy": (
+                "External HTTP(S) and ALL_PROXY forced to unused 127.0.0.1:9. The "
+                "contribute demo alone allows a temporary GET-only loopback fixture "
+                "on 127.0.0.1:11434 and fails on any POST."
+            ),
+            "telemetryPolicy": (
+                "never by default; contribute uses ask only until the captured 'n' "
+                "response cancels before compute or upload"
+            ),
             "userHomeTouched": False,
             "modelDownloadsStarted": False,
             "modelExecutionsStarted": False,
@@ -623,6 +950,12 @@ def main() -> None:
         action="store_true",
         help="Skip optional ffprobe metadata checks during --verify-only.",
     )
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        choices=[demo.slug for demo in DEMOS],
+        help="Recapture only these slugs and preserve the other manifest rows/assets.",
+    )
     args = parser.parse_args()
     if args.verify_only:
         verify_manifest(probe_when_available=not args.no_ffprobe)
@@ -634,13 +967,34 @@ def main() -> None:
         workspace = Path(temporary)
         source, commit, remote = source_checkout(workspace)
         version = project_version(source)
-        _, _, env = prepare_runtime(workspace, source, commit)
+        _, omm_home, env = prepare_runtime(workspace, source, commit)
         frame_root = workspace / "frames"
+        selected = set(args.only or [demo.slug for demo in DEMOS])
+        existing_rows: dict[str, dict[str, object]] = {}
+        if args.only:
+            manifest_path = OUTPUT_DIR / "manifest.json"
+            if not manifest_path.is_file():
+                raise SystemExit("--only requires an existing manifest.json")
+            existing_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            existing_rows = {
+                row["slug"]: row for row in existing_manifest.get("assets", [])
+            }
         rows: list[dict[str, object]] = []
 
         for demo in DEMOS:
-            exit_code, transcript = capture_demo(demo, env, workspace)
-            video, poster, transcript_path = render_asset(demo, transcript, frame_root)
+            if demo.slug not in selected:
+                if demo.slug not in existing_rows:
+                    raise SystemExit(f"Existing manifest is missing preserved slug {demo.slug}")
+                preserved = dict(existing_rows[demo.slug])
+                preserved["outcome"] = demo.outcome
+                rows.append(preserved)
+                continue
+            exit_code, transcript, snapshots, input_events, fixture_record = capture_demo(
+                demo, env, workspace, omm_home
+            )
+            video, poster, transcript_path = render_asset(
+                demo, transcript, frame_root, snapshots
+            )
             probe = probe_video(video)
             video_meta = file_record(video)
             poster_meta = file_record(poster)
@@ -663,6 +1017,10 @@ def main() -> None:
                     "argv": ["omm", *demo.argv],
                     "exitCode": exit_code,
                     "expectedExitCode": demo.expected_exit_code,
+                    "outcome": demo.outcome,
+                    "captureMode": "pseudo-tty" if demo.input_steps else "closed-stdin",
+                    "inputEvents": input_events,
+                    "fixture": fixture_record,
                     "safetyPath": demo.safety_path,
                 }
             )

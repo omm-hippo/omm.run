@@ -334,11 +334,18 @@ export const ko = {
     captureAria: "{command} 실행 녹화",
     demoRecordedCommand: "이 영상에서 실제로 실행한 명령",
     demoExitCode: "종료 코드",
+    demoOutcome: "결과",
+    demoOutcomeSuccess: "완료",
+    demoOutcomeCancelled: "사용자 취소",
+    demoOutcomeGuard: "안전 가드 종료",
     demoSafeSuccess: "외부 네트워크를 차단한 격리 환경에서 읽기 전용으로 캡처했습니다.",
+    demoSafeCancelled:
+      "기록된 키보드 입력으로 설치·모델 실행·벤치마크·업로드가 시작되기 전에 취소했습니다.",
     demoSafeGuard:
       "격리 환경의 안전한 로컬 가드에서 의도적으로 종료했으며 다운로드·모델 실행·벤치마크·업로드를 시작하지 않았습니다.",
     demoTranscript: "실제 프로세스 원문 transcript 열기(.txt)",
-    documentedCapture: "확장 문서 캡처 (별도의 참고 실행)",
+    documentedCapture: "확장 문서 터미널 예시",
+    documentedCaptureAria: "{command} 문서화된 터미널 예시",
     troubleBody:
       "아래 메시지는 모두 이 명령이 실제로 출력하는 것들입니다. 해당하는 메시지를 찾아 원인을 읽고, 마지막 줄대로 하면 됩니다.",
     troubleWhy: "원인",

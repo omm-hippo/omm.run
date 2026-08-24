@@ -343,11 +343,18 @@ export const en = {
     captureAria: "Terminal recording of {command}",
     demoRecordedCommand: "Command recorded in this video",
     demoExitCode: "exit code",
+    demoOutcome: "outcome",
+    demoOutcomeSuccess: "completed",
+    demoOutcomeCancelled: "cancelled",
+    demoOutcomeGuard: "safe guard",
     demoSafeSuccess: "Read-only capture in an isolated environment with outbound network access blocked.",
+    demoSafeCancelled:
+      "Cancelled by the recorded keyboard input before any install, model run, benchmark, or upload.",
     demoSafeGuard:
       "Intentional safe local guard in an isolated environment; no download, model run, benchmark, or upload was started.",
     demoTranscript: "Open the exact real-process transcript (.txt)",
-    documentedCapture: "Extended documented capture (separate reference run)",
+    documentedCapture: "Extended documented terminal example",
+    documentedCaptureAria: "Documented terminal example of {command}",
     troubleBody:
       "Every message below is one this command actually prints. Find yours, read why it happened, then do the last line.",
     troubleWhy: "why",

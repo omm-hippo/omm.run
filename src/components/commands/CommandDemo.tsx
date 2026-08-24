@@ -5,6 +5,7 @@ type Props = {
   readonly slug: Slug;
   readonly recordedCommand: string;
   readonly recordedExitCode: number;
+  readonly recordedOutcome: "success" | "cancelled" | "guard";
   readonly documentedCommand: string;
   readonly documentedOutput: string;
   readonly documentedFootnote: string;
@@ -13,7 +14,12 @@ type Props = {
   readonly transcriptLabel: string;
   readonly recordedCommandLabel: string;
   readonly exitCodeLabel: string;
+  readonly outcomeLabel: string;
+  readonly successLabel: string;
+  readonly cancelledLabel: string;
+  readonly guardLabel: string;
   readonly safeSuccessNote: string;
+  readonly safeCancelledNote: string;
   readonly safeGuardNote: string;
   readonly documentedCaptureLabel: string;
 };
@@ -30,6 +36,7 @@ export default function CommandDemo({
   slug,
   recordedCommand,
   recordedExitCode,
+  recordedOutcome,
   documentedCommand,
   documentedOutput,
   documentedFootnote,
@@ -38,11 +45,28 @@ export default function CommandDemo({
   transcriptLabel,
   recordedCommandLabel,
   exitCodeLabel,
+  outcomeLabel,
+  successLabel,
+  cancelledLabel,
+  guardLabel,
   safeSuccessNote,
+  safeCancelledNote,
   safeGuardNote,
   documentedCaptureLabel,
 }: Props) {
   const base = `/demos/commands/${slug}`;
+  const outcomeText =
+    recordedOutcome === "success"
+      ? successLabel
+      : recordedOutcome === "cancelled"
+        ? cancelledLabel
+        : guardLabel;
+  const outcomeNote =
+    recordedOutcome === "success"
+      ? safeSuccessNote
+      : recordedOutcome === "cancelled"
+        ? safeCancelledNote
+        : safeGuardNote;
 
   return (
     <div className="flex flex-col gap-5">
@@ -66,7 +90,10 @@ export default function CommandDemo({
         <p className="text-small mt-3">
           {exitCodeLabel}: <code className="text-ink-1">{recordedExitCode}</code>
           {" · "}
-          {recordedExitCode === 0 ? safeSuccessNote : safeGuardNote}
+          {outcomeLabel}: <span className="text-ink-1">{outcomeText}</span>
+        </p>
+        <p className="text-small mt-2">
+          {outcomeNote}
         </p>
         <p className="text-small mt-3">
           <a

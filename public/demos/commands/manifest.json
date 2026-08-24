@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-24T12:31:16.389037Z",
+  "generatedAt": "2026-08-24T13:15:20.904067Z",
   "provenance": {
     "repository": "https://github.com/omm-hippo/omm.git",
     "commit": "e66db6f82e8344c33473eb5f722ab41359a85231",
     "version": "0.2.167",
     "sourceWasClean": true,
     "captureScript": "scripts/capture-command-demos.py",
-    "processEvidence": "Each transcript is stdout+stderr captured from the real omm console script installed editable from this commit. Videos reveal only those captured transcript lines; no command result text is synthesized.",
+    "processEvidence": "Each transcript is stdout+stderr captured from the real omm console script installed editable from this commit. Interactive videos use VT100 screen checkpoints reconstructed from those real process bytes and record the exact input events; no command result text is synthesized.",
     "sourcePathPolicy": "The source clone, virtualenv, HOME, OMM_HOME, XDG cache, uv cache, and TMPDIR were disposable paths removed after capture. Absolute temporary paths are intentionally omitted from public artifacts."
   },
   "safety": {
     "liveOmmRunRequests": 0,
     "liveWorkersDevRequests": 0,
-    "cliNetworkPolicy": "HTTP(S) and ALL_PROXY forced to unused 127.0.0.1:9",
-    "telemetryPolicy": "never",
+    "cliNetworkPolicy": "External HTTP(S) and ALL_PROXY forced to unused 127.0.0.1:9. The contribute demo alone allows a temporary GET-only loopback fixture on 127.0.0.1:11434 and fails on any POST.",
+    "telemetryPolicy": "never by default; contribute uses ask only until the captured 'n' response cancels before compute or upload",
     "userHomeTouched": false,
     "modelDownloadsStarted": false,
     "modelExecutionsStarted": false,
@@ -52,35 +52,44 @@
       ],
       "exitCode": 0,
       "expectedExitCode": 0,
-      "safetyPath": "Read-only search against the built-in catalog and catalog copied from the exact source commit. All CLI outbound HTTP(S) is routed to an unused loopback proxy, so live Hugging Face, ModelScope, omm.run, and Workers endpoints are not reached."
+      "safetyPath": "Read-only search against the built-in catalog and catalog copied from the exact source commit. All CLI outbound HTTP(S) is routed to an unused loopback proxy, so live Hugging Face, ModelScope, omm.run, and Workers endpoints are not reached.",
+      "outcome": "success"
     },
     {
       "slug": "install",
       "src": "/demos/commands/install.mp4",
       "poster": "/demos/commands/install.png",
       "transcript": "/demos/commands/install.txt",
-      "duration": 5.75,
+      "duration": 5.375,
       "codec": "h264",
       "width": 1280,
       "height": 720,
       "pixelFormat": "yuv420p",
       "audioStreams": 0,
-      "bytes": 32395,
-      "sha256": "19f881cb78dac33bb088fa1a3f93c6ffe727c468e3d8dad8609774a83718a672",
-      "posterBytes": 58820,
-      "posterSha256": "07b5d11cefaaa548762752a0c7e58ce612dccf609f13f72d42a45787a70e21ac",
-      "transcriptBytes": 281,
-      "transcriptSha256": "e9aacacb2db736774f8fb4465375f91629d476a39316850c55a15c71c2e31777",
-      "command": "omm install zzzz-totally-fake-model-name-xyz --no-color",
+      "bytes": 28699,
+      "sha256": "7b83ae73c5ce6a3039c2e3951f489128a76602abb9b02a2da0bedfbc31a0ee9c",
+      "posterBytes": 53385,
+      "posterSha256": "f81b7fda094d31e0cad3948d8590fdeb9ea6b0949a913586c71744e0bd2fd040",
+      "transcriptBytes": 191,
+      "transcriptSha256": "b489718b8aec3ed9e1171fb6fe44f40d9cb9b418ba96cda14d687bd457ae2b05",
+      "command": "omm install hf:example/oversized-405b-gguf:oversized-405b-q4_k_m.gguf --no-color",
       "argv": [
         "omm",
         "install",
-        "zzzz-totally-fake-model-name-xyz",
+        "hf:example/oversized-405b-gguf:oversized-405b-q4_k_m.gguf",
         "--no-color"
       ],
-      "exitCode": 1,
-      "expectedExitCode": 1,
-      "safetyPath": "The local model-reference parser rejects the deliberately invalid name before the downloader, checksum, linking, or runtime code can run. Any best-effort suggestion lookup is contained by the unused loopback proxy."
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "outcome": "cancelled",
+      "captureMode": "pseudo-tty",
+      "inputEvents": [
+        "n - cancel at hardware-fit warning"
+      ],
+      "fixture": {
+        "description": "Syntactically valid example/oversized-405b reference; no remote model is claimed to exist."
+      },
+      "safetyPath": "A syntactically valid but deliberately non-published 405B fixture reference reaches OMM's real hardware-fit warning. The captured 'n' response cancels before provider metadata, downloader, checksum, linking, or runtime code."
     },
     {
       "slug": "run",
@@ -93,22 +102,35 @@
       "height": 720,
       "pixelFormat": "yuv420p",
       "audioStreams": 0,
-      "bytes": 17551,
-      "sha256": "b7d32e21f22b35dbae4411e3d19d4af9564fec00f8b7cbb9aea98b0899b5644b",
-      "posterBytes": 31483,
-      "posterSha256": "e13592feed09e93db7aa9f190e6498e5057cd8fe55043dda63bea7947d8b0fb7",
-      "transcriptBytes": 96,
-      "transcriptSha256": "ff85d7635259b498bd24a7aa06a706922f33b0360da96ebd0289fdc46b1a4ac7",
-      "command": "omm run demo-model.gguf --no-color",
+      "bytes": 21285,
+      "sha256": "df478786b4014d8837385e8eefce5d4e3caedd8af659c2812ab44ac7ad697914",
+      "posterBytes": 40275,
+      "posterSha256": "34d1b99e897f9d87f69db45f02ae43eaf4bbfd2f05b863f4bd9b13fce2ec6560",
+      "transcriptBytes": 102,
+      "transcriptSha256": "457cf89ec4a646bb1d5fa0f68b0584ce45639046ca7611bb3d73870fa0b15e7f",
+      "command": "omm run --no-color",
       "argv": [
         "omm",
         "run",
-        "demo-model.gguf",
         "--no-color"
       ],
       "exitCode": 1,
       "expectedExitCode": 1,
-      "safetyPath": "The isolated registry is empty, so the command exits at the local not-installed guard before selecting or launching any runner."
+      "outcome": "cancelled",
+      "captureMode": "pseudo-tty",
+      "inputEvents": [
+        "Escape - cancel model picker"
+      ],
+      "fixture": {
+        "description": "Two isolated registry names only; no model files, engine links, or runnable weights exist.",
+        "kind": "metadata-only isolated registry",
+        "entries": [
+          "fixture-alpha.gguf",
+          "fixture-beta.gguf"
+        ],
+        "modelFilesCreated": false
+      },
+      "safetyPath": "Two metadata-only model names are placed in the isolated registry to exercise the real model picker. Escape cancels before engine selection or launcher code."
     },
     {
       "slug": "recommend",
@@ -136,52 +158,72 @@
       ],
       "exitCode": 0,
       "expectedExitCode": 0,
-      "safetyPath": "JSON mode is read-only and never enters the interactive installer. The recommendation artifact is copied from the exact source commit and remote model/rules URLs are disabled in the isolated config."
+      "safetyPath": "JSON mode is read-only and never enters the interactive installer. The recommendation artifact is copied from the exact source commit and remote model/rules URLs are disabled in the isolated config.",
+      "outcome": "success"
     },
     {
       "slug": "contribute",
       "src": "/demos/commands/contribute.mp4",
       "poster": "/demos/commands/contribute.png",
       "transcript": "/demos/commands/contribute.txt",
-      "duration": 5.375,
+      "duration": 6.208,
       "codec": "h264",
       "width": 1280,
       "height": 720,
       "pixelFormat": "yuv420p",
       "audioStreams": 0,
-      "bytes": 20538,
-      "sha256": "d4ea47430208d9b228472cbdddf03b929b5a0c6c6a16c90aac5e03c14218949a",
-      "posterBytes": 36459,
-      "posterSha256": "314530781d9aae97250c94d77c842048d7d69c11a196eccb0b03fd6b88c6e77e",
-      "transcriptBytes": 138,
-      "transcriptSha256": "c39cdeabb44609f35a1cb9eb085da70522df005845085f235e9f7969d9f385c4",
+      "bytes": 74648,
+      "sha256": "1128cc8977aed8f7b8982e96524fbaf883a148660c65737d9b1cb67bb3a39372",
+      "posterBytes": 142872,
+      "posterSha256": "3d9819dbf8941028291f7128582bd98d59b41dd0178f031a409deeea0ea6f8f1",
+      "transcriptBytes": 938,
+      "transcriptSha256": "8e7886e3b7fb7ba52d7f1b18aaa3c43e6052992b2ba175e70721e72fe4c84f9a",
       "command": "omm contribute --no-color",
       "argv": [
         "omm",
         "contribute",
         "--no-color"
       ],
-      "exitCode": 1,
-      "expectedExitCode": 1,
-      "safetyPath": "The isolated config sets telemetry_send_policy=never. The command exits at that first guard before engine detection, downloads, benchmarking, model execution, deletion, or telemetry/error-report upload."
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "outcome": "cancelled",
+      "captureMode": "pseudo-tty",
+      "inputEvents": [
+        "n - cancel before compute"
+      ],
+      "fixture": {
+        "description": "Temporary GET-only loopback API on 127.0.0.1:11434; capture aborts if the port is occupied or any POST occurs.",
+        "kind": "empty GET-only loopback Ollama API",
+        "address": "127.0.0.1:11434",
+        "allowedRequests": [
+          "GET /api/tags",
+          "GET /api/ps",
+          "GET /api/version"
+        ],
+        "requestsObserved": [
+          "GET /api/tags"
+        ],
+        "postRequestsObserved": 0
+      },
+      "safetyPath": "A temporary empty loopback Ollama API fixture permits only GET /api/tags so the real safety notice can render. The captured 'n' response cancels at 'Start contributing compute now?' before downloads, benchmarks, model execution, deletion, POST requests, or uploads."
     },
     {
       "slug": "setup",
       "src": "/demos/commands/setup.mp4",
       "poster": "/demos/commands/setup.png",
       "transcript": "/demos/commands/setup.txt",
-      "duration": 7.042,
+      "duration": 7.875,
       "codec": "h264",
       "width": 1280,
       "height": 720,
       "pixelFormat": "yuv420p",
       "audioStreams": 0,
-      "bytes": 42089,
-      "sha256": "b3e42e08b50a72a443d7b3edbfcc7ee3d384ffb7b64e09ebcfed92fcb974abf0",
-      "posterBytes": 97283,
-      "posterSha256": "cbba4eaaee79f037cae869190581f69a82ede6387be77ba710fa128badb493f7",
-      "transcriptBytes": 988,
-      "transcriptSha256": "35c45946c286272f74b587fc54e67d94aac70e358d9e8fc63d20e5eeb2925a93",
+      "bytes": 137449,
+      "sha256": "c932f0a175b86362ac50d85d5631231128dfb251641df2236442f9359d939cc6",
+      "posterBytes": 103585,
+      "posterSha256": "6a0146dd5d8baf542ad4b6778154ddbf7d0373d779a8ea0a23d72adf912bc63b",
+      "transcriptBytes": 515,
+      "transcriptSha256": "c659b887334c2cc3c7ecac5676acda7b933fb3aee2e48dd0b48a509a3dcd954c",
       "command": "omm setup --no-color",
       "argv": [
         "omm",
@@ -190,7 +232,14 @@
       ],
       "exitCode": 1,
       "expectedExitCode": 1,
-      "safetyPath": "stdin is explicitly closed. The real wizard prints its banner and isolated hardware summary, then exits at the non-interactive engine-selection guard before selection or any engine installer can run."
+      "outcome": "cancelled",
+      "captureMode": "pseudo-tty",
+      "inputEvents": [
+        "Enter - accept recommended theme",
+        "Escape - cancel engine checklist"
+      ],
+      "fixture": null,
+      "safetyPath": "A pseudo-TTY accepts the recommended theme, renders the real hardware summary and engine checklist, then sends Escape. No engine is selected and the installer is never entered."
     }
   ]
 }
