@@ -1,3 +1,7 @@
-$ omm run demo-model.gguf --no-color
+$ omm run --no-color
 
-demo-model.gguf is not installed via omm. See `omm list`.
+? Which model do you want to run? (Use arrow keys)
+
+Cancelled by user
+
+Aborted!

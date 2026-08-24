@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 /**
- * A real captured command and its real captured output (see
- * `src/i18n/commands/base.ts`), typed into view the way `Terminal.tsx` types
- * the homepage demo — except triggered once this block scrolls into view
+ * A documented terminal example (see `src/i18n/commands/base.ts`), typed into
+ * view the way `Terminal.tsx` types the homepage demo. Some source entries are
+ * literal captures and others are explicitly labeled format-accurate
+ * reproductions in their footnote. The animation is triggered once this block scrolls into view
  * (`Reveal.tsx`'s IntersectionObserver, not on-mount) and never replays once
  * played, since it sits mid-page rather than above the fold.
  */
@@ -46,7 +47,7 @@ type Props = {
   readonly command: string;
   readonly output: string;
   readonly footnote: string;
-  /** Screen-reader label for the whole block — the typed/output text itself
+  /** Screen-reader label for the documented example — the typed/output text itself
    *  is `aria-hidden`, same pattern as `Terminal.tsx`. */
   readonly label: string;
 };

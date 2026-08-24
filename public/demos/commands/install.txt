@@ -1,5 +1,5 @@
-$ omm install zzzz-totally-fake-model-name-xyz --no-color
+$ omm install hf:example/oversized-405b-gguf:oversized-405b-q4_k_m.gguf --no-color
 
-Unknown model 'zzzz-totally-fake-model-name-xyz'. Use a curated name (tinyllama-1.1b-q4,
-llama3.1-8b-instruct-q4, mistral-7b-instruct-q4), an 'org/repo:file.gguf' ref (optionally
-prefixed 'hf:' or 'ms:'), or a direct URL.
+Warning: this hardware is predicted not to run oversized-405b-q4_k_m.gguf.
+? Install anyway? No
+Cancelled.
