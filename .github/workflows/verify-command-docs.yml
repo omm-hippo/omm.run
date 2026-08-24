@@ -1,0 +1,72 @@
+name: Verify issue 6 command docs
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/verify-command-docs.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/**"
+      - "public/demos/commands/**"
+      - "public/_headers"
+      - "tests/command-docs-verifier.test.mjs"
+      - "src/app/**/commands/**"
+      - "src/components/commands/**"
+      - "src/i18n/commands/**"
+      - "src/i18n/dictionaries/en.ts"
+      - "src/i18n/dictionaries/ko.ts"
+      - "src/middleware.ts"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verify-command-docs.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/**"
+      - "public/demos/commands/**"
+      - "public/_headers"
+      - "tests/command-docs-verifier.test.mjs"
+      - "src/app/**/commands/**"
+      - "src/components/commands/**"
+      - "src/i18n/commands/**"
+      - "src/i18n/dictionaries/en.ts"
+      - "src/i18n/dictionaries/ko.ts"
+      - "src/middleware.ts"
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: command-docs-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out omm.run
+        uses: actions/checkout@v4
+
+      - name: Check out current omm main
+        uses: actions/checkout@v4
+        with:
+          repository: omm-hippo/omm
+          ref: refs/heads/main
+          path: .upstream/omm
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install site dependencies
+        run: npm ci
+
+      - name: Verify search, demos, source contract, and citations
+        run: npm run check:issue6
+        env:
+          OMM_SOURCE_DIR: ${{ github.workspace }}/.upstream/omm

@@ -1,0 +1,4 @@
+$ omm contribute --no-color
+
+omm contribute requires benchmark uploads to be enabled. Run `omm setting upload --enable` or
+`--ask` first.

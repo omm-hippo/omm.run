@@ -3,6 +3,28 @@
 GitHub issue: [omm-hippo/omm.run#6](https://github.com/omm-hippo/omm.run/issues/6)
 Date: 2026-08-24
 
+## Completion update
+
+The original text below described the first `search`-only slice. Issue #6 is
+now implemented for all six commands. The completion pass keeps the same page
+template and adds:
+
+- self-hosted, silent H.264 MP4 demos with poster images and always-visible
+  text transcripts for `search`, `install`, `run`, `recommend`, `contribute`,
+  and `setup`;
+- a bilingual `/commands` search UI over names, summaries, use cases, examples,
+  options, and troubleshooting text;
+- full command-specific and global flag tables, 3–5 examples per page, localized
+  related links, and source-anchored troubleshooting entries;
+- a deterministic AST verifier and scheduled CI check against the current
+  `omm-hippo/omm` `main`, without any runtime product-repository fetch.
+
+The media decision therefore supersedes the earlier “no video/GIF in v1”
+decision. Exact media provenance and hashes live in
+`public/demos/commands/manifest.json`; synchronization behavior is documented
+in `docs/command-docs-sync.md`, and current source citations live in
+`design/FACTS.md`.
+
 ## Background
 
 Each `omm` command currently gets one line in the product README. The issue

@@ -305,7 +305,24 @@ export const en = {
       "Full reference pages for omm's commands: every flag, real examples from basic to scripted, a real captured run, and the errors each one actually prints.",
     label: "Commands",
     heading: "Pick the command you want the full reference for.",
-    lede: "Each page covers what the command is for and when to reach for it, every flag, five real examples, a real captured run, and the errors it actually prints with what to do about them.",
+    lede: "Each page covers what the command is for and when to reach for it, every flag, 3–5 real examples, a real captured run, and the errors it actually prints with what to do about them.",
+    search: {
+      label: "Search all command docs",
+      placeholder: "Try --json, disk space, runner…",
+      hint: "Search names, purposes, options and real error guidance. Press / to focus; Escape clears.",
+      clear: "clear",
+      resultCount: "{count} commands",
+      noResultsTitle: "No command docs match that search.",
+      noResultsBody: "Try a command name, a flag such as --json, or a shorter error phrase.",
+      matchPrefix: "matches",
+      matchLabels: {
+        name: "name",
+        summary: "summary",
+        use: "uses",
+        options: "options",
+        errors: "errors",
+      },
+    },
   },
 
   commands: {
@@ -324,6 +341,7 @@ export const en = {
     examplesIntro: "From a plain search to something you'd put in a script.",
     /** `{command}` is the captured command, e.g. "omm search qwen --limit 5". */
     captureAria: "Terminal recording of {command}",
+    demoTranscript: "Open the exact real-process transcript (.txt)",
     troubleBody:
       "Every message below is one this command actually prints. Find yours, read why it happened, then do the last line.",
     troubleWhy: "why",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import CommandBlock from "@/components/install/CommandBlock";
-import CommandCapture from "@/components/commands/CommandCapture";
+import CommandDemo from "@/components/commands/CommandDemo";
 import { getCommandLinks, type Command } from "@/components/commands/commands";
 import Reveal from "@/components/Reveal";
 import { localeHref, type Locale } from "@/i18n/config";
@@ -203,11 +203,13 @@ export default function CommandDocPage({
               <Reveal>
                 <SectionHead n="04" id="capture" title={t.sections[3]} />
                 <div className="mt-8">
-                  <CommandCapture
+                  <CommandDemo
+                    slug={command.slug}
                     command={command.capture.title}
                     output={command.capture.text}
                     footnote={command.capture.footnote}
                     label={fill(t.captureAria, { command: command.capture.title })}
+                    transcriptLabel={t.demoTranscript}
                   />
                 </div>
               </Reveal>
@@ -224,15 +226,26 @@ export default function CommandDocPage({
                 <ul className="mt-6 flex flex-col border-t border-line-0">
                   {command.related.map((entry) => (
                     <li key={entry.label} className="border-b border-line-0">
-                      <a
-                        href={entry.href}
-                        target={entry.internal ? undefined : "_blank"}
-                        rel={entry.internal ? undefined : "noreferrer"}
-                        className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
-                      >
-                        <span className="text-terminal text-ink-0">{entry.label}</span>
-                        <span className="text-small">{entry.blurb}</span>
-                      </a>
+                      {entry.internal ? (
+                        <Link
+                          href={localeHref(entry.href, locale)}
+                          prefetch={false}
+                          className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
+                        >
+                          <span className="text-terminal text-ink-0">{entry.label}</span>
+                          <span className="text-small">{entry.blurb}</span>
+                        </Link>
+                      ) : (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
+                        >
+                          <span className="text-terminal text-ink-0">{entry.label}</span>
+                          <span className="text-small">{entry.blurb}</span>
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>

@@ -1,0 +1,22 @@
+$ omm setup --no-color
+
+ ██████╗ ███╗   ███╗███╗   ███╗
+██╔═══██╗████╗ ████║████╗ ████║
+██║   ██║██╔████╔██║██╔████╔██║
+██║   ██║██║╚██╔╝██║██║╚██╔╝██║
+╚██████╔╝██║ ╚═╝ ██║██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝
+Let's get you set up.
+
+                                          Your machine
+ Field           Value
+ OS              macOS 26.5.2
+ CPU             Apple M5
+ RAM (total)     24.0 GB
+ Model budget    19.2 GB
+ Free right now  5.6 GB (close other apps before running big models)
+ GPU             Apple M5
+ omm home        $CAPTURE_ROOT/h…
+                 (51.0 GB free)
+
+Engine selection requires an interactive terminal. Re-run this command from a real terminal.
