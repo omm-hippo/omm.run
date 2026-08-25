@@ -664,7 +664,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "실제 성공 메시지 형식(src/omm/cli.py:6613-6616)을 이 개발 머신의 실제 설치 모델 수(2개)로 재구성한 것입니다 — link를 실제로 실행하면 이 머신의 실제 러너 심볼릭 링크를 다시 쓰기 때문에, 두 모델이 이미 올바르게 링크돼 있어 평소엔 아무 변화 없는 작업임에도 이 페이지는 실제로 실행하지 않았습니다.",
+      "2026-08-25, 실제로 실행한 omm link입니다: 임시 OMM_HOME 기준으로 작은 모델을 실제 설치하고, link를 실제로 실행해서 실제 Ollama 심볼릭 링크를 다시 썼고(link가 원래 하는 일 그대로), 캡처 직후 바로 제거했습니다 — 실제 ollama list에서도 제거된 걸 확인했습니다. \"0 skipped (file missing)\"은 실제 정확한 문구입니다 — 이전 버전 페이지가 실행해보지 않고 추측했던 \"missing\"이 아닙니다.",
 
     trouble: [
       {

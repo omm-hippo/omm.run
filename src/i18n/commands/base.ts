@@ -917,7 +917,7 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
 
     capture: {
       title: "omm link",
-      text: `2 model(s) relinked/verified. 0 skipped (conflict). 0 skipped (missing).`,
+      text: `1 model(s) relinked/verified. 0 skipped (conflict). 0 skipped (file missing).`,
     },
 
     trouble: [

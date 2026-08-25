@@ -664,7 +664,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real success-line format (src/omm/cli.py:6613-6616), using this dev machine's real installed-model count (2) — not a literal capture, since running link for real rewrites this machine's actual runner symlinks, which this page won't trigger even though both models are already correctly linked and the operation is normally idempotent.",
+      "Real omm link run, 2026-08-25: installed a real small model against a throwaway OMM_HOME, ran link for real (rewriting its actual Ollama symlink, exactly what link does), then uninstalled it immediately after capture — confirmed removed from the real ollama list too. \"0 skipped (file missing)\" is the message's real exact wording, not \"missing\" as an earlier version of this page guessed without running it.",
 
     trouble: [
       {

@@ -501,10 +501,13 @@ capture (all models) is real — nothing was re-downloaded.
 ### `link`
 `src/omm/cli.py:6469-6617`. Engine-validation error shared with `list`
 (`cli.py:909-911`); engine-plus-directory conflict: `cli.py:6501-6502`, real
-captured. The success line is a **format-accurate reconstruction**
-(`cli.py:6613-6616`) using this machine's real installed-model count — link
-always rewrites every symlink even when nothing changes, so it was not run
-live.
+captured. The "a real run" block is a **real, driven capture**, 2026-08-25:
+a real small model was installed against a throwaway `OMM_HOME`, `omm
+link` actually re-verified and rewrote its real Ollama symlink
+(`cli.py:6613-6616`), and the model was uninstalled immediately after
+capture — confirmed removed from the real `ollama list` too. The exact
+wording is `0 skipped (file missing)`, not the `(missing)` an earlier,
+unrun version of this page guessed.
 
 ### `autoremove` / `cleanup`
 `src/omm/cli.py:6669-6709`. `autoremove`'s page capture is a
