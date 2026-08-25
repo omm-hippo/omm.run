@@ -40,7 +40,7 @@ export const en = {
 
   hero: {
     eyebrow: "MIT · Python 3.10+ · Windows, macOS, Linux",
-    heading: "One hub for your GGUF files. Seven runners linked automatically.",
+    heading: "One GGUF on disk. Linked into every runner automatically.",
     lede: "One copy of each model on disk, linked into Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp and text-generation-webui — and checked against your free memory before it downloads anything.",
     cta: "Install omm",
   },
@@ -170,27 +170,34 @@ export const en = {
       },
     ],
     tabs: {
-      aria: "Operating system",
-      copyAria: "Copy the {what} install command",
+      aria: "Install method",
+      /** `{what}` is fed into `ui.copyAria`, matching the guide pages' pattern. */
+      copyAria: "the {what} install command",
       needThemFirst: "Need them first?",
-      otherWays: "Other ways to install",
-      unix: {
+      methods: {
+        curl: "curl",
+        irm: "irm",
+        brew: "Homebrew",
+        pipx: "pipx",
+      },
+      curl: {
         notes: [
           "Open a new shell afterward so your PATH picks up omm.",
           "Requires Python 3.10+. On macOS the script uses Homebrew — bootstrapping it first if it is missing — to install Python and git; on Linux it installs them through whichever supported package manager is present (apt-get, dnf, yum, pacman or apk), and on an unsupported distribution it checks for Python 3.10+ and git and stops if they are missing.",
         ],
-        alternatives: [
-          "macOS · Homebrew Tap",
-          "Any OS via PyPI, no signature verification — the distribution is omm-model, the command stays omm",
-        ],
       },
-      windows: {
+      irm: {
         notes: [
           "This must run before irm: script-internal TLS settings are too late for its first download.",
           "Open a new PowerShell window afterward so your PATH picks up omm.",
           "Requires Python 3.10+. The script bootstraps Python and git via winget when they are missing.",
         ],
-        alternatives: [
+      },
+      brew: {
+        notes: ["macOS · Homebrew Tap"],
+      },
+      pipx: {
+        notes: [
           "Any OS via PyPI, no signature verification — the distribution is omm-model, the command stays omm",
         ],
       },

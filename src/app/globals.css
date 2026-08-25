@@ -283,9 +283,11 @@
   /* Korean overrides. The Latin scale's negative tracking is drawn for
      Archivo's closed apertures; applied to Hangul the syllable blocks collide,
      and the tight display leading leaves no room for the taller glyph box.
-     Sizes are unchanged, so the layout keeps the same measure. */
+     Hangul syllable blocks also run visually heavier than Latin at the same
+     size, so the display head is sized down to match. */
   .text-display:lang(ko) {
-    line-height: 1.08;
+    font-size: 62px;
+    line-height: 1.15;
     letter-spacing: -0.01em;
   }
 
@@ -317,12 +319,21 @@
     .text-display {
       font-size: 70px;
     }
+
+    .text-display:lang(ko) {
+      font-size: 56px;
+    }
   }
 
   @media (max-width: 640px) {
     .text-display {
       font-size: 42px;
       line-height: 1;
+    }
+
+    .text-display:lang(ko) {
+      font-size: 36px;
+      line-height: 1.15;
     }
 
     .text-h2 {

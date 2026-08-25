@@ -125,6 +125,16 @@ export default function Nav({ locale }: { locale: Locale }) {
   const t = getDictionary(locale).nav;
   const close = () => setOpen(false);
   const version = useLiveVersion();
+  const pathname = usePathname();
+
+  /** Link to "/" is a no-op navigation when already on the home page, so
+   *  Next.js never fires its scroll-to-top. Do it by hand in that case. */
+  const goHome = () => {
+    close();
+    if (pathname === localeHref("/", locale)) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92">
@@ -132,7 +142,7 @@ export default function Nav({ locale }: { locale: Locale }) {
         <Link
           href={localeHref("/", locale)}
           className="flex shrink-0 items-center gap-2"
-          onClick={close}
+          onClick={goHome}
           prefetch={false}
         >
           <span className="font-mono text-[15px] font-medium lowercase text-ink-0">omm</span>

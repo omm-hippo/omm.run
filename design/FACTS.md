@@ -223,15 +223,18 @@ single source of truth for whether the setup wizard offers to install a runner:
   (`linker.py:2285-2296`).
 
 ### Known README/script divergences (script wins on the guide pages)
-1. **README says `install.sh` bootstraps via "apt on Debian/Ubuntu or Homebrew
-   on macOS".** `install.sh` has no Homebrew bootstrap at all — only `run_apt`
-   (`install.sh:105-155`); the sole `brew` mention is the PEP-668 comment at
-   `install.sh:332`. On macOS and on non-apt Linux the script checks and exits
-   with `Python 3.10+ not found` / `git not found`. `pipx` is bootstrapped with
-   `"$PY" -m pip install --user --quiet pipx`, falling back to
-   `--break-system-packages`, then `pipx ensurepath` (`install.sh:327-338`).
-   The landing page's Install tab footnote was corrected to match. README PR
-   #157 carries the same correction upstream.
+1. **Resolved (was open as of 2026-08-21).** README said `install.sh`
+   bootstraps via "apt on Debian/Ubuntu or Homebrew on macOS"; at the time this
+   page was first written, `install.sh` had no Homebrew bootstrap at all — only
+   `run_apt`, with macOS and non-apt Linux instead checking and exiting on
+   `Python 3.10+ not found` / `git not found`. A follow-up cross-check against
+   the Localfit source (commit `790395a`, 2026-08-23) found the script had
+   since gained Homebrew bootstrapping on macOS and multi-package-manager
+   support on Linux (apt-get, dnf, yum, pacman or apk — not apt-only). The
+   landing page's Install tab and the macOS/Linux guides were updated to match
+   in that commit; re-verify exact line numbers against the current Localfit
+   source before citing them again, since this page's own citations above
+   predate the fix.
 2. **README's runner table listed AnythingLLM as automated on "Windows
    (winget)".** `linker.py:1916-1923` returns Darwin-only and documents why:
    the `MintplexLabs.AnythingLLM` manifest was withdrawn from winget-pkgs on

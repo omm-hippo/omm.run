@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 
-import HeroCommand from "@/components/HeroCommand";
 import Terminal from "@/components/Terminal";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -34,7 +33,6 @@ export default function Hero({ locale }: { locale: Locale }) {
             >
               {t.cta}
             </a>
-            <HeroCommand copy={dictionary.ui.copy} copied={dictionary.ui.copied} />
           </div>
         </div>
 

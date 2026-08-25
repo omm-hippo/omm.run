@@ -47,7 +47,7 @@ export const ko = {
 
   hero: {
     eyebrow: "MIT · Python 3.10+ · Windows, macOS, Linux",
-    heading: "GGUF 파일은 허브 하나에, 러너 일곱 개는 자동으로 연결됩니다.",
+    heading: "GGUF 파일은 하나만, 모든 러너에 자동으로 연결됩니다.",
     lede: "디스크에는 모델마다 사본을 하나만 두고 Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui에 그대로 링크하며, 무엇이든 내려받기 전에 남은 메모리부터 확인합니다.",
     cta: "omm 설치하기",
   },
@@ -173,27 +173,33 @@ export const ko = {
       },
     ],
     tabs: {
-      aria: "운영체제",
-      copyAria: "{what} 설치 명령 복사",
+      aria: "설치 방법",
+      copyAria: "{what} 설치 명령",
       needThemFirst: "먼저 설치해야 하나요?",
-      otherWays: "다른 설치 방법",
-      unix: {
+      methods: {
+        curl: "curl",
+        irm: "irm",
+        brew: "Homebrew",
+        pipx: "pipx",
+      },
+      curl: {
         notes: [
           "설치 후에는 새 셸을 열어야 PATH에 omm이 반영됩니다.",
           "Python 3.10+가 필요합니다. macOS에서는 스크립트가 Homebrew를 이용해 — 없으면 Homebrew부터 먼저 설치한 뒤 — Python과 git을 채워 넣습니다. Linux에서는 apt-get, dnf, yum, pacman, apk 중 있는 패키지 매니저로 설치하며, 지원되지 않는 배포판이라면 Python 3.10+와 git이 있는지만 확인하고 없으면 그 자리에서 멈춥니다.",
         ],
-        alternatives: [
-          "macOS · Homebrew Tap",
-          "모든 OS · PyPI 경유, 서명 검증 없음 — 배포 이름은 omm-model이지만 명령은 그대로 omm입니다",
-        ],
       },
-      windows: {
+      irm: {
         notes: [
           "이 부분은 반드시 irm보다 먼저 실행해야 합니다. 스크립트 안에서 TLS를 설정하려 하면 이미 첫 다운로드에는 늦습니다.",
           "설치 후에는 새 PowerShell 창을 열어야 PATH에 omm이 반영됩니다.",
           "Python 3.10+가 필요합니다. 없으면 스크립트가 winget으로 Python과 git을 설치합니다.",
         ],
-        alternatives: [
+      },
+      brew: {
+        notes: ["macOS · Homebrew Tap"],
+      },
+      pipx: {
+        notes: [
           "모든 OS · PyPI 경유, 서명 검증 없음 — 배포 이름은 omm-model이지만 명령은 그대로 omm입니다",
         ],
       },
