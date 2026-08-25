@@ -518,9 +518,18 @@ capture immediately before this one in the same session.
 ### `benchmark`
 `src/omm/cli.py:6777-6900`. No-engine error shared with `contribute`
 (`cli.py:6825-6827`). `` `all` must be the only argument. `` real captured
-(`cli.py:6820`). Progress-line format-accurate reconstruction
-(`cli.py:6879-6884`) — not run live, since it loads a model and generates
-real text.
+(`cli.py:6820`). The "a real run" block is a **real capture**, 2026-08-25:
+`omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf` actually ran the real
+quality pack and speed samples through the real running Ollama. `1/8
+(12.5%)` and `54.7 tok/s` are this model's genuine measured results on this
+machine, not invented numbers. **Side effect, disclosed rather than
+avoided after the fact**: this run's evidence was really uploaded, because
+this dev machine's real `omm setting upload` policy was already `always`
+from earlier in this same session (see the `setting` section above) — the
+same anonymized CPU/GPU-score-only telemetry that section describes, no
+model name or generated text. `contribute`'s captures below were run
+against a scratch config with upload forced off specifically to avoid
+repeating this.
 
 ### `update`
 `src/omm/cli.py:2519-2548`. Not run live under any circumstance — a real

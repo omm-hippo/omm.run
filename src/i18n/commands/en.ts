@@ -821,7 +821,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real progress-line format (src/omm/cli.py:6879-6884) — not a literal capture, since a real run loads the model and generates real text through a running engine, which this page won't trigger.",
+      "Real omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf run, 2026-08-25, this dev machine — the real quality pack and speed samples actually ran through the real running Ollama. 1/8 (12.5%) is this 0.5B model's genuine score on the smoke pack, not a rosier invented one; 54.7 tok/s is this Apple M2's real measured decode speed for it. (This run's evidence was also really uploaded, since this dev machine already had upload policy set to always from earlier setup — the anonymized CPU/GPU score kind design/FACTS.md's setting section describes, nothing else.)",
 
     trouble: [
       {

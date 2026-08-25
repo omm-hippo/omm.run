@@ -1048,7 +1048,15 @@ Compatible: local text generation succeeded (already loaded and preserved).`,
 
     capture: {
       title: "omm benchmark qwen2.5-0.5b-instruct-q4_k_m.gguf",
-      text: `Benchmarking qwen2.5-0.5b-instruct-q4_k_m.gguf (1/1)...`,
+      text: `  Benchmarking qwen2.5-0.5b-instruct-q4_k_m:latest (1/1)  0:00:24
+                     Localfit reproducible quality evidence
+ Model                   Parameters  Quantization      Quality       Speed
+ qwen2.5-0.5b-instruc…   0.5B        Q4_K_M        1/8 (12.5%)  54.7 tok/s
+
+Saved reproducible local evidence to ~/.omm/evaluations/quality-20260825T042436Z.json.
+No generated text is stored. v8 telemetry includes a CPU/GPU generation score
+(never the model name), plus CPU architecture and core counts. Not a leaderboard.
+Summary: 1 succeeded, 0 model_unfit, 0 performance_unfit, 0 transient_error`,
     },
 
     trouble: [
