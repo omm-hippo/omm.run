@@ -312,11 +312,16 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   {tag}` exited with code... ``: `src/omm/launcher.py:177-183` (quoted from
   source, not executed — both require an environment state this page can't
   safely reproduce).
-- The "a real run" block's startup banner is a **format-accurate
-  reconstruction** of `src/omm/cli.py:5541-5551`, naming a model genuinely
-  installed on this dev machine (`omm info qwen2.5-0.5b-instruct-q4_k_m.gguf
-  --json`, 2026-08-24) — the chat itself is a live conversation, not
-  reproduced.
+- The "a real run" block is a **real, driven capture**, 2026-08-25:
+  `omm run` spawned under a real pty against `qwen2.5-0.5b-instruct-
+  q4_k_m.gguf`, a model genuinely installed on this dev machine, handing off
+  to the real `ollama run` exactly as `cli.py:5541-5565` does. A real
+  message ("What is the capital of France?") was sent and Ollama's real
+  generated reply ("The capital of France is Paris.") is shown verbatim —
+  no dialogue on this page is invented. This particular run skipped
+  "Started Ollama in the background for this chat." because the daemon was
+  already running; that line only prints when `omm run` starts it itself
+  (`cli.py:5547-5551`).
 
 ### `recommend`
 - Command definition: `src/omm/cli.py:2880-2932` (trained-model path) and

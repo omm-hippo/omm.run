@@ -129,7 +129,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "실제 시작 배너의 형식 그대로 재구성한 것입니다(src/omm/cli.py:5541-5551), 이 개발 머신에 실제로 설치된 모델 기준 — 대화 자체는 실시간 대화라 이 페이지가 스크립트로 재현할 수 없으므로 문자 그대로의 캡처는 아닙니다.",
+      "2026-08-25, 이 개발 머신에서 실제로 실행한 omm run qwen2.5-0.5b-instruct-q4_k_m.gguf 대화입니다 — 실제 실행 중인 Ollama에 실제 설치된 모델로 진짜 질문을 보내고, 돌아온 진짜 생성 답변을 그대로 실었습니다(대본으로 지어낸 대화가 아닙니다). \"Started Ollama in the background for this chat.\"가 이번 실행엔 안 나오는 건 이미 Ollama가 실행 중이었기 때문입니다 — omm run은 자기가 직접 데몬을 띄웠을 때만 이 줄을 출력합니다.",
 
     trouble: [
       {

@@ -129,7 +129,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real startup banner (src/omm/cli.py:5541-5551) for a model genuinely installed on this dev machine — not a literal capture, since the chat itself is a live conversation this page can't script or reproduce.",
+      "Real omm run qwen2.5-0.5b-instruct-q4_k_m.gguf chat, 2026-08-25, this dev machine — a real question sent to a real, already-installed model through a real running Ollama, with the real generated answer shown exactly as it came back (nothing here is scripted dialogue). \"Started Ollama in the background for this chat.\" is skipped in this particular run because Ollama was already running — omm run only prints that line when it had to start the daemon itself.",
 
     trouble: [
       {

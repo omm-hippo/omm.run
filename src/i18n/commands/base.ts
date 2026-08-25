@@ -225,11 +225,11 @@ Memory Guard blocked the load: 0.7 GB requested, 0.5 GB safely available (insuff
     capture: {
       title: "omm run qwen2.5-0.5b-instruct-q4_k_m.gguf",
       text: `qwen2.5-0.5b-instruct-q4_k_m.gguf via Ollama (interactive chat in this terminal)
-Started Ollama in the background for this chat.
 Type /bye to leave the chat.
+>>> What is the capital of France?
+The capital of France is Paris.
 
-[ ...interactive chat with Ollama, not reproduced here... ]
-
+>>> /bye
 Chat ended.`,
     },
 
