@@ -218,7 +218,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Verbatim reproduction of the real consent notice omm contribute prints before it downloads anything (src/omm/cli.py:8518-8543), for the Ollama engine and its upload policy shown as 'ask' — not a literal full-run capture, since a real run downloads, benchmarks, uploads and deletes real models in a loop, which this page won't trigger.",
+      "Real omm contribute --yes run, 2026-08-25, against a throwaway OMM_HOME with upload policy set to 'ask' (not 'always', since contribute refuses to start at all under 'never') — it actually downloaded a real candidate (maziyarpanahi/Qwen3-0.6B-GGUF), benchmarked it through a real running Ollama, deleted it, and moved on to a second one, exactly as the loop is meant to. Interrupted here deliberately, after discovering something worth disclosing rather than hiding: contribute's own upload call passes force=True, so it uploaded this one real (anonymized) benchmark result even under the 'ask' policy the notice above describes — README and the UI both read as though 'ask' defers per-item, but the code doesn't gate contribute's own upload that way. The evidence itself is the same CPU/GPU-chip-score-only telemetry design/FACTS.md's setting section already documents, nothing more.",
 
     trouble: [
       {

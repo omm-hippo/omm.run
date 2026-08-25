@@ -351,8 +351,9 @@ Verifying checksum...
     ],
 
     capture: {
-      title: "omm contribute",
-      text: `omm contribute - before you start:
+      title: "omm contribute --yes",
+      text: `Disk preflight passed: 129.6 GiB free on the tightest model volume. Each candidate is checked again before download.
+omm contribute - before you start:
   - Downloads, benchmarks, and deletes GGUF models repeatedly until you press Esc
   - Uses real bandwidth, disk space, and compute; runs unattended (no per-model confirmation)
   - Uploads every benchmark result per your current upload policy (ask)
@@ -361,7 +362,17 @@ Verifying checksum...
   - Gates committed runtime memory before download; monitors paging and measurement stability while running
   - Defers transient memory shortages up to three times instead of losing the candidate
   - Each benchmark has a 10-minute cutoff, with a status line every 30s
-Start contributing compute now? [y/N]`,
+Trying maziyarpanahi-qwen3-0.6b-gguf...
+Memory preflight before download: committed RAM 0.27 GiB; runtime buffers 0.27 GiB; mmap-backed weights 0.45 GiB; median available 1.59 GiB; emergency reserve 0.50 GiB; estimate source gguf_header.
+Predicted speed: 130.8 tok/s (range 57.3-164.4).
+  Qwen3-0.6B.Q4_K_M.gguf ############ 484.2/484.2 MB 31.1 MB/s
+Computing checksum...
+Benchmarking...
+63.6 tok/s
+Local calibration updated: correction ×0.55 (the calibration stays in ~/.omm and is never uploaded).
+Benchmark result uploaded.
+Removed Qwen3-0.6B.Q4_K_M.gguf
+Trying tinyllama-1.1b-q4...`,
     },
 
     trouble: [

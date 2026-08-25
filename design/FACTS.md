@@ -366,11 +366,32 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   consent-notice block quoted verbatim on the page) through `8600`.
 - Upload-policy-disabled error: `cli.py:8433-8436`. No-engine error:
   `cli.py:8456-8459`. Disk-space preflight error: `cli.py:7871-7879`.
-- The "a real run" block is a **verbatim quote of the real consent notice**
-  `omm contribute` prints before it downloads anything (`cli.py:8518-8543`,
-  Ollama-engine branch, upload policy shown as its default `ask`) — not a
-  capture of a full run, since a real run repeatedly downloads, benchmarks,
-  uploads and deletes real models, which this page does not trigger.
+- The "a real run" block is a **real, driven capture**, 2026-08-25: `omm
+  contribute --yes` actually run against a throwaway `OMM_HOME` with
+  `telemetry_send_policy` set to `ask` (not `always` — `never` makes
+  contribute refuse to start at all, `cli.py:8431-8437`). It genuinely
+  downloaded a real candidate (`maziyarpanahi/Qwen3-0.6B-GGUF`, real
+  484.2 MB), benchmarked it through the real running Ollama, deleted it
+  (`Removed Qwen3-0.6B.Q4_K_M.gguf`), and moved on to a second candidate —
+  the loop's actual behavior, not a single-shot reconstruction. Interrupted
+  there deliberately (`pkill`, not a graceful Esc, so no "stopped" line is
+  shown or claimed).
+- **Disclosed finding, not swept under the rug**: this run printed
+  `Benchmark result uploaded.` and a real event was genuinely sent, even
+  though the policy was `ask`, not `always`. The upload call inside
+  contribute's benchmark path passes `force=True`
+  (`cli.py:7314`, `telemetry.send_event(event, force=True)`), which bypasses
+  `telemetry.py:269`'s `policy == "always"` gate entirely. In other words:
+  `omm contribute` uploads under both `ask` and `always` — only `never`
+  stops it, and only because that's checked separately at contribute's own
+  start (`cli.py:8431-8437`), not through the shared send-gate every other
+  command's upload path respects. README's and the in-app text's phrasing
+  ("Uploads every benchmark result per your current upload policy") is
+  technically accurate but reads as though `ask` behaves the way it does
+  for a bare `omm benchmark` run; inside `contribute` specifically, it
+  doesn't. The one real event sent is the same anonymized CPU/GPU-chip-score
+  telemetry the `setting` section above already documents — no model name,
+  no generated text.
 
 ### `setup`
 - Command definition: `src/omm/cli.py:1072-1077`, delegating to

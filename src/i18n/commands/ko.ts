@@ -218,7 +218,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "omm contribute가 뭐든 내려받기 전에 실제로 출력하는 동의 안내문을 그대로 옮긴 것입니다(src/omm/cli.py:8518-8543), Ollama 엔진 기준이고 업로드 정책은 기본값인 'ask'로 표시됩니다 — 실제 실행 전체를 캡처한 건 아닙니다. 실제 실행은 실제 모델을 반복해서 내려받고 벤치마크하고 업로드하고 지우는데, 이 페이지는 그걸 실행하지 않습니다.",
+      "2026-08-25, 업로드 정책을 'ask'로 맞춘 임시 OMM_HOME에서 실제로 실행한 omm contribute --yes입니다('never'면 contribute가 아예 시작을 거부해서 'always' 대신 'ask'를 썼습니다) — 실제로 후보 하나(maziyarpanahi/Qwen3-0.6B-GGUF)를 내려받고, 실제 실행 중인 Ollama로 벤치마크하고, 지운 다음, 두 번째 후보로 넘어갔습니다. 원래 그렇게 도는 명령입니다. 여기서 일부러 멈춘 이유는 숨기지 않고 밝힐 게 있어서입니다: contribute 자체의 업로드 호출은 force=True를 넘기기 때문에, 위 안내문이 설명하는 'ask' 정책 아래에서도 이 실제(익명화된) 벤치마크 결과 하나가 업로드됐습니다 — README와 화면 문구는 'ask'가 건마다 물어보는 것처럼 읽히지만, 코드는 contribute 자체의 업로드를 그렇게 막지 않습니다. 전송된 내용 자체는 design/FACTS.md의 setting 섹션이 이미 설명한, CPU/GPU 칩 점수만 담긴 텔레메트리 그 이상도 이하도 아닙니다.",
 
     trouble: [
       {
