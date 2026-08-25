@@ -434,11 +434,18 @@ always rewrites every symlink even when nothing changes, so it was not run
 live.
 
 ### `autoremove` / `cleanup`
-`src/omm/cli.py:6669-6709`. Both real, safe, idempotent captures ("No
-broken symlinks found." / "No leftover install files found.") — nothing was
-actually broken to clean up on this machine. Their "found something"
-success-line formats are quoted from source (`cli.py:6692-6693`,
-`:6709`), not captured, since nothing broken existed to trigger them.
+`src/omm/cli.py:6669-6709`. `autoremove`'s page capture is a
+**format-accurate reconstruction** of the "found and removed something"
+case (`cli.py:6692-6693`) — the case the command actually exists for — since
+this dev machine has nothing broken to clean up right now and reproducing
+that for real means corrupting its real runner symlinks. The clean-system
+message ("No broken symlinks found.", `cli.py:6689`) moved to the
+troubleshooting section instead, as the common baseline case. `cleanup`
+keeps its real, safe, idempotent capture ("No leftover install files
+found.") since a genuinely empty result is itself a reasonable thing to
+show for a housekeeping command whose "found something" case is comparably
+uninteresting (a bare file count); its own success-line format is quoted
+from source (`cli.py:6709`), not captured.
 
 ### `verify`
 `src/omm/cli.py:5127-5262`. Engine-validation error real captured:

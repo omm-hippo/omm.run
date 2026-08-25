@@ -682,7 +682,7 @@ export const COMMANDS_KO: CommandTextSet = {
   autoremove: {
     metaTitle: "omm autoremove — 깨진 러너 심볼릭 링크 정리",
     metaDescription:
-      "omm autoremove 전체 레퍼런스: 자체 옵션 없음, 예제 2개, 실제 캡처한 실행 결과, 그리고 성공 메시지가 무슨 뜻인지.",
+      "omm autoremove 전체 레퍼런스: 자체 옵션 없음, 예제 2개, 실제로 뭔가 정리할 때의 모습, 그리고 깨끗한 상태에서의 실행 결과.",
     heading: "omm autoremove",
     lede: "모델의 원본 .gguf가 omm uninstall을 거치지 않고 지워진 뒤 러너 모델 디렉터리에 남은 심볼릭 링크를 제거합니다.",
     summary: "러너 모델 디렉터리에 남은 깨진 심볼릭 링크를 정리합니다 — 옵션 없이 바로.",
@@ -698,12 +698,12 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm autoremove 캡처입니다 — 제거할 깨진 링크가 없었는데, 이게 건강한 상태에서 흔한 결과입니다.",
+      "autoremove가 존재하는 이유인 상황 — omm uninstall이 아니라 손으로(또는 다른 방법으로) .gguf를 지워서 러너 두 곳 디렉터리에 깨진 심볼릭 링크가 남은 경우 — 를 실제 성공 메시지 형식(src/omm/cli.py:6692-6693) 그대로 재구성한 것입니다. 문자 그대로의 캡처는 아닙니다: 실제로 재현하려면 이 개발 머신의 진짜 Ollama·AnythingLLM 링크를 망가뜨려야 하는데, 이 페이지는 그렇게 하지 않습니다. 개수는 대표값입니다.",
 
     trouble: [
       {
-        why: "autoremove가 실제로 깨진 링크를 찾아서 제거했을 때 출력하는 문구입니다 — 에러가 아니라, 뭘 정리했고 어디였는지 확인해 주는 메시지입니다.",
-        fix: "별도 조치 필요 없습니다 — 러너 디렉터리에 오래된 심볼릭 링크가 있었을 때 나오는 정상 출력입니다.",
+        why: "대부분의 실행에서 나오는, 건강한 시스템일 때의 출력입니다 — 깨진 게 없어서 정리할 것도 없었다는 뜻입니다.",
+        fix: "별도 조치 필요 없습니다.",
       },
     ],
 

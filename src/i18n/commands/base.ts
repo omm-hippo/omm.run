@@ -890,13 +890,13 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
 
     capture: {
       title: "omm autoremove",
-      text: `No broken symlinks found.`,
+      text: `Removed 2 broken Ollama link(s), 1 broken AnythingLLM link(s).`,
     },
 
     trouble: [
       {
-        see: "Removed 3 broken Ollama link(s).",
-        source: "src/omm/cli.py:6692-6693",
+        see: "No broken symlinks found.",
+        source: "src/omm/cli.py:6689",
       },
     ],
 

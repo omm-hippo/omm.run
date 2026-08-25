@@ -682,7 +682,7 @@ export const COMMANDS_EN: CommandTextSet = {
   autoremove: {
     metaTitle: "omm autoremove — clean up broken runner symlinks",
     metaDescription:
-      "Full reference for omm autoremove: no flags of its own, two examples, a real captured run, and what its success message means.",
+      "Full reference for omm autoremove: no flags of its own, two examples, the case where it actually finds something to clean up, and what a clean run looks like.",
     heading: "omm autoremove",
     lede: "Remove symlinks left behind in runner model directories after a model's source file was deleted outside of omm uninstall.",
     summary: "Clean up broken symlinks left in runner model directories — no flags needed.",
@@ -698,12 +698,12 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm autoremove capture, 2026-08-24, this dev machine — no broken links existed to remove, which is the common, healthy outcome.",
+      "Format-accurate reproduction of the real success-line format (src/omm/cli.py:6692-6693) for the case autoremove actually exists to handle — a model's .gguf deleted by hand (or by something other than omm uninstall) leaving broken symlinks in two runners' directories. Not a literal capture: reproducing it for real means corrupting this dev machine's real Ollama/AnythingLLM links, which this page won't do. The counts are representative.",
 
     trouble: [
       {
-        why: "This is what autoremove prints when it does find and remove broken links — not an error, just confirmation of what it cleaned up and where.",
-        fix: "Nothing to do — this is normal output when a runner's directory had stale symlinks in it.",
+        why: "This is what autoremove prints on a healthy system, which is most runs — nothing was broken, so there was nothing to clean up.",
+        fix: "Nothing to do.",
       },
     ],
 

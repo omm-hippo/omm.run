@@ -306,6 +306,9 @@ export const en = {
     label: "Commands",
     heading: "Pick the command you want the full reference for.",
     lede: "Each page covers what the command is for and when to reach for it, every flag, five real examples, a real captured run, and the errors it actually prints with what to do about them.",
+    searchPlaceholder: "Filter commands by name or what they do",
+    /** `{query}` is what was typed into the filter box. */
+    searchEmpty: "No commands match “{query}”.",
   },
 
   commands: {
