@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState, useSyncExternalStore } from "react";
 
 import CommandBlock from "@/components/install/CommandBlock";
 import type { Slug } from "@/components/install/guides";
@@ -30,6 +30,10 @@ const DEPENDENCIES = [
   { label: "git-scm.com/downloads", href: "https://git-scm.com/downloads" },
 ] as const;
 
+const subscribeNever = () => () => {};
+const isWindowsClient = () => /Windows/i.test(navigator.userAgent);
+const isWindowsServer = () => false;
+
 type Props = {
   readonly t: Dictionary["install"]["tabs"];
   readonly ui: Dictionary["ui"];
@@ -42,8 +46,14 @@ type Props = {
 
 export default function InstallTabs({ t, ui, guides }: Props) {
   const baseId = useId();
-  const [method, setMethod] = useState<Method>("curl");
+  const [manualMethod, setManualMethod] = useState<Method | null>(null);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  /** Server has no OS to go on and always picks `curl`; once hydrated,
+   *  `isWindows` reflects the real browser and the default flips to `irm` —
+   *  unless the visitor already picked a tab themselves. */
+  const isWindows = useSyncExternalStore(subscribeNever, isWindowsClient, isWindowsServer);
+  const method = manualMethod ?? (isWindows ? "irm" : "curl");
 
   const tabId = (id: string) => `${baseId}-tab-${id}`;
   const panelId = (id: string) => `${baseId}-panel-${id}`;
@@ -56,7 +66,7 @@ export default function InstallTabs({ t, ui, guides }: Props) {
       event.preventDefault();
       const current = METHODS.indexOf(method);
       const next = METHODS[(current + step + METHODS.length) % METHODS.length];
-      setMethod(next);
+      setManualMethod(next);
       tabRefs.current[next]?.focus();
     },
     [method],
@@ -85,7 +95,7 @@ export default function InstallTabs({ t, ui, guides }: Props) {
                 aria-selected={active}
                 aria-controls={panelId(id)}
                 tabIndex={active ? 0 : -1}
-                onClick={() => setMethod(id)}
+                onClick={() => setManualMethod(id)}
                 className={`text-small rounded-md border-b-2 px-4 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] ${
                   active
                     ? "border-accent bg-bg-2 text-ink-0"
