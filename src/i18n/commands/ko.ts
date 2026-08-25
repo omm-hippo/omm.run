@@ -447,7 +447,7 @@ export const COMMANDS_KO: CommandTextSet = {
   import: {
     metaTitle: "omm import — 다른 앱의 모델 편입시키기",
     metaDescription:
-      "omm import 전체 레퍼런스: 인자 1개, 예제 3개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러.",
+      "omm import 전체 레퍼런스: 인자 1개, 예제 3개, 실제로 중복 파일을 편입시키는 실행 결과, 그리고 실제로 출력되는 에러들.",
     heading: "omm import",
     lede: "지원하는 모든 로컬 AI 앱을 뒤져서 omm이 아직 관리하지 않는 .gguf 파일을 찾고, 발견하는 대로 허브 편입을 제안합니다.",
     summary: "다른 앱의 모델 디렉터리에 있는 .gguf 파일을 omm 허브로 편입시킵니다.",
@@ -466,9 +466,13 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm import 캡처입니다 — 편입시킬 게 없었는데, 이것도 흔한 실제 결과입니다. 파일을 실제로 허브로 옮기는 대화형 편입 과정은 이 페이지가 실행하지 않으므로 재현하지 않았습니다.",
+      "2026-08-25, 실제 터미널로 처음부터 끝까지 직접 진행한 omm import 실행입니다: 실제 있을 법한 ~/Downloads가 우연히 비어 있는 대신, 이 개발 머신에 이미 설치된 실제 GGUF 파일 사본 2개를 임시 추가 디렉터리에 일부러 넣어서 import가 진짜 중복 파일을 찾도록 했습니다. import는 실제 사본 2개를 찾았고, 확인을 물었고, 실제 체크박스 화면(미리 선택됨)을 보여준 다음, 실제로 파일을 임시 허브로 옮겼습니다 — 0.5GB 절약은 중복 제거로 실제 회수된 디스크 공간이고, 이게 이 명령이 존재하는 이유 그 자체입니다.",
 
     trouble: [
+      {
+        why: "지원하는 모든 앱 디렉터리(그리고 넘긴 추가 경로)를 다 뒤졌는데 import가 아직 관리하지 않는 게 하나도 없었습니다.",
+        fix: "별도 조치 필요 없습니다 — 지금은 편입시킬 게 없습니다.",
+      },
       {
         why: "추가로 넘긴 경로가 존재하지 않거나 디렉터리가 아닙니다.",
         fix: "경로를 다시 확인하거나, 생략하고 평소 앱 디렉터리만 스캔하세요.",
@@ -716,7 +720,7 @@ export const COMMANDS_KO: CommandTextSet = {
   cleanup: {
     metaTitle: "omm cleanup — 남은 설치 파일 정리",
     metaDescription:
-      "omm cleanup 전체 레퍼런스: 자체 옵션 없음, 예제 2개, 실제 캡처한 실행 결과, 그리고 성공 메시지가 무슨 뜻인지.",
+      "omm cleanup 전체 레퍼런스: 자체 옵션 없음, 예제 2개, 실제로 뭔가 정리할 때의 모습, 그리고 깨끗한 상태에서의 실행 결과.",
     heading: "omm cleanup",
     lede: "설치가 중단되면서 모델 디렉터리에 남은, 등록되지 않은 부분 다운로드 .gguf 파일을 제거합니다.",
     summary: "남은 부분 다운로드와 설치 캐시 파일을 정리합니다 — 옵션 없이 바로.",
@@ -732,12 +736,12 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm cleanup 캡처입니다 — 제거할 남은 파일이 없었습니다.",
+      "2026-08-25, 임시 OMM_HOME에 실제 남은 .gguf.part 파일 2개를 일부러 만들어 두고(_cleanup_incomplete_installs가 찾는 바로 그 패턴) 실제로 실행한 omm cleanup입니다 — 지금은 정리할 게 없는 이 개발 머신의 진짜 ~/.omm이 아닙니다. cleanup이 실제로 둘 다 찾아서 지웠습니다.",
 
     trouble: [
       {
-        why: "cleanup이 실제로 남은 파일을 찾아서 제거했을 때 출력하는 문구입니다 — 에러가 아니라 정리한 개수를 알려주는 메시지입니다.",
-        fix: "별도 조치 필요 없습니다 — 중단됐던 설치의 디스크 공간이 회수됐습니다.",
+        why: "대부분의 실행에서 나오는, 정리할 게 없는 상태일 때의 출력입니다.",
+        fix: "별도 조치 필요 없습니다.",
       },
     ],
 
@@ -903,7 +907,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-24, 이 개발 머신에서 실제로 실행한 omm setting theme 캡처입니다.",
+      "2026-08-25, 임시 OMM_HOME 기준으로 실제로 실행한 omm setting theme --set high-contrast입니다 — 그냥 읽기만 하는 기본 omm setting theme보다, 실제로 값을 바꾸는 모습을 보여주는 게 이 명령의 존재 이유에 더 맞다고 판단했습니다.",
 
     trouble: [
       {

@@ -697,11 +697,21 @@ Further help:
     ],
 
     capture: {
-      title: "omm import",
-      text: `No externally-managed .gguf files found.`,
+      title: "omm import ~/Downloads",
+      text: `Found 1 model(s) (2 file(s), ~0.5 GB) in supported local AI apps not yet managed by omm.
+? Import 1 model(s) into the omm hub? Yes
+? Select which models to import:
+  ❯ [x] qwen2.5-0.5b-instruct-q4_k_m.gguf (0.5 GB, found in: import)
+${PICKER_PAUSE}
+  Ω Imported qwen2.5-0.5b-instruct-q4_k_m.gguf
+Done: 1 model(s) in the omm hub, 0.5 GB saved.`,
     },
 
     trouble: [
+      {
+        see: "No externally-managed .gguf files found.",
+        source: "src/omm/cli.py:1421",
+      },
       {
         see: "Not a directory: /definitely/not/a/real/directory",
         source: "src/omm/cli.py:1490",
@@ -959,13 +969,13 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
 
     capture: {
       title: "omm cleanup",
-      text: `No leftover install files found.`,
+      text: `Cleaned up 2 incomplete install file(s).`,
     },
 
     trouble: [
       {
-        see: "Cleaned up 2 incomplete install file(s).",
-        source: "src/omm/cli.py:6709",
+        see: "No leftover install files found.",
+        source: "src/omm/cli.py:6706",
       },
     ],
 
@@ -1114,9 +1124,9 @@ Compatible: local text generation succeeded (test load released).`,
     ],
 
     capture: {
-      title: "omm setting theme",
-      text: `  Color theme
- Theme  dark`,
+      title: "omm setting theme --set high-contrast",
+      text: `       Color theme
+ Theme  high-contrast`,
     },
 
     trouble: [

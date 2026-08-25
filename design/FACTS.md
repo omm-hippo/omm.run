@@ -425,9 +425,21 @@ decorator's own known-command list and `fit`'s body, which does branch on
 captures (bare, and `omm help search`).
 
 ### `import`
-`src/omm/cli.py:1475-1492`. Bad-path error: `cli.py:1490` (real, captured).
-The "no strays found" capture is real and safe — the adopt-flow that runs
-when strays *are* found is not reproduced, since it can move real files.
+`src/omm/cli.py:1475-1492`, adopt flow in `_run_import_flow`
+(`cli.py:1413-1472`) and `scan_import.py`. Bad-path error: `cli.py:1490`
+(real, captured). "Nothing stray found": `cli.py:1421` (real, captured).
+
+The "a real run" block is a **real, driven capture**, 2026-08-25: two copies
+of a real GGUF already installed on this dev machine
+(`qwen2.5-0.5b-instruct-q4_k_m.gguf`) were placed under a throwaway extra
+directory (`scan_directory`, `scan_import.py:201-213`, follows any path
+passed on the command line — no mocking needed, since it's real and
+harmless as long as the path is scratch), then `omm import` was driven
+through a real pty exactly as a flag-less run would be: confirm the import,
+accept the pre-checked picker, land on the real `Ω Imported ...` /
+`Done: 1 model(s) in the omm hub, 0.5 GB saved.` lines. The 0.5 GB is real
+deduplication savings from the two real duplicate copies, not a made-up
+number.
 
 ### `uninstall`
 `src/omm/cli.py:4966-5019`. Not-installed error: `cli.py:5008-5013`.
@@ -460,15 +472,20 @@ live.
 `src/omm/cli.py:6669-6709`. `autoremove`'s page capture is a
 **format-accurate reconstruction** of the "found and removed something"
 case (`cli.py:6692-6693`) — the case the command actually exists for — since
-this dev machine has nothing broken to clean up right now and reproducing
-that for real means corrupting its real runner symlinks. The clean-system
-message ("No broken symlinks found.", `cli.py:6689`) moved to the
-troubleshooting section instead, as the common baseline case. `cleanup`
-keeps its real, safe, idempotent capture ("No leftover install files
-found.") since a genuinely empty result is itself a reasonable thing to
-show for a housekeeping command whose "found something" case is comparably
-uninteresting (a bare file count); its own success-line format is quoted
-from source (`cli.py:6709`), not captured.
+reproducing it for real means corrupting this dev machine's real runner
+symlinks, unlike `cleanup` below. The clean-system message ("No broken
+symlinks found.", `cli.py:6689`) moved to the troubleshooting section
+instead, as the common baseline case.
+
+`cleanup`'s page capture is a **real, driven run**, 2026-08-25: two genuine
+`.gguf.part` files were created under a throwaway `OMM_HOME` — the exact
+pattern `_cleanup_incomplete_installs` (`cli.py:6626-6666`) looks for — and
+`omm cleanup` found and deleted both for real (`Cleaned up 2 incomplete
+install file(s).`). Unlike `autoremove`, this needed no filesystem-layer
+mocking: the files it acts on live entirely under `MODELS_DIR`, which
+follows `OMM_HOME`, so a scratch home was enough to make it both real and
+safe. The clean-system message ("No leftover install files found.",
+`cli.py:6706`) moved to troubleshooting, same as `autoremove`.
 
 ### `verify`
 `src/omm/cli.py:5127-5262`. Engine-validation error real captured:
@@ -493,16 +510,17 @@ representative, not this machine's.
 Ten subcommands: `src/omm/cli.py:5753-6199` (`telemetry`, `upload`,
 `error-reports`, `memory-guard`, `version`, `theme`, `calibrate`,
 `catalog-trust`, `catalog-status`, `catalog-rollback`) plus the bare
-interactive menu (`:6151-6199`). Real, safe captures taken for `theme`,
-`upload`, `memory-guard`, `version`, `catalog-status` (all read-only display
-tables); `theme`'s is the one shown on the page since it carries no
-machine-specific data. **`telemetry` and `error-reports` were deliberately
-not used as the page's capture**: this dev machine has a real, personal
-telemetry endpoint and Firebase error-report URL configured, and neither
-belongs on a public page. Real captured errors: `Choose only one of
---enable, --disable, or --ask.` (`cli.py:5798`, shared `upload`/
-`error-reports`), `The signed catalog manifest must use HTTPS.`
-(`cli.py:6104`). `--policy must be ask, block, or observe.` is quoted from
-source (`cli.py:5901`), not executed, since it needed no live check to
-verify. `calibrate` and `catalog-rollback` were not run live (real benchmark
-load; real config mutation).
+interactive menu (`:6151-6199`). The page's capture, 2026-08-25, is a real
+`omm setting theme --set high-contrast` run against a throwaway `OMM_HOME` —
+an actual change, not the earlier version's passive read-only `omm setting
+theme` display, since showing the value change is closer to why the command
+exists. **`telemetry` and `error-reports` were deliberately never used for
+any capture on this page**: this dev machine has a real, personal telemetry
+endpoint and Firebase error-report URL configured, and neither belongs on a
+public page. Real captured errors: `Choose only one of --enable, --disable,
+or --ask.` (`cli.py:5798`, shared `upload`/`error-reports`), `The signed
+catalog manifest must use HTTPS.` (`cli.py:6104`). `--policy must be ask,
+block, or observe.` is quoted from source (`cli.py:5901`), not executed,
+since it needed no live check to verify. `calibrate` and `catalog-rollback`
+were not run live (real benchmark load; real config mutation on state
+that isn't reasonable to fabricate a "before" for).

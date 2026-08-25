@@ -447,7 +447,7 @@ export const COMMANDS_EN: CommandTextSet = {
   import: {
     metaTitle: "omm import — adopt models from other apps",
     metaDescription:
-      "Full reference for omm import: its one argument, three examples, a real captured run, and the error it actually prints.",
+      "Full reference for omm import: its one argument, three examples, a real captured run that actually adopts a duplicate file, and the errors it actually prints.",
     heading: "omm import",
     lede: "Scan every supported local AI app for .gguf files omm doesn't manage yet, and offer to adopt each one into the hub.",
     summary: "Adopt .gguf files sitting in other apps' model directories into the omm hub.",
@@ -466,9 +466,13 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm import capture, 2026-08-24, this dev machine — nothing stray was found to adopt, which is itself a real, common outcome. The interactive adopt-each-file flow isn't reproduced here since it can move real files into the hub, which this page won't trigger.",
+      "Real omm import run, 2026-08-25, driven end to end through a real terminal: two copies of the same real GGUF (one already installed on this dev machine) were planted under a throwaway extra directory so import would find a genuine duplicate to adopt, instead of a real ~/Downloads that happened to have nothing stray in it. import found both real copies, asked to confirm, showed the real pre-checked picker, and actually moved the file into a throwaway hub — the 0.5 GB saved is real disk space reclaimed by deduplication, the whole reason this command exists.",
 
     trouble: [
+      {
+        why: "Every supported app directory (and any extra path passed) came back with nothing import doesn't already manage.",
+        fix: "Nothing to do — there's nothing stray to adopt right now.",
+      },
       {
         why: "The extra path passed doesn't exist or isn't a directory.",
         fix: "Double check the path, or omit it to just scan the usual app directories.",
@@ -716,7 +720,7 @@ export const COMMANDS_EN: CommandTextSet = {
   cleanup: {
     metaTitle: "omm cleanup — clean up leftover install files",
     metaDescription:
-      "Full reference for omm cleanup: no flags of its own, two examples, a real captured run, and what its success message means.",
+      "Full reference for omm cleanup: no flags of its own, two examples, the case where it actually finds something to clean up, and what a clean run looks like.",
     heading: "omm cleanup",
     lede: "Remove orphaned partial or unregistered .gguf downloads left behind in the models directory by an interrupted install.",
     summary: "Clean up leftover partial downloads and install cache files — no flags needed.",
@@ -732,12 +736,12 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm cleanup capture, 2026-08-24, this dev machine — no leftover files existed to remove.",
+      "Real omm cleanup run, 2026-08-25, against a throwaway OMM_HOME seeded with two genuine leftover .gguf.part files (the exact pattern _cleanup_incomplete_installs looks for) — not this dev machine's real ~/.omm, which had nothing to clean up right now. cleanup actually found and deleted both.",
 
     trouble: [
       {
-        why: "This is what cleanup prints when it does find and remove leftover files — not an error, just a count of what was cleaned up.",
-        fix: "Nothing to do — disk space from the interrupted install(s) has been reclaimed.",
+        why: "This is what cleanup prints on a system with nothing to reclaim, which is most runs.",
+        fix: "Nothing to do.",
       },
     ],
 
@@ -903,7 +907,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm setting theme capture, 2026-08-24, this dev machine.",
+      "Real omm setting theme --set high-contrast run, 2026-08-25, against a throwaway OMM_HOME — an actual change, not just a read, since setting's own display-only case (a bare omm setting theme) is less useful to show than the command actually doing what it's for.",
 
     trouble: [
       {
