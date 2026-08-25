@@ -929,4 +929,82 @@ export const COMMANDS_KO: CommandTextSet = {
       "contribute는 이 명령이 설정하는 업로드 정책을 읽습니다.",
     ],
   },
+
+  doctor: {
+    metaTitle: "omm doctor — 아무것도 안 바꾸고 설치 진단",
+    metaDescription:
+      "omm doctor 전체 레퍼런스: 옵션 1개, 예제 3개, 실제 캡처한 진단 리포트, 그리고 FAIL 결과가 무슨 뜻인지.",
+    heading: "omm doctor",
+    lede: "실제로 어느 바이너리가 실행되는지, 패키지와 소스 버전이 맞는지, 레지스트리가 Ollama가 실제로 보는 것과 일치하는지 — omm 설치 자체와 Ollama 링크를 아무것도 바꾸지 않고 진단합니다.",
+    summary: "omm 설치와 Ollama 링크를 읽기 전용으로 진단합니다 — 옵션 없이 바로.",
+
+    overviewBody:
+      "omm 자체가 뭔가 이상할 때 — 다른 버전이 실행되거나, 업데이트 후 명령을 못 찾거나, omm은 링크됐다고 생각하는데 Ollama는 실제로 못 보는 모델이 있거나 — 추측 대신 구조화된 답이 필요할 때 쓰는 명령입니다. 모든 검사는 읽기 전용입니다: 찾아낸 걸 자동으로 고치지 않고, 두 번 연속 실행해도 두 번째 결과가 절대 바뀌지 않습니다.",
+
+    optionDescriptions: [
+      "같은 검사를 표 대신 구조화된 JSON으로 출력합니다.",
+    ],
+
+    exampleCaptions: [
+      "전체 진단 표.",
+      "같은 검사를 JSON으로.",
+      "같은 진단을, 진행 출력 없이.",
+    ],
+
+    captureFootnote:
+      "2026-08-25, 이 개발 머신에서 실제로 실행한 omm doctor 캡처입니다 — 개인 파일 경로는 일반화했고, 그 외 모든 검사 이름·상태·경로 아닌 세부 정보(버전, 커밋, 태그 이름)는 실제 그대로입니다. 이번 실행이 실제로 찾아낸 진짜 WARN(git 편집 가능 설치라 패키지 메타데이터가 소스보다 몇 버전 뒤처진 상태)도 그대로 실었습니다.",
+
+    trouble: [
+      {
+        why: "doctor 자체 설명문이 명확히 밝힙니다: WARN은 절대 명령을 실패시키지 않지만, 진짜 FAIL(예: 완전히 깨진 Ollama 링크)은 실패시킵니다.",
+        fix: "FAIL 행의 detail 열에서 정확히 뭐가 실패했는지 읽고 그걸 고치세요 — 표가 문제를 정확히 짚어줍니다.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "설치 상태뿐 아니라 더 넓은 하드웨어·모델 요약을 봅니다.",
+      "doctor의 검사가 건강하게 유지하려는 대상인 마법사를 다시 실행합니다.",
+    ],
+  },
+
+  engine: {
+    metaTitle: "omm engine install — 로컬 AI 러너 설치",
+    metaDescription:
+      "omm engine install 전체 레퍼런스: 인자 1개, 예제 3개, 실제 캡처한 설치 결과, 그리고 실제로 출력되는 에러 2가지.",
+    heading: "omm engine install",
+    lede: "omm이 연결하는 일곱 러너 중 하나를 — 전체 설정 마법사를 거치지 않고 — Ollama, LM Studio 등 직접 설치합니다.",
+    summary: "설정 체크리스트를 건너뛰고 로컬 AI 러너 하나를 바로 설치합니다.",
+
+    overviewBody:
+      "전체 마법사를 다시 돌리지 않고 러너 하나만 더 설치하고 싶을 때 쓰는 명령입니다 — 설치한 다음엔 omm scan이나 omm link가 알아서 인식해서 다른 러너처럼 모델을 연결합니다. 인자 없이 실행하면 setup과 같은 체크리스트가 나오고, 러너 키를 주면 이 플랫폼에서 자동화된 패키지 매니저로 그 하나만 바로 설치합니다(어느 플랫폼에서 뭐가 자동화됐는지는 랜딩 페이지의 러너 커버리지 표 참고).",
+
+    optionDescriptions: [
+      "설치할 러너: ollama, lmstudio, jan, anythingllm, mstystudio, textgenwebui, koboldcpp 중 하나. 생략하면 대화형 체크리스트가 나옵니다.",
+    ],
+
+    exampleCaptions: [
+      "대화형 체크리스트 — setup 마법사와 같은 것.",
+      "러너 하나를 바로 설치합니다.",
+      "확인 없이 설치합니다.",
+    ],
+
+    captureFootnote:
+      "2026-08-25, 이 개발 머신에서 실제로 실행한 omm engine install lmstudio입니다 — 대역 채운 게 아니라 진짜 Homebrew cask 설치입니다. 퍼센트 단위로 길게 이어지는 다운로드 출력은 앞뒤만 남기고 나머지는 잘랐고, 그 외에는 LM Studio 설치 프로그램이 실제로 출력하는 lms daemon up 안내까지 전부 그대로입니다. 이 결과로 이 머신에 LM Studio가 실제로 설치됐습니다.",
+
+    trouble: [
+      {
+        why: "이 러너가 이미 설치돼 있어서 engine install이 할 일이 없습니다.",
+        fix: "별도 조치 필요 없습니다. omm scan으로 이미 뭐가 설치돼 있는지 확인하세요.",
+      },
+      {
+        why: "러너 키는 실제 존재하는 일곱 개 중 하나만 받는데, 이번 실행에서는 다른 값을 줬습니다.",
+        fix: "메시지에 나열된 일곱 개 중 하나를 쓰세요.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "러너 하나 대신 체크리스트까지 포함한 전체 마법사를 다시 실행합니다.",
+      "뭐가 설치돼 있고 뭐가 아직 없는지 확인합니다.",
+    ],
+  },
 };

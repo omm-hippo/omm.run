@@ -579,3 +579,39 @@ block, or observe.` is quoted from source (`cli.py:5901`), not executed,
 since it needed no live check to verify. `calibrate` and `catalog-rollback`
 were not run live (real benchmark load; real config mutation on state
 that isn't reasonable to fabricate a "before" for).
+
+### `doctor`
+- Command definition, checks table, exit codes: `src/omm/cli.py:2479-2514`.
+- The capture is a **real, driven capture**, 2026-08-25, this dev machine:
+  `omm doctor --no-color` and `omm doctor --json` (for full untruncated
+  detail strings) run for real. Every check name, PASS/WARN/FAIL status, and
+  non-path detail (omm version, source commit, pipx version, registered
+  model count, Ollama version, real model tag names) is verbatim and
+  unedited — including the real WARN this run actually surfaced (a
+  git-editable install whose package metadata trails its editable source by
+  a few versions, a genuine state on this machine, not staged). Personal
+  filesystem paths were generalized to representative ones (`~/.local/bin/
+  omm`, `~/.omm-src`, `~/.omm/models.json`) per this page set's existing
+  anonymization convention; every other value is exact. The `Overall: FAIL`
+  trouble-table row is quoted from source (`cli.py:2513-2514`), not forced
+  live, since forcing a real fail state (e.g. deleting the real Ollama
+  binary) would have broken this dev machine's actual setup.
+
+### `engine`
+- Command definition, subcommand, options, errors: `src/omm/cli.py:1080-
+  1113` (`engine_install_cmd`); "already installed" message: `cli.py:1109-
+  1111`; bad-engine-key error: `cli.py:1104-1108`.
+- The "a real run" block is a **real, driven capture**, 2026-08-25:
+  `omm engine install lmstudio --no-color` actually run on this dev
+  machine — a genuine Homebrew-cask install of LM Studio, not a
+  reconstruction. The long percentage-by-percentage download progress line
+  has been trimmed to its start and end; every other line, including the
+  real `lms daemon up` hint LM Studio's own installer prints on success, is
+  verbatim. **This install was intentionally not cleaned up afterward**,
+  unlike this page set's usual model-file pattern (scratch `OMM_HOME` +
+  immediate `omm uninstall`) — the user explicitly asked for a real
+  install, and engine installs are real desktop applications outside
+  `OMM_HOME`'s scope, not disposable model files. LM Studio genuinely
+  remains installed on this machine as a result. The "already installed"
+  and bad-key error captures were taken by re-running the command
+  afterward, both real.

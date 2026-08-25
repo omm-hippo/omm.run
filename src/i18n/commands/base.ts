@@ -39,7 +39,9 @@ export type Slug =
   | "verify"
   | "benchmark"
   | "update"
-  | "setting";
+  | "setting"
+  | "doctor"
+  | "engine";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -64,6 +66,8 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "benchmark",
   "update",
   "setting",
+  "doctor",
+  "engine",
 ];
 
 export type Option = {
@@ -1167,6 +1171,95 @@ Summary: 1 succeeded, 0 model_unfit, 0 performance_unfit, 0 transient_error`,
     related: [
       { label: "omm setup", href: "/commands/setup", internal: true },
       { label: "omm contribute", href: "/commands/contribute", internal: true },
+    ],
+  },
+
+  doctor: {
+    slug: "doctor",
+    name: "omm doctor",
+    href: "/commands/doctor",
+
+    options: [{ name: "--json", argument: null, default: "off" }],
+
+    examples: [
+      { prompt: "$", command: "omm doctor" },
+      { prompt: "$", command: "omm doctor --json" },
+      { prompt: "$", command: "omm doctor --quiet" },
+    ],
+
+    capture: {
+      title: "omm doctor",
+      text: `                                   omm doctor
+ Status  Check                                          Detail
+ PASS    installation                                    omm 0.2.146; source=git; command=~/.local/bin/omm; module=~/.omm-src/src/omm/cli.py
+ PASS    command                                          ~/.local/bin/omm -> ~/.local/bin/omm
+ PASS    editable source                                  ~/.omm-src
+ PASS    source commit                                    7860dedf19fa
+ WARN    version agreement                                package metadata=0.2.146; editable source=0.2.170
+ PASS    pipx                                              pipx 1.16.7 at /opt/homebrew/bin/pipx
+ PASS    registry                                          2 registered model(s) at ~/.omm/models.json
+ PASS    Ollama installation                               detected at /usr/local/bin/ollama
+ PASS    Ollama server                                     reachable; version=0.32.14
+ PASS    Ollama tag: qwen2.5-0.5b-instruct-q4_k_m.gguf     stored=qwen2.5-0.5b-instruct-q4_k_m; runtime=qwen2.5-0.5b-instruct-q4_k_m:latest; present in /api/tags
+ PASS    Ollama tag: qwen1_5-1_8b-chat-q4_k_m.gguf         stored=qwen1_5-1_8b-chat-q4_k_m; runtime=qwen1_5-1_8b-chat-q4_k_m:latest; present in /api/tags
+Overall: WARN (10 pass, 1 warn, 0 fail)`,
+    },
+
+    trouble: [
+      {
+        see: "Overall: FAIL (N pass, N warn, 1 fail)",
+        source: "src/omm/cli.py:2513-2514",
+      },
+    ],
+
+    related: [
+      { label: "omm scan", href: "/commands/scan", internal: true },
+      { label: "omm setup", href: "/commands/setup", internal: true },
+    ],
+  },
+
+  engine: {
+    slug: "engine",
+    name: "omm engine install",
+    href: "/commands/engine",
+
+    options: [{ name: "[engine]", argument: null, default: "none — interactive checklist" }],
+
+    examples: [
+      { prompt: "$", command: "omm engine install" },
+      { prompt: "$", command: "omm engine install lmstudio" },
+      { prompt: "$", command: "omm engine install ollama --yes" },
+    ],
+
+    capture: {
+      title: "omm engine install lmstudio",
+      text: `Installing LM Studio...
+Downloading llmster 0.0.21-2 Darwin arm64
+##################################################### 100.0%
+Verifying checksum...
+Installing llmster...
+Installation finished successfully! llmster is ready to launch.
+To start the daemon, run:
+
+    lms daemon up
+
+LM Studio installed successfully.`,
+    },
+
+    trouble: [
+      {
+        see: "LM Studio is already installed.",
+        source: "src/omm/cli.py:1109-1111",
+      },
+      {
+        see: "engine must be one of: anythingllm, jan, koboldcpp, lmstudio, mstystudio, ollama, textgenwebui (got 'bogus').",
+        source: "src/omm/cli.py:1104-1108",
+      },
+    ],
+
+    related: [
+      { label: "omm setup", href: "/commands/setup", internal: true },
+      { label: "omm scan", href: "/commands/scan", internal: true },
     ],
   },
 } as const satisfies Record<

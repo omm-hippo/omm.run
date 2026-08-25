@@ -929,4 +929,82 @@ export const COMMANDS_EN: CommandTextSet = {
       "contribute reads the upload policy this command configures.",
     ],
   },
+
+  doctor: {
+    metaTitle: "omm doctor — diagnose the install without changing anything",
+    metaDescription:
+      "Full reference for omm doctor: its one flag, three examples, a real captured diagnostic report, and what a FAIL result means.",
+    heading: "omm doctor",
+    lede: "Diagnose the omm install itself and its Ollama links — which binary is actually running, whether the package and source agree, whether the registry matches what Ollama can see — without changing anything.",
+    summary: "Diagnose the omm install and Ollama links, read-only — no flags needed.",
+
+    overviewBody:
+      "Reach for doctor when something about omm itself seems off — the wrong version running, a command not found after an update, a model omm thinks is linked that Ollama doesn't actually see — and you want a structured answer instead of guessing. Every check is read-only: nothing it finds gets fixed automatically, and running it twice in a row never changes the second result.",
+
+    optionDescriptions: [
+      "Print the same checks as structured JSON instead of a table.",
+    ],
+
+    exampleCaptions: [
+      "The full diagnostic table.",
+      "The same checks as JSON.",
+      "Same diagnosis, without the progress output.",
+    ],
+
+    captureFootnote:
+      "Real omm doctor capture, 2026-08-25, this dev machine — personal file paths generalized, every check name, status, and non-path detail (versions, commit, tag names) real and unedited, including the real WARN this run actually found (a git-editable install whose package metadata trails its source by a few versions).",
+
+    trouble: [
+      {
+        why: "doctor's own docstring is explicit about this: a WARN never fails the command, but a genuine FAIL (like a completely broken Ollama link) does.",
+        fix: "Read the FAIL row's detail column for the specific check that failed, and address that — the table names exactly what's wrong.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "See a broader hardware and model summary, not just install health.",
+      "Re-run the wizard doctor's checks are meant to keep healthy.",
+    ],
+  },
+
+  engine: {
+    metaTitle: "omm engine install — install a local AI runner",
+    metaDescription:
+      "Full reference for omm engine install: its one argument, three examples, a real captured install, and the two errors it actually prints.",
+    heading: "omm engine install",
+    lede: "Install a local AI runner program directly — Ollama, LM Studio, and the rest of the seven omm links into — without going through the full setup wizard.",
+    summary: "Install one local AI runner program directly, skipping the setup checklist.",
+
+    overviewBody:
+      "Reach for engine install when you want one more runner without repeating the whole setup wizard — after installing it, omm scan or omm link will pick it up and start linking models into it like any other runner. With no argument it shows the same checklist setup does; with an engine key it installs that one directly, using whichever package manager is automated for it on this platform (see the runner coverage table on the landing page for which ones that is, per OS).",
+
+    optionDescriptions: [
+      "Which runner to install: ollama, lmstudio, jan, anythingllm, mstystudio, textgenwebui, or koboldcpp. Left out, shows an interactive checklist instead.",
+    ],
+
+    exampleCaptions: [
+      "Interactive checklist, same as the setup wizard's.",
+      "Install one runner directly.",
+      "Install without any confirmation prompts.",
+    ],
+
+    captureFootnote:
+      "Real omm engine install lmstudio run, 2026-08-25, this dev machine — a genuine Homebrew-cask install, not a stand-in. The very long percentage-by-percentage download output has been trimmed to its start and end; everything else is verbatim, including the real lms daemon up hint LM Studio's own installer prints. LM Studio is now actually installed on this machine as a result.",
+
+    trouble: [
+      {
+        why: "This exact runner is already installed — engine install has nothing to do.",
+        fix: "Nothing to do. Use omm scan to confirm what's already installed.",
+      },
+      {
+        why: "The engine key only accepts one of the seven real runner keys, and this run passed something else.",
+        fix: "Use one of the seven listed in the message.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Re-run the full wizard, checklist and all, instead of one runner.",
+      "Confirm what's installed and what's still missing.",
+    ],
+  },
 };
