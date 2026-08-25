@@ -175,7 +175,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "2026-08-25, 실제 터미널로 처음부터 끝까지 직접 진행한 omm recommend 실행입니다 — 이 세션이 돌아가는 노트북 대신, design/FACTS.md의 설치 가이드가 쓰는 것과 같은 중급 사양 PC(Intel Core Ultra 7 155H, RAM 15.5GB, Intel Arc)를 기준으로 삼아서, 실제로 이걸 돌릴 만한 하드웨어 기준으로 순위가 나오게 했습니다. 바꿔치기한 건 하드웨어 값 하나뿐이고, 순위 계산·GitHub에서 실시간으로 가져온 후보 10개·1위를 고른 다음 나오는 상세 카드까지 전부 실제로 계산된 것입니다. 선택은 여기서 멈춥니다 — 끝까지 진행하면 실제 omm install 다운로드로 이어지는데, 이 페이지는 그걸 실행하지 않습니다.",
+      "2026-08-25, 실제 터미널로 처음부터 끝까지 직접 진행한 omm recommend 실행입니다 — 이 세션이 돌아가는 노트북 대신, design/FACTS.md의 설치 가이드가 쓰는 것과 같은 중급 사양 PC(Intel Core Ultra 7 155H, RAM 15.5GB, Intel Arc)를 기준으로 삼아서, 실제로 이걸 돌릴 만한 하드웨어 기준으로 순위가 나오게 했습니다. 바꿔치기한 건 하드웨어 값 하나뿐이고, 순위 계산·GitHub에서 실시간으로 가져온 후보 10개·화살표로 mistral 7b instruct v0.2(같은 순위 결과에 실제로 들어있는 후보)까지 이동한 것·그걸 고른 다음 나오는 상세 카드까지 전부 실제로 계산된 진짜입니다. Repository 필드에 나오는 TheBloke/Mistral-7B-Instruct-v0.2-GGUF도 이 사이트의 설치 데모가 이미 검증해 둔 것과 정확히 같은 저장소입니다. 이걸 선택하면 실제로 뭘 받는지도 보여주는데, 이 페이지만을 위해 4.4GB를 또 내려받는 대신 이미 검증된 같은 설치 데모(실제 바이트 수, Ollama·LM Studio·Jan 연결 요약)를 그대로 재사용했습니다.",
 
     trouble: [
       {

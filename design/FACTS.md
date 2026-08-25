@@ -322,11 +322,25 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   this on rather than this specific dev environment's cramped numbers. That
   substitution is the only one made: the ranked list is `predictor.rank_
   candidates` run for real against the ten real candidates `omm recommend`
-  fetched live from GitHub the same run, and the detail card
-  (`recommend_ui.py:308-`) after selecting the top-ranked candidate is
-  equally real. `install()` itself was monkeypatched to a no-op so pressing
-  Enter to select never triggers a real download — the capture ends at the
-  detail card rather than showing an install that didn't happen.
+  fetched live from GitHub the same run. The picker was then driven down
+  seven rows (real Down-arrow bytes sent into the pty) to `mistral 7b
+  instruct v0.2` — a real candidate in that same ranked run, not a scripted
+  substitute — and Enter selected it, producing a real detail card
+  (`recommend_ui.py:308-`) whose `Repository` field
+  (`TheBloke/Mistral-7B-Instruct-v0.2-GGUF`) matches, independently, the
+  exact repo this file's HF-verified install demo already cites — the
+  product's curated catalog entry for `mistral-7b-instruct-q4` and the
+  site's own long-standing demo model are provably the same repo.
+  `omm.cli.install` was monkeypatched to a no-op so pressing Enter never
+  triggers a real download; what selecting it would actually install is
+  shown by reusing this file's own already-HF-verified install facts
+  (byte count, link summary) rather than downloading 4.4 GB a second time
+  just for this page — see "Install guide pages" above and the `install`
+  section below for that verification.
+- The page's animation walks the `❯` pointer down through all ten rows
+  before landing (`CommandCapture.tsx`'s `ROWS_START`/`ROWS_END` block),
+  matching the real seven-Down-arrow navigation the capture used, not just
+  showing the final frame.
 - `No model is predicted to run on this hardware.`: `cli.py:2916`.
   `No model in the current rules fits this hardware.`: `cli.py:2952`.
 

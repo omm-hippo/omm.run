@@ -175,7 +175,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm recommend run, 2026-08-25, driven end to end through a real terminal against a mid-range PC (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc — the same machine design/FACTS.md's install guides use) instead of this session's own laptop, so the ranked list reflects hardware someone would actually run this on. Only the hardware reading was substituted; the ranking, the ten real candidates fetched live from GitHub, and the detail card after picking the top one are all genuinely computed. Selecting stops here — completing it would hand off into a real omm install download, which this page won't trigger.",
+      "Real omm recommend run, 2026-08-25, driven end to end through a real terminal against a mid-range PC (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc — the same machine design/FACTS.md's install guides use) instead of this session's own laptop, so the ranked list reflects hardware someone would actually run this on. Only the hardware reading was substituted; the ranking, the ten real candidates fetched live from GitHub, the arrow-key walk down to mistral 7b instruct v0.2 (a real candidate in that same ranked run), and the detail card after picking it are all genuinely computed and real, including its repository field — the same TheBloke/Mistral-7B-Instruct-v0.2-GGUF this site's own install demo already verifies. What selecting it actually downloads is shown too, reusing that same already-verified install (real byte count, real link summary for Ollama/LM Studio/Jan) rather than triggering a second real 4.4 GB download just for this page.",
 
     trouble: [
       {

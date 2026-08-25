@@ -281,22 +281,38 @@ Fetched updated recommendation data from GitHub.
 Recommended models
    MODEL                          STATUS     SPEED       MEMORY     BEST FOR
 ◆ Choose a model (↑↓ move · Enter select · Esc cancel)
- ❯ ornith 1.0 9b                  BEST FIT   ~6 tok/s    ~5.9 GB    General purpose
-   Qwen3.5 9B                     POPULAR    ~6 tok/s    ~5.9 GB    General purpose
-   Meta Llama 3.1 8B Instruct     OMM PICK   ~5 tok/s    ~5.3 GB    General chat
-   mistral 7b instruct v0.2       OMM PICK   ~21 tok/s   ~4.6 GB    General chat
-   … 6 more, ↑↓ move · Enter select · Esc cancel
+ROWS_START(7)
+ornith 1.0 9b                     BEST FIT   ~6 tok/s    ~5.9 GB    General purpose
+Qwen3.5 9B                        POPULAR    ~6 tok/s    ~5.9 GB    General purpose
+DeepSeek V4 Pro Qwen3.5 9B MTP    POPULAR    ~6 tok/s    ~5.9 GB    General purpose
+Meta Llama 3.1 8B Instruct        OMM PICK   ~5 tok/s    ~5.3 GB    General chat
+Qwen3 8B                          POPULAR    ~5 tok/s    ~5.3 GB    General purpose
+Qwen3 8B                          POPULAR    ~5 tok/s    ~5.3 GB    General purpose
+Qwen3VL 8B Instruct                POPULAR    ~5 tok/s    ~5.3 GB    General chat
+mistral 7b instruct v0.2          OMM PICK   ~21 tok/s   ~4.6 GB    General chat
+Qwen2.5 7B Instruct               POPULAR    ~21 tok/s   ~4.6 GB    General chat
+Qwen2.5 VL 7B Instruct            POPULAR    ~21 tok/s   ~4.6 GB    General chat
+ROWS_END
 ${PICKER_PAUSE}
-╭─ ornith 1.0 9b ────────────────────────────────────────────────────────────╮
-│ Popular on Hugging Face with 5,025,073 downloads.                         │
+╭─ mistral 7b instruct v0.2 ──────────────────────────────────────────────────╮
+│ Curated model from OMM's default catalog.                                  │
 │                                                                            │
 │ ✓  Predicted to run comfortably on this PC                                │
 │                                                                            │
-│ PREDICTED SPEED  ~6 tok/s              MEMORY REQUIRED  ~5.9 GB           │
+│ PREDICTED SPEED  ~21 tok/s              MEMORY REQUIRED  ~4.6 GB          │
 │                                                                            │
-│ Repository  ornith-ai/Ornith-1.0-9B-GGUF                                  │
+│ Repository  TheBloke/Mistral-7B-Instruct-v0.2-GGUF                        │
 ╰────────────────────────────────────────────────────────────────────────────╯
-Predicted speed is an estimate; actual performance can vary by runtime settings.`,
+Predicted speed is an estimate; actual performance can vary by runtime settings.
+
+  mistral-7b-instruct-v0.2.Q4_K_M.gguf ############ 4.4/4.4 GB
+Verifying checksum...
+Ω Installed mistral-7b-instruct-v0.2.Q4_K_M.gguf
+  Ollama: ollama run mistral-7b-instruct-v0.2.q4_k_m
+  LM Studio: visible in your local models list
+  Jan: visible in your local models list
+  Uninstall with: omm uninstall mistral-7b-instruct-v0.2.Q4_K_M.gguf
+  Run it now: omm run mistral-7b-instruct-v0.2.Q4_K_M.gguf`,
     },
 
     trouble: [
