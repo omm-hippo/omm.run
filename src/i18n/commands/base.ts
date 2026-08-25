@@ -177,15 +177,16 @@ Install with: omm install <number>  (e.g. omm install 1)`,
     ],
 
     capture: {
-      title: "omm install mistral-7b-instruct-q4",
-      text: `  mistral-7b-instruct-v0.2.Q4_K_M.gguf ############ 4.4/4.4 GB
-Verifying checksum...
-Ω Installed mistral-7b-instruct-v0.2.Q4_K_M.gguf
-  Ollama: ollama run mistral-7b-instruct-v0.2.q4_k_m
-  LM Studio: visible in your local models list
-  Jan: visible in your local models list
-  Uninstall with: omm uninstall mistral-7b-instruct-v0.2.Q4_K_M.gguf
-  Run it now: omm run mistral-7b-instruct-v0.2.Q4_K_M.gguf`,
+      title: "omm install tinyllama-1.1b-q4",
+      text: `  tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf ############ 668.8/668.8 MB 20.4 MB/s
+Computing checksum...
+Benchmarking...
+Memory Guard blocked the load: 0.7 GB requested, 0.5 GB safely available (insufficient_live_memory, no_owned_release_available).
+Ω Installed tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+  Ollama: ollama run tinyllama-1.1b-chat-v1.0.q4_k_m
+  AnythingLLM: visible in your local models list
+  Uninstall with: omm uninstall tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+  Run it now: omm run tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf`,
     },
 
     trouble: [

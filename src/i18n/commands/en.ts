@@ -87,7 +87,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real download, checksum and link-summary lines (src/omm/downloader.py:107-170, src/omm/cli.py:4880-4889) — not a literal capture, since actually downloading a 4.4 GB file isn't something this page does. Filename, byte count and the three linked runners match the site's own verified install demo (design/FACTS.md).",
+      "Real omm install tinyllama-1.1b-q4 run, 2026-08-25, against a throwaway OMM_HOME — a genuinely smaller curated model than the site's usual mistral-7b demo, chosen so a full real download stays quick. Download speed, both real engines it linked into (Ollama and AnythingLLM — whatever's actually installed on this dev machine, not a fictional roster), and the Memory Guard line are all real: the post-install benchmark this dev machine's real memory pressure blocked at capture time. Uninstalled immediately after capture, cleanly, with nothing left behind in either runner.",
 
     trouble: [
       {

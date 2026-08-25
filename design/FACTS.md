@@ -282,14 +282,26 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
 - Command definition, options, and errors: `src/omm/cli.py:4768-4889`;
   `Unknown model` message: `src/omm/hub.py:371`; disk-space check:
   `src/omm/cli.py:3477-3488`.
-- The "a real run" block is a **format-accurate reconstruction, not a
-  literal capture** — actually downloading a model is out of scope for this
-  page. It reuses the site's own already-verified install demo: filename
-  `mistral-7b-instruct-v0.2.Q4_K_M.gguf`, `4,368,439,584` bytes, and the
-  Ollama/LM Studio/Jan link summary, all from the sanctioned demo state
-  `Terminal.tsx` and this file's "Real `omm scan --no-color` capture" section
-  already document. Download/checksum/summary line formats:
-  `src/omm/downloader.py:107-170`, `src/omm/cli.py:4880-4889`.
+- The "a real run" block is a **real, driven capture**, 2026-08-25:
+  `omm install tinyllama-1.1b-q4 --yes` actually run against a throwaway
+  `OMM_HOME`, downloading the real 668.8 MB curated file (a smaller curated
+  name than the site's usual `mistral-7b-instruct-q4` demo, chosen so a real
+  download completes quickly rather than reusing that already-verified
+  reconstruction again). Real, unmocked linking wrote into this dev
+  machine's actual Ollama and AnythingLLM directories — the two runners
+  genuinely installed here, not the fictional Windows/Intel roster
+  `recommend`/`setup` use, since real linking follows each runner's real
+  install location regardless of `OMM_HOME`. `omm uninstall
+  tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf --yes` ran immediately after
+  capture, confirmed removed from both `omm list` and the real `ollama
+  list`. The `Computing checksum...` wording (not `Verifying checksum...`)
+  is real too — `cli.py:4134` prints one or the other depending on whether
+  the source has a pinned hash ahead of time; this curated entry didn't.
+  The Memory Guard line is a real safety block: this dev machine's actual
+  live memory pressure at capture time refused the post-install benchmark
+  load. Line refs: `src/omm/downloader.py:107-170` (download line format),
+  `src/omm/cli.py:4130-4136` (checksum wording), `:4880-4889` (link
+  summary).
 
 ### `run`
 - Command definition and options: `src/omm/cli.py:5517-5565`.

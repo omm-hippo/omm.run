@@ -87,7 +87,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "실제 다운로드·체크섬·연결 요약 줄의 형식 그대로 재구성한 것입니다(src/omm/downloader.py:107-170, src/omm/cli.py:4880-4889) — 이 페이지가 실제로 4.4 GB 파일을 내려받지는 않으므로 문자 그대로의 캡처는 아닙니다. 파일명·바이트 수·연결된 세 러너는 이 사이트 자체의 검증된 설치 데모(design/FACTS.md)와 동일합니다.",
+      "2026-08-25, 임시 OMM_HOME 기준으로 실제로 실행한 omm install tinyllama-1.1b-q4입니다 — 실제 다운로드가 빨리 끝나도록, 사이트가 보통 쓰는 mistral-7b 데모보다 진짜로 더 작은 큐레이션 모델을 골랐습니다. 다운로드 속도, 실제로 연결된 두 러너(Ollama·AnythingLLM — 지어낸 목록이 아니라 이 개발 머신에 실제로 설치된 것), Memory Guard 줄까지 전부 실제입니다: 캡처 시점 이 머신의 실제 메모리 압박 때문에 설치 후 벤치마크가 막힌 겁니다. 캡처 직후 바로 제거해서 두 러너 어디에도 흔적을 남기지 않았습니다.",
 
     trouble: [
       {
