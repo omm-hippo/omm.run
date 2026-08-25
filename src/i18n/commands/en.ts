@@ -175,7 +175,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "The hardware panel and table header are a real omm recommend capture, 2026-08-24, this dev machine. The two model rows are a format-accurate reconstruction from a real omm recommend --json run the same day — the arrow-key picker draws its rows directly to the terminal, so they never appear in plain captured output. A fresh run reflects this machine's live memory budget and the current candidate catalog.",
+      "Real omm recommend run, 2026-08-25, driven end to end through a real terminal against a mid-range PC (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc — the same machine design/FACTS.md's install guides use) instead of this session's own laptop, so the ranked list reflects hardware someone would actually run this on. Only the hardware reading was substituted; the ranking, the ten real candidates fetched live from GitHub, and the detail card after picking the top one are all genuinely computed. Selecting stops here — completing it would hand off into a real omm install download, which this page won't trigger.",
 
     trouble: [
       {
@@ -262,7 +262,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm setup run, 2026-08-24, this dev machine, driven end to end through a real terminal (accepting the default theme, selecting no runners, declining tab-completion) against a throwaway OMM_HOME so nothing here touched this machine's real config. The theme picker and runner checklist are questionary screens rendered straight to the terminal, captured through a terminal emulator rather than plain stdout — the same reason recommend's picker rows can't be captured any other way. The closing three lines are quoted verbatim from onboarding.py's own completion message.",
+      "Real omm setup run, 2026-08-25, driven end to end through a real terminal against the same mid-range PC recommend's page uses (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc, Ollama/LM Studio/Jan already installed) rather than this session's own laptop, against a throwaway OMM_HOME so nothing here touched this machine's real config. The theme picker and runner checklist are questionary screens rendered straight to the terminal, captured through a terminal emulator rather than plain stdout. The closing three lines are quoted verbatim from onboarding.py's own completion message.",
 
     trouble: [
       {

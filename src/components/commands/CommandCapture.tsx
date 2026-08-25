@@ -2,18 +2,29 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
+import { PICKER_PAUSE } from "@/i18n/commands/base";
+
 /**
  * A real captured command and its real captured output (see
  * `src/i18n/commands/base.ts`), typed into view the way `Terminal.tsx` types
  * the homepage demo — except triggered once this block scrolls into view
  * (`Reveal.tsx`'s IntersectionObserver, not on-mount) and never replays once
  * played, since it sits mid-page rather than above the fold.
+ *
+ * Commands that stop at an interactive picker (omm setup's runner
+ * checklist, omm recommend's model list) can embed `PICKER_PAUSE` in their
+ * captured `output` string, right after the rendered picker screen. The
+ * block reveals up to that marker, holds ~2s with the cursor blinking as if
+ * a reader were still looking at the options, then reveals the rest. Every
+ * other command's output has no marker and reveals in one step.
  */
 
-const CHAR_MS = 22; // ±8ms jitter, matches Terminal.tsx / DIRECTION.md §3
+const CHAR_MS = 22; // plus or minus 8ms jitter, matches Terminal.tsx / DIRECTION.md section 3
 const JITTER_MS = 8;
 const PAUSE_MS = 420;
 const THRESHOLD = 0.35;
+
+const PICKER_PAUSE_MS = 2000;
 
 const CURSOR_CSS = `
 @keyframes omm-cursor { 0% { opacity: 1 } 50% { opacity: 0 } }
@@ -40,7 +51,7 @@ const subscribeReducedMotion = (onChange: () => void) => {
   return () => query.removeEventListener("change", onChange);
 };
 
-type Phase = "waiting" | "typing" | "output";
+type Phase = "waiting" | "typing" | "picker-hold" | "output";
 
 type Props = {
   readonly command: string;
@@ -59,8 +70,12 @@ export default function CommandCapture({ command, output, footnote, label }: Pro
   const started = useSyncExternalStore(subscribeNever, isClient, isServer);
   const reduced = useSyncExternalStore(subscribeReducedMotion, prefersReduced, isServer);
 
-  // DIRECTION.md §3: under prefers-reduced-motion, skip straight to the
-  // final frame and never start an observer or a timer.
+  const pauseIndex = output.indexOf(PICKER_PAUSE);
+  const beforePause = pauseIndex === -1 ? output : output.slice(0, pauseIndex);
+  const afterPause = pauseIndex === -1 ? "" : output.slice(pauseIndex + PICKER_PAUSE.length);
+
+  // DIRECTION.md section 3: under prefers-reduced-motion, skip straight to
+  // the final frame and never start an observer or a timer.
   useEffect(() => {
     const node = rootRef.current;
     if (!node || reduced) return;
@@ -78,20 +93,29 @@ export default function CommandCapture({ command, output, footnote, label }: Pro
   }, [reduced]);
 
   useEffect(() => {
-    if (phase !== "typing") return;
-    if (tick < command.length) {
+    if (phase === "typing") {
+      if (tick < command.length) {
+        const timer = window.setTimeout(
+          () => setTick((t) => t + 1),
+          CHAR_MS + (Math.random() * 2 - 1) * JITTER_MS,
+        );
+        return () => window.clearTimeout(timer);
+      }
       const timer = window.setTimeout(
-        () => setTick((t) => t + 1),
-        CHAR_MS + (Math.random() * 2 - 1) * JITTER_MS,
+        () => setPhase(pauseIndex === -1 ? "output" : "picker-hold"),
+        PAUSE_MS,
       );
       return () => window.clearTimeout(timer);
     }
-    const timer = window.setTimeout(() => setPhase("output"), PAUSE_MS);
-    return () => window.clearTimeout(timer);
-  }, [phase, tick, command.length]);
+    if (phase === "picker-hold") {
+      const timer = window.setTimeout(() => setPhase("output"), PICKER_PAUSE_MS);
+      return () => window.clearTimeout(timer);
+    }
+  }, [phase, tick, command.length, pauseIndex]);
 
   const done = reduced || phase === "output";
-  const typed = done ? command : command.slice(0, tick);
+  const holding = !reduced && phase === "picker-hold";
+  const typed = done || holding ? command : command.slice(0, tick);
 
   return (
     <div ref={rootRef}>
@@ -114,11 +138,19 @@ export default function CommandCapture({ command, output, footnote, label }: Pro
           <code>
             <span className="text-accent">$ </span>
             <span className="text-ink-0">{typed}</span>
-            {started && !done ? <span className="omm-cursor" /> : null}
+            {started && !done && !holding ? <span className="omm-cursor" /> : null}
+            {holding ? (
+              <>
+                {"\n\n"}
+                {beforePause}
+                {started ? <span className="omm-cursor" /> : null}
+              </>
+            ) : null}
             {done ? (
               <>
                 {"\n\n"}
-                {output}
+                {beforePause}
+                {afterPause}
                 {"\n\n"}
                 <span className="text-accent">$ </span>
                 {started ? <span className="omm-cursor" /> : null}

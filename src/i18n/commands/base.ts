@@ -8,6 +8,15 @@
  * source behind every option, message and captured line below.
  */
 
+/**
+ * Embedded in a `capture.text` right after an interactive picker's rendered
+ * screen (omm setup's runner checklist, omm recommend's model list) to mark
+ * where `CommandCapture.tsx`'s typing animation holds for ~2s — as if a
+ * reader were still looking at the options — before revealing the rest.
+ * Absent from every other command's capture, which reveals in one step.
+ */
+export const PICKER_PAUSE = "@@PICKER_PAUSE@@";
+
 export type Slug =
   | "search"
   | "install"
@@ -262,18 +271,32 @@ Chat ended.`,
 
     capture: {
       title: "omm recommend",
-      text: `10 compatible models found
+      text: `No externally-managed .gguf files found.
+Fetched updated recommendation data from GitHub.
+10 compatible models found
 ╭─ This PC ────────────────────────────────────────────────────────────────────╮
-│ CPU  Apple M2                                                                │
-│ RAM  8.0 GB                                                                  │
-│ GPU  Apple M2  ·  8.0 GB                                                     │
-│ MODEL MEMORY  6.4 GB                                                         │
+│ CPU  Intel(R) Core(TM) Ultra 7 155H          RAM  15.5 GB                    │
+│ GPU  Intel(R) Arc(TM) Graphics               MODEL MEMORY  12.4 GB           │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Recommended models
-   MODEL                                        STATUS     SPEED        BEST FOR
- ❯ ornith 1.0 9b                                 BEST FIT   ~14 tok/s    General purpose
-   Qwen3.5 9B                                    POPULAR    ~14 tok/s    General purpose
-   … 8 more, ↑↓ move · Enter select · Esc cancel`,
+   MODEL                          STATUS     SPEED       MEMORY     BEST FOR
+◆ Choose a model (↑↓ move · Enter select · Esc cancel)
+ ❯ ornith 1.0 9b                  BEST FIT   ~6 tok/s    ~5.9 GB    General purpose
+   Qwen3.5 9B                     POPULAR    ~6 tok/s    ~5.9 GB    General purpose
+   Meta Llama 3.1 8B Instruct     OMM PICK   ~5 tok/s    ~5.3 GB    General chat
+   mistral 7b instruct v0.2       OMM PICK   ~21 tok/s   ~4.6 GB    General chat
+   … 6 more, ↑↓ move · Enter select · Esc cancel
+${PICKER_PAUSE}
+╭─ ornith 1.0 9b ────────────────────────────────────────────────────────────╮
+│ Popular on Hugging Face with 5,025,073 downloads.                         │
+│                                                                            │
+│ ✓  Predicted to run comfortably on this PC                                │
+│                                                                            │
+│ PREDICTED SPEED  ~6 tok/s              MEMORY REQUIRED  ~5.9 GB           │
+│                                                                            │
+│ Repository  ornith-ai/Ornith-1.0-9B-GGUF                                  │
+╰────────────────────────────────────────────────────────────────────────────╯
+Predicted speed is an estimate; actual performance can vary by runtime settings.`,
     },
 
     trouble: [
@@ -386,23 +409,23 @@ Pick a color theme for omm's output:
 
                 Your machine
  Field           Value
- OS              macOS 27.0
- CPU             Apple M2
- RAM (total)     8.0 GB
- Model budget    6.4 GB
- Free right now  0.4 GB (close other apps before running big models)
- GPU             Apple M2
- omm home        /Users/you/.omm  (147.3 GB free)
+ OS              Windows 11
+ CPU             Intel(R) Core(TM) Ultra 7 155H
+ RAM (total)     15.5 GB
+ Model budget    12.4 GB
+ Free right now  8.2 GB (close other apps before running big models)
+ GPU             Intel(R) Arc(TM) Graphics
+ omm home        C:\\Users\\you\\.omm  (131.6 GB free)
 
 ? Install any local AI runners you'd like to use? (space to select, enter to confirm)
    - Ollama (installed)
- » [ ] LM Studio
-   [ ] Jan
-   - AnythingLLM (installed)
+   - LM Studio (installed)
+   - Jan (installed)
+ » [ ] AnythingLLM
    [ ] Msty
    [ ] text-generation-webui
    [ ] KoboldCpp
-
+${PICKER_PAUSE}
 ? Install any local AI runners you'd like to use? (space to select, enter to confirm) done
 Enable tab-completion for install/remove any time: \`omm --install-completion\`.
 

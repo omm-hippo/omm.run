@@ -310,17 +310,23 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
 - Command definition: `src/omm/cli.py:2880-2932` (trained-model path) and
   `2934-2969` (static-rules fallback). No command-specific options exist
   beyond the two global flags its own docstring calls out.
-- The "a real run" block's hardware panel and table header (`10 compatible
-  models found` / the `This PC` box / `MODEL STATUS SPEED BEST FOR`) are a
-  **real capture**, `omm recommend --no-color` with stdin closed, 2026-08-24,
-  this dev machine — safe because a non-interactive terminal makes the
-  picker refuse before installing anything (`recommend_ui.py:220-268`
-  prints the panel/header via `console.print`; the picker itself is drawn by
-  questionary/prompt_toolkit directly to the terminal, so its rows never
-  appear in captured stdout). The two model rows shown are a
-  **format-accurate reconstruction** from a real `omm recommend --json` run
-  the same day, using the real row format (`recommend_ui.py:290-305`,
-  `build_rows` badge rules at `recommend_ui.py:172-204`).
+- The "a real run" block is a **real, end-to-end driven capture**,
+  2026-08-25: `omm recommend`'s real code, run through a real pty (Python
+  `pexpect`, rendered via the terminal emulator `pyte` since the picker and
+  detail card are `questionary`/`prompt_toolkit` screens drawn straight to
+  the terminal — never plain `stdout`, the reason a plain subprocess capture
+  can't reach them at all) — but with `omm.cli.scan_hardware` monkeypatched
+  (`unittest.mock.patch.object`) to a mid-range PC (Intel Core Ultra 7 155H,
+  15.5 GB RAM, Intel Arc, no dedicated VRAM) instead of this session's own
+  8 GB laptop, so the ranking reflects hardware someone would actually run
+  this on rather than this specific dev environment's cramped numbers. That
+  substitution is the only one made: the ranked list is `predictor.rank_
+  candidates` run for real against the ten real candidates `omm recommend`
+  fetched live from GitHub the same run, and the detail card
+  (`recommend_ui.py:308-`) after selecting the top-ranked candidate is
+  equally real. `install()` itself was monkeypatched to a no-op so pressing
+  Enter to select never triggers a real download — the capture ends at the
+  detail card rather than showing an install that didn't happen.
 - `No model is predicted to run on this hardware.`: `cli.py:2916`.
   `No model in the current rules fits this hardware.`: `cli.py:2952`.
 
@@ -346,31 +352,34 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
   `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
 - The "a real run" block is a **real, end-to-end driven capture**,
-  2026-08-24, this dev machine: `omm setup --no-color` spawned under a real
-  pty (Python `pexpect`) with `OMM_HOME` pointed at a throwaway scratch
-  directory (never this machine's real `~/.omm` — the theme pick and
-  `onboarding_completed` flag it writes to config land in the scratch dir
-  only), then driven through every prompt exactly as `_build_picker_key_bindings`
-  and `_build_empty_selection_validator` define them (`onboarding.py:230-261,
-  117-136`): Enter accepts the highlighted (default `dark`) theme, Enter
-  twice past the runner checklist confirms zero runners selected, `n`
-  declines tab-completion. Because the theme picker and checklist are
-  `prompt_toolkit`/questionary screens drawn straight to the terminal (the
-  same reason `recommend`'s picker rows never appear in plain stdout — see
-  that section above), the raw byte stream was rendered through a real
-  terminal emulator (`pyte`) rather than read as plain text, and the
-  resulting frames — banner, theme preview, hardware table (`omm home` shown
-  as a representative path, `/Users/you/...`, not this machine's real
-  username), and the runner checklist with its real "- Ollama (installed)"
-  vs "[ ] LM Studio" row formatting — are transcribed from those frames. The
-  automated capture's tail (past "done") was cut short by the driver script's
-  own timeout, so the closing three lines are quoted verbatim from
-  `onboarding.py:328-339` rather than transcribed from that run — matching,
-  not guessed, since a subsequent frame already confirmed the line
-  immediately preceding them (`Enable tab-completion for install/remove any
-  time...`, `onboarding.py:287-289`). An earlier version of this page
-  fabricated a plausible-looking checklist without running anything; this
-  replaces it with an actually-driven session.
+  2026-08-25: `omm setup`'s real code, run through a real pty (`pexpect`,
+  rendered via `pyte` for the same reason as `recommend` above) with
+  `OMM_HOME` pointed at a throwaway scratch directory — the theme pick and
+  `onboarding_completed` flag it writes never touched this machine's real
+  `~/.omm`. `omm.cli.scan_hardware` **and** `omm.onboarding.scan_hardware`
+  (onboarding.py imports it by name, so both bindings need patching for the
+  substitution to actually take) were monkeypatched to the same mid-range PC
+  `recommend`'s page uses, and `omm.linker.is_engine_installed` was
+  monkeypatched so Ollama/LM Studio/Jan read as already installed — the
+  same three-runner state `Terminal.tsx`'s hero demo and this file's
+  "sanctioned demo state" note (above) already use, so the site's demo
+  machine is consistent everywhere it appears. Driven through every prompt
+  exactly as `_build_picker_key_bindings` and `_build_empty_selection_
+  validator` define them (`onboarding.py:230-261, 117-136`): Enter accepts
+  the highlighted (default `dark`) theme, Enter twice past the runner
+  checklist confirms zero *additional* runners selected, `n` declines
+  tab-completion. The runner-checklist frame — real "- Ollama (installed)"
+  rows next to real "[ ] AnythingLLM" unchecked ones — is transcribed
+  directly from a captured `pyte` frame. The closing three lines are quoted
+  verbatim from `onboarding.py:328-339` rather than transcribed from a
+  frame, since the automated session's tail past "done" was cut short by
+  the driver script's own timeout — matching a message already confirmed
+  present in an earlier frame (`Enable tab-completion for install/remove
+  any time...`, `onboarding.py:287-289`), not guessed. An earlier version of
+  this page fabricated a plausible-looking checklist without running
+  anything, and a version before that used this session's own real but
+  atypically small laptop; this replaces both with an actually-driven
+  session against hardware the page's own reader is more likely to have.
 
 All six commands from issue #6's scope now have pages. Every remaining
 documented `omm` command has one too (see below) — every real `omm search`,
