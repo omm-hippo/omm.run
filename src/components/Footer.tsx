@@ -19,15 +19,14 @@ const DOCS_HREFS = [
 ] as const;
 
 /** Command names are the product's own vocabulary — never translated.
- *  `internal: true` once `/commands/<slug>` exists; external entries point
- *  at the README section covering that command until then. */
+ *  All entries now have a live `/commands/<slug>` doc page. */
 const COMMANDS = [
   { label: "omm search", href: "/commands/search", internal: true },
-  { label: "omm scan", href: `${REPO}#usage`, internal: false },
+  { label: "omm scan", href: "/commands/scan", internal: true },
   { label: "omm install", href: "/commands/install", internal: true },
-  { label: "omm list", href: `${REPO}#usage`, internal: false },
-  { label: "omm benchmark", href: `${REPO}#self-hosted-benchmark-data`, internal: false },
-  { label: "omm setting", href: `${REPO}#signed-recommendation-data`, internal: false },
+  { label: "omm list", href: "/commands/list", internal: true },
+  { label: "omm benchmark", href: "/commands/benchmark", internal: true },
+  { label: "omm setting", href: "/commands/setting", internal: true },
 ] as const;
 
 const PROJECT_HREFS = [
