@@ -776,7 +776,7 @@ export const COMMANDS_KO: CommandTextSet = {
     ],
 
     captureFootnote:
-      "이 개발 머신에 실제로 설치된 모델을 기준으로, 실제 상태·성공 메시지 형식(src/omm/cli.py:5239-5250) 그대로 재구성한 것입니다 — 실제로 실행 중인 엔진에 로드하는 건 이 페이지의 범위 밖이라 문자 그대로의 캡처는 아닙니다.",
+      "2026-08-25, 이 개발 머신에서 실제로 실행한 omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf입니다 — 실제 실행 중인 Ollama에 실제 결정적 프롬프트를 보내고 실제 응답을 요구했습니다. \"already loaded and preserved\"는 바로 앞의 omm run 캡처 때문에 모델이 마침 로드된 채로 남아 있어서 나온 실제 결과입니다 — 콜드 스타트라면 대신 \"test load released\"가 나옵니다.",
 
     trouble: [
       {

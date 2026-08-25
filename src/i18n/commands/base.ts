@@ -1007,7 +1007,7 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
     capture: {
       title: "omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf",
       text: `Verifying qwen2.5-0.5b-instruct-q4_k_m.gguf with Ollama...
-Compatible: local text generation succeeded (test load released).`,
+Compatible: local text generation succeeded (already loaded and preserved).`,
     },
 
     trouble: [

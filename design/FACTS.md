@@ -506,9 +506,14 @@ safe. The clean-system message ("No leftover install files found.",
 
 ### `verify`
 `src/omm/cli.py:5127-5262`. Engine-validation error real captured:
-`--engine must be ollama or lmstudio.` (`cli.py:5081-5163`). Status/success
-line format-accurate reconstruction (`cli.py:5239-5250`) — not run live,
-since it loads a real model into a real running engine.
+`--engine must be ollama or lmstudio.` (`cli.py:5081-5163`). The "a real
+run" block is a **real capture**, 2026-08-25: `omm verify
+qwen2.5-0.5b-instruct-q4_k_m.gguf --yes` actually sent a real deterministic
+prompt to the real running Ollama and required a real non-empty answer back
+(`cli.py:5239-5250`). The `(already loaded and preserved)` detail is real,
+not a stand-in for the more common `(test load released)` — it reflects
+that the model happened to still be loaded in Ollama from the `run`
+capture immediately before this one in the same session.
 
 ### `benchmark`
 `src/omm/cli.py:6777-6900`. No-engine error shared with `contribute`

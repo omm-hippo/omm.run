@@ -776,7 +776,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Format-accurate reproduction of the real status and success lines (src/omm/cli.py:5239-5250) for a model genuinely installed on this dev machine — not a literal capture, since actually loading it into a running engine is out of scope for this page.",
+      "Real omm verify qwen2.5-0.5b-instruct-q4_k_m.gguf run, 2026-08-25, this dev machine — a real deterministic prompt actually sent to the real running Ollama and a real answer required back. \"already loaded and preserved\" is the real detail this run reported, because the model happened to still be loaded from the omm run capture moments earlier; a cold run reports \"test load released\" instead.",
 
     trouble: [
       {
