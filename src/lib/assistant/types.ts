@@ -11,8 +11,8 @@ export const ASSISTANT_LIMITS = {
   maxCompletionTokens: 48,
   inferenceTimeoutMs: 5_000,
   clientWindowSeconds: 10 * 60,
-  clientRequestsPerWindow: 3,
-  dailyRequests: 40,
+  clientRequestsPerWindow: 10,
+  dailyRequests: 200,
   cacheSeconds: 15 * 60,
 } as const;
 
@@ -24,6 +24,7 @@ export type AssistantReason =
   | "no_match"
   | "sensitive_input"
   | "unsafe_input"
+  | "openai_model_ambiguous"
   | "rate_limited"
   | "daily_cap"
   | "not_configured"

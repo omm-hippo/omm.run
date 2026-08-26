@@ -1,6 +1,10 @@
 import type { Slug } from "../../i18n/commands/base";
 import type { AssistantStore } from "./budget";
-import { explicitCommand, narrowCandidates } from "./knowledge";
+import {
+  explicitCommand,
+  narrowCandidates,
+  needsOpenAiModelClarification,
+} from "./knowledge";
 import { inspectInput, privateHash } from "./security";
 import {
   ASSISTANT_LIMITS,
@@ -77,6 +81,13 @@ export async function answerAssistantQuestion(
   }
   if (safety === "url") {
     return response("fallback", "unsafe_input", candidateIds);
+  }
+  if (needsOpenAiModelClarification(request.question)) {
+    return response(
+      "clarify",
+      "openai_model_ambiguous",
+      ["search", "install"],
+    );
   }
 
   const explicit = explicitCommand(request.question);

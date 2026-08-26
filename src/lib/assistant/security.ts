@@ -18,6 +18,21 @@ export function inspectInput(question: string): InputSafety {
   return "safe";
 }
 
+export function rateLimitIdentity(requestUrl: string, clientAddress: string): string {
+  let scope = "development";
+  try {
+    const hostname = new URL(requestUrl).hostname.toLowerCase();
+    if (hostname === "omm.run" || hostname === "www.omm.run") {
+      scope = "production";
+    } else if (hostname.endsWith(".workers.dev")) {
+      scope = "preview";
+    }
+  } catch {
+    // Invalid URLs keep the fail-closed development scope.
+  }
+  return `${scope}\u0000${clientAddress}`;
+}
+
 export async function privateHash(secret: string, value: string): Promise<string> {
   const bytes = new TextEncoder().encode(`${secret}\u0000${value}`);
   const digest = await crypto.subtle.digest("SHA-256", bytes);

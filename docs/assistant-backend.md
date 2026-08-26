@@ -35,7 +35,7 @@ The default is `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. Cloudflare lists it
 explicitly as a JSON Mode model, and a live preview-binding check on 2026-08-26
 returned a valid allowlisted command selection in 14 completion tokens. Its
 higher unit cost is bounded by the 48-token output limit and the app-level
-40-request daily cap.
+200-request daily cap.
 
 `WORKERS_AI_MODEL` may select only:
 
@@ -60,16 +60,17 @@ AI inference stays disabled unless all three are available:
 3. an `ASSISTANT_HASH_SALT` secret of at least 16 characters.
 
 The D1 conditional `INSERT ... ON CONFLICT ... WHERE used < limit RETURNING`
-is one atomic SQL statement. It enforces three calls per salted client hash per
-10-minute UTC bucket and 40 model attempts per UTC day. Missing bindings or
+is one atomic SQL statement. It enforces ten calls per salted client hash per
+10-minute UTC bucket and 200 model attempts per UTC day. Preview and production
+use separate client scopes, so QA cannot consume a production visitor's limit. Missing bindings or
 schema errors fail closed. Do not substitute an isolate-local `Map` or a KV
 read/modify/write counter and call it global; neither provides this atomic
 account-wide contract.
 
 This application counter does not query the Cloudflare account's neuron usage.
 Other Workers AI applications on the same account can consume the shared free
-allocation first, and a Workers Paid account can bill overage. The 40-attempt
-preview cap limits this application's traffic; it is not a billing guarantee or
+allocation first, and a Workers Paid account can bill overage. The 200-attempt
+cap limits this application's traffic; it is not a billing guarantee or
 production-readiness evidence. Account budgets and monitoring require a
 separate, explicitly approved Cloudflare configuration step.
 

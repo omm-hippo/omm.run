@@ -2,11 +2,20 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { AssistantStore } from "../src/lib/assistant/budget";
-import { narrowCandidates } from "../src/lib/assistant/knowledge";
+import {
+  narrowCandidates,
+  needsOpenAiModelClarification,
+} from "../src/lib/assistant/knowledge";
 import { parseAssistantRequestText } from "../src/lib/assistant/request";
-import { inspectInput } from "../src/lib/assistant/security";
+import {
+  inspectInput,
+  rateLimitIdentity,
+} from "../src/lib/assistant/security";
 import { answerAssistantQuestion } from "../src/lib/assistant/service";
-import type { ModelSelection } from "../src/lib/assistant/types";
+import {
+  ASSISTANT_LIMITS,
+  type ModelSelection,
+} from "../src/lib/assistant/types";
 import {
   buildWorkersAiInput,
   DEFAULT_WORKERS_AI_MODEL,
@@ -83,6 +92,54 @@ test("runner detection questions prioritize diagnostic commands over reinstall",
     ids.slice(0, 3).filter((id) => id === "doctor" || id === "scan" || id === "link")
       .length >= 2,
   );
+});
+
+test("weak fallback candidates are removed and bare OpenAI downloads clarify", async () => {
+  const question = "open ai 모델을 다운로드를 받으려로 해";
+  assert.deepEqual(
+    narrowCandidates(question, "ko").map(({ id }) => id),
+    ["install"],
+  );
+  assert.equal(needsOpenAiModelClarification(question), true);
+  assert.equal(
+    needsOpenAiModelClarification("gpt-oss GGUF 모델을 다운로드하고 싶어"),
+    false,
+  );
+
+  let calls = 0;
+  const result = await answerAssistantQuestion(
+    { locale: "ko", question, turnCount: 0 },
+    {
+      ai: {
+        async run() {
+          calls += 1;
+          return { response: { action: "command", commandId: "install" } };
+        },
+      },
+      clientIdentity: "production\u0000198.51.100.7",
+    },
+  );
+  assert.equal(result.kind, "clarify");
+  assert.equal(result.reason, "openai_model_ambiguous");
+  assert.deepEqual(result.candidateIds, ["search", "install"]);
+  assert.equal(calls, 0);
+});
+
+test("preview traffic cannot consume the production client bucket", () => {
+  const address = "198.51.100.8";
+  assert.equal(
+    rateLimitIdentity("https://omm.run/api/assistant", address),
+    rateLimitIdentity("https://www.omm.run/api/assistant", address),
+  );
+  assert.notEqual(
+    rateLimitIdentity("https://omm.run/api/assistant", address),
+    rateLimitIdentity(
+      "https://version-omm.example-account.workers.dev/api/assistant",
+      address,
+    ),
+  );
+  assert.equal(ASSISTANT_LIMITS.clientRequestsPerWindow, 10);
+  assert.equal(ASSISTANT_LIMITS.dailyRequests, 200);
 });
 
 test("Workers AI request is bounded and asks only for schema-constrained IDs", () => {

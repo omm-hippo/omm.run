@@ -20,6 +20,7 @@ export type AssistantReason =
   | "no_match"
   | "sensitive_input"
   | "unsafe_input"
+  | "openai_model_ambiguous"
   | "rate_limited"
   | "daily_cap"
   | "not_configured"

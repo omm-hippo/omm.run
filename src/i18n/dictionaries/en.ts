@@ -360,8 +360,10 @@ export const en = {
         "The question may contain private or secret information, so it was not sent for classification. Remove it and try again.",
       unsafe_input:
         "URLs are not opened or trusted, so this question was kept out of the classifier. Remove the URL and try again.",
+      openai_model_ambiguous:
+        "Hosted OpenAI API models such as GPT-4 cannot be downloaded. If you mean the open-weight gpt-oss family in GGUF format, include ‘gpt-oss’ or the exact model name.",
       rate_limited:
-        "The inference limit is busy. No retry was attempted; use the regular command search.",
+        "This connection has reached the app limit of 10 model-backed questions per 10 minutes. No retry was attempted; wait for the window to reset or use regular command search.",
       daily_cap:
         "The daily inference cap has been reached. Use the regular command search.",
       not_configured:

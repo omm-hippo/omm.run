@@ -126,6 +126,24 @@ export function explicitCommand(question: string): Slug | null {
   return null;
 }
 
+/** Hosted OpenAI API models cannot be downloaded. A bare “OpenAI model”
+ * download request needs the model family clarified; explicit gpt-oss/GGUF
+ * wording is allowed through to normal command selection. */
+export function needsOpenAiModelClarification(question: string): boolean {
+  const normalized = normalize(question);
+  const mentionsOpenAi =
+    /\bopen\s*ai\b|\bopenai\b|오픈\s*(?:ai|에이아이)/u.test(normalized);
+  const mentionsDownload =
+    /\b(?:download|install)\w*\b|다운로드|설치|받(?:고|기|으|아|으려)/u.test(
+      normalized,
+    );
+  const namesOpenWeightModel =
+    /\bgpt[ ._-]?oss\b|\bgguf\b|\bopen[ -]?weight\b|오픈소스|공개\s*가중치/u.test(
+      normalized,
+    );
+  return mentionsOpenAi && mentionsDownload && !namesOpenWeightModel;
+}
+
 export function narrowCandidates(question: string, locale: Locale): readonly Candidate[] {
   const queryTokens = tokens(question);
   if (queryTokens.length === 0) return [];
@@ -135,7 +153,7 @@ export function narrowCandidates(question: string, locale: Locale): readonly Can
   );
   const diagnosisBoosts = runnerDiagnosisBoosts(question);
 
-  return COMMAND_ORDER.map((slug) => {
+  const ranked = COMMAND_ORDER.map((slug) => {
     const command = getCommand(slug, locale);
     const summary = summaryBySlug.get(slug) ?? "";
     const sections = searchableSections(slug, locale, summary);
@@ -149,6 +167,12 @@ export function narrowCandidates(question: string, locale: Locale): readonly Can
     return { id: slug, name: command.name, summary, score };
   })
     .filter((candidate) => candidate.score > 0)
-    .sort((left, right) => right.score - left.score || left.id.localeCompare(right.id))
+    .sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
+
+  const strongest = ranked[0]?.score ?? 0;
+  if (strongest < 8) return [];
+  const confidenceFloor = strongest * 0.6;
+  return ranked
+    .filter((candidate) => candidate.score >= confidenceFloor)
     .slice(0, ASSISTANT_LIMITS.maxCandidates);
 }

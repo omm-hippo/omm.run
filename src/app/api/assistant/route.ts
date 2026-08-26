@@ -5,6 +5,7 @@ import {
   type D1DatabaseLike,
 } from "../../../lib/assistant/budget";
 import { parseAssistantRequestText } from "../../../lib/assistant/request";
+import { rateLimitIdentity } from "../../../lib/assistant/security";
 import { answerAssistantQuestion } from "../../../lib/assistant/service";
 import {
   ASSISTANT_LIMITS,
@@ -63,7 +64,10 @@ export async function POST(request: Request): Promise<Response> {
     store: env?.ASSISTANT_DB ? new D1AssistantStore(env.ASSISTANT_DB) : undefined,
     model: env?.WORKERS_AI_MODEL,
     hashSalt: env?.ASSISTANT_HASH_SALT,
-    clientIdentity: request.headers.get("cf-connecting-ip") ?? "anonymous",
+    clientIdentity: rateLimitIdentity(
+      request.url,
+      request.headers.get("cf-connecting-ip") ?? "anonymous",
+    ),
   });
 
   return json(result);
