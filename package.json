@@ -7,6 +7,9 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "eslint",
+    "test": "tsx --test tests/*.test.ts",
+    "test:assistant": "tsx --test tests/assistant.test.ts tests/command-docs-sync.test.ts",
+    "check:omm-sync": "node scripts/check-omm-sync.mjs",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
@@ -26,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5",
     "wrangler": "^4.125.0"
   },

@@ -13,21 +13,73 @@ type Props = {
   readonly placeholder: string;
   /** `{query}` template for the no-results message. */
   readonly empty: string;
+  readonly initialQuery?: string;
 };
 
-/** Client-side filter over name + one-line summary — 22 rows is small
+const SEARCH_STOP_WORDS = new Set([
+  "and",
+  "but",
+  "can",
+  "does",
+  "for",
+  "how",
+  "installed",
+  "is",
+  "model",
+  "need",
+  "not",
+  "omm",
+  "runner",
+  "the",
+  "this",
+  "use",
+  "what",
+  "with",
+  "러너",
+  "모델",
+  "명령어",
+]);
+
+const SEARCH_ALIASES: Partial<Record<CommandLink["slug"], string>> = {
+  scan: "hardware detect detected detection missing 하드웨어 감지 인식 찾지 못해",
+  doctor: "diagnose diagnostic troubleshoot broken error 진단 오류 문제 점검",
+  link: "repair relink runner link 연결 복구 다시 연결",
+  setup: "configure onboarding checklist 설정 초기 구성",
+  engine: "runner program lm studio ollama 러너 프로그램",
+};
+
+function searchTerms(query: string): readonly string[] {
+  return query
+    .trim()
+    .toLowerCase()
+    .split(/\s+/u)
+    .map((term) =>
+      term
+        .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "")
+        .replace(/(?:하려면|하려고|에서|으로|에게|은|는|이|가|을|를|와|과|도)$/u, ""),
+    )
+    .filter((term) => term.length >= 2 && !SEARCH_STOP_WORDS.has(term));
+}
+
+/** Client-side filter over name + one-line summary — 24 rows is small
  *  enough that no build-time index or fuzzy scoring earns its keep. */
-export default function CommandSearch({ links, locale, placeholder, empty }: Props) {
-  const [query, setQuery] = useState("");
+export default function CommandSearch({
+  links,
+  locale,
+  placeholder,
+  empty,
+  initialQuery = "",
+}: Props) {
+  const [query, setQuery] = useState(initialQuery);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return links;
-    return links.filter(
-      (link) =>
-        link.name.toLowerCase().includes(needle) ||
-        link.summary.toLowerCase().includes(needle),
-    );
+    const terms = searchTerms(query);
+    return links.filter((link) => {
+      const haystack = `${link.name} ${link.summary} ${SEARCH_ALIASES[link.slug] ?? ""}`.toLowerCase();
+      return haystack.includes(needle) || terms.some((term) => haystack.includes(term));
+    });
   }, [links, query]);
 
   return (

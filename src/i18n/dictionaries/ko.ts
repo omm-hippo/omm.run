@@ -38,6 +38,7 @@ export const ko = {
     sections: ["문제", "기능", "러너", "설치"],
     installGuides: "가이드",
     commands: "명령어",
+    assistant: "명령 도우미",
     github: "GitHub",
     install: "설치",
     menu: "메뉴",
@@ -50,6 +51,7 @@ export const ko = {
     heading: "GGUF 파일은 하나만, 모든 러너에 자동으로 연결됩니다.",
     lede: "디스크에는 모델마다 사본을 하나만 두고 Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui에 그대로 링크하며, 무엇이든 내려받기 전에 남은 메모리부터 확인합니다.",
     cta: "omm 설치하기",
+    assistantCta: "알맞은 명령어 찾기",
   },
 
   terminal: {
@@ -306,6 +308,89 @@ export const ko = {
     lede: "각 페이지는 명령이 무엇을 위한 것이고 언제 쓰는지, 모든 옵션, 실제 예제 5개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러와 대처법까지 다룹니다.",
     searchPlaceholder: "이름이나 하는 일로 명령어 필터링",
     searchEmpty: "“{query}”와 일치하는 명령어가 없습니다.",
+  },
+
+  assistant: {
+    metaTitle: "omm 명령 도우미",
+    metaDescription:
+      "omm 설치·진단·모델·러너 작업을 설명하면 검증된 omm 명령어 레퍼런스에서 알맞은 명령을 찾아 줍니다.",
+    label: "명령 도우미",
+    heading: "할 일을 설명하면, 검증된 명령어를 찾아드립니다.",
+    lede:
+      "범용 챗봇이 아니라 omm 설치·진단·모델·러너 전용 안내 도구입니다. Workers AI는 허용된 명령어 ID 하나만 고를 수 있고, 셸 코드를 새로 만들거나 실행하지 않습니다.",
+    scope: "이름·옵션·변경 위험·예제·링크는 공식 정적 명령어 문서에서 가져옵니다.",
+    formLabel: "omm으로 무엇을 하려 하나요?",
+    placeholder:
+      "예: LM Studio를 설치했는데 omm이 찾지 못합니다. 무엇부터 확인해야 하나요?",
+    submit: "명령어 찾기",
+    submitting: "명령어 레퍼런스 확인 중…",
+    counter: "{count} / {max}",
+    privacy:
+      "API 키, 토큰, 비밀번호, 비공개 경로·모델 이름, 개인정보가 담긴 터미널 출력을 붙여넣지 마세요. 질문은 Workers AI에서 처리될 수 있습니다.",
+    quickLabel: "이런 질문으로 시작해 보세요",
+    quickQuestions: [
+      "설치한 러너를 찾지 못하는 이유를 어떻게 확인하나요?",
+      "이 컴퓨터에 맞는 모델을 찾는 명령어는 무엇인가요?",
+      "사용하지 않는 모델 파일을 안전하게 정리하려면 어떻게 하나요?",
+    ],
+    resultLabel: "검증된 명령어 레퍼런스",
+    clarifyLabel: "조금 더 구체적인 설명이 필요합니다",
+    fallbackLabel: "일반 명령어 검색으로 전환",
+    source: {
+      "workers-ai": "선택 방식: Workers AI 분류기",
+      deterministic: "선택 방식: 결정적 대체 검색",
+    },
+    messages: {
+      matched: "설명한 작업과 가장 가까운 문서화된 명령어입니다.",
+      ambiguous:
+        "여러 명령어가 맞을 수 있습니다. 후보를 비교하거나 구체적인 상황 한 가지를 더 적어 주세요.",
+      no_match:
+        "확실하게 일치하는 문서화된 명령어를 찾지 못했습니다. 전체 명령어 검색을 이용해 주세요.",
+      sensitive_input:
+        "질문에 비공개 정보나 비밀값이 포함됐을 수 있어 분류기로 보내지 않았습니다. 해당 내용을 지우고 다시 시도하세요.",
+      unsafe_input:
+        "URL은 열거나 신뢰하지 않으므로 이 질문을 분류기로 보내지 않았습니다. URL을 지우고 다시 시도하세요.",
+      rate_limited:
+        "현재 추론 요청 한도가 혼잡합니다. 재시도하지 않았으며, 일반 명령어 검색을 이용할 수 있습니다.",
+      daily_cap:
+        "오늘의 추론 한도에 도달했습니다. 일반 명령어 검색을 이용해 주세요.",
+      not_configured:
+        "이 환경에는 모델 분류가 설정되지 않았습니다. 결정적 명령어 검색을 이용해 주세요.",
+      provider_unavailable:
+        "분류기를 사용할 수 없습니다. 재시도하지 않았으며, 일반 명령어 검색을 이용할 수 있습니다.",
+      invalid_response:
+        "분류기 응답이 안전한 명령어 ID 계약과 맞지 않아 폐기했습니다.",
+      invalid_request:
+        "질문을 처리할 수 없습니다. 더 짧게 쓰고 비공개 정보나 비밀값을 지워 주세요.",
+    },
+    example: "문서에 있는 예제",
+    options: "레퍼런스의 옵션",
+    moreOptions: "외 {count}개",
+    changeCheck: "실행하기 전에",
+    risk: {
+      inspect: {
+        label: "정보 확인 중심",
+        description: "로컬 상태를 읽거나 설명하는 작업이 중심입니다.",
+      },
+      caution: {
+        label: "주의 필요",
+        description: "네트워크를 사용하거나 런타임을 시작하고 로컬 레지스트리 상태를 갱신할 수 있습니다.",
+      },
+      "high-impact": {
+        label: "변경 영향 큼",
+        description: "다운로드·설정 변경·로컬 데이터 삭제·결과 업로드가 일어날 수 있습니다.",
+      },
+    },
+    changeNote:
+      "이 분류와 예제는 정적 omm 문서에서 가져왔습니다. 옵션별 영향은 전체 레퍼런스에서 확인하세요.",
+    openReference: "전체 명령어 레퍼런스 열기",
+    searchAll: "모든 명령어 검색",
+    askAgain: "다른 질문하기",
+    turnLimit: "질문 3회를 모두 사용했습니다. 다시 시작해 새 질문을 적어 주세요.",
+    empty: "omm 설치·진단·모델 관리·러너 사용에 관한 구체적인 질문을 적어 주세요.",
+    tooShort: "알맞은 명령어를 좁힐 수 있도록 상황을 조금 더 설명해 주세요.",
+    unavailable:
+      "도우미를 사용할 수 없거나 응답을 검증하지 못했습니다. 일반 명령어 검색을 이용해 주세요.",
   },
 
   commands: {

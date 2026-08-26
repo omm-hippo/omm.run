@@ -70,6 +70,41 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "engine",
 ];
 
+/**
+ * Conservative command-level risk shown by the assistant before a reader
+ * copies anything. This describes the command's normal path, not a promise
+ * that every flag has the same effect. The command page remains the detailed
+ * source for options and mitigations.
+ */
+export type CommandRisk = "inspect" | "caution" | "high-impact";
+
+export const COMMAND_RISK = {
+  search: "caution",
+  install: "high-impact",
+  run: "caution",
+  recommend: "high-impact",
+  contribute: "high-impact",
+  setup: "high-impact",
+  scan: "caution",
+  tune: "inspect",
+  fit: "inspect",
+  help: "inspect",
+  import: "high-impact",
+  uninstall: "high-impact",
+  list: "caution",
+  info: "inspect",
+  upgrade: "high-impact",
+  link: "high-impact",
+  autoremove: "high-impact",
+  cleanup: "high-impact",
+  verify: "caution",
+  benchmark: "high-impact",
+  update: "high-impact",
+  setting: "high-impact",
+  doctor: "inspect",
+  engine: "high-impact",
+} as const satisfies Record<Slug, CommandRisk>;
+
 export type Option = {
   readonly name: string;
   readonly argument: string | null;
@@ -264,12 +299,18 @@ Chat ended.`,
     href: "/commands/recommend",
 
     options: [
+      {
+        name: "--profile",
+        argument: "dedicated | balanced | minimal",
+        default: "prompted; balanced with --yes/--json",
+      },
       { name: "--json", argument: null, default: "off" },
       { name: "--yes", argument: null, default: "off" },
     ],
 
     examples: [
       { prompt: "$", command: "omm recommend" },
+      { prompt: "$", command: "omm recommend --profile minimal" },
       { prompt: "$", command: "omm recommend --json" },
       { prompt: "$", command: "omm recommend --yes" },
     ],
@@ -1130,7 +1171,11 @@ Summary: 1 succeeded, 0 model_unfit, 0 performance_unfit, 0 transient_error`,
       { name: "setting telemetry --endpoint URL", argument: null, default: "not configured" },
       { name: "setting upload --enable|--disable|--ask", argument: null, default: "ask" },
       { name: "setting error-reports --enable|--disable|--ask", argument: null, default: "never" },
-      { name: "setting memory-guard --policy ask|block|observe", argument: null, default: "ask" },
+      {
+        name: "setting memory-guard --policy ask|block|observe --poll-seconds N --low-memory-seconds N",
+        argument: null,
+        default: "show current values",
+      },
       { name: "setting version --stable|--beta", argument: null, default: "stable" },
       { name: "setting theme --set NAME", argument: null, default: "dark" },
       { name: "setting calibrate [name]", argument: null, default: "smallest Ollama model" },

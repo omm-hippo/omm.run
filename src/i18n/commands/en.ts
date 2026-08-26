@@ -155,7 +155,7 @@ export const COMMANDS_EN: CommandTextSet = {
   recommend: {
     metaTitle: "omm recommend — a model that fits this machine",
     metaDescription:
-      "Full reference for omm recommend: both flags, three real examples, a real ranked-candidate capture, and the two errors it actually prints.",
+      "Full reference for omm recommend: its profile and output controls, four real examples, a real ranked-candidate capture, and the two errors it actually prints.",
     heading: "omm recommend",
     lede: "Rank models by a predictor trained on real install telemetry — falling back to static rules when the trained model can't be fetched — and offer to install the top pick.",
     summary: "Get a model suggestion ranked for this machine's hardware, with an offer to install it.",
@@ -164,12 +164,14 @@ export const COMMANDS_EN: CommandTextSet = {
       "Reach for recommend when you don't already know what to install: it scans this machine, ranks candidates by predicted speed and how much of the safe memory budget they'd use, and — outside --json — walks you through picking one and installs it directly. --json is read-only: it prints the ranked list and installs nothing, which is what makes it safe to script. --yes skips the picker and installs whatever ranked first.",
 
     optionDescriptions: [
+      "Choose how much of this machine the model may claim: dedicated, balanced, or minimal. Interactive runs ask; --yes and --json default to balanced.",
       "Print the ranked candidates as JSON and install nothing.",
       "Skip the interactive picker and install the top-ranked candidate immediately.",
     ],
 
     exampleCaptions: [
       "Interactive — ranks candidates, then walks you through picking one to install.",
+      "Prefer the smallest memory footprint so more of the machine remains available for other work.",
       "Read-only — prints the ranked list, installs nothing.",
       "Non-interactive — installs the top-ranked candidate without asking.",
     ],
@@ -294,7 +296,7 @@ export const COMMANDS_EN: CommandTextSet = {
     summary: "Print this machine's hardware, detected runners, and models — no flags needed.",
 
     overviewBody:
-      "Reach for scan any time you want a snapshot of what this machine can run and what's already on it, without changing anything. It's read-only: nothing it prints is a suggestion to act on immediately, though it does nudge you toward omm link or omm import when it notices something those would fix.",
+      "Reach for scan any time you want a snapshot of what this machine can run and what's already on it. The report itself is observational, but scan may correct stale link records when a runner has been removed; it also nudges you toward omm link or omm import when it notices something those would fix.",
 
     optionDescriptions: [
       "Print the same report as structured JSON instead of tables.",
@@ -877,7 +879,7 @@ export const COMMANDS_EN: CommandTextSet = {
   setting: {
     metaTitle: "omm setting — view or change omm's settings",
     metaDescription:
-      "Full reference for omm setting: all nine subcommands, five examples, a real captured display, and the three errors it actually prints.",
+      "Full reference for omm setting: all ten subcommands, five examples, a real captured display, and the three errors it actually prints.",
     heading: "omm setting",
     lede: "View or change telemetry, upload policy, error reports, memory protection, the update channel, the color theme, calibration, and signed-catalog trust — interactively, or one subcommand at a time.",
     summary: "View or change omm's settings — telemetry, upload policy, theme, update channel, and more.",
@@ -889,7 +891,7 @@ export const COMMANDS_EN: CommandTextSet = {
       "Configure where benchmark telemetry is sent, or clear it with --endpoint none.",
       "Configure whether benchmark results upload without asking, never, or ask each time.",
       "Configure the separate, opt-in policy for scrubbed crash/error reports.",
-      "Configure the policy that protects a runner's memory during a long operation.",
+      "Configure Memory Guard's policy, polling interval (0.1–60 seconds), and how long low memory must persist before cancellation (0–300 seconds).",
       "Show or switch which branch omm update pulls from.",
       "Show or change omm's output color theme.",
       "Correct this machine's local speed prediction using a real Ollama-linked model — never uploaded.",

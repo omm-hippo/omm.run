@@ -3,7 +3,7 @@
  *
  * English is the canonical, unprefixed site (`/`, `/install/windows`); Korean
  * lives under `/ko`. The app router segment is `[locale]`, so every English
- * request is rewritten to `/en/...` in `src/proxy.ts` and `/en/...` is
+ * request is rewritten to `/en/...` in `src/middleware.ts` and `/en/...` is
  * redirected back to the unprefixed path. Nothing in the app tree ever builds
  * an `/en` href — `localeHref` is the only place the prefix rule lives.
  */

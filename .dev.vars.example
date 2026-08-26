@@ -1,0 +1,5 @@
+# Local/preview only. Use a random value of at least 16 characters.
+ASSISTANT_HASH_SALT=replace-with-a-random-secret
+
+# Optional. Invalid or non-allowlisted IDs fail closed.
+WORKERS_AI_MODEL=@cf/meta/llama-3.3-70b-instruct-fp8-fast

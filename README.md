@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# omm.run
 
-## Getting Started
+The bilingual official website and command reference for
+[OMM](https://github.com/omm-hippo/omm). It is a Next.js application deployed
+to Cloudflare Workers through OpenNext.
 
-First, run the development server:
+## Local development
 
-```bash
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>. English is served without a prefix and Korean is
+served under `/ko`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Command assistant
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`/assistant` and `/ko/assistant` provide a constrained OMM command selector.
+Cloudflare Workers AI can choose only an allowlisted command ID; all commands,
+options, examples, risks, and links are rendered from the existing static OMM
+command docs.
 
-## Learn More
+The Workers AI binding is declared in `wrangler.jsonc`. Live inference also
+requires an approved D1 `ASSISTANT_DB` binding and a server-side
+`ASSISTANT_HASH_SALT`; without both, the route fails closed to deterministic
+search. See [the backend contract](docs/assistant-backend.md) before configuring
+or deploying it.
 
-To learn more about Next.js, take a look at the following resources:
+## Verification
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To compare the website command manifest against a trusted current local OMM
+checkout without network access:
 
-## Deploy on Vercel
+```sh
+OMM_SOURCE_DIR=/path/to/omm npm run check:omm-sync
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`npm run deploy` changes the Cloudflare account and production Worker. Do not
+run it without explicit deployment approval.

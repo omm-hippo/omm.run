@@ -35,9 +35,12 @@ export async function generateMetadata({
 
 export default async function CommandsChooser({
   params,
+  searchParams,
 }: PageProps<"/[locale]/commands">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const { q } = await searchParams;
+  const initialQuery = typeof q === "string" ? q.slice(0, 120) : "";
   const { commandsChooser } = getDictionary(locale);
   const links = getCommandLinks(locale);
 
@@ -56,6 +59,7 @@ export default async function CommandsChooser({
               locale={locale}
               placeholder={commandsChooser.searchPlaceholder}
               empty={commandsChooser.searchEmpty}
+              initialQuery={initialQuery}
             />
           </div>
         </div>

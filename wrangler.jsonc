@@ -1,5 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
+	"account_id": "370e521d89a70d895de8448a36449b93",
 	"main": ".open-next/worker.js",
 	"name": "omm",
 	"compatibility_date": "2026-08-23",
@@ -11,6 +12,17 @@
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
 	},
+	"ai": {
+		"binding": "AI"
+	},
+	"d1_databases": [
+		{
+			"binding": "ASSISTANT_DB",
+			"database_name": "omm-assistant-limits",
+			"database_id": "78488d68-2e7e-4bc1-87fa-67cf85915302",
+			"migrations_dir": "migrations"
+		}
+	],
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name

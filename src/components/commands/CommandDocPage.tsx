@@ -225,7 +225,7 @@ export default function CommandDocPage({
                   {command.related.map((entry) => (
                     <li key={entry.label} className="border-b border-line-0">
                       <a
-                        href={entry.href}
+                        href={entry.internal ? localeHref(entry.href, locale) : entry.href}
                         target={entry.internal ? undefined : "_blank"}
                         rel={entry.internal ? undefined : "noreferrer"}
                         className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"

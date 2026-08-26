@@ -151,7 +151,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           </span>
         </Link>
 
-        <nav className="ml-8 hidden items-center gap-6 md:flex">
+        <nav className="ml-8 hidden items-center gap-6 lg:flex">
           {SECTION_HREFS.map((href, index) => (
             <a key={href} href={localeHref(href, locale)} className={LINK}>
               {t.sections[index]}
@@ -163,9 +163,12 @@ export default function Nav({ locale }: { locale: Locale }) {
           <Link href={localeHref("/commands", locale)} prefetch={false} className={LINK}>
             {t.commands}
           </Link>
+          <Link href={localeHref("/assistant", locale)} prefetch={false} className={LINK}>
+            {t.assistant}
+          </Link>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-6 md:flex">
+        <div className="ml-auto hidden items-center gap-6 lg:flex">
           <a href={REPO} className={LINK} target="_blank" rel="noreferrer">
             {t.github}
           </a>
@@ -184,7 +187,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           aria-expanded={open}
           aria-controls="nav-panel"
           onClick={() => setOpen((v) => !v)}
-          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 md:hidden"
+          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 lg:hidden"
         >
           {open ? t.close : t.menu}
         </button>
@@ -192,7 +195,7 @@ export default function Nav({ locale }: { locale: Locale }) {
 
       {/* Mobile: plain full-width panel. No slide, no hamburger morph. */}
       {open ? (
-        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 md:hidden">
+        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 lg:hidden">
           <nav className="mx-auto flex max-w-page flex-col px-5 py-2">
             {SECTION_HREFS.map((href, index) => (
               <a
@@ -219,6 +222,14 @@ export default function Nav({ locale }: { locale: Locale }) {
               prefetch={false}
             >
               {t.commands}
+            </Link>
+            <Link
+              href={localeHref("/assistant", locale)}
+              onClick={close}
+              className="border-b border-line-0 py-3 text-small text-ink-2"
+              prefetch={false}
+            >
+              {t.assistant}
             </Link>
             <a
               href={REPO}

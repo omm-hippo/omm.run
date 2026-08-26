@@ -31,6 +31,7 @@ export const en = {
     sections: ["Problem", "Features", "Runners", "Install"],
     installGuides: "Guide",
     commands: "Commands",
+    assistant: "Command assistant",
     github: "GitHub",
     install: "Install",
     menu: "menu",
@@ -43,6 +44,7 @@ export const en = {
     heading: "One GGUF on disk. Linked into every runner automatically.",
     lede: "One copy of each model on disk, linked into Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp and text-generation-webui — and checked against your free memory before it downloads anything.",
     cta: "Install omm",
+    assistantCta: "Find the right command",
   },
 
   terminal: {
@@ -316,6 +318,90 @@ export const en = {
     searchPlaceholder: "Filter commands by name or what they do",
     /** `{query}` is what was typed into the filter box. */
     searchEmpty: "No commands match “{query}”.",
+  },
+
+  assistant: {
+    metaTitle: "omm command assistant",
+    metaDescription:
+      "Describe an omm installation, diagnosis, model, or runner task and get a command selected from the verified omm reference.",
+    label: "Command assistant",
+    heading: "Describe the task. Get the verified command.",
+    lede:
+      "This is a narrow guide for omm installation, diagnosis, models, and runners — not a general chatbot. Workers AI can only select an allowed command ID; it cannot invent or run shell code.",
+    scope: "Names, options, risks, examples, and links come from the official static command docs.",
+    formLabel: "What do you need omm to do?",
+    placeholder:
+      "For example: LM Studio is installed, but omm does not find it. What should I check?",
+    submit: "Find a command",
+    submitting: "Checking the command reference…",
+    counter: "{count} / {max}",
+    privacy:
+      "Do not paste API keys, tokens, passwords, private paths, model names, or terminal output containing personal data. A question may be processed by Workers AI.",
+    quickLabel: "Try a focused question",
+    quickQuestions: [
+      "Why is an installed runner not detected?",
+      "Which command finds a model that fits this computer?",
+      "How do I remove unused model files safely?",
+    ],
+    resultLabel: "Verified command reference",
+    clarifyLabel: "A little more detail is needed",
+    fallbackLabel: "Command search fallback",
+    source: {
+      "workers-ai": "Selection: Workers AI classifier",
+      deterministic: "Selection: deterministic fallback",
+    },
+    messages: {
+      matched: "This documented command is the closest match for the task you described.",
+      ambiguous:
+        "More than one documented command may fit. Compare these candidates or add one concrete detail.",
+      no_match:
+        "No documented command was a confident match. Continue with the complete command search.",
+      sensitive_input:
+        "The question may contain private or secret information, so it was not sent for classification. Remove it and try again.",
+      unsafe_input:
+        "URLs are not opened or trusted, so this question was kept out of the classifier. Remove the URL and try again.",
+      rate_limited:
+        "The inference limit is busy. No retry was attempted; use the regular command search.",
+      daily_cap:
+        "The daily inference cap has been reached. Use the regular command search.",
+      not_configured:
+        "Model classification is not configured here. Use the deterministic command search.",
+      provider_unavailable:
+        "The classifier is unavailable. No retry was attempted; use the regular command search.",
+      invalid_response:
+        "The classifier response did not match the safe command-ID contract, so it was discarded.",
+      invalid_request:
+        "The question could not be accepted. Shorten it and remove any private or secret information.",
+    },
+    example: "Documented example",
+    options: "Options in the reference",
+    moreOptions: "+{count} more",
+    changeCheck: "Before running",
+    risk: {
+      inspect: {
+        label: "Inspection",
+        description: "Focused on reading or explaining local state.",
+      },
+      caution: {
+        label: "Caution",
+        description: "May use the network, start a runtime, or refresh local registry state.",
+      },
+      "high-impact": {
+        label: "High impact",
+        description: "May download, change settings, remove local data, or upload results.",
+      },
+    },
+    changeNote:
+      "This classification and the example come from the static omm docs. Read the full reference for option-level effects.",
+    openReference: "Open full command reference",
+    searchAll: "Search all commands",
+    askAgain: "Ask another question",
+    turnLimit: "Three questions reached. Start over to ask another.",
+    empty:
+      "Write a focused question about installing omm, diagnosing it, managing a model, or using a runner.",
+    tooShort: "Add a little more detail so the command can be narrowed down.",
+    unavailable:
+      "The assistant is unavailable or its response could not be verified. Use the regular command search instead.",
   },
 
   commands: {

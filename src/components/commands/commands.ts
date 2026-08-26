@@ -15,8 +15,10 @@ import type { Locale } from "@/i18n/config";
 import {
   COMMAND_BASE,
   COMMAND_ORDER,
+  COMMAND_RISK,
   type Example,
   type Option,
+  type CommandRisk,
   type Slug,
 } from "@/i18n/commands/base";
 import { COMMANDS_EN } from "@/i18n/commands/en";
@@ -46,10 +48,13 @@ export type RelatedRow = {
 export type Command = {
   readonly slug: Slug;
   readonly name: string;
+  readonly href: string;
+  readonly risk: CommandRisk;
   readonly metaTitle: string;
   readonly metaDescription: string;
   readonly heading: string;
   readonly lede: string;
+  readonly summary: string;
   readonly overviewBody: string;
   readonly options: readonly OptionRow[];
   readonly examples: readonly ExampleRow[];
@@ -65,10 +70,13 @@ export function getCommand(slug: Slug, locale: Locale): Command {
   return {
     slug: base.slug,
     name: base.name,
+    href: base.href,
+    risk: COMMAND_RISK[slug],
     metaTitle: text.metaTitle,
     metaDescription: text.metaDescription,
     heading: text.heading,
     lede: text.lede,
+    summary: text.summary,
     overviewBody: text.overviewBody,
 
     options: base.options.map((option, index) => ({
