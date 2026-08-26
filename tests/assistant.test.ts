@@ -9,6 +9,7 @@ import {
 import { parseAssistantRequestText } from "../src/lib/assistant/request";
 import {
   inspectInput,
+  privateHash,
   rateLimitIdentity,
 } from "../src/lib/assistant/security";
 import { answerAssistantQuestion } from "../src/lib/assistant/service";
@@ -94,13 +95,15 @@ test("runner detection questions prioritize diagnostic commands over reinstall",
   );
 });
 
-test("weak fallback candidates are removed and bare OpenAI downloads clarify", async () => {
-  const question = "open ai 모델을 다운로드를 받으려로 해";
+test("weak fallback candidates are removed and bare OpenAI requests clarify", async () => {
+  const downloadQuestion = "open ai 모델을 다운로드를 받으려로 해";
+  const recommendationQuestion = "open ai 모델 추천을 해줘";
   assert.deepEqual(
-    narrowCandidates(question, "ko").map(({ id }) => id),
+    narrowCandidates(downloadQuestion, "ko").map(({ id }) => id),
     ["install"],
   );
-  assert.equal(needsOpenAiModelClarification(question), true);
+  assert.equal(needsOpenAiModelClarification(downloadQuestion), true);
+  assert.equal(needsOpenAiModelClarification(recommendationQuestion), true);
   assert.equal(
     needsOpenAiModelClarification("gpt-oss GGUF 모델을 다운로드하고 싶어"),
     false,
@@ -108,7 +111,7 @@ test("weak fallback candidates are removed and bare OpenAI downloads clarify", a
 
   let calls = 0;
   const result = await answerAssistantQuestion(
-    { locale: "ko", question, turnCount: 0 },
+    { locale: "ko", question: recommendationQuestion, turnCount: 0 },
     {
       ai: {
         async run() {
@@ -252,6 +255,34 @@ test("mocked inference returns only static IDs and repeated questions use cache"
     "reason",
     "source",
   ]);
+});
+
+test("selection cache namespace invalidates pre-policy cache entries", async () => {
+  const store = new MemoryStore();
+  const hashSalt = "sixteen-byte-salt";
+  const question = "I need to install a local model";
+  const legacyHash = await privateHash(hashSalt, `en\u0000${question}`);
+  store.cache.set(legacyHash, { action: "command", commandId: "search" });
+
+  let calls = 0;
+  const result = await answerAssistantQuestion(
+    { locale: "en", question, turnCount: 0 },
+    {
+      ai: {
+        async run() {
+          calls += 1;
+          return { response: { action: "command", commandId: "install" } };
+        },
+      },
+      store,
+      clientIdentity: "production\u0000198.51.100.9",
+      hashSalt,
+      now: 1_788_019_200,
+    },
+  );
+  assert.equal(result.source, "workers-ai");
+  assert.equal(result.commandId, "install");
+  assert.equal(calls, 1);
 });
 
 test("prompt injection cannot escape the candidate allowlist", async () => {

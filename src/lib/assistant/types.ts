@@ -14,6 +14,7 @@ export const ASSISTANT_LIMITS = {
   clientRequestsPerWindow: 10,
   dailyRequests: 200,
   cacheSeconds: 15 * 60,
+  cacheNamespace: "assistant-v2",
 } as const;
 
 export type AssistantSource = "workers-ai" | "deterministic";

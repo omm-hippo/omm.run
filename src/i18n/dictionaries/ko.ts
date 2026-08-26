@@ -351,7 +351,7 @@ export const ko = {
       unsafe_input:
         "URL은 열거나 신뢰하지 않으므로 이 질문을 분류기로 보내지 않았습니다. URL을 지우고 다시 시도하세요.",
       openai_model_ambiguous:
-        "GPT-4 같은 OpenAI 호스팅 API 모델은 다운로드할 수 없습니다. 공개 가중치인 gpt-oss 계열의 GGUF를 뜻한다면 ‘gpt-oss’나 정확한 모델 이름을 적어 주세요.",
+        "OMM은 다운로드 가능한 로컬 GGUF를 관리하며 GPT-4 같은 OpenAI 호스팅 API 모델은 관리하지 않습니다. 공개 가중치인 gpt-oss 계열을 뜻한다면 ‘gpt-oss’나 정확한 모델 이름을 적어 주세요.",
       rate_limited:
         "이 접속 환경에서 모델 분류 질문 10분당 10회 제한에 도달했습니다. 재시도하지 않았으며, 제한이 초기화될 때까지 기다리거나 일반 명령어 검색을 이용할 수 있습니다.",
       daily_cap:

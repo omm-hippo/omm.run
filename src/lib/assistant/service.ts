@@ -103,7 +103,7 @@ export async function answerAssistantQuestion(
   const now = dependencies.now ?? Math.floor(Date.now() / 1_000);
   const questionHash = await privateHash(
     hashSalt,
-    `${request.locale}\u0000${request.question}`,
+    `${ASSISTANT_LIMITS.cacheNamespace}\u0000${request.locale}\u0000${request.question}`,
   );
 
   try {

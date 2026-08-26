@@ -361,7 +361,7 @@ export const en = {
       unsafe_input:
         "URLs are not opened or trusted, so this question was kept out of the classifier. Remove the URL and try again.",
       openai_model_ambiguous:
-        "Hosted OpenAI API models such as GPT-4 cannot be downloaded. If you mean the open-weight gpt-oss family in GGUF format, include ‘gpt-oss’ or the exact model name.",
+        "OMM manages downloadable local GGUF models, not hosted OpenAI API models such as GPT-4. If you mean the open-weight gpt-oss family, include ‘gpt-oss’ or the exact model name.",
       rate_limited:
         "This connection has reached the app limit of 10 model-backed questions per 10 minutes. No retry was attempted; wait for the window to reset or use regular command search.",
       daily_cap:

@@ -74,9 +74,11 @@ cap limits this application's traffic; it is not a billing guarantee or
 production-readiness evidence. Account budgets and monitoring require a
 separate, explicitly approved Cloudflare configuration step.
 
-The short cache stores only a salted question hash, `commandId`/`clarify`, and
-expiry. It never stores the prompt, question, IP address, model free text, URL,
-or a command string. The route does not log request or model content.
+The short cache stores only a versioned salted question hash,
+`commandId`/`clarify`, and expiry. Incrementing the namespace invalidates old
+selections after classifier or policy changes. It never stores the prompt,
+question, IP address, model free text, URL, or a command string. The route does
+not log request or model content.
 
 The production configuration binds `ASSISTANT_DB` to the dedicated
 `omm-assistant-limits` database in the `omm.run` Cloudflare account. The
