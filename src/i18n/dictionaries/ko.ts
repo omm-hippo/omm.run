@@ -38,7 +38,7 @@ export const ko = {
     sections: ["문제", "기능", "러너", "설치"],
     installGuides: "가이드",
     commands: "명령어",
-    assistant: "명령 도우미",
+    assistant: "OMM AI assistant",
     github: "GitHub",
     install: "설치",
     menu: "메뉴",
@@ -311,10 +311,10 @@ export const ko = {
   },
 
   assistant: {
-    metaTitle: "omm 명령 도우미",
+    metaTitle: "OMM AI assistant",
     metaDescription:
       "omm 설치·진단·모델·러너 작업을 설명하면 검증된 omm 명령어 레퍼런스에서 알맞은 명령을 찾아 줍니다.",
-    label: "명령 도우미",
+    label: "OMM AI assistant",
     heading: "할 일을 설명하면, 검증된 명령어를 찾아드립니다.",
     lede:
       "범용 챗봇이 아니라 omm 설치·진단·모델·러너 전용 안내 도구입니다. Workers AI는 허용된 명령어 ID 하나만 고를 수 있고, 셸 코드를 새로 만들거나 실행하지 않습니다.",

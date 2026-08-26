@@ -14,7 +14,7 @@ npm run dev
 Open <http://localhost:3000>. English is served without a prefix and Korean is
 served under `/ko`.
 
-## Command assistant
+## OMM AI assistant
 
 `/assistant` and `/ko/assistant` provide a constrained OMM command selector.
 Cloudflare Workers AI can choose only an allowlisted command ID; all commands,

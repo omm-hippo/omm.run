@@ -1,4 +1,4 @@
-# OMM command assistant backend
+# OMM AI assistant backend
 
 The assistant is a constrained command selector, not a general chatbot. The
 browser sends `{ locale, question, turnCount }`. The server narrows the

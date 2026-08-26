@@ -31,7 +31,7 @@ export const en = {
     sections: ["Problem", "Features", "Runners", "Install"],
     installGuides: "Guide",
     commands: "Commands",
-    assistant: "Command assistant",
+    assistant: "OMM AI assistant",
     github: "GitHub",
     install: "Install",
     menu: "menu",
@@ -321,10 +321,10 @@ export const en = {
   },
 
   assistant: {
-    metaTitle: "omm command assistant",
+    metaTitle: "OMM AI assistant",
     metaDescription:
       "Describe an omm installation, diagnosis, model, or runner task and get a command selected from the verified omm reference.",
-    label: "Command assistant",
+    label: "OMM AI assistant",
     heading: "Describe the task. Get the verified command.",
     lede:
       "This is a narrow guide for omm installation, diagnosis, models, and runners — not a general chatbot. Workers AI can only select an allowed command ID; it cannot invent or run shell code.",
