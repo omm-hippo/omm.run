@@ -180,8 +180,8 @@ export default function AssistantClient({
         : t.resultLabel;
 
   return (
-    <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-6">
-      <div className="lg:col-span-5">
+    <div className="mx-auto max-w-3xl">
+      <div>
         <form onSubmit={submitQuestion} noValidate>
           <label htmlFor="assistant-question" className="text-h3 block">
             {t.formLabel}
@@ -252,7 +252,7 @@ export default function AssistantClient({
       <section
         aria-live="polite"
         aria-busy={status === "loading"}
-        className="min-h-80 border-t border-line-1 pt-6 lg:col-span-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
+        className="mt-10 min-h-80 border-t border-line-1 pt-8"
       >
         {status === "loading" ? (
           <div className="flex min-h-64 items-center border-y border-line-0">
