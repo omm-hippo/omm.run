@@ -6,7 +6,7 @@ export const ASSISTANT_LIMITS = {
   minQuestionCharacters: 1,
   maxQuestionCharacters: 480,
   maxTurns: 3,
-  maxCandidates: 5,
+  maxCandidates: 8,
   maxSuggestions: 3,
   maxCompletionTokens: 48,
   inferenceTimeoutMs: 5_000,
@@ -52,6 +52,9 @@ export type Candidate = {
   readonly id: Slug;
   readonly name: string;
   readonly summary: string;
+  /** A few lines of symptom→fix and example captions from the static docs,
+   *  so Workers AI has more than a one-line summary to disambiguate on. */
+  readonly context: string;
   readonly score: number;
 };
 

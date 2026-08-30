@@ -95,6 +95,32 @@ test("runner detection questions prioritize diagnostic commands over reinstall",
   );
 });
 
+test("synonym and symptom phrasings reach the right command", () => {
+  const top3 = (q: string, locale: "en" | "ko" = "en") =>
+    narrowCandidates(q, locale).slice(0, 3).map(({ id }) => id);
+
+  assert.ok(top3("I want to talk to a model I downloaded").includes("run"));
+  assert.ok(top3("get rid of a model I no longer want").includes("uninstall"));
+  assert.ok(top3("will a 7B model even run on this laptop").includes("fit"));
+  assert.ok(
+    top3("LM Studio is installed but omm acts like it isn't there").some((id) =>
+      ["doctor", "scan", "link"].includes(id),
+    ),
+  );
+  assert.ok(top3("안 쓰는 모델 지우고 싶어", "ko").includes("uninstall"));
+});
+
+test("Workers AI candidates carry symptom/example context, not just a summary", () => {
+  const candidates = narrowCandidates("my runner is not detected", "en");
+  assert.ok(candidates.length > 0);
+  assert.ok(candidates.every((candidate) => candidate.context.length > 0));
+  const input = buildWorkersAiInput("en", "my runner is not detected", candidates);
+  const userMessage = (input.messages as { role: string; content: string }[]).find(
+    (message) => message.role === "user",
+  );
+  assert.match(String(userMessage?.content), /"context":/u);
+});
+
 test("weak fallback candidates are removed and bare OpenAI requests clarify", async () => {
   const downloadQuestion = "open ai 모델을 다운로드를 받으려로 해";
   const recommendationQuestion = "open ai 모델 추천을 해줘";
