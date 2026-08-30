@@ -71,6 +71,55 @@ export const COMMAND_ORDER: readonly Slug[] = [
 ];
 
 /**
+ * Purpose bucket for the `/commands` chooser page, mirroring how `omm help`
+ * groups its command list. Locale-independent; labels live in the
+ * `commandsChooser.groups` dictionary entry.
+ */
+export type CommandGroup =
+  | "start"
+  | "models"
+  | "hardware"
+  | "quality"
+  | "maintenance"
+  | "config";
+
+export const COMMAND_GROUPS: readonly CommandGroup[] = [
+  "start",
+  "models",
+  "hardware",
+  "quality",
+  "maintenance",
+  "config",
+];
+
+export const COMMAND_GROUP = {
+  search: "start",
+  install: "start",
+  run: "start",
+  recommend: "start",
+  setup: "start",
+  list: "models",
+  info: "models",
+  uninstall: "models",
+  upgrade: "models",
+  import: "models",
+  scan: "hardware",
+  fit: "hardware",
+  tune: "hardware",
+  benchmark: "quality",
+  verify: "quality",
+  contribute: "quality",
+  doctor: "maintenance",
+  link: "maintenance",
+  autoremove: "maintenance",
+  cleanup: "maintenance",
+  engine: "maintenance",
+  setting: "config",
+  update: "config",
+  help: "config",
+} as const satisfies Record<Slug, CommandGroup>;
+
+/**
  * Conservative command-level risk shown by the assistant before a reader
  * copies anything. This describes the command's normal path, not a promise
  * that every flag has the same effect. The command page remains the detailed

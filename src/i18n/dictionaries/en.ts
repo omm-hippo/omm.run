@@ -318,6 +318,15 @@ export const en = {
     searchPlaceholder: "Filter commands by name or what they do",
     /** `{query}` is what was typed into the filter box. */
     searchEmpty: "No commands match “{query}”.",
+    /** Purpose buckets, in the order they appear. Keys match `COMMAND_GROUP`. */
+    groups: {
+      start: "Get a model running",
+      models: "Manage installed models",
+      hardware: "Check hardware & fit",
+      quality: "Measure quality & speed",
+      maintenance: "Fix & maintain",
+      config: "Configure omm",
+    },
   },
 
   assistant: {

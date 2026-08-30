@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import CommandSearch from "@/components/commands/CommandSearch";
 import { getCommandLinks } from "@/components/commands/commands";
+import { COMMAND_GROUPS } from "@/i18n/commands/base";
 import {
   OG_LOCALE,
   alternatesFor,
@@ -43,6 +44,10 @@ export default async function CommandsChooser({
   const initialQuery = typeof q === "string" ? q.slice(0, 120) : "";
   const { commandsChooser } = getDictionary(locale);
   const links = getCommandLinks(locale);
+  const groups = COMMAND_GROUPS.map((id) => ({
+    id,
+    label: commandsChooser.groups[id],
+  }));
 
   return (
     <main className="relative border-b border-line-0 bg-bg-0">
@@ -59,6 +64,7 @@ export default async function CommandsChooser({
               locale={locale}
               placeholder={commandsChooser.searchPlaceholder}
               empty={commandsChooser.searchEmpty}
+              groups={groups}
               initialQuery={initialQuery}
             />
           </div>

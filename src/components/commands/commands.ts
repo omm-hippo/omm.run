@@ -14,8 +14,10 @@
 import type { Locale } from "@/i18n/config";
 import {
   COMMAND_BASE,
+  COMMAND_GROUP,
   COMMAND_ORDER,
   COMMAND_RISK,
+  type CommandGroup,
   type Example,
   type Option,
   type CommandRisk,
@@ -109,6 +111,7 @@ export type CommandLink = {
   readonly name: string;
   readonly href: string;
   readonly summary: string;
+  readonly group: CommandGroup;
 };
 
 /** Used by the `/commands` chooser page. */
@@ -118,5 +121,6 @@ export function getCommandLinks(locale: Locale): readonly CommandLink[] {
     name: COMMAND_BASE[slug].name,
     href: COMMAND_BASE[slug].href,
     summary: TEXT[locale][slug].summary,
+    group: COMMAND_GROUP[slug],
   }));
 }

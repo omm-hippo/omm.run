@@ -308,6 +308,14 @@ export const ko = {
     lede: "각 페이지는 명령이 무엇을 위한 것이고 언제 쓰는지, 모든 옵션, 실제 예제 5개, 실제 캡처한 실행 결과, 그리고 실제로 출력되는 에러와 대처법까지 다룹니다.",
     searchPlaceholder: "이름이나 하는 일로 명령어 필터링",
     searchEmpty: "“{query}”와 일치하는 명령어가 없습니다.",
+    groups: {
+      start: "모델 실행하기",
+      models: "설치한 모델 관리",
+      hardware: "하드웨어와 적합성 확인",
+      quality: "품질과 속도 측정",
+      maintenance: "복구와 유지보수",
+      config: "omm 설정",
+    },
   },
 
   assistant: {

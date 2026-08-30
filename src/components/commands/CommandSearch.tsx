@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import type { CommandLink } from "@/components/commands/commands";
+import type { CommandGroup } from "@/i18n/commands/base";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill } from "@/i18n/dictionaries";
 
@@ -13,6 +14,8 @@ type Props = {
   readonly placeholder: string;
   /** `{query}` template for the no-results message. */
   readonly empty: string;
+  /** Purpose buckets in display order; a group with no matches is hidden. */
+  readonly groups: readonly { readonly id: CommandGroup; readonly label: string }[];
   readonly initialQuery?: string;
 };
 
@@ -68,6 +71,7 @@ export default function CommandSearch({
   locale,
   placeholder,
   empty,
+  groups,
   initialQuery = "",
 }: Props) {
   const [query, setQuery] = useState(initialQuery);
@@ -94,20 +98,31 @@ export default function CommandSearch({
       />
 
       {filtered.length > 0 ? (
-        <ul className="mt-6 flex flex-col border-t border-line-0">
-          {filtered.map((link) => (
-            <li key={link.slug} className="border-b border-line-0">
-              <Link
-                href={localeHref(link.href, locale)}
-                prefetch={false}
-                className="grid grid-cols-1 gap-2 px-2 py-6 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
-              >
-                <span className="text-h3 font-mono">{link.name}</span>
-                <span className="text-small max-w-[62ch]">{link.summary}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6 flex flex-col gap-12">
+          {groups.map((group) => {
+            const rows = filtered.filter((link) => link.group === group.id);
+            if (rows.length === 0) return null;
+            return (
+              <section key={group.id}>
+                <h2 className="text-label border-b border-line-0 pb-3">{group.label}</h2>
+                <ul className="flex flex-col">
+                  {rows.map((link) => (
+                    <li key={link.slug} className="border-b border-line-0">
+                      <Link
+                        href={localeHref(link.href, locale)}
+                        prefetch={false}
+                        className="grid grid-cols-1 gap-2 px-2 py-6 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
+                      >
+                        <span className="text-h3 font-mono">{link.name}</span>
+                        <span className="text-small max-w-[62ch]">{link.summary}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
       ) : (
         <p className="text-small mt-8 text-ink-3">{fill(empty, { query })}</p>
       )}
