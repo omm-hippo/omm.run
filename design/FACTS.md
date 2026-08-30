@@ -441,7 +441,7 @@ documented `omm` command has one too (see below) — every real `omm search`,
 `omm list`, `omm scan`, etc. shown on this site is the literal filename
 `qwen2.5-0.5b-instruct-q4_k_m.gguf`, this dev machine's real second-smallest
 installed model, unless noted otherwise. Real captures below are dated
-2026-08-24 (`omm scan`, `list`, `info`, `fit`, `tune`, `autoremove`,
+2026-08-24 (`omm scan`, `list`, `info`, `fit`, `tune`,
 `cleanup`, `uninstall --dry-run`, `upgrade --dry-run`, `help`, `import`,
 `setting theme`) and 2026-08-25 (`omm setup`'s driven session, see above).
 
@@ -512,24 +512,21 @@ capture — confirmed removed from the real `ollama list` too. The exact
 wording is `0 skipped (file missing)`, not the `(missing)` an earlier,
 unrun version of this page guessed.
 
-### `autoremove` / `cleanup`
-`src/omm/cli.py:6669-6709`. `autoremove`'s page capture is a
-**format-accurate reconstruction** of the "found and removed something"
-case (`cli.py:6692-6693`) — the case the command actually exists for — since
-reproducing it for real means corrupting this dev machine's real runner
-symlinks, unlike `cleanup` below. The clean-system message ("No broken
-symlinks found.", `cli.py:6689`) moved to the troubleshooting section
-instead, as the common baseline case.
+### `cleanup`
+`omm autoremove` was merged into `omm cleanup` (omm-hippo/omm, beta
+2026-08-30 "refactor: merge omm autoremove into omm cleanup"). One command
+now sweeps both leftover partial downloads and broken runner symlinks; the
+`autoremove` page was deleted with no redirect, matching omm's "fully
+delete the old command, no back-compat alias" rule.
 
-`cleanup`'s page capture is a **real, driven run**, 2026-08-25: two genuine
-`.gguf.part` files were created under a throwaway `OMM_HOME` — the exact
-pattern `_cleanup_incomplete_installs` (`cli.py:6626-6666`) looks for — and
-`omm cleanup` found and deleted both for real (`Cleaned up 2 incomplete
-install file(s).`). Unlike `autoremove`, this needed no filesystem-layer
-mocking: the files it acts on live entirely under `MODELS_DIR`, which
-follows `OMM_HOME`, so a scratch home was enough to make it both real and
-safe. The clean-system message ("No leftover install files found.",
-`cli.py:6706`) moved to troubleshooting, same as `autoremove`.
+`cleanup`'s page capture splits: the partial-download half is a **real,
+driven run**, 2026-08-25 — two genuine `.gguf.part` files created under a
+throwaway `OMM_HOME` (the exact pattern `_cleanup_incomplete_installs`
+looks for), which `omm cleanup` found and deleted for real. The broken-link
+count in the same line is a **format-accurate reconstruction**: reproducing
+it for real means corrupting this dev machine's real runner symlinks. The
+clean-system message ("Nothing to clean up.") moved to the troubleshooting
+section as the common baseline case.
 
 ### `verify`
 `src/omm/cli.py:5127-5262`. Engine-validation error real captured:

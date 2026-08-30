@@ -34,7 +34,6 @@ export type Slug =
   | "info"
   | "upgrade"
   | "link"
-  | "autoremove"
   | "cleanup"
   | "verify"
   | "benchmark"
@@ -60,7 +59,6 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "info",
   "upgrade",
   "link",
-  "autoremove",
   "cleanup",
   "verify",
   "benchmark",
@@ -111,7 +109,6 @@ export const COMMAND_GROUP = {
   contribute: "quality",
   doctor: "maintenance",
   link: "maintenance",
-  autoremove: "maintenance",
   cleanup: "maintenance",
   engine: "maintenance",
   setting: "config",
@@ -144,7 +141,6 @@ export const COMMAND_RISK = {
   info: "inspect",
   upgrade: "high-impact",
   link: "high-impact",
-  autoremove: "high-impact",
   cleanup: "high-impact",
   verify: "caution",
   benchmark: "high-impact",
@@ -1031,36 +1027,6 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
     ],
   },
 
-  autoremove: {
-    slug: "autoremove",
-    name: "omm autoremove",
-    href: "/commands/autoremove",
-
-    options: [],
-
-    examples: [
-      { prompt: "$", command: "omm autoremove" },
-      { prompt: "$", command: "omm autoremove --quiet" },
-    ],
-
-    capture: {
-      title: "omm autoremove",
-      text: `Removed 2 broken Ollama link(s), 1 broken AnythingLLM link(s).`,
-    },
-
-    trouble: [
-      {
-        see: "No broken symlinks found.",
-        source: "src/omm/cli.py:6689",
-      },
-    ],
-
-    related: [
-      { label: "omm cleanup", href: "/commands/cleanup", internal: true },
-      { label: "omm scan", href: "/commands/scan", internal: true },
-    ],
-  },
-
   cleanup: {
     slug: "cleanup",
     name: "omm cleanup",
@@ -1075,19 +1041,19 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
 
     capture: {
       title: "omm cleanup",
-      text: `Cleaned up 2 incomplete install file(s).`,
+      text: `Cleaned up 2 incomplete install file(s), 1 broken Ollama link(s).`,
     },
 
     trouble: [
       {
-        see: "No leftover install files found.",
-        source: "src/omm/cli.py:6706",
+        see: "Nothing to clean up.",
+        source: "src/omm/cli.py",
       },
     ],
 
     related: [
-      { label: "omm autoremove", href: "/commands/autoremove", internal: true },
       { label: "omm install", href: "/commands/install", internal: true },
+      { label: "omm link", href: "/commands/link", internal: true },
     ],
   },
 

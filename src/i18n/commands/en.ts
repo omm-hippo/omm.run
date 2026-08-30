@@ -685,71 +685,37 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
   },
 
-  autoremove: {
-    metaTitle: "omm autoremove — clean up broken runner symlinks",
-    metaDescription:
-      "Full reference for omm autoremove: no flags of its own, two examples, the case where it actually finds something to clean up, and what a clean run looks like.",
-    heading: "omm autoremove",
-    lede: "Remove symlinks left behind in runner model directories after a model's source file was deleted outside of omm uninstall.",
-    summary: "Clean up broken symlinks left in runner model directories — no flags needed.",
-
-    overviewBody:
-      "Reach for autoremove if a runner's own model list shows an entry that no longer loads — usually because the underlying .gguf was deleted by hand, or by something other than omm uninstall, leaving a dangling symlink behind in the runner's directory. It only ever removes links that are already broken; a model still on disk is never touched.",
-
-    optionDescriptions: [],
-
-    exampleCaptions: [
-      "Clean up broken symlinks across every installed runner.",
-      "Same cleanup, without the per-runner progress output.",
-    ],
-
-    captureFootnote:
-      "Format-accurate reproduction of the real success-line format (src/omm/cli.py:6692-6693) for the case autoremove actually exists to handle — a model's .gguf deleted by hand (or by something other than omm uninstall) leaving broken symlinks in two runners' directories. Not a literal capture: reproducing it for real means corrupting this dev machine's real Ollama/AnythingLLM links, which this page won't do. The counts are representative.",
-
-    trouble: [
-      {
-        why: "This is what autoremove prints on a healthy system, which is most runs — nothing was broken, so there was nothing to clean up.",
-        fix: "Nothing to do.",
-      },
-    ],
-
-    relatedBlurbs: [
-      "Clean up leftover partial downloads the same way.",
-      "See if scan still flags anything after cleaning up.",
-    ],
-  },
-
   cleanup: {
-    metaTitle: "omm cleanup — clean up leftover install files",
+    metaTitle: "omm cleanup — clean up leftover install files and broken links",
     metaDescription:
       "Full reference for omm cleanup: no flags of its own, two examples, the case where it actually finds something to clean up, and what a clean run looks like.",
     heading: "omm cleanup",
-    lede: "Remove orphaned partial or unregistered .gguf downloads left behind in the models directory by an interrupted install.",
-    summary: "Clean up leftover partial downloads and install cache files — no flags needed.",
+    lede: "Remove orphaned partial downloads left by an interrupted install, plus symlinks in runner model directories whose source .gguf was deleted outside of omm uninstall.",
+    summary: "Clean up leftover partial downloads and broken runner symlinks in one pass — no flags needed.",
 
     overviewBody:
-      "Reach for cleanup after an install was interrupted (network drop, Ctrl+C, a crash) and you want to reclaim the partial download's disk space without hunting for the file yourself. It only ever touches incomplete, unregistered files — nothing that's actually a finished, installed model.",
+      "Reach for cleanup after an install was interrupted (network drop, Ctrl+C, a crash) and you want the partial download's disk space back without hunting for the file yourself, or when a runner's own model list shows an entry that no longer loads because the underlying .gguf was deleted by hand. It only ever touches incomplete, unregistered files and links that are already broken — never a finished, installed model still on disk. This is the same sweep omm contribute runs when it finishes.",
 
     optionDescriptions: [],
 
     exampleCaptions: [
-      "Clean up every leftover install file.",
+      "Clean up every leftover install file and broken runner symlink.",
       "Same cleanup, without the progress output.",
     ],
 
     captureFootnote:
-      "Real omm cleanup run, 2026-08-25, against a throwaway OMM_HOME seeded with two genuine leftover .gguf.part files (the exact pattern _cleanup_incomplete_installs looks for) — not this dev machine's real ~/.omm, which had nothing to clean up right now. cleanup actually found and deleted both.",
+      "The partial-download half is a real omm cleanup run, 2026-08-25, against a throwaway OMM_HOME seeded with two genuine leftover .gguf.part files (the exact pattern _cleanup_incomplete_installs looks for) — cleanup found and deleted both. The broken-link count is a format-accurate reconstruction: reproducing it for real means corrupting this dev machine's real runner symlinks, which this page won't do. The counts are representative.",
 
     trouble: [
       {
-        why: "This is what cleanup prints on a system with nothing to reclaim, which is most runs.",
+        why: "This is what cleanup prints on a healthy system with nothing to reclaim, which is most runs.",
         fix: "Nothing to do.",
       },
     ],
 
     relatedBlurbs: [
-      "Clean up broken runner symlinks the same way.",
       "Retry the install that got interrupted.",
+      "Re-verify and repair runner links instead of just removing broken ones.",
     ],
   },
 
