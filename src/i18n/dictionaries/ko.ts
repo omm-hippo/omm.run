@@ -35,7 +35,7 @@ export const ko = {
   },
 
   nav: {
-    sections: ["문제", "기능", "러너", "설치"],
+    sections: ["문제", "기능", "러너"],
     installGuides: "가이드",
     commands: "명령어",
     assistant: "OMM AI assistant",

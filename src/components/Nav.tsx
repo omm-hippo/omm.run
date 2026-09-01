@@ -54,7 +54,7 @@ function useLiveVersion(): string {
 
 /** Section ids are owned by the other section components. */
 /* Absolute so the same nav works from /install/* as well as from "/". */
-const SECTION_HREFS = ["/#problem", "/#features", "/#runners", "/#install"] as const;
+const SECTION_HREFS = ["/#problem", "/#features", "/#runners"] as const;
 
 const LINK =
   "border-b border-transparent pb-0.5 text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0";
