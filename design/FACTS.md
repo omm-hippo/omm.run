@@ -397,15 +397,21 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   no generated text.
 
 ### `setup`
-- Command definition: `src/omm/cli.py:1072-1077`, delegating to
-  `src/omm/onboarding.py`'s `run_wizard` (`:315-339`). Takes no
+- Command definition: `src/omm/cli.py:1122-1127`, delegating to
+  `src/omm/onboarding.py`'s `run_wizard` (`:407-433`). Takes no
   command-specific options.
 - Banner/hardware-table format: `onboarding.py:42-91`. Engine checklist
   format and its `[*]`/`[ ]` indicators: `onboarding.py:139-162, 207-250`.
-  Completion step: `onboarding.py:275-313`.
+  Data-sharing step: panel text `onboarding.py:295-309`, the y/N prompt and
+  what each answer writes `:312-354` (a "yes" also flips crash reports to
+  `ask`, but only when that policy has never been set explicitly; a "no"
+  records `never` so `omm update` never re-asks; a non-TTY run enables
+  nothing). Completion step: `onboarding.py:360-397`.
 - `Engine selection requires an interactive terminal...`: `onboarding.py:
-  221-224`. `{label} isn't auto-installable yet...`: `onboarding.py:258-261`.
-  `Couldn't enable tab-completion automatically...`: `onboarding.py:303-305`.
+  232-233`. `{label} isn't auto-installable yet...`: `onboarding.py:276-278`
+  — its URL is now `https://omm.run/#runners` (`onboarding.py:31`), not the
+  retired GitHub wiki page this page used to quote.
+  `Couldn't enable tab-completion automatically...`: `onboarding.py:396-397`.
 - The "a real run" block is a **real, end-to-end driven capture**,
   2026-08-25: `omm setup`'s real code, run through a real pty (`pexpect`,
   rendered via `pyte` for the same reason as `recommend` above) with
@@ -435,6 +441,19 @@ file:line), `en.ts`/`ko.ts` for prose — assembled by
   anything, and a version before that used this session's own real but
   atypically small laptop; this replaces both with an actually-driven
   session against hardware the page's own reader is more likely to have.
+- **2026-09-01 partial re-capture.** The wizard gained a data-sharing step
+  (`feat: ask about anonymous data sharing in omm setup (off by default)`),
+  and its closing lines changed with it ("...to change data-sharing or
+  update-channel settings", and the old `Error reports are off unless you
+  turn them on: omm setting error-reports --ask` line is gone entirely).
+  Everything from the `Help improve omm` panel down — panel, the declined
+  `? Send anonymous usage data + crash reports? No`, `No data will be
+  sent.`, and the closing lines — is a second real driven run, 2026-09-01,
+  through a real pty at `COLUMNS=88` against a throwaway `OMM_HOME`, on this
+  session's own laptop rather than the substituted mid-range PC (nothing in
+  those lines is hardware-dependent). Verbatim, panel borders included.
+  Answer given: `n`, so this machine's scratch config recorded
+  `usage_stats_policy=never` and nothing was sent.
 
 All six commands from issue #6's scope now have pages. Every remaining
 documented `omm` command has one too (see below) — every real `omm search`,
@@ -556,29 +575,47 @@ against a scratch config with upload forced off specifically to avoid
 repeating this.
 
 ### `update`
-`src/omm/cli.py:2519-2548`. Not run live under any circumstance — a real
+`src/omm/cli.py:2752-2783`. Not run live under any circumstance — a real
 update can reinstall omm itself. Success/failure line formats quoted from
 source (`cli.py:2536`, `:2542-2544`); the version/commit shown are
-representative, not this machine's.
+representative, not this machine's. A successful update now ends by showing
+the same data-sharing consent `omm setup` asks
+(`_maybe_prompt_data_sharing_after_update`, `cli.py:2785-2800`), and only
+for users who have never answered it — `usage_stats_policy` is `None` only
+before the question has been answered either way, and a non-TTY run skips
+it.
 
 ### `setting`
-Ten subcommands: `src/omm/cli.py:5753-6199` (`telemetry`, `upload`,
-`error-reports`, `memory-guard`, `version`, `theme`, `calibrate`,
-`catalog-trust`, `catalog-status`, `catalog-rollback`) plus the bare
-interactive menu (`:6151-6199`). The page's capture, 2026-08-25, is a real
-`omm setting theme --set high-contrast` run against a throwaway `OMM_HOME` —
-an actual change, not the earlier version's passive read-only `omm setting
-theme` display, since showing the value change is closer to why the command
-exists. **`telemetry` and `error-reports` were deliberately never used for
-any capture on this page**: this dev machine has a real, personal telemetry
-endpoint and Firebase error-report URL configured, and neither belongs on a
-public page. Real captured errors: `Choose only one of --enable, --disable,
-or --ask.` (`cli.py:5798`, shared `upload`/`error-reports`), `The signed
-catalog manifest must use HTTPS.` (`cli.py:6104`). `--policy must be ask,
-block, or observe.` is quoted from source (`cli.py:5901`), not executed,
-since it needed no live check to verify. `calibrate` and `catalog-rollback`
-were not run live (real benchmark load; real config mutation on state
-that isn't reasonable to fabricate a "before" for).
+Nine subcommands (`telemetry`, `upload`, `memory-guard`, `version`, `theme`,
+`calibrate`, `catalog-trust`, `catalog-status`, `catalog-rollback`) plus the
+bare interactive menu. **The old top-level `upload` and `error-reports`
+policy flags are gone**: `feat: consolidate outbound-data settings under
+'omm setting upload'` turned `upload` into its own group with one
+subcommand per outbound channel — `omm setting upload benchmark`
+(`cli.py:6437-6474`, default `ask`), `omm setting upload usage`
+(`cli.py:6527-6571`, opt-in, off by default, `--reset-id` regenerates the
+random install id), `omm setting upload crash` (`cli.py:6477-6524`, opt-in,
+off by default, its own write-only channel). Bare `omm setting upload`
+prints all three (`cli.py:6420-6434`).
+The page's capture, 2026-09-01, is that bare `omm setting upload` run
+against a throwaway `OMM_HOME` — the three real untouched defaults, hint
+line included, replacing the earlier `omm setting theme --set high-contrast`
+capture, since the consolidated group is what a reader most needs to see
+now. **`telemetry` and the crash/usage endpoints were still deliberately
+never exercised for any capture on this page**: this dev machine has a real,
+personal telemetry endpoint and Firebase error-report URL configured, and
+neither belongs on a public page — the captured table shows policies only,
+no destinations. Real captured errors: `Choose only one of --enable,
+--disable, or --ask.` (`cli.py:6454` benchmark, `:6489` crash). Quoted from
+source, not executed, since neither needed a live check: `Set an endpoint
+with omm setting telemetry --endpoint before enabling uploads.`
+(`cli.py:6459-6460`), `The signed catalog manifest must use HTTPS.`
+(`cli.py:6828`), `--policy must be ask, block, or observe.` (`cli.py:6602`).
+`calibrate` and `catalog-rollback` were not run live (real benchmark load;
+real config mutation on state that isn't reasonable to fabricate a "before"
+for). Usage-stats payload fields, and the promise that model names, search
+terms, file paths, IP and hostname are never sent, come from
+`onboarding.py:295-309` and `PRIVACY.md`.
 
 ### `doctor`
 - Command definition, checks table, exit codes: `src/omm/cli.py:2479-2514`.
@@ -615,3 +652,29 @@ that isn't reasonable to fabricate a "before" for).
   remains installed on this machine as a result. The "already installed"
   and bad-key error captures were taken by re-running the command
   afterward, both real.
+
+### `log`
+- New command from `feat: add 'omm log' to read the local run log`, on top
+  of the per-invocation run log (`feat: write a run log around every omm
+  invocation`, `src/omm/runlog.py`). Command definition and options:
+  `src/omm/cli.py:6342-6367` (`--lines/-n`, default 40; `--grep TEXT`;
+  `--rebuild`). Log location: `~/.omm/logs/history.log` for the rolled-up
+  summary blocks, `~/.omm/logs/<timestamp>_<pid>_<command>.jsonl` for one
+  run's full detail (`runlog.py:49`, resolved under `OMM_HOME`).
+- **Local only, never uploaded** — stated in the command's own docstring
+  (`cli.py:6359-6361`) and independent of every `omm setting upload`
+  policy. Command arguments are recorded as `<arg>`, not their values, so
+  model names and search terms never reach the log; the page's capture
+  shows this directly in its `omm search <arg>` and `omm setting <arg>`
+  blocks.
+- The capture is a **real run**, 2026-09-01, against a throwaway `OMM_HOME`
+  on this session's laptop: `omm list`, `omm doctor`, `omm search qwen3` and
+  `omm setting theme` were really run in that order, then `omm log` read
+  them back. Timestamps, durations, PIDs, detail filenames and the `0.3.47`
+  version are all real and unedited. Two further blocks the same log held
+  (an `omm help --all` run, and the hidden `_bg-version-check` background
+  command, which the log records as `omm <arg>`) were cut for length only.
+- `No run log yet.` (`cli.py:6365-6366`) and `Rebuilt history.log from N
+  run(s).` (`cli.py:6362-6363`) are the two messages the page lists; both
+  are quoted from source, neither is an error — `log` exits 0 on an empty
+  log.

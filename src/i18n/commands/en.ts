@@ -246,13 +246,13 @@ export const COMMANDS_EN: CommandTextSet = {
   setup: {
     metaTitle: "omm setup — the first-run wizard, any time",
     metaDescription:
-      "Full reference for omm setup: its one meaningful flag, both examples, a real hardware-scan-backed capture of the wizard, and the three messages it actually prints.",
+      "Full reference for omm setup: its one meaningful flag, both examples, a real hardware-scan-backed capture of the wizard including its data-sharing question, and the three messages it actually prints.",
     heading: "omm setup",
     lede: "Re-run the first-time setup wizard — a hardware scan followed by a checklist of local AI runners to install — any time, not just on first run.",
     summary: "Re-run the hardware scan and runner-install checklist, any time.",
 
     overviewBody:
-      "setup is what runs automatically the first time omm is used, and it's also the command to reach for later: to pick up a runner you skipped, to re-check your hardware summary, or to turn shell tab-completion on. It takes no arguments — everything it does is an interactive step: a hardware summary, a checklist of runners (already-installed ones shown but not selectable), and an offer to enable tab-completion. It needs a real terminal; running it with no TTY attached fails immediately instead of hanging.",
+      "setup is what runs automatically the first time omm is used, and it's also the command to reach for later: to pick up a runner you skipped, to re-check your hardware summary, or to turn shell tab-completion on. It takes no arguments — everything it does is an interactive step: a hardware summary, a checklist of runners (already-installed ones shown but not selectable), a one-time data-sharing question, and an offer to enable tab-completion. The data-sharing step spells out exactly what one anonymous daily batch would contain and defaults to No; answering yes also turns crash reports on, and either answer can be changed later with omm setting upload. It needs a real terminal; running it with no TTY attached fails immediately instead of hanging, and a non-interactive run leaves usage stats and crash reports off.",
 
     optionDescriptions: [
       "Suppress the engine-install progress lines while the wizard installs the runners you picked. Prompts, warnings and the final summary still print.",
@@ -264,7 +264,7 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     captureFootnote:
-      "Real omm setup run, 2026-08-25, driven end to end through a real terminal against the same mid-range PC recommend's page uses (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc, Ollama/LM Studio/Jan already installed) rather than this session's own laptop, against a throwaway OMM_HOME so nothing here touched this machine's real config. The theme picker and runner checklist are questionary screens rendered straight to the terminal, captured through a terminal emulator rather than plain stdout. The closing three lines are quoted verbatim from onboarding.py's own completion message.",
+      "Two real driven runs, both through a real terminal against a throwaway OMM_HOME so nothing touched this machine's real config. The banner, theme picker, hardware summary and runner checklist come from the 2026-08-25 run against the same mid-range PC recommend's page uses (Intel Core Ultra 7 155H, 15.5 GB RAM, Intel Arc, Ollama/LM Studio/Jan already installed) rather than this session's own laptop. The data-sharing panel, the declined answer, and the closing lines were re-captured on 2026-09-01, after the data-sharing step landed, on this session's laptop — verbatim, panel borders included. The theme picker, runner checklist and consent prompt are questionary screens rendered straight to the terminal, captured through a terminal emulator rather than plain stdout.",
 
     trouble: [
       {
@@ -845,18 +845,20 @@ export const COMMANDS_EN: CommandTextSet = {
   setting: {
     metaTitle: "omm setting — view or change omm's settings",
     metaDescription:
-      "Full reference for omm setting: all ten subcommands, five examples, a real captured display, and the three errors it actually prints.",
+      "Full reference for omm setting: all nine subcommands including the three outbound-data channels, five examples, a real captured display, and the four errors it actually prints.",
     heading: "omm setting",
-    lede: "View or change telemetry, upload policy, error reports, memory protection, the update channel, the color theme, calibration, and signed-catalog trust — interactively, or one subcommand at a time.",
-    summary: "View or change omm's settings — telemetry, upload policy, theme, update channel, and more.",
+    lede: "View or change telemetry, what anonymous data may leave this machine, memory protection, the update channel, the color theme, calibration, and signed-catalog trust — interactively, or one subcommand at a time.",
+    summary: "View or change omm's settings — telemetry, outbound data, theme, update channel, and more.",
 
     overviewBody:
-      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting.",
+      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting. Everything omm may ever send is now grouped under one subcommand, omm setting upload, with a separate policy per channel: benchmark results, anonymous usage stats, and crash reports. Usage stats and crash reports are off until you turn them on.",
 
     optionDescriptions: [
       "Configure where benchmark telemetry is sent, or clear it with --endpoint none.",
+      "Show all three outbound-data policies — benchmark, usage, crash — in one table.",
       "Configure whether benchmark results upload without asking, never, or ask each time.",
-      "Configure the separate, opt-in policy for scrubbed crash/error reports.",
+      "Anonymous daily usage stats: omm version, install method, OS, CPU/GPU class, RAM and VRAM size ranges, and which commands ran. Never model names, search terms, file paths, IP, or hostname. With no flag it prints the exact payload that would be sent next; --reset-id generates a new random install id.",
+      "Configure the separate, opt-in policy for scrubbed crash reports, sent on their own write-only channel.",
       "Configure Memory Guard's policy, polling interval (0.1–60 seconds), and how long low memory must persist before cancellation (0–300 seconds).",
       "Show or switch which branch omm update pulls from.",
       "Show or change omm's output color theme.",
@@ -869,18 +871,22 @@ export const COMMANDS_EN: CommandTextSet = {
     exampleCaptions: [
       "Open the interactive menu covering every setting below.",
       "Show the current color theme.",
-      "Show the current benchmark-upload policy.",
-      "Change the color theme directly, without the menu.",
+      "Show all three outbound-data policies at once.",
+      "Turn anonymous usage stats off and discard anything already queued.",
       "Show signed-catalog trust and rollback state.",
     ],
 
     captureFootnote:
-      "Real omm setting theme --set high-contrast run, 2026-08-25, against a throwaway OMM_HOME — an actual change, not just a read, since setting's own display-only case (a bare omm setting theme) is less useful to show than the command actually doing what it's for.",
+      "Real bare omm setting upload run, 2026-09-01, against a throwaway OMM_HOME — the three real default policies on a machine that has never been asked, verbatim including the hint line under the table. Table borders are dropped for the web, as everywhere on this page set.",
 
     trouble: [
       {
-        why: "upload and error-reports each take exactly one policy flag; this run passed more than one at once.",
+        why: "omm setting upload benchmark and omm setting upload crash each take exactly one policy flag; this run passed more than one at once.",
         fix: "Pass only one of --enable, --disable, or --ask.",
+      },
+      {
+        why: "Benchmark uploads have nowhere to go until a telemetry endpoint is configured, so --enable refuses rather than silently enabling a policy that can never send.",
+        fix: "Run omm setting telemetry --endpoint URL first, then re-run the --enable.",
       },
       {
         why: "Signed-catalog verification has to happen over a connection that can't be tampered with in transit — an HTTP manifest URL defeats the point of requiring a signature at all.",
@@ -893,8 +899,8 @@ export const COMMANDS_EN: CommandTextSet = {
     ],
 
     relatedBlurbs: [
-      "Re-run the wizard that sets several of these on first use.",
-      "contribute reads the upload policy this command configures.",
+      "Re-run the wizard that asks about data sharing and sets several of these on first use.",
+      "contribute reads the benchmark-upload policy this command configures.",
     ],
   },
 
@@ -973,6 +979,49 @@ export const COMMANDS_EN: CommandTextSet = {
     relatedBlurbs: [
       "Re-run the full wizard, checklist and all, instead of one runner.",
       "Confirm what's installed and what's still missing.",
+    ],
+  },
+  log: {
+    metaTitle: "omm log — read the local run log",
+    metaDescription:
+      "Full reference for omm log: its three flags, four examples, a real captured run log, and the two messages it actually prints.",
+    heading: "omm log",
+    lede: "Read the local run log every omm command writes — what ran, when, whether it succeeded, and how long it took — without sending anything anywhere.",
+    summary: "Read the local run log: what omm ran, when, and whether it worked.",
+
+    overviewBody:
+      "Every omm invocation appends a summary block to ~/.omm/logs/history.log, and writes the full detail of that one run to its own ~/.omm/logs/<timestamp>_<pid>_<command>.jsonl file. log is how you read that back: the last 40 runs by default, fewer or more with -n, or only the runs matching some text with --grep. Arguments are recorded as <arg> rather than their values, so a model name or search term never lands in the log. The log is local only and is never uploaded, whatever the omm setting upload policies say — it exists so you can see what omm actually did after the fact, especially when something failed and the screen has scrolled away.",
+
+    optionDescriptions: [
+      "How many of the most recent runs to show.",
+      "Only show runs whose block contains this text — a command name, a version, an error.",
+      "Regenerate history.log from the per-run JSONL files, for when the rolled-up file is missing or truncated.",
+    ],
+
+    exampleCaptions: [
+      "The last 40 runs.",
+      "Just the last five runs.",
+      "Only runs whose block mentions install.",
+      "Rebuild the rolled-up log from the per-run detail files.",
+    ],
+
+    captureFootnote:
+      "Real omm log run, 2026-09-01, against a throwaway OMM_HOME — four consecutive real runs (list, doctor, search, setting) logged and read back verbatim, timings and PIDs included. Two other blocks the same log held (an omm help --all run and a hidden background version check) are cut for length; nothing shown is edited. Note the <arg> in the search and setting blocks: that is what omm records, not the query.",
+
+    trouble: [
+      {
+        why: "Nothing has been logged yet under this OMM_HOME — a brand-new install, or a log directory that was cleared.",
+        fix: "Run any omm command, then read the log again.",
+      },
+      {
+        why: "Not an error: --rebuild reports how many per-run JSONL files it re-rolled into history.log.",
+        fix: "Nothing to do — the count is how many runs the rebuilt log now covers.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Diagnose the install itself when the log shows a command failing repeatedly.",
+      "contribute's unattended loop is the case the run log is most worth reading after.",
     ],
   },
 };

@@ -40,7 +40,8 @@ export type Slug =
   | "update"
   | "setting"
   | "doctor"
-  | "engine";
+  | "engine"
+  | "log";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -66,6 +67,7 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "setting",
   "doctor",
   "engine",
+  "log",
 ];
 
 /**
@@ -111,6 +113,7 @@ export const COMMAND_GROUP = {
   link: "maintenance",
   cleanup: "maintenance",
   engine: "maintenance",
+  log: "maintenance",
   setting: "config",
   update: "config",
   help: "config",
@@ -148,6 +151,7 @@ export const COMMAND_RISK = {
   setting: "high-impact",
   doctor: "inspect",
   engine: "high-impact",
+  log: "inspect",
 } as const satisfies Record<Slug, CommandRisk>;
 
 export type Option = {
@@ -468,7 +472,7 @@ Trying tinyllama-1.1b-q4...`,
     trouble: [
       {
         see: "omm contribute requires benchmark uploads to be enabled. Run `omm setting upload --enable` or `--ask` first.",
-        source: "src/omm/cli.py:8433-8436",
+        source: "src/omm/cli.py:9273-9276",
       },
       {
         see: "Neither Ollama nor LM Studio is installed or available. Install one of them, start it once, then retry `omm contribute`.",
@@ -545,27 +549,44 @@ Pick a color theme for omm's output:
    [ ] KoboldCpp
 ${PICKER_PAUSE}
 ? Install any local AI runners you'd like to use? (space to select, enter to confirm) done
+╭────────────────────────────────── Help improve omm ──────────────────────────────────╮
+│ omm can send anonymous usage data so we know which versions and hardware to          │
+│ support, and which commands are breaking.                                            │
+│                                                                                      │
+│ If you say yes, once a day omm sends ONE batch containing:                           │
+│   - a random id (not tied to you - reset: omm setting upload usage --reset-id)       │
+│   - omm version, install method, OS, CPU architecture                                │
+│   - RAM / VRAM size range, GPU vendor                                                │
+│   - which commands you ran and whether they succeeded                                │
+│ It never sends model names, search terms, file paths, your IP, or hostname.          │
+│                                                                                      │
+│ Saying yes also turns on crash reports (you're asked before each one is sent).       │
+│                                                                                      │
+│ Default is OFF. Change any time with \`omm setting upload\`.                           │
+│ Full details: https://github.com/omm-hippo/omm/blob/main/PRIVACY.md                  │
+╰──────────────────────────────────────────────────────────────────────────────────────╯
+? Send anonymous usage data + crash reports? No
+No data will be sent.
+
 Enable tab-completion for install/remove any time: \`omm --install-completion\`.
 
-Setup complete. Run \`omm setting\` any time to change telemetry, upload, or update-channel settings.
+Setup complete. Run \`omm setting\` any time to change data-sharing or update-channel settings.
 
-Next: \`omm recommend\` picks a model that fits this PC and installs it, then \`omm run\` starts chatting with it.
-
-Error reports are off unless you turn them on: \`omm setting error-reports --ask\` (see docs/error-reports.md).`,
+Next: \`omm recommend\` picks a model that fits this PC and installs it, then \`omm run\` starts chatting with it.`,
     },
 
     trouble: [
       {
         see: "Engine selection requires an interactive terminal. Re-run this command from a real terminal.",
-        source: "src/omm/onboarding.py:221-224",
+        source: "src/omm/onboarding.py:232-233",
       },
       {
-        see: "AnythingLLM isn't auto-installable yet. Install it yourself, then re-run `omm setup` or `omm link`. See https://github.com/omm-hippo/omm/wiki/Compatible-Programs",
-        source: "src/omm/onboarding.py:258-261",
+        see: "AnythingLLM isn't auto-installable yet. Install it yourself, then re-run `omm setup` or `omm link`. See https://omm.run/#runners",
+        source: "src/omm/onboarding.py:276-278",
       },
       {
         see: "Couldn't enable tab-completion automatically. Run `omm --install-completion` to set it up manually.",
-        source: "src/omm/onboarding.py:303-305",
+        source: "src/omm/onboarding.py:396-397",
       },
     ],
 
@@ -1184,8 +1205,10 @@ Summary: 1 succeeded, 0 model_unfit, 0 performance_unfit, 0 transient_error`,
 
     options: [
       { name: "setting telemetry --endpoint URL", argument: null, default: "not configured" },
-      { name: "setting upload --enable|--disable|--ask", argument: null, default: "ask" },
-      { name: "setting error-reports --enable|--disable|--ask", argument: null, default: "never" },
+      { name: "setting upload", argument: null, default: "show all three policies" },
+      { name: "setting upload benchmark --enable|--disable|--ask", argument: null, default: "ask" },
+      { name: "setting upload usage --enable|--disable|--reset-id", argument: null, default: "off" },
+      { name: "setting upload crash --enable|--disable|--ask", argument: null, default: "off" },
       {
         name: "setting memory-guard --policy ask|block|observe --poll-seconds N --low-memory-seconds N",
         argument: null,
@@ -1203,28 +1226,38 @@ Summary: 1 succeeded, 0 model_unfit, 0 performance_unfit, 0 transient_error`,
       { prompt: "$", command: "omm setting" },
       { prompt: "$", command: "omm setting theme" },
       { prompt: "$", command: "omm setting upload" },
-      { prompt: "$", command: "omm setting theme --set dark" },
+      { prompt: "$", command: "omm setting upload usage --disable" },
       { prompt: "$", command: "omm setting catalog-status" },
     ],
 
     capture: {
-      title: "omm setting theme --set high-contrast",
-      text: `       Color theme
- Theme  high-contrast`,
+      title: "omm setting upload",
+      text: `     Outbound data (see
+         PRIVACY.md)
+ Channel     Policy
+ benchmark   ask
+ usage       off (default)
+ crash       off (default)
+
+omm setting upload <benchmark|usage|crash> --enable / --disable`,
     },
 
     trouble: [
       {
         see: "Choose only one of --enable, --disable, or --ask.",
-        source: "src/omm/cli.py:5798",
+        source: "src/omm/cli.py:6454, :6489",
+      },
+      {
+        see: "Set an endpoint with `omm setting telemetry --endpoint` before enabling uploads.",
+        source: "src/omm/cli.py:6459-6460",
       },
       {
         see: "The signed catalog manifest must use HTTPS.",
-        source: "src/omm/cli.py:6104",
+        source: "src/omm/cli.py:6828",
       },
       {
         see: "--policy must be ask, block, or observe.",
-        source: "src/omm/cli.py:5901",
+        source: "src/omm/cli.py:6602",
       },
     ],
 
@@ -1320,6 +1353,60 @@ LM Studio installed successfully.`,
     related: [
       { label: "omm setup", href: "/commands/setup", internal: true },
       { label: "omm scan", href: "/commands/scan", internal: true },
+    ],
+  },
+
+  log: {
+    slug: "log",
+    name: "omm log",
+    href: "/commands/log",
+
+    options: [
+      { name: "--lines", argument: "N", default: "40" },
+      { name: "--grep", argument: "TEXT", default: "no filter" },
+      { name: "--rebuild", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm log" },
+      { prompt: "$", command: "omm log -n 5" },
+      { prompt: "$", command: "omm log --grep install" },
+      { prompt: "$", command: "omm log --rebuild" },
+    ],
+
+    capture: {
+      title: "omm log -n 4",
+      text: `2026-09-01T13:10:56.004Z  omm list   (0.3.47)
+  -> ok  (0.059s)
+  detail: 2026-09-01T13-10-56Z_25828_list.jsonl
+
+2026-09-01T13:10:56.250Z  omm doctor   (0.3.47)
+  -> ok  (0.273s)
+  detail: 2026-09-01T13-10-56Z_25860_doctor.jsonl
+
+2026-09-01T13:10:56.717Z  omm search <arg>   (0.3.47)
+  -> ok  (5.07s)
+  detail: 2026-09-01T13-10-56Z_25872_search.jsonl
+
+2026-09-01T13:11:01.996Z  omm setting <arg>   (0.3.47)
+  -> ok  (0.111s)
+  detail: 2026-09-01T13-11-01Z_25878_setting.jsonl`,
+    },
+
+    trouble: [
+      {
+        see: "No run log yet.",
+        source: "src/omm/cli.py:6365-6366",
+      },
+      {
+        see: "Rebuilt history.log from 12 run(s).",
+        source: "src/omm/cli.py:6362-6363",
+      },
+    ],
+
+    related: [
+      { label: "omm doctor", href: "/commands/doctor", internal: true },
+      { label: "omm contribute", href: "/commands/contribute", internal: true },
     ],
   },
 } as const satisfies Record<
