@@ -4,13 +4,10 @@ import {
   D1AssistantStore,
   type D1DatabaseLike,
 } from "../../../lib/assistant/budget";
-import { parseAssistantRequestText } from "../../../lib/assistant/request";
+import { parseAssistantRequest } from "../../../lib/assistant/request";
 import { rateLimitIdentity } from "../../../lib/assistant/security";
 import { answerAssistantQuestion } from "../../../lib/assistant/service";
-import {
-  ASSISTANT_LIMITS,
-  type AssistantResponse,
-} from "../../../lib/assistant/types";
+import type { AssistantResponse } from "../../../lib/assistant/types";
 import type { WorkersAiBinding } from "../../../lib/assistant/workers-ai";
 
 type AssistantEnv = CloudflareEnv & {
@@ -42,14 +39,7 @@ function json(result: AssistantResponse, status = 200): Response {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  const declaredLength = Number(request.headers.get("content-length"));
-  if (
-    Number.isFinite(declaredLength) &&
-    declaredLength > ASSISTANT_LIMITS.maxBodyCharacters * 4
-  ) {
-    return json(invalidRequest(), 400);
-  }
-  const parsed = parseAssistantRequestText(await request.text());
+  const parsed = await parseAssistantRequest(request);
   if (!parsed.ok) return json(invalidRequest(), 400);
 
   let env: AssistantEnv | undefined;

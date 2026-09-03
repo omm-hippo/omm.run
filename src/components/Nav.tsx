@@ -16,37 +16,27 @@ import {
   type Locale,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { publishedVersion, PYPI_RELEASE_URL } from "@/lib/site-metadata";
 
-/** Fallback shown until the live fetch below resolves, or if it fails. Keep
- *  this roughly current — it's a fallback, not a source of truth. */
-const FALLBACK_VERSION = "v0.2.148";
 const REPO = "https://github.com/omm-hippo/omm";
-const PYPROJECT_RAW_URL =
-  "https://raw.githubusercontent.com/omm-hippo/omm/main/pyproject.toml";
 
-/** Reads `version = "X.Y.Z"` straight off origin/main's `pyproject.toml` so
- *  the badge never drifts from what's actually published. Client-side only:
- *  raw.githubusercontent.com is a CDN, not the rate-limited GitHub API, so a
- *  per-visitor fetch is fine. Falls back to FALLBACK_VERSION on any failure. */
-function useLiveVersion(): string {
-  const [version, setVersion] = useState(FALLBACK_VERSION);
+/** Main can be ahead of release. Show only PyPI's confirmed package version. */
+function useLiveVersion(): string | null {
+  const [version, setVersion] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
-    fetch(PYPROJECT_RAW_URL, { cache: "no-store" })
-      .then((res) => (res.ok ? res.text() : Promise.reject(res.status)))
-      .then((text) => {
-        const match = text.match(/^version\s*=\s*"([^"]+)"/m);
-        if (match && !cancelled) setVersion(`v${match[1]}`);
+    fetch(PYPI_RELEASE_URL, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((data: unknown) => {
+        if (!controller.signal.aborted) setVersion(publishedVersion(data));
       })
       .catch(() => {
-        /* keep FALLBACK_VERSION */
+        // A missing badge is preferable to claiming an unverified version.
       });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => controller.abort();
   }, []);
 
   return version;
@@ -60,10 +50,8 @@ const LINK =
   "border-b border-transparent pb-0.5 text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0";
 
 /**
- * Remembers the reader's choice so the `Accept-Language` redirect in
- * `src/proxy.ts` never overrides it on a later visit. Written from the click
- * rather than from a server action: the toggle is a plain link, so the
- * navigation itself is what renders the other language.
+ * Records the explicit language choice. The link itself selects the locale;
+ * middleware keeps first visits in English regardless of Accept-Language.
  */
 function rememberLocale(locale: Locale) {
   document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
@@ -146,9 +134,11 @@ export default function Nav({ locale }: { locale: Locale }) {
           prefetch={false}
         >
           <span className="font-mono text-[15px] font-medium lowercase text-ink-0">omm</span>
-          <span className="rounded-sm border border-line-1 px-1.5 py-0.5 font-mono text-[11px] leading-none text-ink-3">
-            {version}
-          </span>
+          {version ? (
+            <span className="rounded-sm border border-line-1 px-1.5 py-0.5 font-mono text-[11px] leading-none text-ink-3">
+              {version}
+            </span>
+          ) : null}
         </Link>
 
         <nav className="ml-8 hidden items-center gap-6 lg:flex">

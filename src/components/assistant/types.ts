@@ -1,5 +1,12 @@
 import type { Slug } from "@/components/commands/commands";
 import type { CommandRisk } from "@/i18n/commands/base";
+import type { AssistantResponse } from "@/lib/assistant/types";
+
+export type {
+  AssistantKind,
+  AssistantSource,
+  AssistantReason,
+} from "@/lib/assistant/types";
 
 export type AssistantCommandCard = {
   readonly id: Slug;
@@ -12,25 +19,6 @@ export type AssistantCommandCard = {
   readonly risk: CommandRisk;
 };
 
-export type AssistantKind = "command" | "clarify" | "fallback";
-export type AssistantSource = "workers-ai" | "deterministic";
-export type AssistantReason =
-  | "matched"
-  | "ambiguous"
-  | "no_match"
-  | "sensitive_input"
-  | "unsafe_input"
-  | "openai_model_ambiguous"
-  | "rate_limited"
-  | "daily_cap"
-  | "not_configured"
-  | "provider_unavailable"
-  | "invalid_response"
-  | "invalid_request";
-
-export type AssistantResult = {
-  readonly kind: AssistantKind;
-  readonly source: AssistantSource;
-  readonly reason: AssistantReason;
+export type AssistantResult = Pick<AssistantResponse, "kind" | "source" | "reason"> & {
   readonly commandIds: readonly Slug[];
 };
