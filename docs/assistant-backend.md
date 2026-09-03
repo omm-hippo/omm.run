@@ -2,7 +2,7 @@
 
 The assistant is a constrained command selector, not a general chatbot. The
 browser sends `{ locale, question, turnCount }`. The server narrows the
-question to at most five entries derived from the existing command docs. A
+question to at most eight entries derived from the existing command docs. A
 Workers AI model may return only one candidate `commandId` or `clarify`.
 Options, examples, risk labels, links, and shell text always come from the
 static OMM command catalog.
@@ -10,6 +10,8 @@ static OMM command catalog.
 ## Runtime contract
 
 - `question`: 1–480 Unicode code points.
+- Request bodies are bounded while streaming, including uploads without a
+  `Content-Length` header. Invalid or interrupted uploads receive HTTP 400.
 - `turnCount`: integer 0–2 (three browser questions at most).
 - Model output: at most 48 completion tokens, non-streaming, temperature 0, five-second
   application timeout, no retry.
@@ -20,7 +22,8 @@ static OMM command catalog.
 - `429`, capacity, timeout, model, binding, database, and invalid-JSON failures
   fall back to ordinary static command search without a retry.
 
-`wrangler.jsonc` contains only the Workers AI binding:
+`wrangler.jsonc` declares the Workers AI binding alongside the D1 and OpenNext
+bindings:
 
 ```json
 "ai": { "binding": "AI" }
@@ -28,6 +31,8 @@ static OMM command catalog.
 
 The route reads the binding through OpenNext's `getCloudflareContext()` and
 calls `env.AI.run()`. No browser-visible API key exists.
+`next dev` does not initialize Cloudflare bindings, so it neither starts a remote preview
+session nor invokes paid inference during ordinary local development.
 
 ## Model choice
 

@@ -14,6 +14,10 @@ npm run dev
 Open <http://localhost:3000>. English is served without a prefix and Korean is
 served under `/ko`.
 
+`next dev` does not initialize Cloudflare bindings, so local development does not
+require Cloudflare authentication or invoke remote Workers AI. The assistant
+uses its deterministic fallback without the live inference configuration.
+
 ## OMM AI assistant
 
 `/assistant` and `/ko/assistant` provide a constrained OMM command selector.
@@ -35,6 +39,18 @@ npm run lint
 npx tsc --noEmit
 npm run build
 ```
+
+`npm run build` runs the Next.js build once through OpenNext and produces the
+Cloudflare Worker bundle in `.open-next/`.
+
+Pull requests and pushes to `main` run tests, lint, type checking and the Worker
+build in GitHub Actions. The workflow uses no Cloudflare credentials and does
+not deploy or call Workers AI.
+
+The navigation badge reads the published `omm-model` version from PyPI. It is
+hidden if that request fails; the development version on GitHub `main` is not
+presented as a release. The footer commit is embedded at build time from
+Cloudflare Workers/Pages, GitHub Actions, Vercel, or the local Git checkout.
 
 To compare the website command manifest against a trusted current local OMM
 checkout without network access:

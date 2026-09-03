@@ -65,10 +65,8 @@ function Column({
 export default function Footer({ locale }: { locale: Locale }) {
   const t = getDictionary(locale).footer;
 
-  /* DIRECTION.md §4.7: the bottom row carries the build's real commit
-     short-SHA. Vercel injects it at build time; locally it is absent, and the
-     row then renders repo + license only rather than a fake placeholder. */
-  const sha = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7);
+  // next.config resolves the Cloudflare/CI/local commit while building.
+  const sha = process.env.OMM_BUILD_SHA?.slice(0, 7);
 
   return (
     <footer className="border-t border-line-0 bg-bg-0 py-16">

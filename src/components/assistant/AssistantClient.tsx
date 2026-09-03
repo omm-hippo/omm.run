@@ -14,9 +14,10 @@ import type {
 import type { Slug } from "@/components/commands/commands";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary } from "@/i18n/dictionaries";
+import { ASSISTANT_LIMITS } from "@/lib/assistant/types";
 
-const MAX_QUESTION_LENGTH = 480;
-const MAX_TURNS = 3;
+const MAX_QUESTION_LENGTH = ASSISTANT_LIMITS.maxQuestionCharacters;
+const MAX_TURNS = ASSISTANT_LIMITS.maxTurns;
 const REQUEST_TIMEOUT_MS = 7_000;
 const KINDS = new Set<AssistantKind>(["command", "clarify", "fallback"]);
 const SOURCES = new Set<AssistantSource>(["workers-ai", "deterministic"]);
@@ -76,7 +77,11 @@ function parseResponse(
   if (!(value.commandId === null || typeof value.commandId === "string")) {
     return null;
   }
-  if (!Array.isArray(value.candidateIds) || value.candidateIds.length > 3) {
+  if (
+    !Array.isArray(value.candidateIds) ||
+    value.candidateIds.length > ASSISTANT_LIMITS.maxSuggestions ||
+    value.candidateIds.some((id) => typeof id !== "string" || !allowedIds.has(id))
+  ) {
     return null;
   }
 
@@ -191,11 +196,10 @@ export default function AssistantClient({
               id="assistant-question"
               value={question}
               onChange={(event) => {
-                setQuestion(event.target.value.slice(0, MAX_QUESTION_LENGTH));
+                setQuestion(Array.from(event.target.value).slice(0, MAX_QUESTION_LENGTH).join(""));
                 if (error) setError(null);
               }}
               placeholder={t.placeholder}
-              maxLength={MAX_QUESTION_LENGTH}
               rows={6}
               aria-describedby="assistant-privacy assistant-counter"
               disabled={turnLimitReached}
@@ -204,7 +208,7 @@ export default function AssistantClient({
             <div className="flex items-center justify-between border-t border-line-0 px-4 py-3">
               <span id="assistant-counter" className="text-label">
                 {fill(t.counter, {
-                  count: String(question.length),
+                  count: String(Array.from(question).length),
                   max: String(MAX_QUESTION_LENGTH),
                 })}
               </span>

@@ -7,9 +7,8 @@ const cloudflareConfig = {
 		incrementalCache: staticAssetsIncrementalCache,
 		enableCacheInterception: true,
 	}),
-	// Without this, `opennextjs-cloudflare build` re-runs the project's own
-	// "build" npm script (`next build && opennextjs-cloudflare build`),
-	// recursing into itself forever.
+	// Keep the framework build explicit: the package's "build" script invokes
+	// OpenNext, so falling back to that script would recurse into itself.
 	buildCommand: "next build",
 };
 

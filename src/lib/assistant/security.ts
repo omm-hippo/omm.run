@@ -1,7 +1,10 @@
 const SECRET_PATTERNS = [
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/iu,
   /\b(?:sk|pk)[-_](?:live|test|or)[-_][A-Za-z0-9_-]{16,}\b/u,
+  /\bsk-[A-Za-z0-9_-]{20,}\b/u,
   /\bgh(?:p|o|u|s|r)_[A-Za-z0-9]{20,}\b/u,
+  /\bgithub_pat_[A-Za-z0-9_]{20,}\b/u,
+  /\bhf_[A-Za-z0-9]{20,}\b/u,
   /\bAKIA[0-9A-Z]{16}\b/u,
   /\b(?:api[_ -]?key|access[_ -]?token|auth[_ -]?token|password|passwd)\s*[:=]\s*\S{6,}/iu,
 ] as const;

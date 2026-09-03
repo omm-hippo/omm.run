@@ -162,6 +162,8 @@ export async function selectWithWorkersAi(
         }),
       );
     return await Promise.race([inference, timedOut]);
+  } catch {
+    return { ok: false, reason: "provider_unavailable" };
   } finally {
     if (timeout !== undefined) clearTimeout(timeout);
   }
