@@ -21,6 +21,7 @@ const PAGES: Record<string, string | null> = {
   "supported-platforms": "Supported platforms",
   "storage-location": "Storage location",
   scripting: "Scripting",
+  "local-ai-runners": "Local AI runners",
 };
 
 const SAMPLE = `# Title

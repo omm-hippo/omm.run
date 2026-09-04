@@ -275,6 +275,13 @@ export const ko = {
         heading: "스크립팅",
         lede: "스크립트로 omm을 구동할 때의 stdout, stderr, --json, --yes — README에서 미러링합니다.",
       },
+      "local-ai-runners": {
+        metaTitle: "호환 프로그램 — omm",
+        metaDescription:
+          "omm이 설치하거나 연결하는 로컬 AI 러너 — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — 와 각 플랫폼별 자동화 범위를 omm README에서 미러링.",
+        heading: "호환 프로그램",
+        lede: "omm이 설치하거나 연결할 수 있는 로컬 AI 러너와 플랫폼별 자동화 범위를 README에서 미러링합니다.",
+      },
     },
   },
 

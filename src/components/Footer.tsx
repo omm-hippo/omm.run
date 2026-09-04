@@ -15,7 +15,7 @@ const DOCS_HREFS = [
   { href: "/docs/supported-platforms", internal: true },
   { href: "/docs/storage-location", internal: true },
   { href: "/docs/scripting", internal: true },
-  { href: `${REPO}/wiki/Compatible-Programs`, internal: false },
+  { href: "/docs/local-ai-runners", internal: true },
 ] as const;
 
 /** Command names are the product's own vocabulary — never translated.

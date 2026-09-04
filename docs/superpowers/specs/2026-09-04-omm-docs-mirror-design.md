@@ -23,7 +23,7 @@ concerns are addressed here:
 
 ## Scope
 
-Four pages under `/[locale]/docs/`:
+Five pages under `/[locale]/docs/`:
 
 | Route | Body |
 |---|---|
@@ -31,13 +31,15 @@ Four pages under `/[locale]/docs/`:
 | `/docs/supported-platforms` | `### Supported platforms` section |
 | `/docs/storage-location` | `### Storage location` section |
 | `/docs/scripting` | `### Scripting` section |
+| `/docs/local-ai-runners` | `### Local AI runners` section (Footer label: "Compatible programs") |
 
-The Footer's four external anchors become internal `next/link`s to these
-routes.
+All five Footer "Docs" entries that pointed at GitHub become internal links
+to these routes — including the old `wiki/Compatible-Programs` link, which
+was dead (the upstream wiki is disabled) and now points at
+`/docs/local-ai-runners`.
 
-**Out of scope:** the Footer's `wiki/Compatible-Programs` link (the wiki is
-disabled upstream — dead link, tracked separately), a top-nav entry, a
-`/docs` index page.
+**Out of scope:** a top-nav entry, a `/docs` index page, the Footer "Source"
+column's `wiki` link.
 
 ## Content source and sync
 

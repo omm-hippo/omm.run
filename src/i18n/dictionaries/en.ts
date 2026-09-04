@@ -286,6 +286,13 @@ export const en = {
         heading: "Scripting",
         lede: "stdout, stderr, --json, and --yes when you drive omm from a script — mirrored from the README.",
       },
+      "local-ai-runners": {
+        metaTitle: "Compatible programs — omm",
+        metaDescription:
+          "The local AI runners omm installs or links — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — and which platforms each is automated on, mirrored from the omm README.",
+        heading: "Compatible programs",
+        lede: "The local AI runners omm can install or link, and which platform each is automated on, mirrored from the README.",
+      },
     },
   },
 
