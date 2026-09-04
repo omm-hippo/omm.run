@@ -245,6 +245,50 @@ export const en = {
     build: "build {sha}",
   },
 
+  /** `/docs/*` pages. The body is the README itself, fetched live and always
+   *  in English; only this chrome is translated. Keys under `pages` are the
+   *  route slugs. */
+  docs: {
+    breadcrumbAria: "Breadcrumb",
+    /** `{source}` is the host the README is fetched from. */
+    syncedFrom: "Synced live from {source}",
+    sourceLink: "View the source on GitHub",
+    unavailable: {
+      title: "Couldn’t load this from GitHub",
+      body: "This page mirrors the omm README and the text is fetched live. GitHub did not answer just now — read it on the repository instead.",
+    },
+    pages: {
+      readme: {
+        metaTitle: "omm README",
+        metaDescription:
+          "The full omm README — what it does, install paths for every operating system, usage, and configuration — mirrored from the repository and kept in sync.",
+        heading: "omm README",
+        lede: "The project README in full, mirrored from the repository. Whatever changes upstream shows up here.",
+      },
+      "supported-platforms": {
+        metaTitle: "Supported platforms — omm",
+        metaDescription:
+          "Which operating systems, Python versions, and Node.js versions omm is tested against, mirrored from the omm README.",
+        heading: "Supported platforms",
+        lede: "The operating systems and language runtimes omm is tested against, mirrored from the README.",
+      },
+      "storage-location": {
+        metaTitle: "Storage location — omm",
+        metaDescription:
+          "Where omm keeps the model hub and its state, and the environment variables that move them, mirrored from the omm README.",
+        heading: "Storage location",
+        lede: "Where the model hub and omm state live, and how to move them, mirrored from the README.",
+      },
+      scripting: {
+        metaTitle: "Scripting — omm",
+        metaDescription:
+          "How omm behaves when driven from a script: stderr, --json output, and --yes, mirrored from the omm README.",
+        heading: "Scripting",
+        lede: "stdout, stderr, --json, and --yes when you drive omm from a script — mirrored from the README.",
+      },
+    },
+  },
+
   installChooser: {
     metaTitle: "Install omm",
     metaDescription:

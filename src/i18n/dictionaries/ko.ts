@@ -238,6 +238,46 @@ export const ko = {
     build: "빌드 {sha}",
   },
 
+  docs: {
+    breadcrumbAria: "탐색 경로",
+    syncedFrom: "{source}에서 실시간 동기화",
+    sourceLink: "GitHub에서 원문 보기",
+    unavailable: {
+      title: "GitHub에서 불러오지 못했습니다",
+      body: "이 페이지는 omm README를 실시간으로 가져와 그대로 보여줍니다. 방금은 GitHub가 응답하지 않았습니다 — 저장소에서 직접 확인해 주세요.",
+    },
+    pages: {
+      readme: {
+        metaTitle: "omm README",
+        metaDescription:
+          "omm README 전문 — 무엇을 하는지, 모든 운영체제의 설치 경로, 사용법, 설정까지 — 저장소에서 미러링되어 최신 상태로 유지됩니다.",
+        heading: "omm README",
+        lede: "프로젝트 README 전문을 저장소에서 그대로 미러링합니다. 원본이 바뀌면 여기에도 반영됩니다.",
+      },
+      "supported-platforms": {
+        metaTitle: "지원 플랫폼 — omm",
+        metaDescription:
+          "omm이 테스트되는 운영체제, Python 버전, Node.js 버전 — omm README에서 미러링.",
+        heading: "지원 플랫폼",
+        lede: "omm이 테스트되는 운영체제와 언어 런타임을 README에서 미러링합니다.",
+      },
+      "storage-location": {
+        metaTitle: "저장 위치 — omm",
+        metaDescription:
+          "omm이 모델 허브와 상태를 두는 위치, 그리고 이를 옮기는 환경 변수 — omm README에서 미러링.",
+        heading: "저장 위치",
+        lede: "모델 허브와 omm 상태가 저장되는 위치, 그리고 옮기는 방법을 README에서 미러링합니다.",
+      },
+      scripting: {
+        metaTitle: "스크립팅 — omm",
+        metaDescription:
+          "스크립트에서 omm을 구동할 때의 동작: stderr, --json 출력, --yes — omm README에서 미러링.",
+        heading: "스크립팅",
+        lede: "스크립트로 omm을 구동할 때의 stdout, stderr, --json, --yes — README에서 미러링합니다.",
+      },
+    },
+  },
+
   installChooser: {
     metaTitle: "omm 설치",
     metaDescription:

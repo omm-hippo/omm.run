@@ -11,10 +11,10 @@ const DOCS_HREFS = [
   { href: "/install/windows", internal: true },
   { href: "/install/macos", internal: true },
   { href: "/install/linux", internal: true },
-  { href: `${REPO}#readme`, internal: false },
-  { href: `${REPO}#supported-platforms`, internal: false },
-  { href: `${REPO}#storage-location`, internal: false },
-  { href: `${REPO}#scripting`, internal: false },
+  { href: "/docs/readme", internal: true },
+  { href: "/docs/supported-platforms", internal: true },
+  { href: "/docs/storage-location", internal: true },
+  { href: "/docs/scripting", internal: true },
   { href: `${REPO}/wiki/Compatible-Programs`, internal: false },
 ] as const;
 
