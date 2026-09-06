@@ -17,6 +17,7 @@ export const README_URL =
   "https://raw.githubusercontent.com/omm-hippo/omm/main/README.md";
 
 const EDGE_CACHE_TTL_SECONDS = 3600;
+const FETCH_TIMEOUT_MS = 5_000;
 
 type EdgeCache = {
   match(request: Request): Promise<Response | undefined>;
@@ -39,24 +40,36 @@ export function readmeCacheKey(): Request {
 }
 
 async function runAfterResponse(promise: Promise<unknown>): Promise<void> {
+  // Handle rejection before importing the runtime: cache writes are best effort.
+  const settled = promise.catch(() => {});
   try {
     const { getCloudflareContext } = await import("@opennextjs/cloudflare");
-    getCloudflareContext().ctx.waitUntil(promise);
+    getCloudflareContext().ctx.waitUntil(settled);
   } catch {
     // No Cloudflare context (dev, tests): just await it inline.
-    await promise;
+    await settled;
   }
 }
 
 async function fetchFromGitHub(): Promise<string> {
-  let response: Response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    response = await fetch(README_URL, { cache: "no-store" });
-  } catch {
+    const response = await fetch(README_URL, {
+      cache: "no-store",
+      signal: controller.signal,
+      redirect: "manual",
+    });
+    if (!response.ok) throw new OmmDocsUnavailable(response.status);
+    // Await the body here: a connection can fail after successful headers,
+    // and the same deadline must cover the entire download.
+    return await response.text();
+  } catch (error) {
+    if (error instanceof OmmDocsUnavailable) throw error;
     throw new OmmDocsUnavailable();
+  } finally {
+    clearTimeout(timeout);
   }
-  if (!response.ok) throw new OmmDocsUnavailable(response.status);
-  return response.text();
 }
 
 /**
@@ -69,8 +82,12 @@ export const fetchReadme = cache(async (): Promise<string> => {
   if (!store) return fetchFromGitHub();
 
   const key = readmeCacheKey();
-  const hit = await store.match(key);
-  if (hit) return hit.text();
+  try {
+    const hit = await store.match(key);
+    if (hit) return await hit.text();
+  } catch {
+    // A failed cache read is a miss, not a document outage.
+  }
 
   const markdown = await fetchFromGitHub();
   const entry = new Response(markdown, {

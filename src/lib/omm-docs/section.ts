@@ -1,56 +1,24 @@
+import { marked, type Tokens } from "marked";
+
 import { OmmDocsSectionMissing } from "./errors";
 
-const HEADING = /^(#{1,6})\s+(.+?)\s*$/;
-const FENCE = /^\s*(```|~~~)/;
-
-/**
- * Slice one section out of a markdown document: from the first heading whose
- * text matches `heading` (trimmed, case-insensitive) down to the next heading
- * of the same or a higher level, or the end of the document.
- *
- * Fenced code blocks are skipped so a `# comment` line inside a shell snippet
- * is never mistaken for a heading.
- */
+/** Slice a heading and its descendants using the same parser as the renderer.
+ * This keeps fenced/indented code and alternate heading syntax consistent. */
 export function extractSection(markdown: string, heading: string): string {
   const target = heading.trim().toLowerCase();
-  const lines = markdown.split("\n");
-
-  let start = -1;
-  let level = 0;
-  let inFence = false;
-
-  for (let i = 0; i < lines.length; i += 1) {
-    if (FENCE.test(lines[i])) {
-      inFence = !inFence;
-      continue;
-    }
-    if (inFence) continue;
-
-    const match = HEADING.exec(lines[i]);
-    if (match && match[2].trim().toLowerCase() === target) {
-      start = i;
-      level = match[1].length;
-      break;
-    }
-  }
-
+  const tokens = marked.lexer(markdown);
+  const start = tokens.findIndex(
+    (token) => token.type === "heading" && token.text.trim().toLowerCase() === target,
+  );
   if (start === -1) throw new OmmDocsSectionMissing(heading);
 
-  let end = lines.length;
-  inFence = false;
-  for (let i = start + 1; i < lines.length; i += 1) {
-    if (FENCE.test(lines[i])) {
-      inFence = !inFence;
-      continue;
-    }
-    if (inFence) continue;
-
-    const match = HEADING.exec(lines[i]);
-    if (match && match[1].length <= level) {
-      end = i;
-      break;
-    }
-  }
-
-  return lines.slice(start, end).join("\n").trim();
+  const level = (tokens[start] as Tokens.Heading).depth;
+  const next = tokens.findIndex(
+    (token, index) => index > start && token.type === "heading" && token.depth <= level,
+  );
+  return tokens
+    .slice(start, next === -1 ? undefined : next)
+    .map((token) => token.raw)
+    .join("")
+    .trim();
 }
