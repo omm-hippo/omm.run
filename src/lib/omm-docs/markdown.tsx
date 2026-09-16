@@ -12,6 +12,7 @@ import { marked, type Token, type Tokens } from "marked";
 
 const REPO_ROOT = "https://github.com/omm-hippo/omm";
 const REPO_BLOB = `${REPO_ROOT}/blob/main/`;
+const REPO_RAW = "https://raw.githubusercontent.com/omm-hippo/omm/main/";
 const SITE_HOSTS = new Set(["omm.run", "www.omm.run"]);
 
 const LINK_CLASS =
@@ -226,10 +227,17 @@ function MarkedLink({ token }: { token: Tokens.Link }) {
 
 function renderImage(token: Tokens.Image): ReactNode {
   if (BADGE_HREF.test(token.href)) return null;
+  let url: URL;
+  try {
+    url = new URL(token.href, REPO_RAW);
+  } catch {
+    return token.text;
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") return token.text;
   return (
     // eslint-disable-next-line @next/next/no-img-element -- upstream README image, host + dimensions unknown
     <img
-      src={token.href}
+      src={url.href}
       alt={token.text}
       title={token.title ?? undefined}
       loading="lazy"
@@ -240,13 +248,13 @@ function renderImage(token: Tokens.Image): ReactNode {
 
 function isBadgeParagraph(paragraph: Tokens.Paragraph): boolean {
   return paragraph.tokens.every((token) => {
-    if (token.type === "image") return true;
+    if (token.type === "image") return BADGE_HREF.test(token.href);
     if (token.type === "space" || token.type === "br") return true;
     if (token.type === "text") return token.raw.trim() === "";
     if (token.type === "link") {
       return (token as Tokens.Link).tokens.every(
         (child) =>
-          child.type === "image" ||
+          (child.type === "image" && BADGE_HREF.test(child.href)) ||
           (child.type === "text" && child.raw.trim() === ""),
       );
     }

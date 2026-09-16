@@ -86,6 +86,29 @@ test("extractSection throws OmmDocsSectionMissing when absent", () => {
   );
 });
 
+test("extractSection uses markdown fence rules instead of toggling on any fence", () => {
+  for (const [open, inner, close] of [["````md", "```", "````"], ["```md", "~~~", "```"]]) {
+    const md = `## First\n\n${open}\n${inner}\n## In code\n${close}\n\nKept.\n\n## Next\nOther.`;
+    const section = extractSection(md, "First");
+    assert.ok(section.includes("Kept."));
+    assert.ok(!section.includes("Other."));
+    assert.throws(() => extractSection(md, "In code"), OmmDocsSectionMissing);
+  }
+});
+
+test("extractSection recognizes setext and closing-hash headings", () => {
+  assert.equal(extractSection("Intro\n\nFirst\n-----\n\nText.\n\n## Next", "First"), "First\n-----\n\nText.");
+  assert.equal(extractSection("## First ##\n\nText.\n\n## Next", "First"), "## First ##\n\nText.");
+});
+
+test("extractSection preserves reference link definitions and their rendered target", () => {
+  const md = "## First\n\n[Read the guide][guide]\n\n[guide]: docs/guide.md\n\n## Next";
+  const section = extractSection(md, "First");
+  assert.ok(section.includes("[guide]: docs/guide.md"));
+  const html = renderToStaticMarkup(renderMarkdown(section));
+  assert.ok(html.includes('href="https://github.com/omm-hippo/omm/blob/main/docs/guide.md"'));
+});
+
 test("renderMarkdown renders every handled token without throwing", () => {
   const html = renderToStaticMarkup(renderMarkdown(SAMPLE));
   assert.ok(html.includes("<h2"));
@@ -112,6 +135,22 @@ test("renderMarkdown drops shields.io badge paragraphs", () => {
   const html = renderToStaticMarkup(renderMarkdown(md));
   assert.ok(!html.includes("img.shields.io"));
   assert.ok(html.includes("Real text."));
+});
+
+test("renderMarkdown preserves standalone and linked content images", () => {
+  const md = "![Diagram](docs/diagram.png)\n\n[![Screenshot](https://example.com/screen.png)](docs/guide.md)";
+  const html = renderToStaticMarkup(renderMarkdown(md));
+  assert.ok(html.includes('alt="Diagram"'));
+  assert.ok(html.includes('src="https://raw.githubusercontent.com/omm-hippo/omm/main/docs/diagram.png"'));
+  assert.ok(html.includes('alt="Screenshot"'));
+  assert.ok(html.includes('href="https://github.com/omm-hippo/omm/blob/main/docs/guide.md"'));
+});
+
+test("malformed or non-web image URLs degrade to their alternative text", () => {
+  const html = renderToStaticMarkup(renderMarkdown("![Broken](http://[)\n\n![Local](file:///tmp/image.png)"));
+  assert.ok(html.includes("Broken"));
+  assert.ok(html.includes("Local"));
+  assert.ok(!html.includes("<img"));
 });
 
 test("every /docs route directory has a page and a dictionary entry", async () => {
