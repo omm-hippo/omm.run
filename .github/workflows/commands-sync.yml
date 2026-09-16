@@ -1,0 +1,34 @@
+name: Commands sync
+
+# `src/data/commands.json` is a copy of `docs/commands.json` in omm-hippo/omm.
+# This job fails when the copy has drifted, so /commands can never describe a
+# CLI that no longer exists (omm-hippo/omm#347). The Worker build itself is
+# covered by the CI workflow, which already runs on every pull request.
+on:
+  pull_request:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: commands-sync-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: commands.json 동기화 확인
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run check-commands

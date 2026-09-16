@@ -252,9 +252,39 @@ Windows 11 run recorded above, shown on the Windows page with a caption saying
 it was taken under heavy load. The macOS and Linux pages have no capture, so
 they list the field names `omm scan` prints instead of inventing a table.
 
+## Command reference data (`src/data/commands.json`)
+
+The "CLI reference" section on every `/commands/<name>` page, the command table
+on `/commands`, and the fallback page at `src/app/[locale]/commands/[name]`
+render **verbatim** from `src/data/commands.json`. That file is a byte copy of
+`docs/commands.json` in `github.com/omm-hippo/omm`, which
+`scripts/export_command_reference.py` generates from `src/omm/cli.py` there.
+Nothing in it is written, reworded or translated on this side: usage lines,
+argument names, flags, metavars, defaults and help text are the strings
+`omm <command> --help` prints, so a Korean page shows Korean headings above
+English flags — which is what the reader will actually type.
+
+Update path: `npm run sync-commands` fetches
+`https://raw.githubusercontent.com/omm-hippo/omm/main/docs/commands.json`,
+checks `schema_version === 1`, and rewrites the copy. `npm run check-commands`
+does the same fetch and exits 1 when the committed copy differs, printing which
+command paths moved; `.github/workflows/commands-sync.yml` runs it on every pull
+request and once a day. Editing `src/data/commands.json` by hand is always
+wrong — the next sync overwrites it, and the check job fails in the meantime.
+
+Shape: a flat `commands` array sorted by `path`, where `path[0]` is the site
+route and a two-element `path` is a sub-command rendered under the group page as
+an `#<sub>` anchor (`/commands/setting#version`). Options carrying
+`"global": true` are the flags the CLI injects into every command
+(`--json`, `--quiet`, `--yes`); the site collects them into one "Shared flags"
+note instead of repeating them on 24 pages. Hidden commands are not exported.
+Background: omm-hippo/omm#347.
+
 ## Command doc pages (`/commands`, `/commands/search`)
 
-Source of truth for these pages is the omm product repo at
+The prose, examples, captured runs and troubleshooting on these pages are
+hand-written and reviewed; only the "CLI reference" section is generated (see
+the section above). Source of truth for these pages is the omm product repo at
 `~/Project/Localfit` (remote `origin` = `github.com/omm-hippo/omm`). Content
 lives in `src/i18n/commands/` — `base.ts` for everything language-independent
 (options, example commands, captured output, verbatim errors and their

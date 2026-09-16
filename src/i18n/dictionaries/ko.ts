@@ -363,6 +363,13 @@ export const ko = {
       maintenance: "복구와 유지보수",
       config: "omm 설정",
     },
+    reference: {
+      title: "CLI가 가진 모든 명령어",
+      body:
+        "omm이 직접 출력하는 도움말에서 그대로 가져옵니다. CLI에 명령이 추가되면 이 페이지를 고치지 않아도 여기에 나타납니다.",
+      columns: { command: "명령어", summary: "하는 일" },
+      aliases: "별칭: {aliases}",
+    },
   },
 
   assistant: {
@@ -460,6 +467,7 @@ export const ko = {
       "실제 실행 예시",
       "관련 명령어",
       "문제가 생겼다면",
+      "CLI 레퍼런스",
     ],
     optionsIntro: "이 명령이 받는 모든 옵션과, 생략했을 때의 기본값입니다.",
     optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
@@ -472,5 +480,30 @@ export const ko = {
     troubleSource: "출처",
     stillStuck: "그래도 해결되지 않는다면, 화면에 뜬 메시지 그대로를 첨부해 이슈를 등록하세요.",
     elsewhere: "전체 명령어",
+  },
+
+  commandReference: {
+    intro: "omm {command} --help가 출력하는 내용 그대로, CLI 소스에서 뽑아낸 것입니다.",
+    usage: "사용법",
+    aliases: "같은 명령의 다른 이름: {aliases}",
+    arguments: "인자",
+    required: "필수",
+    optional: "선택",
+    options: "옵션",
+    columns: { flag: "옵션", value: "값", default: "기본값" },
+    noOptions: "이 명령에는 자체 옵션이 없습니다.",
+    subcommands: "하위 명령어",
+    subcommandCount: "하위 명령어 {count}개",
+    subcommandCountOne: "하위 명령어 1개",
+    sharedFlags: "공통 옵션",
+    sharedFlagsBody:
+      "모든 omm 명령이 {flags}도 함께 받습니다. 명령마다 반복하지 않고 여기에 한 번만 적었습니다.",
+    readmeTitle: "README — Usage",
+    readmeBlurb: "omm의 모든 명령어를 한 줄씩 정리한 목록입니다.",
+    generated: "omm {version} 기준으로 내보낸 내용입니다.",
+    empty: "—",
+    breadcrumbAria: "탐색 경로",
+    metaTitle: "omm {command}",
+    backToIndex: "전체 명령어",
   },
 } as const satisfies Dictionary;

@@ -18,6 +18,26 @@ served under `/ko`.
 require Cloudflare authentication or invoke remote Workers AI. The assistant
 uses its deterministic fallback without the live inference configuration.
 
+## Command reference
+
+`/commands` lists every command the CLI exports, and each `/commands/<name>`
+page ends with a "CLI reference" section showing that command's usage line,
+arguments, options and sub-commands exactly as `omm <name> --help` prints them.
+A command the CLI exports but this site has no hand-written page for still gets
+a reference-only page from `src/app/[locale]/commands/[name]`.
+
+All of it renders from `src/data/commands.json`, a copy of `docs/commands.json`
+in [omm-hippo/omm](https://github.com/omm-hippo/omm), which is generated there
+from `src/omm/cli.py`. Do not edit the copy by hand:
+
+```sh
+npm run sync-commands   # fetch the current export and write the copy
+npm run check-commands  # fail if the committed copy has drifted
+```
+
+`.github/workflows/commands-sync.yml` runs the check on every pull request and
+once a day, so the site cannot quietly describe a CLI that has moved on.
+
 ## OMM AI assistant
 
 `/assistant` and `/ko/assistant` provide a constrained OMM command selector.
