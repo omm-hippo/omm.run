@@ -10,6 +10,8 @@
     "test": "tsx --test tests/*.test.ts",
     "test:assistant": "tsx --test tests/assistant.test.ts tests/command-docs-sync.test.ts",
     "check:omm-sync": "node scripts/check-omm-sync.mjs",
+    "sync-commands": "node scripts/sync-commands.mjs",
+    "check-commands": "node scripts/sync-commands.mjs --check",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",

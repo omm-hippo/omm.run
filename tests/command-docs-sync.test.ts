@@ -33,6 +33,9 @@ async function routeSlugs(): Promise<string[]> {
   const routes: string[] = [];
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
+    // `[name]` is the dynamic fallback for commands the CLI exports but the
+    // site has no hand-written page for; it is not a hand-written slug.
+    if (entry.name.startsWith("[")) continue;
     try {
       await readFile(path.join(COMMAND_ROUTES, entry.name, "page.tsx"));
       routes.push(entry.name);

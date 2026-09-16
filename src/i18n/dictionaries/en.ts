@@ -378,6 +378,15 @@ export const en = {
       maintenance: "Fix & maintain",
       config: "Configure omm",
     },
+    /** The table generated from the CLI's own exported reference. */
+    reference: {
+      title: "Every command the CLI has",
+      body:
+        "Taken straight from omm's own help output, so a command added to the CLI shows up here without anyone editing this page.",
+      columns: { command: "Command", summary: "What it does" },
+      /** `{aliases}` is the comma-separated alias list, e.g. "ls". */
+      aliases: "alias: {aliases}",
+    },
   },
 
   assistant: {
@@ -476,6 +485,7 @@ export const en = {
       "A real run",
       "Related commands",
       "If something goes wrong",
+      "CLI reference",
     ],
     optionsIntro: "Every flag this command accepts, and what it defaults to when you leave it out.",
     optionsColumns: { flag: "Flag", argument: "Argument", default: "Default" },
@@ -489,5 +499,40 @@ export const en = {
     troubleSource: "source",
     stillStuck: "Still stuck? Open an issue with the exact message you saw.",
     elsewhere: "All commands",
+  },
+
+  /** The `/commands` reference block. Only this chrome is translated: the
+   *  usage lines, flags, defaults and help text come from the CLI itself and
+   *  are shown exactly as `omm <command> --help` prints them. */
+  commandReference: {
+    /** `{command}` is the command name, e.g. "install". */
+    intro:
+      "Exactly what omm {command} --help prints, exported from the CLI source.",
+    usage: "Usage",
+    /** `{aliases}` is the comma-separated alias list, e.g. "ls". */
+    aliases: "Also accepted as: {aliases}",
+    arguments: "Arguments",
+    required: "required",
+    optional: "optional",
+    options: "Options",
+    columns: { flag: "Flag", value: "Value", default: "Default" },
+    noOptions: "This command takes no options of its own.",
+    subcommands: "Sub-commands",
+    /** `{count}` is how many sub-commands the group has, always two or more. */
+    subcommandCount: "{count} sub-commands",
+    subcommandCountOne: "1 sub-command",
+    sharedFlags: "Shared flags",
+    /** `{flags}` is the comma-separated list of flags every command accepts. */
+    sharedFlagsBody:
+      "Every omm command also accepts {flags}, so they are listed here once instead of on each command.",
+    readmeTitle: "README — Usage",
+    readmeBlurb: "Every omm command, one line each.",
+    /** `{version}` is the omm release the reference was exported from. */
+    generated: "Exported from omm {version}.",
+    empty: "—",
+    breadcrumbAria: "Breadcrumb",
+    /** `{command}` is the command name. */
+    metaTitle: "omm {command}",
+    backToIndex: "All commands",
   },
 } as const;

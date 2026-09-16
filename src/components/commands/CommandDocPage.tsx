@@ -2,10 +2,16 @@ import Link from "next/link";
 
 import CommandBlock from "@/components/install/CommandBlock";
 import CommandCapture from "@/components/commands/CommandCapture";
+import CommandReference from "@/components/commands/CommandReference";
 import { getCommandLinks, type Command } from "@/components/commands/commands";
 import Reveal from "@/components/Reveal";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary } from "@/i18n/dictionaries";
+import {
+  OMM_REFERENCE_VERSION,
+  getEntry,
+  subEntries,
+} from "@/lib/commands/reference";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -16,17 +22,20 @@ const SECTION_IDS = [
   "capture",
   "related",
   "trouble",
+  "reference",
 ] as const;
 
-const SECTION_NUMBERS = ["01", "02", "03", "04", "05", "06"] as const;
+const SECTION_NUMBERS = ["01", "02", "03", "04", "05", "06", "07"] as const;
 
 function SectionHead({
   n,
+  total,
   id,
   title,
   body,
 }: {
   n: string;
+  total: string;
   id: string;
   title: string;
   body?: string;
@@ -35,7 +44,7 @@ function SectionHead({
     <>
       <p className="text-label">
         <span className="text-ink-2">{n}</span>
-        <span> / 06</span>
+        <span> / {total}</span>
       </p>
       <h2 id={`${id}-title`} className="text-h2 mt-3">
         {title}
@@ -65,11 +74,18 @@ export default function CommandDocPage({
   const ui = dictionary.ui;
   const others = getCommandLinks(locale).filter((link) => link.slug !== command.slug);
 
+  // The exported CLI reference is the source of truth for usage lines and
+  // flags. A command that is not in the export yet (a page written ahead of
+  // the CLI, or a stale copy of commands.json) simply drops the section.
+  const entry = getEntry(command.slug);
+  const subs = entry ? subEntries(command.slug) : [];
+
   const sections = SECTION_IDS.map((id, index) => ({
     id,
     n: SECTION_NUMBERS[index],
     title: t.sections[index],
-  }));
+  })).filter((section) => section.id !== "reference" || entry !== undefined);
+  const total = String(sections.length).padStart(2, "0");
 
   return (
     <main>
@@ -139,7 +155,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="01" id="overview" title={t.sections[0]} body={command.overviewBody} />
+                <SectionHead n="01" total={total} id="overview" title={t.sections[0]} body={command.overviewBody} />
               </Reveal>
             </section>
 
@@ -150,7 +166,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="02" id="options" title={t.sections[1]} body={t.optionsIntro} />
+                <SectionHead n="02" total={total} id="options" title={t.sections[1]} body={t.optionsIntro} />
                 <Rows>
                   {command.options.map((option) => (
                     <Row key={option.name}>
@@ -177,7 +193,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="03" id="examples" title={t.sections[2]} body={t.examplesIntro} />
+                <SectionHead n="03" total={total} id="examples" title={t.sections[2]} body={t.examplesIntro} />
                 <div className="mt-6 flex flex-col gap-6">
                   {command.examples.map((example) => (
                     <div key={example.command}>
@@ -201,7 +217,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="04" id="capture" title={t.sections[3]} />
+                <SectionHead n="04" total={total} id="capture" title={t.sections[3]} />
                 <div className="mt-8">
                   <CommandCapture
                     command={command.capture.title}
@@ -220,7 +236,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="05" id="related" title={t.sections[4]} />
+                <SectionHead n="05" total={total} id="related" title={t.sections[4]} />
                 <ul className="mt-6 flex flex-col border-t border-line-0">
                   {command.related.map((entry) => (
                     <li key={entry.label} className="border-b border-line-0">
@@ -246,7 +262,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="06" id="trouble" title={t.sections[5]} body={t.troubleBody} />
+                <SectionHead n="06" total={total} id="trouble" title={t.sections[5]} body={t.troubleBody} />
                 <ol className="mt-6 flex flex-col border-t border-line-0">
                   {command.trouble.map((entry) => (
                     <li key={entry.see} className="border-b border-line-0 py-6">
@@ -273,6 +289,30 @@ export default function CommandDocPage({
                 <p className="text-small mt-6 max-w-[68ch]">{t.stillStuck}</p>
               </Reveal>
             </section>
+
+            {/* 07 — the CLI's own reference, copied from omm-hippo/omm */}
+            {entry ? (
+              <section
+                id="reference"
+                aria-labelledby="reference-title"
+                className="scroll-mt-14 border-b border-line-0 py-12"
+              >
+                <Reveal>
+                  <SectionHead
+                    n="07"
+                    total={total}
+                    id="reference"
+                    title={t.sections[6]}
+                  />
+                  <CommandReference
+                    entry={entry}
+                    subs={subs}
+                    t={dictionary.commandReference}
+                    version={OMM_REFERENCE_VERSION}
+                  />
+                </Reveal>
+              </section>
+            ) : null}
 
             {/* Where to go next */}
             <section aria-labelledby="elsewhere-title" className="py-8">
