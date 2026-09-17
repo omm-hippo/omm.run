@@ -471,6 +471,7 @@ export const ko = {
     ],
     optionsIntro: "이 명령이 받는 모든 옵션과, 생략했을 때의 기본값입니다.",
     optionsColumns: { flag: "옵션", argument: "인자", default: "기본값" },
+    noOptions: "이 명령에는 자체 옵션이 없습니다.",
     examplesIntro: "기본 검색부터 스크립트에 넣을 만한 형태까지.",
     captureAria: "{command} 실행 녹화",
     troubleBody:

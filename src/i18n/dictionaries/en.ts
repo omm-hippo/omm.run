@@ -491,6 +491,10 @@ export const en = {
     ],
     optionsIntro: "Every flag this command accepts, and what it defaults to when you leave it out.",
     optionsColumns: { flag: "Flag", argument: "Argument", default: "Default" },
+    /** Shown instead of the options table when a command takes none of its
+     *  own (the shared --json/--yes/--quiet/--no-color flags are covered
+     *  once in the CLI reference section below, not repeated here). */
+    noOptions: "This command takes no options of its own.",
     examplesIntro: "From a plain search to something you'd put in a script.",
     /** `{command}` is the captured command, e.g. "omm search qwen --limit 5". */
     captureAria: "Terminal recording of {command}",

@@ -167,22 +167,26 @@ export default function CommandDocPage({
             >
               <Reveal>
                 <SectionHead n="02" total={total} id="options" title={t.sections[1]} body={t.optionsIntro} />
-                <Rows>
-                  {command.options.map((option) => (
-                    <Row key={option.name}>
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,22ch)_minmax(0,14ch)_minmax(0,1fr)] sm:gap-6">
-                        <code className="text-terminal text-ink-0">{option.name}</code>
-                        <span className="text-table text-ink-3">
-                          {option.argument ?? "—"}
-                          <span className="block text-ink-2">
-                            {t.optionsColumns.default}: {option.default}
+                {command.options.length > 0 ? (
+                  <Rows>
+                    {command.options.map((option) => (
+                      <Row key={option.name}>
+                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,22ch)_minmax(0,14ch)_minmax(0,1fr)] sm:gap-6">
+                          <code className="text-terminal text-ink-0">{option.name}</code>
+                          <span className="text-table text-ink-3">
+                            {option.argument ?? "—"}
+                            <span className="block text-ink-2">
+                              {t.optionsColumns.default}: {option.default}
+                            </span>
                           </span>
-                        </span>
-                        <p className="text-small max-w-[62ch]">{option.description}</p>
-                      </div>
-                    </Row>
-                  ))}
-                </Rows>
+                          <p className="text-small max-w-[62ch]">{option.description}</p>
+                        </div>
+                      </Row>
+                    ))}
+                  </Rows>
+                ) : (
+                  <p className="text-small mt-6 max-w-[62ch]">{t.noOptions}</p>
+                )}
               </Reveal>
             </section>
 
