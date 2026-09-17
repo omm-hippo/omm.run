@@ -708,3 +708,56 @@ terms, file paths, IP and hostname are never sent, come from
   run(s).` (`cli.py:6362-6363`) are the two messages the page lists; both
   are quoted from source, neither is an error — `log` exits 0 on an empty
   log.
+
+### `pin`, `unpin`, `rollback`, `unlink`, `export`
+Five commands that exist in the CLI (`omm_version` `0.3.101`+ in
+`src/data/commands.json`) but had no hand-written page — the drift
+omm-hippo/omm#347's dynamic `/commands/[name]` fallback exists to catch.
+Backed-filled 2026-09-17 from `~/Project/Localfit` at commit `4eb7bfe`
+(`0.3.107`); line numbers below are that commit's. `pin`/`unpin`/`rollback`
+share `_lookup_entry`/`_print_not_installed_error` with every other
+model-argument command (`cli.py:3495-3502`, unchanged).
+
+- **`pin`** — `cli.py:7940-7964`. Sets `pinned` on the registry entry only;
+  copies nothing (`cli.py:7962`). Already-pinned message: `cli.py:7956`.
+- **`unpin`** — `cli.py:7965-7991`. Also deletes the archive file if one
+  exists (`cli.py:7981-7985` — `_unlink_with_retry` under `locked(archive)`).
+  Not-pinned message: `cli.py:7978`.
+- **`rollback`** — `cli.py:7992-8139`. No-archive checks at `cli.py:8007-8008`
+  (no `archive` metadata at all) and `cli.py:8022-8023` (metadata present but
+  the archive file is missing); checksum-mismatch refusal at
+  `cli.py:8034-8038`. The actual swap stages the current file aside
+  (`.rollback-staging`) before replacing `dest` with the archive, then moves
+  the staged file into the now-empty archive slot (`cli.py:8069-8110`) —
+  same-volume hard link where possible, so two rollbacks in a row swap
+  forward and back losslessly. Success message: `cli.py:8138`.
+- **`unlink`** — `cli.py:6842-6911`. `--runner` is required
+  (`typer.Option(...)`, `cli.py:6853-6858`) and validated by the same
+  `_validate_engine` `list`/`link` use (`cli.py:1210-1220`, message at
+  `cli.py:1217-1218`). Per-model "isn't linked" messages (not errors):
+  `cli.py:6880` (`--runner all`, nothing linked) and `cli.py:6884` (one
+  runner, not linked there).
+- **`export`** — `cli.py:9524-9576`. Hard link when destination is the same
+  volume, real copy otherwise (`report_copy` callback, `cli.py:9557-9561`,
+  prints the muted "GiB copied ... different volume" line only on the copy
+  path — not captured on the page, since this dev machine's export hit the
+  hard-link path). Conflict handling is `linker.py`'s shared destination-
+  ownership check (`linker.py:751-799`): an unrecognized existing file at the
+  destination raises `Refusing to replace unowned existing file at {dst}.`
+  (`linker.py:799`) unless `--force`; a destination omm's own ownership
+  record shows as a *different* model raises `Refusing to replace an omm
+  link for a different model at {dst}.` (`linker.py:787`) regardless of
+  `--force`. The page's trouble entry captures the unowned-file case, the
+  common one. Writes a provenance/checksum manifest sidecar next to the
+  exported file (`cli.py:9339-9347` docstring; consumed by `import` on
+  another machine).
+- Real captures, 2026-09-17, this dev machine, via the pipx install (`omm`
+  `0.3.102` — same source for these five commands as `Localfit`'s `4eb7bfe`,
+  diffed byte-for-byte before citing): `omm pin`/`omm unpin` on
+  `qwen2.5-0.5b-instruct-q4_k_m.gguf` (pin → unpin, net no state change);
+  `omm rollback` on the same model with no archive (the real, common no-op
+  case — a full pin → `install --force` → rollback cycle was deliberately
+  **not** run, to avoid a real re-download and hub file replacement for a
+  demo capture); `omm unlink ... --runner lmstudio` on
+  `qwen2.5-0.5b-instruct-fp16.gguf`, immediately relinked with `omm link`;
+  `omm export ... ~/Desktop/omm-export-demo`, deleted right after.

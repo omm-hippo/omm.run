@@ -378,11 +378,13 @@ export const en = {
       maintenance: "Fix & maintain",
       config: "Configure omm",
     },
-    /** The table generated from the CLI's own exported reference. */
+    /** The table generated from the CLI's own exported reference — shown
+     *  only for a command the CLI has that no page above has been
+     *  hand-written for yet (see `HAND_WRITTEN` in `commands/page.tsx`). */
     reference: {
-      title: "Every command the CLI has",
+      title: "Not written up yet",
       body:
-        "Taken straight from omm's own help output, so a command added to the CLI shows up here without anyone editing this page.",
+        "Taken straight from omm's own help output. A command lands here the moment the CLI ships it, and moves up into the list above once someone writes its full page.",
       columns: { command: "Command", summary: "What it does" },
       /** `{aliases}` is the comma-separated alias list, e.g. "ls". */
       aliases: "alias: {aliases}",

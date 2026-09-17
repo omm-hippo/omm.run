@@ -41,7 +41,12 @@ export type Slug =
   | "setting"
   | "doctor"
   | "engine"
-  | "log";
+  | "log"
+  | "pin"
+  | "unpin"
+  | "rollback"
+  | "unlink"
+  | "export";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -68,6 +73,11 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "doctor",
   "engine",
   "log",
+  "pin",
+  "unpin",
+  "rollback",
+  "unlink",
+  "export",
 ];
 
 /**
@@ -117,6 +127,11 @@ export const COMMAND_GROUP = {
   setting: "config",
   update: "config",
   help: "config",
+  pin: "models",
+  unpin: "models",
+  rollback: "models",
+  export: "models",
+  unlink: "maintenance",
 } as const satisfies Record<Slug, CommandGroup>;
 
 /**
@@ -152,6 +167,11 @@ export const COMMAND_RISK = {
   doctor: "inspect",
   engine: "high-impact",
   log: "inspect",
+  pin: "caution",
+  unpin: "high-impact",
+  rollback: "caution",
+  unlink: "high-impact",
+  export: "caution",
 } as const satisfies Record<Slug, CommandRisk>;
 
 export type Option = {
@@ -1407,6 +1427,195 @@ LM Studio installed successfully.`,
     related: [
       { label: "omm doctor", href: "/commands/doctor", internal: true },
       { label: "omm contribute", href: "/commands/contribute", internal: true },
+    ],
+  },
+
+  pin: {
+    slug: "pin",
+    name: "omm pin",
+    href: "/commands/pin",
+
+    options: [{ name: "<model_name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm pin qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm pin 1" },
+      { prompt: "$", command: "omm pin qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+    ],
+
+    capture: {
+      title: "omm pin qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `Pinned qwen2.5-0.5b-instruct-q4_k_m.gguf. Its next \`omm install --force\` will archive the current version first.`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz.gguf is not installed via omm.\n→ Run `omm list` to see what is installed.",
+        source: "src/omm/cli.py:7952-7953",
+      },
+      {
+        see: "qwen2.5-0.5b-instruct-q4_k_m.gguf is already pinned.",
+        source: "src/omm/cli.py:7955-7956",
+      },
+    ],
+
+    related: [
+      { label: "omm rollback", href: "/commands/rollback", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  unpin: {
+    slug: "unpin",
+    name: "omm unpin",
+    href: "/commands/unpin",
+
+    options: [{ name: "<model_name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm unpin qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm unpin 1" },
+      { prompt: "$", command: "omm unpin qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+    ],
+
+    capture: {
+      title: "omm unpin qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `Unpinned qwen2.5-0.5b-instruct-q4_k_m.gguf.`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz.gguf is not installed via omm.\n→ Run `omm list` to see what is installed.",
+        source: "src/omm/cli.py:7974-7975",
+      },
+      {
+        see: "qwen2.5-0.5b-instruct-q4_k_m.gguf isn't pinned.",
+        source: "src/omm/cli.py:7977-7978",
+      },
+    ],
+
+    related: [
+      { label: "omm pin", href: "/commands/pin", internal: true },
+      { label: "omm rollback", href: "/commands/rollback", internal: true },
+    ],
+  },
+
+  rollback: {
+    slug: "rollback",
+    name: "omm rollback",
+    href: "/commands/rollback",
+
+    options: [{ name: "<model_name>", argument: null, default: "required" }],
+
+    examples: [
+      { prompt: "$", command: "omm rollback qwen2.5-0.5b-instruct-q4_k_m.gguf" },
+      { prompt: "$", command: "omm rollback 1" },
+      { prompt: "$", command: "omm rollback qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
+    ],
+
+    capture: {
+      title: "omm rollback qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      text: `No archived version for qwen2.5-0.5b-instruct-q4_k_m.gguf.`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz.gguf is not installed via omm.\n→ Run `omm list` to see what is installed.",
+        source: "src/omm/cli.py:8002-8003",
+      },
+      {
+        see: "No archived version for qwen2.5-0.5b-instruct-q4_k_m.gguf.",
+        source: "src/omm/cli.py:8007-8008",
+      },
+    ],
+
+    related: [
+      { label: "omm pin", href: "/commands/pin", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  unlink: {
+    slug: "unlink",
+    name: "omm unlink",
+    href: "/commands/unlink",
+
+    options: [
+      {
+        name: "<filenames>",
+        argument: null,
+        default: "required — comma-separated names or list numbers",
+      },
+      { name: "--runner", argument: "NAME | all", default: "required" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm unlink qwen2.5-0.5b-instruct-fp16.gguf --runner lmstudio" },
+      { prompt: "$", command: "omm unlink qwen2.5-0.5b-instruct-fp16.gguf --runner all" },
+      { prompt: "$", command: "omm unlink 1,2 --runner ollama" },
+    ],
+
+    capture: {
+      title: "omm unlink qwen2.5-0.5b-instruct-fp16.gguf --runner lmstudio",
+      text: `Unlinked qwen2.5-0.5b-instruct-fp16.gguf from LM Studio.`,
+    },
+
+    trouble: [
+      {
+        see: "--runner must be one of: anythingllm, jan, koboldcpp, lmstudio, mstystudio, ollama, textgenwebui (got 'bogus').",
+        source: "src/omm/cli.py:1217-1218",
+      },
+      {
+        see: "zzzz-fake-model-xyz.gguf is not installed via omm.\n→ Run `omm list` to see what is installed.",
+        source: "src/omm/cli.py:6871-6872",
+      },
+    ],
+
+    related: [
+      { label: "omm link", href: "/commands/link", internal: true },
+      { label: "omm list", href: "/commands/list", internal: true },
+    ],
+  },
+
+  export: {
+    slug: "export",
+    name: "omm export",
+    href: "/commands/export",
+
+    options: [
+      { name: "<filename>", argument: null, default: "required" },
+      { name: "<destination>", argument: null, default: "required" },
+      { name: "--force", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm export qwen2.5-0.5b-instruct-q4_k_m.gguf ~/Desktop/omm-export-demo" },
+      {
+        prompt: "$",
+        command: "omm export qwen2.5-0.5b-instruct-q4_k_m.gguf ~/Desktop/omm-export-demo --force",
+      },
+      { prompt: "$", command: "omm export qwen2.5-0.5b-instruct-q4_k_m.gguf ~/Desktop/omm-export-demo --json" },
+    ],
+
+    capture: {
+      title: "omm export qwen2.5-0.5b-instruct-q4_k_m.gguf ~/Desktop/omm-export-demo",
+      text: `Exported qwen2.5-0.5b-instruct-q4_k_m.gguf to /Users/shinmingyu/Desktop/omm-export-demo/qwen2.5-0.5b-instruct-q4_k_m.gguf.`,
+    },
+
+    trouble: [
+      {
+        see: "zzzz-fake-model-xyz.gguf is not installed via omm.\n→ Run `omm list` to see what is installed.",
+        source: "src/omm/cli.py:9545-9546",
+      },
+      {
+        see: "qwen2.5-0.5b-instruct-q4_k_m.gguf: export failed: Refusing to replace unowned existing file at /Users/shinmingyu/Desktop/omm-export-demo2/qwen2.5-0.5b-instruct-q4_k_m.gguf.",
+        source: "src/omm/cli.py:9567-9568",
+      },
+    ],
+
+    related: [
+      { label: "omm import", href: "/commands/import", internal: true },
+      { label: "omm list", href: "/commands/list", internal: true },
     ],
   },
 } as const satisfies Record<

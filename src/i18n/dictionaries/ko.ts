@@ -364,9 +364,9 @@ export const ko = {
       config: "omm 설정",
     },
     reference: {
-      title: "CLI가 가진 모든 명령어",
+      title: "아직 정리 안 된 명령어",
       body:
-        "omm이 직접 출력하는 도움말에서 그대로 가져옵니다. CLI에 명령이 추가되면 이 페이지를 고치지 않아도 여기에 나타납니다.",
+        "omm이 직접 출력하는 도움말에서 그대로 가져옵니다. CLI가 명령을 내놓는 즉시 여기 나타나고, 누군가 전체 페이지를 써주면 위 목록으로 올라갑니다.",
       columns: { command: "명령어", summary: "하는 일" },
       aliases: "별칭: {aliases}",
     },

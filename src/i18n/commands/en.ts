@@ -1024,4 +1024,205 @@ export const COMMANDS_EN: CommandTextSet = {
       "contribute's unattended loop is the case the run log is most worth reading after.",
     ],
   },
+
+  pin: {
+    metaTitle: "omm pin — keep the current version before a reinstall replaces it",
+    metaDescription:
+      "Full reference for omm pin: its one argument, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm pin",
+    lede: "Mark an installed model so its next omm install --force archives the current file first, instead of just overwriting it.",
+    summary: "Mark a model so its next forced reinstall archives the current version instead of overwriting it.",
+
+    overviewBody:
+      "Reach for pin before you run omm install --force on a model you might want to go back to — a fine-tune, a specific quantization, or a version a newer download hasn't proven itself against yet. Pinning writes nothing by itself: it only sets a flag on the registry entry. The archive itself is only made right before the reinstall actually replaces the file, because GGUFs are large enough that copying one on pin and never using it would waste real disk space. omm install --force still replaces a pinned model the same as any other — pin only decides whether the version it replaces is kept somewhere omm rollback can find it.",
+
+    optionDescriptions: ["The installed model to pin — filename, curated name, or its number in `omm list`."],
+
+    exampleCaptions: [
+      "Pin a model by filename.",
+      "Pin the same model by its omm list number.",
+      "Pin it and get the confirmation as JSON.",
+    ],
+
+    captureFootnote: "Real omm pin qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-09-17, this dev machine.",
+
+    trouble: [
+      {
+        why: "The model name doesn't match anything in the registry — a typo, or a model that was never installed via omm.",
+        fix: "Run omm list to see the exact installed filenames, then pin one of those.",
+      },
+      {
+        why: "Not an error: the model already had `pinned` set from an earlier omm pin call, so this run has nothing left to do.",
+        fix: "Nothing to do — it's already pinned. Run omm unpin first if you want to clear it and re-pin.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Restore the version pin protected once a forced reinstall replaces it.",
+      "The command whose --force flag actually reads the pin.",
+    ],
+  },
+
+  unpin: {
+    metaTitle: "omm unpin — stop protecting a model's version on reinstall",
+    metaDescription:
+      "Full reference for omm unpin: its one argument, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm unpin",
+    lede: "Undo omm pin — a future omm install --force stops archiving this model, and any version already archived for it is deleted.",
+    summary: "Undo omm pin and delete any version it already archived for this model.",
+
+    overviewBody:
+      "unpin is pin's reverse, with one sharp edge: it doesn't just clear the flag, it also deletes the archive file if omm install --force (or omm rollback) already created one. That archive is the only copy of whatever version it was holding — if you might still want it, run omm rollback first to restore it as the active install, then decide from there. Run unpin once you're sure you'll never need to go back to the version a pin was protecting.",
+
+    optionDescriptions: ["The pinned model to unpin — filename, curated name, or its number in `omm list`."],
+
+    exampleCaptions: [
+      "Unpin a model by filename.",
+      "Unpin the same model by its omm list number.",
+      "Unpin it and get the confirmation as JSON.",
+    ],
+
+    captureFootnote:
+      "Real omm unpin qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-09-17, this dev machine — reversing the omm pin capture on this same page's pin example.",
+
+    trouble: [
+      {
+        why: "The model name doesn't match anything in the registry — a typo, or a model that was never installed via omm.",
+        fix: "Run omm list to see the exact installed filenames, then unpin one of those.",
+      },
+      {
+        why: "Not an error: the model has neither `pinned` set nor an archive on file, so there's nothing for unpin to undo.",
+        fix: "Nothing to do. Run omm pin first if you meant to protect this model's current version.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Protect a model's current version before a forced reinstall replaces it.",
+      "Restore an archived version instead of deleting it with unpin.",
+    ],
+  },
+
+  rollback: {
+    metaTitle: "omm rollback — restore a pinned model's archived version",
+    metaDescription:
+      "Full reference for omm rollback: its one argument, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm rollback",
+    lede: "Restore a pinned model's archived version in place of the one currently installed.",
+    summary: "Restore a pinned model's archived version in place of the one currently installed.",
+
+    overviewBody:
+      "rollback only has something to do once omm pin has marked a model and a later omm install --force has actually archived a version by replacing it — pin alone copies nothing. When that archive exists, rollback swaps it back in, and the version it replaces takes over the archive slot: running rollback again swaps forward to that one, so two rollbacks in a row return you to where you started. Every swap is checksum-verified against the registry record first, so a corrupted archive is refused rather than installed.",
+
+    optionDescriptions: ["The pinned model to roll back — filename, curated name, or its number in `omm list`."],
+
+    exampleCaptions: [
+      "Roll back a model by filename.",
+      "Roll back the same model by its omm list number.",
+      "Roll back and get the result as JSON.",
+    ],
+
+    captureFootnote:
+      "Real omm rollback qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-09-17, this dev machine — this model was pinned and unpinned for the pin/unpin captures on this page but never actually reinstalled, so no archive exists yet; this is the real message rollback prints for that (very common) case.",
+
+    trouble: [
+      {
+        why: "The model name doesn't match anything in the registry — a typo, or a model that was never installed via omm.",
+        fix: "Run omm list to see the exact installed filenames, then roll back one of those.",
+      },
+      {
+        why: "The model is installed but has no archived version — either it was never pinned, or it was pinned but omm install --force never actually replaced it.",
+        fix: "Pin it with omm pin, then reinstall with omm install --force to create an archive, and rollback will find it.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Mark the model that rollback should keep an archive for.",
+      "The forced reinstall that actually creates the archive rollback restores.",
+    ],
+  },
+
+  unlink: {
+    metaTitle: "omm unlink — remove a model's link from one runner",
+    metaDescription:
+      "Full reference for omm unlink: its two options, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm unlink",
+    lede: "Remove one or more models' links from one runner — or every runner with --runner all — without touching the hub file or links into other runners.",
+    summary: "Remove a model's link from one runner (or every runner) without touching the hub file.",
+
+    overviewBody:
+      "unlink is link's undo, scoped to a single runner at a time. It's for when a model shouldn't show up in one app anymore — LM Studio's model picker got cluttered, or a runner is about to be uninstalled — without uninstalling the model from omm itself or breaking its links into every other runner. The hub file and registry entry are untouched either way; run omm link afterward to relink it. --runner all removes every link a model currently has in one call, which is the fast way to make a model briefly invisible everywhere without uninstalling it.",
+
+    optionDescriptions: [
+      "Comma-separated model filenames, curated names, or omm list numbers to unlink.",
+      "Which runner to unlink from, or all for every runner the model is currently linked into.",
+    ],
+
+    exampleCaptions: [
+      "Unlink one model from LM Studio only.",
+      "Unlink it from every runner it's currently linked into.",
+      "Unlink two models (by their omm list numbers) from Ollama.",
+    ],
+
+    captureFootnote:
+      "Real omm unlink qwen2.5-0.5b-instruct-fp16.gguf --runner lmstudio capture, 2026-09-17, this dev machine — relinked immediately after with omm link so nothing stayed unlinked.",
+
+    trouble: [
+      {
+        why: "--runner was given a value that isn't one of omm's seven supported runner keys — usually a typo, like ollama vs ollma.",
+        fix: "Use one of the exact keys the error lists, e.g. --runner ollama.",
+      },
+      {
+        why: "The model name doesn't match anything in the registry — a typo, or a model that was never installed via omm.",
+        fix: "Run omm list to see the exact installed filenames, then unlink one of those.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Relink a model back into a runner after unlinking it.",
+      "See every model's current links before deciding what to unlink.",
+    ],
+  },
+
+  export: {
+    metaTitle: "omm export — copy a hub model out for deployment or backup",
+    metaDescription:
+      "Full reference for omm export: its argument and one flag, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm export",
+    lede: "Export a hub model to a destination directory for deployment or backup — a hard link when possible, otherwise a real copy, never a symlink.",
+    summary: "Copy a hub model out to a destination directory for deployment or backup.",
+
+    overviewBody:
+      "export is for getting a model file out of omm's hub and into somewhere that doesn't depend on omm existing there — a deployment target, an external drive, another machine. It never creates a symlink, so the exported file keeps working after omm uninstall removes the source, or once it's moved somewhere omm has never run. When the destination is on the same volume, export hard-links instead of copying, which is instant regardless of the model's size; a different volume falls back to a real copy. Either way it writes a small provenance/checksum manifest sidecar next to the exported file, so omm import on another machine — including an air-gapped one — can restore the source repo, version, and install date instead of treating the file as an anonymous import. The export isn't tracked in the registry: uninstalling the source model later never touches an exported copy.",
+
+    optionDescriptions: [
+      "The installed model to export — filename, curated name, or its number in `omm list`.",
+      "Directory to place the exported file in.",
+      "Reclaim a destination file omm doesn't recognize as its own by deleting it and exporting, instead of skipping it as a conflict.",
+    ],
+
+    exampleCaptions: [
+      "Export a model to a directory.",
+      "Export it again, overwriting a destination file omm doesn't own.",
+      "Export it and get the result as JSON.",
+    ],
+
+    captureFootnote:
+      "Real omm export qwen2.5-0.5b-instruct-q4_k_m.gguf ~/Desktop/omm-export-demo capture, 2026-09-17, this dev machine — hard-linked instantly since the destination was on the same volume; the exported copy and its manifest sidecar were removed again right after.",
+
+    trouble: [
+      {
+        why: "The model name doesn't match anything in the registry — a typo, or a model that was never installed via omm.",
+        fix: "Run omm list to see the exact installed filenames, then export one of those.",
+      },
+      {
+        why: "The destination path already has a file omm doesn't recognize as an export or link it made itself — export refuses to overwrite something it might destroy.",
+        fix: "Move or remove the conflicting file yourself, or re-run with --force to let export reclaim it.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "The reverse of export — bring externally-managed files into the hub.",
+      "Check what's actually installed before deciding what to export.",
+    ],
+  },
 };

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { subcommandLabel } from "@/components/commands/CommandReference";
 import CommandSearch from "@/components/commands/CommandSearch";
 import { getCommandLinks } from "@/components/commands/commands";
-import { COMMAND_GROUPS } from "@/i18n/commands/base";
+import { COMMAND_GROUPS, COMMAND_ORDER } from "@/i18n/commands/base";
 import {
   OG_LOCALE,
   alternatesFor,
@@ -57,14 +57,20 @@ export default async function CommandsChooser({
     label: commandsChooser.groups[id],
   }));
 
-  // Straight from the CLI's exported reference: one row per top-level command,
-  // and one row — not one per sub-command — for a group like `setting`.
-  const reference = topLevelEntries().map((entry) => ({
-    name: entry.path[0],
-    aliases: entry.aliases,
-    summary: entry.summary,
-    subs: entry.kind === "group" ? subEntries(entry.path[0]).length : 0,
-  }));
+  // Straight from the CLI's exported reference, minus every command that
+  // already has a hand-written page above (the whole point of this section
+  // is to surface a command the CLI shipped that nobody has written prose
+  // for yet — see omm-hippo/omm#347). Once every exported command has a
+  // hand-written page, this list — and the section below — is empty.
+  const HAND_WRITTEN = new Set<string>(COMMAND_ORDER);
+  const reference = topLevelEntries()
+    .filter((entry) => !HAND_WRITTEN.has(entry.path[0]))
+    .map((entry) => ({
+      name: entry.path[0],
+      aliases: entry.aliases,
+      summary: entry.summary,
+      subs: entry.kind === "group" ? subEntries(entry.path[0]).length : 0,
+    }));
 
   return (
     <main className="relative border-b border-line-0 bg-bg-0">
@@ -85,56 +91,58 @@ export default async function CommandsChooser({
               initialQuery={initialQuery}
             />
 
-            <section
-              id="reference"
-              aria-labelledby="reference-title"
-              className="mt-20 scroll-mt-14 border-t border-line-0 pt-12"
-            >
-              <h2 id="reference-title" className="text-h2">
-                {commandsChooser.reference.title}
-              </h2>
-              <p className="text-small mt-4 max-w-[68ch]">
-                {commandsChooser.reference.body}
-              </p>
+            {reference.length > 0 ? (
+              <section
+                id="reference"
+                aria-labelledby="reference-title"
+                className="mt-20 scroll-mt-14 border-t border-line-0 pt-12"
+              >
+                <h2 id="reference-title" className="text-h2">
+                  {commandsChooser.reference.title}
+                </h2>
+                <p className="text-small mt-4 max-w-[68ch]">
+                  {commandsChooser.reference.body}
+                </p>
 
-              <ul className="mt-8 flex flex-col border-t border-line-0">
-                {reference.map((row) => (
-                  <li key={row.name} className="border-b border-line-0">
-                    <Link
-                      href={localeHref(`/commands/${row.name}`, locale)}
-                      prefetch={false}
-                      className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,24ch)_minmax(0,1fr)] sm:gap-6"
-                    >
-                      <span>
-                        <span className="text-terminal text-ink-0">{`omm ${row.name}`}</span>
-                        {row.aliases.length > 0 ? (
-                          <span className="text-table block text-ink-3">
-                            {fill(commandsChooser.reference.aliases, {
-                              aliases: row.aliases.join(", "),
-                            })}
-                          </span>
-                        ) : null}
-                        {row.subs > 0 ? (
-                          <span className="text-table block text-ink-3">
-                            {subcommandLabel(
-                              dictionary.commandReference,
-                              row.subs,
-                            )}
-                          </span>
-                        ) : null}
-                      </span>
-                      <span className="text-small">{row.summary}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                <ul className="mt-8 flex flex-col border-t border-line-0">
+                  {reference.map((row) => (
+                    <li key={row.name} className="border-b border-line-0">
+                      <Link
+                        href={localeHref(`/commands/${row.name}`, locale)}
+                        prefetch={false}
+                        className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,24ch)_minmax(0,1fr)] sm:gap-6"
+                      >
+                        <span>
+                          <span className="text-terminal text-ink-0">{`omm ${row.name}`}</span>
+                          {row.aliases.length > 0 ? (
+                            <span className="text-table block text-ink-3">
+                              {fill(commandsChooser.reference.aliases, {
+                                aliases: row.aliases.join(", "),
+                              })}
+                            </span>
+                          ) : null}
+                          {row.subs > 0 ? (
+                            <span className="text-table block text-ink-3">
+                              {subcommandLabel(
+                                dictionary.commandReference,
+                                row.subs,
+                              )}
+                            </span>
+                          ) : null}
+                        </span>
+                        <span className="text-small">{row.summary}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
 
-              <p className="text-label mt-8">
-                {fill(dictionary.commandReference.generated, {
-                  version: OMM_REFERENCE_VERSION,
-                })}
-              </p>
-            </section>
+                <p className="text-label mt-8">
+                  {fill(dictionary.commandReference.generated, {
+                    version: OMM_REFERENCE_VERSION,
+                  })}
+                </p>
+              </section>
+            ) : null}
           </div>
         </div>
       </div>
