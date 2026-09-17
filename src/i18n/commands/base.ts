@@ -375,6 +375,7 @@ Chat ended.`,
       },
       { name: "--json", argument: null, default: "off" },
       { name: "--yes", argument: null, default: "off" },
+      { name: "--refresh-metadata", argument: null, default: "off" },
     ],
 
     examples: [
@@ -382,6 +383,7 @@ Chat ended.`,
       { prompt: "$", command: "omm recommend --profile minimal" },
       { prompt: "$", command: "omm recommend --json" },
       { prompt: "$", command: "omm recommend --yes" },
+      { prompt: "$", command: "omm recommend --refresh-metadata" },
     ],
 
     capture: {
@@ -455,6 +457,9 @@ Verifying checksum...
     options: [
       { name: "--report-errors", argument: null, default: "off" },
       { name: "--yes", argument: null, default: "off" },
+      { name: "--max-minutes", argument: "N", default: "no limit" },
+      { name: "--max-download-gb", argument: "N", default: "no limit" },
+      { name: "--max-models", argument: "N", default: "no limit" },
     ],
 
     examples: [
@@ -462,6 +467,7 @@ Verifying checksum...
       { prompt: "$", command: "omm contribute --yes" },
       { prompt: "$", command: "omm contribute --report-errors" },
       { prompt: "$", command: "OMM_HOME=/mnt/data/omm omm contribute --yes" },
+      { prompt: "$", command: "omm contribute --yes --max-minutes 30 --max-download-gb 20" },
     ],
 
     capture: {
@@ -621,12 +627,12 @@ Next: \`omm recommend\` picks a model that fits this PC and installs it, then \`
     name: "omm scan",
     href: "/commands/scan",
 
-    options: [{ name: "--json", argument: null, default: "off" }],
+    options: [{ name: "--details", argument: null, default: "off" }],
 
     examples: [
       { prompt: "$", command: "omm scan" },
+      { prompt: "$", command: "omm scan --details" },
       { prompt: "$", command: "omm scan --json" },
-      { prompt: "$", command: "omm scan --quiet" },
     ],
 
     capture: {
@@ -679,12 +685,22 @@ https://github.com/omm-hippo/omm/wiki/Compatible-Programs
     name: "omm tune",
     href: "/commands/tune",
 
-    options: [{ name: "<name>", argument: null, default: "required" }],
+    options: [
+      { name: "<name>", argument: null, default: "required" },
+      { name: "--apply", argument: null, default: "off" },
+      { name: "--save", argument: null, default: "off — requires --apply" },
+      { name: "--engine", argument: "ollama | lmstudio", default: "auto-selected" },
+    ],
 
     examples: [
       { prompt: "$", command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf" },
       { prompt: "$", command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
       { prompt: "$", command: "omm tune mistral-7b-instruct-q4" },
+      { prompt: "$", command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf --apply --yes" },
+      {
+        prompt: "$",
+        command: "omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf --apply --save --engine ollama --yes",
+      },
     ],
 
     capture: {
@@ -706,6 +722,10 @@ optimal.`,
       {
         see: "Unknown model 'zzzz-totally-fake-model-name-xyz'. Use a curated name (tinyllama-1.1b-q4, llama3.1-8b-instruct-q4, mistral-7b-instruct-q4), an 'org/repo:file.gguf' ref (optionally prefixed 'hf:' or 'ms:'), or a direct URL.",
         source: "src/omm/hub.py:371",
+      },
+      {
+        see: "--save requires --apply so settings are verified before saving.",
+        source: "src/omm/cli.py:4010-4011",
       },
     ],
 
@@ -1035,15 +1055,17 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
     href: "/commands/link",
 
     options: [
-      { name: "[directory]", argument: null, default: "none — repairs known app links" },
-      { name: "--engine", argument: "NAME", default: "every engine" },
+      { name: "[models]", argument: null, default: "every installed model" },
+      { name: "--engine", argument: "NAME", default: "every engine — repair mode only" },
+      { name: "--to", argument: "PATH", default: "off — repairs known app links instead" },
       { name: "--force", argument: null, default: "off" },
     ],
 
     examples: [
       { prompt: "$", command: "omm link" },
       { prompt: "$", command: "omm link --engine ollama" },
-      { prompt: "$", command: "omm link ~/my-runner/models" },
+      { prompt: "$", command: "omm link --to ~/my-runner/models" },
+      { prompt: "$", command: "omm link qwen2.5-0.5b-instruct-q4_k_m.gguf --engine ollama" },
     ],
 
     capture: {
@@ -1054,11 +1076,11 @@ Would check for updates: qwen1_5-1_8b-chat-q4_k_m.gguf`,
     trouble: [
       {
         see: "--engine must be one of: anythingllm, jan, koboldcpp, lmstudio, mstystudio, ollama, textgenwebui (got 'bogus').",
-        source: "src/omm/cli.py:909-911",
+        source: "src/omm/cli.py:1217-1218",
       },
       {
-        see: "--engine only applies without a directory argument.",
-        source: "src/omm/cli.py:6501-6502",
+        see: "--engine only applies without --to.",
+        source: "src/omm/cli.py:9174-9175",
       },
     ],
 

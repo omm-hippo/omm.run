@@ -155,7 +155,7 @@ export const COMMANDS_EN: CommandTextSet = {
   recommend: {
     metaTitle: "omm recommend — a model that fits this machine",
     metaDescription:
-      "Full reference for omm recommend: its profile and output controls, four real examples, a real ranked-candidate capture, and the two errors it actually prints.",
+      "Full reference for omm recommend: its profile and output controls, five real examples, a real ranked-candidate capture, and the two errors it actually prints.",
     heading: "omm recommend",
     lede: "Rank models by a predictor trained on real install telemetry — falling back to static rules when the trained model can't be fetched — and offer to install the top pick.",
     summary: "Get a model suggestion ranked for this machine's hardware, with an offer to install it.",
@@ -167,6 +167,7 @@ export const COMMANDS_EN: CommandTextSet = {
       "Choose how much of this machine the model may claim: dedicated, balanced, or minimal. Interactive runs ask; --yes and --json default to balanced.",
       "Print the ranked candidates as JSON and install nothing.",
       "Skip the interactive picker and install the top-ranked candidate immediately.",
+      "Refresh cached provider task metadata and exact file sizes before ranking, instead of trusting what's cached.",
     ],
 
     exampleCaptions: [
@@ -174,6 +175,7 @@ export const COMMANDS_EN: CommandTextSet = {
       "Prefer the smallest memory footprint so more of the machine remains available for other work.",
       "Read-only — prints the ranked list, installs nothing.",
       "Non-interactive — installs the top-ranked candidate without asking.",
+      "Re-check provider metadata and file sizes before ranking, in case a cached one drifted.",
     ],
 
     captureFootnote:
@@ -199,17 +201,20 @@ export const COMMANDS_EN: CommandTextSet = {
   contribute: {
     metaTitle: "omm contribute — grow the recommendation dataset",
     metaDescription:
-      "Full reference for omm contribute: both meaningful flags, four real examples, the real consent notice it prints before starting, and the three errors it actually prints.",
+      "Full reference for omm contribute: all five meaningful flags, five real examples, the real consent notice it prints before starting, and the three errors it actually prints.",
     heading: "omm contribute",
     lede: "Repeatedly install, benchmark, and upload telemetry for hardware-fit models — deleting each one afterward — to grow the training data behind omm recommend.",
     summary: "Benchmark models in a loop, uploading telemetry to improve recommend for hardware like yours.",
 
     overviewBody:
-      "contribute is the one command in omm that is meant to run unattended for a while: it downloads a candidate, benchmarks it, uploads the result under your current upload policy, deletes the model to keep disk usage bounded, and repeats until you press Esc or it runs out of candidates this hardware hasn't already covered. It refuses to start unless every model volume has real free space, and prints the exact consent notice below before it downloads anything.",
+      "contribute is the one command in omm that is meant to run unattended for a while: it downloads a candidate, benchmarks it, uploads the result under your current upload policy, deletes the model to keep disk usage bounded, and repeats until you press Esc, it runs out of candidates this hardware hasn't already covered, or one of --max-minutes/--max-download-gb/--max-models is hit. It refuses to start unless every model volume has real free space, and prints the exact consent notice below before it downloads anything.",
 
     optionDescriptions: [
       "Send scrubbed error reports from this run only. Doesn't change the saved policy, and is ignored if error reports are explicitly turned off.",
       "Skip the 'Start contributing compute now?' confirmation and every per-model prompt — required for an unattended run.",
+      "Stop the loop after this many minutes, finishing whatever cleanup is in progress first.",
+      "Cap total model data read across the whole run at this many GiB, retries included (metadata/HTTP overhead not counted).",
+      "Try at most this many new models before stopping; a retried candidate still counts as one.",
     ],
 
     exampleCaptions: [
@@ -217,6 +222,7 @@ export const COMMANDS_EN: CommandTextSet = {
       "Unattended — no confirmation prompt, runs until Esc or the candidates run out.",
       "Also send scrubbed error reports from this run.",
       "Store models under a roomier volume than the default ~/.omm, straight from the README.",
+      "Unattended, but bounded — stop after 30 minutes or 20 GiB downloaded, whichever comes first.",
     ],
 
     captureFootnote:
@@ -299,13 +305,13 @@ export const COMMANDS_EN: CommandTextSet = {
       "Reach for scan any time you want a snapshot of what this machine can run and what's already on it. The report itself is observational, but scan may correct stale link records when a runner has been removed; it also nudges you toward omm link or omm import when it notices something those would fix.",
 
     optionDescriptions: [
-      "Print the same report as structured JSON instead of tables.",
+      "Also show this machine's OS, CPU, and GPU identity — left out of the default report to keep it short.",
     ],
 
     exampleCaptions: [
-      "The full hardware, runner, and model report.",
+      "The default report: memory, storage, runners, models.",
+      "The same report, plus OS, CPU, and GPU identity.",
       "Machine-readable — the same fields, as JSON.",
-      "Skip the two hint lines at the end, if any would otherwise print.",
     ],
 
     captureFootnote:
@@ -331,31 +337,40 @@ export const COMMANDS_EN: CommandTextSet = {
   tune: {
     metaTitle: "omm tune — recommended runtime settings",
     metaDescription:
-      "Full reference for omm tune: its one argument, three examples, a real captured runtime profile, and the error it actually prints.",
+      "Full reference for omm tune: its four options, five examples, a real captured runtime profile, and the two errors it actually prints.",
     heading: "omm tune",
     lede: "Recommend a starting context length, GPU offload, thread count, and batch size for a model on this machine.",
     summary: "Get recommended context length, GPU offload, threads, and batch size for a model.",
 
     overviewBody:
-      "Reach for tune once you've picked a model, installed or not, and want conservative starting values before you configure a runner by hand. It never benchmarks anything itself — it's a prediction based on this machine's hardware and the model's size, meant as a first guess you'd then verify with omm benchmark.",
+      "Reach for tune once you've picked a model, installed or not, and want conservative starting values before you configure a runner by hand. By default it never loads or benchmarks anything — it's a prediction based on this machine's hardware and the model's size, meant as a first guess you'd then verify with omm benchmark. --apply goes further: it briefly loads the installed model in Ollama or LM Studio, runs a short baseline-vs-proposed probe, then releases it again — a real (if small) trial, not just a prediction. --save only writes the proposed settings after that trial passes, which is why it requires --apply on the same run.",
 
     optionDescriptions: [
       "An installed model's filename, a curated name, or a repo reference. Not-yet-installed models work too, as long as their size can be resolved.",
+      "Temporarily load the model and verify the proposed settings with a short real trial, instead of only predicting them.",
+      "Save the proposed settings, but only once --apply's trial has passed.",
+      "Which runtime to use for the --apply trial. Auto-selected from what's installed and compatible when omitted.",
     ],
 
     exampleCaptions: [
       "Recommended settings for an installed model.",
       "The same profile as JSON.",
       "Works on a model that isn't installed yet, if its size can be resolved.",
+      "Verify the proposed settings with a real (if brief) load, without prompting.",
+      "Verify and save the proposed settings on Ollama specifically, without prompting.",
     ],
 
     captureFootnote:
-      "Real omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-08-24, this dev machine. The negative headroom reflects this machine's real memory pressure at capture time — a busier or freer machine will show a different number.",
+      "Real omm tune qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-08-24, this dev machine. The negative headroom reflects this machine's real memory pressure at capture time — a busier or freer machine will show a different number. (This is the default, read-only prediction; --apply's real trial and --save's confirmation were not additionally captured, to avoid loading a model and rewriting local runtime settings just to demo it.)",
 
     trouble: [
       {
         why: "This name doesn't match anything in the curated catalog, and it isn't a repo reference or URL tune recognizes either.",
         fix: "Try omm search first to find the exact name or reference.",
+      },
+      {
+        why: "--save writes settings only after --apply's trial has verified them, so it refuses to run without --apply on the same command.",
+        fix: "Add --apply alongside --save, or drop --save to just see the prediction.",
       },
     ],
 
@@ -645,17 +660,18 @@ export const COMMANDS_EN: CommandTextSet = {
   link: {
     metaTitle: "omm link — repair or extend model links",
     metaDescription:
-      "Full reference for omm link: all three options, three examples, its real success-line format, and the two errors it actually prints.",
+      "Full reference for omm link: all four options, four examples, its real success-line format, and the two errors it actually prints.",
     heading: "omm link",
     lede: "Re-verify and repair every installed model's links into every installed runner — or link the whole hub into a directory for an app omm doesn't support directly.",
     summary: "Re-verify and repair every installed model's runner links, or link into a custom directory.",
 
     overviewBody:
-      "Reach for link after installing a new runner (so models installed before it get linked in too), or when scan's \"aren't linked into an installed engine yet\" note shows up. With no directory it always re-links every model into every installed runner — covering both never-linked and quietly-broken links, since it never trusts a cached linked flag. With a directory, it reuses the central file directly when possible instead of copying it, for an app that isn't one of the seven omm knows natively.",
+      "Reach for link after installing a new runner (so models installed before it get linked in too), or when scan's \"aren't linked into an installed engine yet\" note shows up. Without --to it always re-links the selected models into every installed runner — covering both never-linked and quietly-broken links, since it never trusts a cached linked flag; --engine narrows that repair to one runner. With --to, it reuses the central file directly when possible instead of copying it, for an app that isn't one of the seven omm knows natively — --engine and --to don't combine, since --engine only makes sense in repair mode. An optional models argument (filenames or omm list numbers, comma-separated) scopes either mode to a subset instead of every installed model.",
 
     optionDescriptions: [
-      "An extra directory to link every installed model's file into, for an app omm doesn't support directly.",
-      "Only re-verify/repair links for this one engine.",
+      "Which installed models to link — filenames or omm list numbers, comma-separated. Omit for every installed model.",
+      "Only re-verify/repair links for this one engine. Only valid without --to.",
+      "Link into an arbitrary directory instead of the supported runners, for an app omm doesn't support directly.",
       "Reclaim a destination omm doesn't recognize as its own by deleting and relinking it, instead of skipping it as a conflict.",
     ],
 
@@ -663,6 +679,7 @@ export const COMMANDS_EN: CommandTextSet = {
       "Re-verify and repair every model's links into every installed runner.",
       "Only repair links into Ollama.",
       "Link every installed model into a directory for an unsupported app.",
+      "Repair just one model's link into Ollama, by filename.",
     ],
 
     captureFootnote:
@@ -674,8 +691,8 @@ export const COMMANDS_EN: CommandTextSet = {
         fix: "Use one of the seven listed in the message.",
       },
       {
-        why: "--engine narrows which runner gets repaired; a directory argument means something different — linking into a location that isn't one of the seven known runners. The two can't be combined.",
-        fix: "Use --engine alone to repair one runner's links, or a directory alone to link into a custom location.",
+        why: "--engine narrows which runner gets repaired, which only means something in repair mode; --to switches to linking into a custom directory instead. The two can't be combined.",
+        fix: "Use --engine alone to repair one runner's links, or --to alone to link into a custom location.",
       },
     ],
 
