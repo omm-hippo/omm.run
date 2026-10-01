@@ -31,6 +31,7 @@ export const en = {
     sections: ["Problem", "Features", "Runners"],
     installGuides: "Guide",
     commands: "Commands",
+    models: "Model wiki",
     assistant: "OMM AI assistant",
     github: "GitHub",
     install: "Install",

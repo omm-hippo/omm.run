@@ -51,8 +51,9 @@ export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
 
-/** `/fr` is not a page; it 404s rather than rendering an English fallback. */
-export const dynamicParams = false;
+/** Validate locales in the layout instead of disabling fallback for every
+ * nested dynamic route. Otherwise an unknown model id can throw
+ * NoFallbackError before notFound(), then repeat the English locale rewrite. */
 
 export async function generateMetadata({
   params,
