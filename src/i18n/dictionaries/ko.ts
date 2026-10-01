@@ -38,6 +38,7 @@ export const ko = {
     sections: ["문제", "기능", "러너"],
     installGuides: "가이드",
     commands: "명령어",
+    models: "모델 위키",
     assistant: "OMM AI assistant",
     github: "GitHub",
     install: "설치",

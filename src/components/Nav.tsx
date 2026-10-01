@@ -12,6 +12,7 @@ import {
   LOCALE_NAME,
   HTML_LANG,
   localeHref,
+  canonicalPath,
   switchLocalePath,
   type Locale,
 } from "@/i18n/config";
@@ -114,6 +115,8 @@ export default function Nav({ locale }: { locale: Locale }) {
   const close = () => setOpen(false);
   const version = useLiveVersion();
   const pathname = usePathname();
+  const modelsPath = canonicalPath(pathname);
+  const modelsActive = modelsPath === "/models" || modelsPath.startsWith("/models/");
 
   /** Link to "/" is a no-op navigation when already on the home page, so
    *  Next.js never fires its scroll-to-top. Do it by hand in that case. */
@@ -141,7 +144,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           ) : null}
         </Link>
 
-        <nav className="ml-8 hidden items-center gap-6 lg:flex">
+        <nav className="ml-6 hidden items-center gap-4 lg:flex">
           {SECTION_HREFS.map((href, index) => (
             <a key={href} href={localeHref(href, locale)} className={LINK}>
               {t.sections[index]}
@@ -153,12 +156,15 @@ export default function Nav({ locale }: { locale: Locale }) {
           <Link href={localeHref("/commands", locale)} prefetch={false} className={LINK}>
             {t.commands}
           </Link>
+          <Link href={localeHref("/models", locale)} prefetch={false} className={modelsActive ? "border-b border-accent pb-0.5 text-small text-ink-0 transition-colors duration-[120ms] ease-micro" : LINK} aria-current={modelsActive ? "page" : undefined}>
+            {t.models}
+          </Link>
           <Link href={localeHref("/assistant", locale)} prefetch={false} className={LINK}>
             {t.assistant}
           </Link>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-6 lg:flex">
+        <div className="ml-auto hidden items-center gap-4 lg:flex">
           <a href={REPO} className={LINK} target="_blank" rel="noreferrer">
             {t.github}
           </a>
@@ -212,6 +218,15 @@ export default function Nav({ locale }: { locale: Locale }) {
               prefetch={false}
             >
               {t.commands}
+            </Link>
+            <Link
+              href={localeHref("/models", locale)}
+              onClick={close}
+              className={`border-b border-line-0 py-3 text-small ${modelsActive ? "text-accent" : "text-ink-2"}`}
+              aria-current={modelsActive ? "page" : undefined}
+              prefetch={false}
+            >
+              {t.models}
             </Link>
             <Link
               href={localeHref("/assistant", locale)}
