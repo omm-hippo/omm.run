@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { DEFAULT_LOCALE, canonicalPath, type Locale } from "@/i18n/config";
+import { DEFAULT_LOCALE, canonicalPath, isLocale, type Locale } from "@/i18n/config";
 
 /**
- * Korean-only routing, independent of browser language and old locale cookies.
+ * Korean-default routing, independent of browser language and old cookies.
  *
  *   `/install/windows`     → rewritten to `/ko/install/windows` (URL unchanged)
- *   `/en/install/windows`  → 308 to `/install/windows`
+ *   `/en/install/windows`  → served in English
  *   `/ko/install/windows`  → 308 to `/install/windows`
  */
 
@@ -40,12 +40,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
-  const canonical = canonicalPath(pathname);
-  if (canonical !== pathname) {
+  const first = pathname.split("/")[1] ?? "";
+  if (first === DEFAULT_LOCALE) {
     const url = request.nextUrl.clone();
-    url.pathname = canonical;
+    url.pathname = canonicalPath(pathname);
     return NextResponse.redirect(url, 308);
   }
+
+  if (isLocale(first)) return NextResponse.next();
 
   const url = request.nextUrl.clone();
   url.pathname = withPrefix(pathname, DEFAULT_LOCALE);

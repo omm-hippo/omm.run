@@ -1,18 +1,21 @@
 import type { Locale } from "@/i18n/config";
+import { en } from "@/i18n/dictionaries/en";
 import { ko } from "@/i18n/dictionaries/ko";
 import type { Widen } from "@/i18n/widen";
 
-/** Korean copy defines the site's dictionary shape. */
-export type Dictionary = Widen<typeof ko>;
+/** English is the shape of record; Korean is checked against it. */
+export type Dictionary = Widen<typeof en>;
 
-const DICTIONARIES: Record<Locale, Dictionary> = { ko };
+const DICTIONARIES: Record<Locale, Dictionary> = { en, ko };
 
 export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];
 }
 
 /**
- * Fills `{name}` placeholders without coupling prose to value order.
+ * Fills `{name}` placeholders. Korean and English put the same values in
+ * different positions ("Runners on Windows" / "Windows의 러너"), which is the
+ * whole reason the strings carry placeholders instead of being concatenated.
  */
 export function fill(
   template: string,

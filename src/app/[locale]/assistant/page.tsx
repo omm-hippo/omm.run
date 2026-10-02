@@ -30,7 +30,7 @@ export async function generateMetadata({
   return {
     title: assistant.metaTitle,
     description: assistant.metaDescription,
-    alternates: alternatesFor(PATH),
+    alternates: alternatesFor(PATH, locale),
     openGraph: {
       type: "website",
       siteName: "omm",

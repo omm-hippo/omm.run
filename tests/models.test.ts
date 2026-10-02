@@ -27,7 +27,7 @@ test("every checkpoint has resolvable primary evidence and no invented OMM score
     assert.ok(model.sources.length > 0);
     assert.ok(model.sources.some((source) => source.id === model.context.sourceId));
     for (const claim of [...model.strengths, ...model.cautions]) {
-      assert.ok(claim.text.ko);
+      assert.ok(claim.text.en && claim.text.ko);
       if (claim.basis === "publisher") assert.ok(model.sources.some((source) => source.id === claim.sourceId));
     }
     for (const source of model.sources) {
@@ -63,7 +63,7 @@ test("localized UI projection and API describe the same checkpoints and provenan
 });
 
 test("API validates inputs and distinguishes no match from unknown checkpoint", async () => {
-  for (const query of ["locale=en", "locale=fr", "task=unrecognized", `q=${"a".repeat(161)}`]) {
+  for (const query of ["locale=fr", "task=unrecognized", `q=${"a".repeat(161)}`]) {
     assert.equal(GET(new Request(`https://example.test/api/models?${query}`)).status, 400);
   }
   assert.equal(GET(new Request("https://example.test/api/models?id=unknown")).status, 404);

@@ -1,6 +1,6 @@
 # omm.run
 
-The Korean official website and command reference for
+The bilingual official website and command reference for
 [OMM](https://github.com/omm-hippo/omm). It is a Next.js application deployed
 to Cloudflare Workers through OpenNext.
 
@@ -11,10 +11,12 @@ npm ci
 npm run dev
 ```
 
-Open <http://localhost:3000>. All pages are served in Korean without a language
-prefix. Legacy `/en` and `/ko` URLs redirect to the same unprefixed page,
-preserving query strings. Browser language and old `omm_locale` cookies do not
-change the site language.
+Open <http://localhost:3000>. Korean is served without a language prefix;
+English is served under `/en` (for example, `/en/commands`). Legacy `/ko` URLs
+redirect to the same unprefixed Korean page, preserving query strings. Language
+controls switch between the same Korean and English page while preserving the
+query and fragment. Browser language and old `omm_locale` cookies do not change
+the language of an unprefixed URL.
 
 `next dev` does not initialize Cloudflare bindings, so local development does not
 require Cloudflare authentication or invoke remote Workers AI. The assistant
@@ -42,7 +44,7 @@ once a day, so the site cannot quietly describe a CLI that has moved on.
 
 ## OMM AI assistant
 
-`/assistant` provides a constrained OMM command selector in Korean.
+`/assistant` and `/en/assistant` provide a constrained OMM command selector.
 Cloudflare Workers AI can choose only an allowlisted command ID; all commands,
 options, examples, risks, and links are rendered from the existing static OMM
 command docs.

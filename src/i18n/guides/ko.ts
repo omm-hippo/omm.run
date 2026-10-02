@@ -1,7 +1,12 @@
 /**
- * Korean prose for the three per-OS install guides. Technical facts, commands,
- * verbatim output, paths and environment variables live in `./base.ts`.
- * Every claim must trace back to design/FACTS.md.
+ * Korean translation of `./en.ts` — the prose for the three per-OS install
+ * guides.
+ *
+ * All commands, verbatim installer/shell messages, paths, environment
+ * variables, and other non-translatable strings stay in English and live in
+ * `./base.ts`; nothing here duplicates them. This file adds no claim and
+ * changes no claim relative to the English original — every sentence should
+ * trace back to the same fact in `en.ts`.
  */
 
 /**

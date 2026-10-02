@@ -17,6 +17,8 @@
  * token lines (`MIT · Python 3.10+ · Windows, macOS, Linux`).
  */
 
+import type { Dictionary } from "@/i18n/dictionaries";
+
 export const ko = {
   meta: {
     title: "omm — 오픈소스 모델 매니저",
@@ -40,6 +42,7 @@ export const ko = {
     install: "설치",
     menu: "메뉴",
     close: "닫기",
+    language: "언어",
   },
 
   hero: {
@@ -503,4 +506,4 @@ export const ko = {
     metaTitle: "omm {command}",
     backToIndex: "전체 명령어",
   },
-} as const;
+} as const satisfies Dictionary;

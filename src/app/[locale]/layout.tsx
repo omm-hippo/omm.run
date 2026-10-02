@@ -67,11 +67,11 @@ export async function generateMetadata({
     title: dictionary.meta.title,
     description: dictionary.meta.description,
     applicationName: "omm",
-    alternates: alternatesFor("/"),
+    alternates: alternatesFor("/", locale),
     openGraph: {
       type: "website",
       siteName: "omm",
-      url: alternatesFor("/").canonical,
+      url: alternatesFor("/", locale).canonical,
       locale: OG_LOCALE[locale],
       title: dictionary.meta.title,
       description: dictionary.meta.description,

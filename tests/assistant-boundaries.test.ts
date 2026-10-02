@@ -25,7 +25,7 @@ test("common pasted credentials stop before any model or store call", async () =
     const question = `I need to install a model ${credential}`;
     assert.equal(inspectInput(question), "sensitive");
     const result = await answerAssistantQuestion(
-      { locale: "ko", question, turnCount: 0 },
+      { locale: "en", question, turnCount: 0 },
       {
         clientIdentity: "test-client",
         hashSalt: "synthetic-test-salt",
@@ -92,7 +92,7 @@ test("a synchronous binding failure falls back once instead of rejecting the rou
   const result = await selectWithWorkersAi(
     { run() { calls += 1; throw new Error("binding unavailable"); } },
     DEFAULT_WORKERS_AI_MODEL,
-    "ko",
+    "en",
     "install a model",
     [],
   );

@@ -5,8 +5,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
+  LOCALES,
+  LOCALE_LABEL,
+  LOCALE_NAME,
+  HTML_LANG,
   localeHref,
   canonicalPath,
+  switchLocalePath,
   type Locale,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -42,6 +47,61 @@ const SECTION_HREFS = ["/#problem", "/#features", "/#runners"] as const;
 
 const LINK =
   "border-b border-transparent pb-0.5 text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0";
+
+/** EN / KO segmented control — same geometry as the Install tabs (§4.6). */
+function LanguageToggle({
+  locale,
+  label,
+  className = "",
+}: {
+  locale: Locale;
+  label: string;
+  className?: string;
+}) {
+  const pathname = usePathname();
+
+  // Document navigation keeps the fragment intact when crossing between the
+  // rewritten Korean route and the explicit English route.
+  const updateHref = (anchor: HTMLAnchorElement, candidate: Locale) => {
+    anchor.href = switchLocalePath(
+      window.location.pathname + window.location.search + window.location.hash,
+      candidate,
+    );
+  };
+
+  return (
+    <div
+      aria-label={label}
+      className={`inline-flex gap-1 rounded-md border border-line-1 bg-bg-0 p-1 ${className}`}
+    >
+      {LOCALES.map((candidate) => {
+        const active = candidate === locale;
+        return (
+          <a
+            key={candidate}
+            href={switchLocalePath(pathname, candidate)}
+            /* hrefLang describes the destination. No `lang` here: both chips
+               are Latin, and marking one of them Korean would hand it the
+               `:lang(ko)` tracking and make the pair look uneven. */
+            hrefLang={HTML_LANG[candidate]}
+            aria-current={active ? "true" : undefined}
+            title={LOCALE_NAME[candidate]}
+            onClick={(event) => updateHref(event.currentTarget, candidate)}
+            onAuxClick={(event) => updateHref(event.currentTarget, candidate)}
+            onContextMenu={(event) => updateHref(event.currentTarget, candidate)}
+            className={`text-label rounded-md border-b-2 px-2.5 py-1.5 transition-colors duration-[120ms] ease-[var(--ease-micro)] ${
+              active
+                ? "border-accent bg-bg-2 text-ink-0"
+                : "border-transparent text-ink-2 hover:bg-bg-3 hover:text-ink-0"
+            }`}
+          >
+            {LOCALE_LABEL[candidate]}
+          </a>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Nav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
@@ -102,6 +162,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           <a href={REPO} className={LINK} target="_blank" rel="noreferrer">
             {t.github}
           </a>
+          <LanguageToggle locale={locale} label={t.language} />
           <Link
             href={localeHref("/#install", locale)}
             className="focus-ring-neutral rounded-md bg-accent px-4 py-1.5 text-small font-medium text-accent-ink transition-colors duration-[120ms] ease-micro hover:bg-accent-press"
@@ -177,6 +238,13 @@ export default function Nav({ locale }: { locale: Locale }) {
             >
               {t.github}
             </a>
+            <div className="flex items-center justify-between border-b border-line-0 py-3">
+              <span className="text-small text-ink-2">{t.language}</span>
+              <LanguageToggle
+                locale={locale}
+                label={t.language}
+              />
+            </div>
             <Link
               href={localeHref("/#install", locale)}
               onClick={close}

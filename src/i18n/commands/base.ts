@@ -1,7 +1,7 @@
 /**
  * The command-doc-page facts that are identical in every locale: options,
  * example commands, the captured terminal output, and the verbatim errors
- * with their file:line source. Prose lives in `./ko.ts` and is
+ * with their file:line source. Prose lives in `./en.ts` and `./ko.ts` and is
  * merged onto this by index in `src/components/commands/commands.ts`.
  *
  * See design/FACTS.md, section "Command doc pages", for the product-repo

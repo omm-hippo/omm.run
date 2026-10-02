@@ -1,10 +1,11 @@
 /**
  * The install guides, assembled.
  *
- * `src/i18n/guides/base.ts` holds technical facts (commands, prompt samples,
- * dependency links, captured output,
+ * Content lives in two halves so a command exists exactly once across both
+ * languages: `src/i18n/guides/base.ts` holds everything that is identical in
+ * every locale (commands, prompt samples, dependency links, captured output,
  * runner names, the verbatim messages the installer prints and the file:line
- * each traces to), and `src/i18n/guides/ko.ts` holds the Korean prose. This module
+ * each traces to), and `src/i18n/guides/{en,ko}.ts` hold the prose. This module
  * merges the two by index into the shape `GuidePage.tsx` renders.
  *
  * See design/FACTS.md, section "Install guide pages", for the product-repo
@@ -13,13 +14,14 @@
 
 import type { Locale } from "@/i18n/config";
 import { GUIDE_BASE, GUIDE_ORDER, type Slug } from "@/i18n/guides/base";
+import { GUIDES_EN } from "@/i18n/guides/en";
 import { GUIDES_KO } from "@/i18n/guides/ko";
 import type { GuideTextSet } from "@/i18n/guides/shape";
 
 export type { Slug };
 export { GUIDE_ORDER };
 
-const TEXT: Record<Locale, GuideTextSet> = { ko: GUIDES_KO };
+const TEXT: Record<Locale, GuideTextSet> = { en: GUIDES_EN, ko: GUIDES_KO };
 
 export type Command = {
   /** Shell prompt glyph rendered before the command; not part of the copy. */
