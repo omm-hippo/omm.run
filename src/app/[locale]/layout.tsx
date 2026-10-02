@@ -24,8 +24,8 @@ const archivo = Archivo({
 
 // Archivo has no Hangul. Noto Sans KR is the Hangul fallback only: it sits
 // *after* Archivo in `--font-sans` and after JetBrains Mono in `--font-mono`,
-// so Latin text, digits and box-drawing glyphs never reach it and the English
-// pages render exactly as before. DIRECTION.md §3 records the exception.
+// so Latin text, digits and box-drawing glyphs keep their original fonts.
+// DIRECTION.md §3 records the font pairing.
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-kr",
   subsets: ["latin"],
@@ -53,7 +53,7 @@ export function generateStaticParams() {
 
 /** Validate locales in the layout instead of disabling fallback for every
  * nested dynamic route. Otherwise an unknown model id can throw
- * NoFallbackError before notFound(), then repeat the English locale rewrite. */
+ * NoFallbackError before notFound(), then repeat the locale rewrite. */
 
 export async function generateMetadata({
   params,
@@ -67,11 +67,11 @@ export async function generateMetadata({
     title: dictionary.meta.title,
     description: dictionary.meta.description,
     applicationName: "omm",
-    alternates: alternatesFor("/"),
+    alternates: alternatesFor("/", locale),
     openGraph: {
       type: "website",
       siteName: "omm",
-      url: alternatesFor("/").canonical,
+      url: alternatesFor("/", locale).canonical,
       locale: OG_LOCALE[locale],
       title: dictionary.meta.title,
       description: dictionary.meta.description,

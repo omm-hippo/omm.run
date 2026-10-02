@@ -1,4 +1,4 @@
-import { isLocale } from "../../../i18n/config";
+import { DEFAULT_LOCALE, isLocale } from "../../../i18n/config";
 import { MODEL_WIKI_REVIEWED_AT, MODEL_WIKI_VERSION, WIKI_MODELS, localizeModel } from "../../../lib/models/catalog";
 import { filterModels } from "../../../lib/models/search";
 import { isModelTask } from "../../../lib/models/types";
@@ -6,7 +6,7 @@ import { isModelTask } from "../../../lib/models/types";
 /** Public read-only knowledge. No inference, credentials, storage or remote fetch. */
 export function GET(request: Request) {
   const params = new URL(request.url).searchParams;
-  const locale = params.get("locale") ?? "en";
+  const locale = params.get("locale") ?? DEFAULT_LOCALE;
   const task = params.get("task");
   const query = params.get("q") ?? "";
   const id = params.get("id");

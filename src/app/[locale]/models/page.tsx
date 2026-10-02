@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/models">
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getModelDictionary(locale);
-  return { title: t.metaTitle, description: t.metaDescription, alternates: alternatesFor("/models"), openGraph: { title: t.metaTitle, description: t.metaDescription, url: localeHref("/models", locale), locale: OG_LOCALE[locale] } };
+  return { title: t.metaTitle, description: t.metaDescription, alternates: alternatesFor("/models", locale), openGraph: { title: t.metaTitle, description: t.metaDescription, url: localeHref("/models", locale), locale: OG_LOCALE[locale] } };
 }
 
 export default async function ModelsPage({ params }: PageProps<"/[locale]/models">) {

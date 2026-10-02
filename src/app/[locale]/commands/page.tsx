@@ -29,7 +29,7 @@ export async function generateMetadata({
   return {
     title: commandsChooser.metaTitle,
     description: commandsChooser.metaDescription,
-    alternates: alternatesFor("/commands"),
+    alternates: alternatesFor("/commands", locale),
     openGraph: {
       type: "article",
       siteName: "omm",

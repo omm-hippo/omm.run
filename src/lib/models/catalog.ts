@@ -1,7 +1,7 @@
 import type { Locale } from "../../i18n/config";
 import type { Localized, ModelSource, ModelView, WikiModel } from "./types";
 
-export const MODEL_WIKI_VERSION = "2026-10-01.1";
+export const MODEL_WIKI_VERSION = "2026-10-02.2";
 export const MODEL_WIKI_REVIEWED_AT = "2026-10-01";
 const l = (en: string, ko: string): Localized => ({ en, ko });
 const card = (repository: string): ModelSource => ({

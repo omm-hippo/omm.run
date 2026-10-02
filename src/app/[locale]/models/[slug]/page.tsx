@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ModelFacts } from "@/components/models/ModelFacts";
-import { alternatesFor, isLocale, localeHref, OG_LOCALE } from "@/i18n/config";
+import { alternatesFor, isLocale, localeHref, OG_LOCALE, type Locale } from "@/i18n/config";
 import { getModelDictionary } from "@/i18n/models";
 import { WIKI_MODELS, getWikiModel, localizeModel } from "@/lib/models/catalog";
 import type { ModelView } from "@/lib/models/types";
@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/models/[
   if (!model) notFound();
   const t = getModelDictionary(locale);
   const title = `${model.name} — ${t.eyebrow.toLowerCase()} — omm`;
-  return { title, description: model.summary[locale], alternates: alternatesFor(`/models/${slug}`), openGraph: { title, description: model.summary[locale], url: localeHref(`/models/${slug}`, locale), locale: OG_LOCALE[locale] } };
+  return { title, description: model.summary[locale], alternates: alternatesFor(`/models/${slug}`, locale), openGraph: { title, description: model.summary[locale], url: localeHref(`/models/${slug}`, locale), locale: OG_LOCALE[locale] } };
 }
 
-function Claims({ claims, model, locale }: { claims: ModelView["strengths"]; model: ModelView; locale: "en" | "ko" }) {
+function Claims({ claims, model, locale }: { claims: ModelView["strengths"]; model: ModelView; locale: Locale }) {
   const t = getModelDictionary(locale);
   return <ul className="mt-4 space-y-5">{claims.map((claim, index) => {
     const source = model.sources.find((value) => value.id === claim.sourceId);

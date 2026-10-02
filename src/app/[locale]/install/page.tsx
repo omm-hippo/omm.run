@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: installChooser.metaTitle,
     description: installChooser.metaDescription,
-    alternates: alternatesFor("/install"),
+    alternates: alternatesFor("/install", locale),
     openGraph: {
       type: "article",
       siteName: "omm",

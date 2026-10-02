@@ -52,7 +52,7 @@ export async function generateMetadata({
   return {
     title,
     description: entry.summary,
-    alternates: alternatesFor(path),
+    alternates: alternatesFor(path, locale),
     openGraph: {
       type: "article",
       siteName: "omm",

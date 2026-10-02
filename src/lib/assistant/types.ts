@@ -1,4 +1,4 @@
-import type { Locale } from "../../i18n/config";
+import { isLocale as isSiteLocale, type Locale } from "../../i18n/config";
 import type { Slug } from "../../i18n/commands/base";
 
 export const ASSISTANT_LIMITS = {
@@ -63,5 +63,5 @@ export type ModelSelection =
   | { readonly action: "clarify"; readonly commandId: null };
 
 export function isLocale(value: unknown): value is Locale {
-  return value === "en" || value === "ko";
+  return typeof value === "string" && isSiteLocale(value);
 }

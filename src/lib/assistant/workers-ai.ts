@@ -1,3 +1,4 @@
+import type { Locale } from "../../i18n/config";
 import { isCommandId } from "./catalog";
 import type { Candidate, ModelSelection } from "./types";
 import { ASSISTANT_LIMITS } from "./types";
@@ -38,7 +39,7 @@ function selectionSchema(candidateIds: readonly string[]): Record<string, unknow
 }
 
 export function buildWorkersAiInput(
-  locale: "en" | "ko",
+  locale: Locale,
   question: string,
   candidates: readonly Candidate[],
 ): Record<string, unknown> {
@@ -131,7 +132,7 @@ export function parseWorkersAiSelection(
 export async function selectWithWorkersAi(
   ai: WorkersAiBinding,
   model: string,
-  locale: "en" | "ko",
+  locale: Locale,
   question: string,
   candidates: readonly Candidate[],
   timeoutMs: number = ASSISTANT_LIMITS.inferenceTimeoutMs,
