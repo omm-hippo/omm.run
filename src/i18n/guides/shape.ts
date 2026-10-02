@@ -2,8 +2,8 @@
  * The translatable half of an install guide.
  *
  * Lists that merge onto `GUIDE_BASE` by index are typed as tuples derived from
- * the base, so dropping a troubleshooting entry — or adding one to Korean that
- * has no English counterpart — is a compile error rather than a page that
+ * the base, so dropping or adding a troubleshooting entry without a matching
+ * base record is a compile error rather than a page that
  * renders the wrong fix under the wrong message.
  */
 

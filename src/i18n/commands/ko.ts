@@ -1,5 +1,5 @@
 /**
- * Korean copy for the command doc pages. Translation of the English page —
+ * Korean copy for the command doc pages. Technical strings —
  * commands, flags, file paths and verbatim printed messages stay in English,
  * per design/FACTS.md's "Korean locale" section.
  */

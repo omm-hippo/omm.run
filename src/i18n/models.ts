@@ -1,37 +1,6 @@
 import type { Locale } from "./config";
 
-const en = {
-  metaTitle: "Model wiki — omm",
-  metaDescription: "Compare open-weight LLMs by use case, strengths, limitations and official sources. A model-selection reference for people and applications.",
-  eyebrow: "MODEL WIKI",
-  heading: "Choose a model by what it does.",
-  lede: "Coding, agents, reasoning or vision. See what each checkpoint is designed for, what to check, and where the information comes from.",
-  mobileLede: "Compare use cases, strengths and limits, with official sources.",
-  checkpoints: "checkpoints", reviewed: "Sources reviewed", taskHeading: "What are you building?", all: "All models",
-  tasks: { agents: "Agents & tools", coding: "Coding", reasoning: "Reasoning & math", vision: "Image understanding", multilingual: "Multilingual", compact: "Smaller models" },
-  search: "Search models", searchPlaceholder: "Model, publisher or task…", publisher: "Publisher", allPublishers: "All publishers",
-  visionOnly: "Image input only", result: "models shown", clear: "Reset filters", empty: "No models match these filters.",
-  emptyHint: "Try a shorter model name or reset the filters.",
-  model: "Model / checkpoint", bestFor: "When to consider it", specs: "Size / context", details: "Read entry", compare: "Compare",
-  selected: "selected", compareHint: "Select up to 3 checkpoints to compare.", compareMax: "3 selected. Remove one to add another.",
-  comparison: "Checkpoint comparison", closeComparison: "Close comparison", compareSelected: "Compare selected", clearSelected: "Clear selection",
-  chooseWhen: "When to consider it", strengths: "Published strengths", cautions: "Tradeoffs & limitations", runtime: "Before running it",
-  architecture: "Architecture", dense: "Dense", moe: "Mixture of experts", active: "active", total: "total", context: "Context window",
-  native: "native", configured: "from config", extended: "with extra configuration", input: "Input", inputs: { text: "Text", image: "Image", video: "Video" },
-  tools: "Tool calling", documented: "Documented", unconfirmed: "Not confirmed", license: "License / terms",
-  officialSources: "Official sources", publisherClaim: "Publisher report", editorial: "OMM editorial note", lastReviewed: "Last source review",
-  evaluation: "OMM evaluation", notMeasured: "Not yet measured by OMM", back: "All models", repository: "Official model card",
-  evidenceTitle: "Capabilities need context.",
-  evidenceNote: "Use cases are editorial starting points. Published strengths are developer reports, not OMM measurements. Local speed, Korean quality and tool reliability still need testing with your runner and quantization.",
-  openWeightsNote: "This wiki includes open-weight models. Licenses vary; open weights do not always mean an open-source license.",
-  sizeNote: "Size labels follow the checkpoint’s published class. Active MoE parameters do not represent the full weight footprint. Context tokens are not a RAM estimate.",
-  handoffHeading: "Try it in your environment.",
-  handoffBody: "Find a compatible model file, check memory fit, then measure the exact model and runner. A wiki entry does not guarantee an OMM-compatible download.",
-  searchCommand: "Search with OMM", fitCommand: "Check memory fit", benchmarkCommand: "Measure performance",
-  json: "Model data (JSON)", contribution: "Suggest a correction", contributionBody: "Include the exact checkpoint, a primary source, and the claim to change.",
-};
-
-const ko: typeof en = {
+const ko = {
   metaTitle: "모델 위키 — omm",
   metaDescription: "오픈 웨이트 LLM의 추천 용도, 특징, 한계, 공식 출처를 비교하세요. 사용자와 애플리케이션을 위한 모델 선택 자료입니다.",
   eyebrow: "MODEL WIKI", heading: "어떤 모델을 쓸지, 특징부터 비교하세요.",
@@ -62,5 +31,6 @@ const ko: typeof en = {
 };
 
 export function getModelDictionary(locale: Locale) {
-  return locale === "ko" ? ko : en;
+  const dictionaries = { ko };
+  return dictionaries[locale];
 }

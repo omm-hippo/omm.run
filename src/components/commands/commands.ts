@@ -1,10 +1,9 @@
 /**
  * The command doc pages, assembled.
  *
- * Content lives in two halves so a command exists exactly once across both
- * languages: `src/i18n/commands/base.ts` holds everything identical in every
- * locale (options, example commands, captured output, verbatim errors and
- * their file:line), and `src/i18n/commands/{en,ko}.ts` hold the prose. This
+ * `src/i18n/commands/base.ts` holds technical facts (options, example commands,
+ * captured output, verbatim errors and their file:line), while
+ * `src/i18n/commands/ko.ts` holds the Korean prose. This
  * module merges the two by index into the shape `CommandDocPage.tsx` renders.
  *
  * See design/FACTS.md, section "Command doc pages", for the product-repo
@@ -23,14 +22,13 @@ import {
   type CommandRisk,
   type Slug,
 } from "@/i18n/commands/base";
-import { COMMANDS_EN } from "@/i18n/commands/en";
 import { COMMANDS_KO } from "@/i18n/commands/ko";
 import type { CommandTextSet } from "@/i18n/commands/shape";
 
 export type { Slug };
 export { COMMAND_ORDER };
 
-const TEXT: Record<Locale, CommandTextSet> = { en: COMMANDS_EN, ko: COMMANDS_KO };
+const TEXT: Record<Locale, CommandTextSet> = { ko: COMMANDS_KO };
 
 export type OptionRow = Option & { readonly description: string };
 export type ExampleRow = Example & { readonly caption: string };

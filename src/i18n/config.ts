@@ -1,32 +1,19 @@
 /**
- * Locale plumbing for the two-language site.
- *
- * English is the canonical, unprefixed site (`/`, `/install/windows`); Korean
- * lives under `/ko`. The app router segment is `[locale]`, so every English
- * request is rewritten to `/en/...` in `src/middleware.ts` and `/en/...` is
- * redirected back to the unprefixed path. Nothing in the app tree ever builds
- * an `/en` href — `localeHref` is the only place the prefix rule lives.
+ * Korean is the only site language, published without a URL prefix.
+ * The app router retains its `[locale]` segment internally; middleware maps
+ * public paths to `/ko/...` and redirects old `/en` and `/ko` links.
  */
 
-export const LOCALES = ["en", "ko"] as const;
+export const LOCALES = ["ko"] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
 /** The locale served without a path prefix. */
-export const DEFAULT_LOCALE: Locale = "en";
-
-/** Set by the language toggle, read by the proxy. One year, path `/`. */
-export const LOCALE_COOKIE = "omm_locale";
-export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+export const DEFAULT_LOCALE: Locale = "ko";
 
 /** `<html lang>` and Open Graph `locale`. */
-export const HTML_LANG: Record<Locale, string> = { en: "en", ko: "ko" };
-export const OG_LOCALE: Record<Locale, string> = { en: "en_US", ko: "ko_KR" };
-
-/** Segmented-control labels. Deliberately not translated: each side is written
- *  in the language it switches to. */
-export const LOCALE_LABEL: Record<Locale, string> = { en: "EN", ko: "KO" };
-export const LOCALE_NAME: Record<Locale, string> = { en: "English", ko: "한국어" };
+export const HTML_LANG: Record<Locale, string> = { ko: "ko" };
+export const OG_LOCALE: Record<Locale, string> = { ko: "ko_KR" };
 
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
@@ -40,12 +27,10 @@ function splitHash(path: string): [string, string] {
 }
 
 /**
- * Canonical path (always written unprefixed, the way the English site is
- * addressed) → the href for `locale`.
+ * Canonical path → the public Korean href, with query and fragment intact.
  *
- *   localeHref("/install/windows", "ko") === "/ko/install/windows"
- *   localeHref("/#install", "ko")        === "/ko#install"
- *   localeHref("/#install", "en")        === "/#install"
+ *   localeHref("/install/windows", "ko") === "/install/windows"
+ *   localeHref("/#install", "ko")        === "/#install"
  */
 export function localeHref(path: string, locale: Locale): string {
   const [pathname, hash] = splitHash(path);
@@ -58,27 +43,14 @@ export function localeHref(path: string, locale: Locale): string {
 export function canonicalPath(pathname: string): string {
   const segments = pathname.split("/");
   const first = segments[1] ?? "";
-  if (!isLocale(first)) return pathname || "/";
+  if (first !== "en" && first !== "ko") return pathname || "/";
   const rest = segments.slice(2).join("/");
   return rest ? `/${rest}` : "/";
 }
 
-/** The same page in the other locale — what the language toggle links to. */
-export function switchLocalePath(pathname: string, locale: Locale): string {
-  return localeHref(canonicalPath(pathname), locale);
-}
-
-/**
- * `metadata.alternates` for a canonical path. `x-default` points at the
- * unprefixed English page, which is also what an unprefixed request serves.
- */
+/** A single canonical page; there are no alternate-language pages. */
 export function alternatesFor(path: string) {
   return {
     canonical: localeHref(path, DEFAULT_LOCALE),
-    languages: {
-      en: localeHref(path, "en"),
-      ko: localeHref(path, "ko"),
-      "x-default": localeHref(path, DEFAULT_LOCALE),
-    },
   };
 }

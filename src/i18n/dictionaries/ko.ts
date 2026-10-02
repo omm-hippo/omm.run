@@ -1,7 +1,5 @@
 /**
- * Korean copy. A translation of `./en.ts` — every fact, number and constraint
- * is the English one; nothing is added, softened or dropped. design/FACTS.md
- * therefore governs this file exactly as it governs the English.
+ * Korean site copy. design/FACTS.md governs every fact and constraint.
  *
  * GLOSSARY — keep these renderings consistent when editing:
  *   install 설치 · installer(the one-line script) 설치 스크립트 ·
@@ -18,8 +16,6 @@
  * paths, verbatim installer output, product and runner names, and the mono
  * token lines (`MIT · Python 3.10+ · Windows, macOS, Linux`).
  */
-
-import type { Dictionary } from "@/i18n/dictionaries";
 
 export const ko = {
   meta: {
@@ -39,12 +35,11 @@ export const ko = {
     installGuides: "가이드",
     commands: "명령어",
     models: "모델 위키",
-    assistant: "OMM AI assistant",
+    assistant: "OMM AI 도우미",
     github: "GitHub",
     install: "설치",
     menu: "메뉴",
     close: "닫기",
-    language: "언어",
   },
 
   hero: {
@@ -374,10 +369,10 @@ export const ko = {
   },
 
   assistant: {
-    metaTitle: "OMM AI assistant",
+    metaTitle: "OMM AI 도우미",
     metaDescription:
       "omm 설치·진단·모델·러너 작업을 설명하면 검증된 omm 명령어 레퍼런스에서 알맞은 명령을 찾아 줍니다.",
-    label: "OMM AI assistant",
+    label: "OMM AI 도우미",
     heading: "할 일을 설명하면, 검증된 명령어를 찾아드립니다.",
     lede:
       "범용 챗봇이 아니라 omm 설치·진단·모델·러너 전용 안내 도구입니다. Workers AI는 허용된 명령어 ID 하나만 고를 수 있고, 셸 코드를 새로 만들거나 실행하지 않습니다.",
@@ -508,4 +503,4 @@ export const ko = {
     metaTitle: "omm {command}",
     backToIndex: "전체 명령어",
   },
-} as const satisfies Dictionary;
+} as const;

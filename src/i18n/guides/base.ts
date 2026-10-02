@@ -4,7 +4,7 @@
  * runner names, the verbatim messages the installer prints, and the file:line
  * each message traces to.
  *
- * Prose lives in `./en.ts` and `./ko.ts` and is merged onto this by index in
+ * Prose lives in `./ko.ts` and is merged onto this by index in
  * `src/components/install/guides.ts`, so a command exists exactly once no
  * matter how many languages the site ships.
  *

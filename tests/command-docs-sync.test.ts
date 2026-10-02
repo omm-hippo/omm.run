@@ -9,7 +9,6 @@ import {
   COMMAND_ORDER,
   COMMAND_RISK,
 } from "../src/i18n/commands/base";
-import { COMMANDS_EN } from "../src/i18n/commands/en";
 import { COMMANDS_KO } from "../src/i18n/commands/ko";
 import { getCommand } from "../src/components/commands/commands";
 import { isCommandId } from "../src/lib/assistant/catalog";
@@ -53,7 +52,6 @@ test("command docs, locale text, risk, and routes have exact shared coverage", a
   assert.equal(new Set(COMMAND_ORDER).size, COMMAND_ORDER.length);
   assert.deepEqual(sorted(Object.keys(COMMAND_BASE)), expected);
   assert.deepEqual(sorted(Object.keys(COMMAND_RISK)), expected);
-  assert.deepEqual(sorted(Object.keys(COMMANDS_EN)), expected);
   assert.deepEqual(sorted(Object.keys(COMMANDS_KO)), expected);
   assert.deepEqual(sorted(routes), expected);
 
@@ -70,7 +68,7 @@ test("command docs, locale text, risk, and routes have exact shared coverage", a
   }
 });
 
-test("base records and bilingual tuple content stay aligned", () => {
+test("base records and Korean tuple content stay aligned", () => {
   const validRisks = new Set(["inspect", "caution", "high-impact"]);
 
   for (const slug of COMMAND_ORDER) {
@@ -80,7 +78,6 @@ test("base records and bilingual tuple content stay aligned", () => {
     assert.ok(validRisks.has(COMMAND_RISK[slug]));
 
     for (const [locale, text] of [
-      ["en", COMMANDS_EN[slug]],
       ["ko", COMMANDS_KO[slug]],
     ] as const) {
       assert.equal(
@@ -152,7 +149,7 @@ test("assistant allowlist and deterministic candidates stay inside command docs"
 
   const commandIds = new Set<string>(COMMAND_ORDER);
   for (const [question, locale] of [
-    ["install, diagnose, link, benchmark, or remove a local model", "en"],
+    ["install, diagnose, link, benchmark, or remove a local model", "ko"],
     ["로컬 모델 설치 진단 연결 벤치마크 삭제", "ko"],
   ] as const) {
     for (const candidate of narrowCandidates(question, locale)) {

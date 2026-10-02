@@ -164,17 +164,12 @@ test("every /docs route directory has a page and a dictionary entry", async () =
 
   assert.deepEqual([...slugs].sort(), Object.keys(PAGES).sort());
 
-  const en = await readFile(
-    path.join(REPO_ROOT, "src/i18n/dictionaries/en.ts"),
-    "utf8",
-  );
   const ko = await readFile(
     path.join(REPO_ROOT, "src/i18n/dictionaries/ko.ts"),
     "utf8",
   );
   for (const slug of slugs) {
     const key = slug.includes("-") ? `"${slug}"` : slug;
-    assert.ok(en.includes(`${key}: {`), `en.ts missing docs.pages.${slug}`);
     assert.ok(ko.includes(`${key}: {`), `ko.ts missing docs.pages.${slug}`);
   }
 });
