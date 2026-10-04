@@ -965,12 +965,13 @@ Done: 1 model(s) in the omm hub, 0.5 GB saved.`,
     name: "omm info",
     href: "/commands/info",
 
-    options: [{ name: "<name>", argument: null, default: "required" }],
+    options: [{ name: "<name>...", argument: null, default: "required" }],
 
     examples: [
       { prompt: "$", command: "omm info qwen2.5-0.5b-instruct-q4_k_m.gguf" },
       { prompt: "$", command: "omm info qwen2.5-0.5b-instruct-q4_k_m.gguf --json" },
       { prompt: "$", command: "omm info 1" },
+      { prompt: "$", command: "omm info model-a.gguf model-b.gguf --json" },
     ],
 
     capture: {
