@@ -111,6 +111,7 @@ export default function Nav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const modelsPath = canonicalPath(pathname);
   const modelsActive = modelsPath === "/models" || modelsPath.startsWith("/models/");
+  const arenaActive = modelsPath === "/arena";
 
   /** Link to "/" is a no-op navigation when already on the home page, so
    *  Next.js never fires its scroll-to-top. Do it by hand in that case. */
@@ -155,6 +156,9 @@ export default function Nav({ locale }: { locale: Locale }) {
           </Link>
           <Link href={localeHref("/assistant", locale)} prefetch={false} className={LINK}>
             {t.assistant}
+          </Link>
+          <Link href={localeHref("/arena", locale)} prefetch={false} className={arenaActive ? "border-b border-accent pb-0.5 text-small text-ink-0" : LINK} aria-current={arenaActive ? "page" : undefined}>
+            {locale === "ko" ? "리더보드" : "Leaderboard"}
           </Link>
         </nav>
 
@@ -229,6 +233,9 @@ export default function Nav({ locale }: { locale: Locale }) {
               prefetch={false}
             >
               {t.assistant}
+            </Link>
+            <Link href={localeHref("/arena", locale)} onClick={close} prefetch={false} className={`border-b border-line-0 py-3 text-small ${arenaActive ? "text-accent" : "text-ink-2"}`} aria-current={arenaActive ? "page" : undefined}>
+              {locale === "ko" ? "리더보드" : "Leaderboard"}
             </Link>
             <a
               href={REPO}

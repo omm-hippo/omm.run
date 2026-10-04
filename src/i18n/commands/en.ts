@@ -583,28 +583,29 @@ export const COMMANDS_EN: CommandTextSet = {
   },
 
   info: {
-    metaTitle: "omm info — full detail on one installed model",
+    metaTitle: "omm info — inspect and compare model packages",
     metaDescription:
-      "Full reference for omm info: its one argument, three examples, a real captured detail view, and the error it actually prints.",
+      "Inspect installed and remote packages or compare several models side by side.",
     heading: "omm info",
-    lede: "Show one installed model's repo, version, size, verification status, and the exact command to run it in each linked program.",
-    summary: "Show full detail — repo, version, size, links, run commands — for one installed model.",
+    lede: "Inspect one model or compare the source, size, version and license of several installed or remote packages.",
+    summary: "Inspect model facts and compare several packages side by side.",
 
     overviewBody:
-      "Reach for info once list has told you a model exists and you want everything about it: which repo and version it came from, whether a compatibility check has passed, and the literal command to run it in whichever runner it's linked into. It also prints the same live memory-fit card omm fit shows, so you don't need a second command just to check that.",
+      "Inspect packages before installation using a repository reference or search number. One package keeps its detailed view; multiple packages show the same fields side by side and return a models array in JSON. Membership in the recommendation catalog is not required. Use omm fit for hardware suitability.",
 
     optionDescriptions: [
-      "An installed model's filename or a numeric index from the last search or list run.",
+      "One or more installed filenames, remote repository/file references, or numbers from the last search or list run.",
     ],
 
     exampleCaptions: [
       "Full detail for one installed model.",
       "The same fields as JSON.",
       "By the number the last search or list run printed.",
+      "Example of comparing two models. Replace the filenames with the packages you want to inspect.",
     ],
 
     captureFootnote:
-      "Real omm info qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-08-24, this dev machine.",
+      "Real omm info qwen2.5-0.5b-instruct-q4_k_m.gguf capture, 2026-08-24, this dev machine, from an older version. The current memory-fit card is provided by omm fit.",
 
     trouble: [
       {
