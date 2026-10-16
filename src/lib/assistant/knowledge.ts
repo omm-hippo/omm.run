@@ -4,6 +4,8 @@ import {
 } from "../../components/commands/commands";
 import { COMMAND_ORDER, type Slug } from "../../i18n/commands/base";
 import type { Locale } from "../../i18n/config";
+import { getEntry, ownOptions, subEntries } from "../commands/reference";
+import { COMMAND_IDS, REFERENCE_ONLY_IDS, type CommandId } from "./catalog";
 import { ASSISTANT_LIMITS, type Candidate } from "./types";
 
 const LATIN_STOP_WORDS = new Set([
@@ -61,11 +63,21 @@ function tokens(value: string): readonly string[] {
   return [...result];
 }
 
+/** One command as the ranker and Workers AI see it, whatever its source. */
+type SearchDoc = {
+  readonly id: CommandId;
+  readonly name: string;
+  readonly summary: string;
+  /** Weighted 4 / 2 / 1: identity and summary, options and examples, the rest. */
+  readonly sections: readonly [string, string, string];
+  readonly context: string;
+};
+
 function searchableSections(
   slug: Slug,
   locale: Locale,
   summary: string,
-): readonly string[] {
+): readonly [string, string, string] {
   const command = getCommand(slug, locale);
   return [
     [command.name, summary, command.lede, command.overviewBody].join(" "),
@@ -90,6 +102,59 @@ function candidateContext(command: ReturnType<typeof getCommand>): string {
     .slice(0, 2)
     .map((example) => `${example.command} — ${example.caption}`);
   return [...trouble, ...examples].join(" | ").slice(0, 360);
+}
+
+/**
+ * A command the CLI exports but the site has no hand-written page for. Its
+ * text is the CLI's own `--help` wording (English only, never translated —
+ * see `src/lib/commands/reference.ts`), so a Korean question reaches it
+ * through the command name, an intent boost, or Workers AI rather than
+ * token overlap.
+ */
+function referenceDoc(name: string): SearchDoc | null {
+  const entry = getEntry(name);
+  if (!entry) return null;
+  const subs = subEntries(name);
+  const description = entry.description.replace(/`/gu, "").replace(/\s+/gu, " ").trim();
+  return {
+    id: name,
+    name: `omm ${name}`,
+    summary: entry.summary,
+    sections: [
+      [name, entry.summary, description].join(" "),
+      [
+        ...ownOptions(entry).flatMap((option) => [...option.flags, option.help]),
+        ...entry.arguments.flatMap((argument) => [argument.name, argument.help]),
+      ].join(" "),
+      subs.flatMap((sub) => [sub.path.join(" "), sub.summary]).join(" "),
+    ],
+    context: [description, ...subs.map((sub) => `${sub.path.join(" ")} — ${sub.summary}`)]
+      .filter(Boolean)
+      .join(" | ")
+      .slice(0, 360),
+  };
+}
+
+function searchDocs(locale: Locale): readonly SearchDoc[] {
+  const summaryBySlug = new Map(
+    getCommandLinks(locale).map((link) => [link.slug, link.summary]),
+  );
+  const handWritten = COMMAND_ORDER.map((slug): SearchDoc => {
+    const command = getCommand(slug, locale);
+    const summary = summaryBySlug.get(slug) ?? "";
+    return {
+      id: slug,
+      name: command.name,
+      summary,
+      sections: searchableSections(slug, locale, summary),
+      context: candidateContext(command),
+    };
+  });
+  const referenceOnly = REFERENCE_ONLY_IDS.flatMap((name) => {
+    const doc = referenceDoc(name);
+    return doc ? [doc] : [];
+  });
+  return [...handWritten, ...referenceOnly];
 }
 
 function sectionScore(queryTokens: readonly string[], value: string, weight: number): number {
@@ -172,9 +237,9 @@ const BOOST_RULES = [
   },
 ] as const satisfies readonly BoostRule[];
 
-function intentBoosts(question: string): ReadonlyMap<Slug, number> {
+function intentBoosts(question: string): ReadonlyMap<CommandId, number> {
   const normalized = normalize(question);
-  const merged = new Map<Slug, number>();
+  const merged = new Map<CommandId, number>();
   for (const rule of BOOST_RULES) {
     if (!rule.when.test(normalized)) continue;
     for (const [slug, value] of rule.boosts) {
@@ -184,9 +249,9 @@ function intentBoosts(question: string): ReadonlyMap<Slug, number> {
   return merged;
 }
 
-export function explicitCommand(question: string): Slug | null {
+export function explicitCommand(question: string): CommandId | null {
   const normalized = normalize(question);
-  for (const slug of COMMAND_ORDER) {
+  for (const slug of COMMAND_IDS) {
     const pattern = new RegExp(`(?:^|\\s)omm\\s+${slug}(?:\\s|$)`, "u");
     if (pattern.test(normalized)) return slug;
   }
@@ -207,31 +272,57 @@ export function needsOpenAiModelClarification(question: string): boolean {
   return mentionsOpenAi && !namesOpenWeightModel;
 }
 
+/** Every selectable command, unranked, in catalog order. */
+export function allCandidates(locale: Locale): readonly Candidate[] {
+  return searchDocs(locale).map((doc) => ({
+    id: doc.id,
+    name: doc.name,
+    summary: doc.summary,
+    context: doc.context,
+    score: 0,
+  }));
+}
+
+/**
+ * What Workers AI chooses from: every command, so the token-overlap ranker
+ * can no longer drop the right one before the model sees it. Only the
+ * ranker's top few keep their symptom/example context; the rest carry just
+ * the one-line summary, which keeps the prompt near twice the old size
+ * instead of five times.
+ */
+export function modelCandidates(
+  narrowed: readonly Candidate[],
+  locale: Locale,
+): readonly Candidate[] {
+  const detailed = narrowed.slice(0, ASSISTANT_LIMITS.detailedCandidates);
+  const detailedIds = new Set(detailed.map(({ id }) => id));
+  return [
+    ...detailed,
+    ...allCandidates(locale)
+      .filter(({ id }) => !detailedIds.has(id))
+      .map((candidate) => ({ ...candidate, context: "" })),
+  ];
+}
+
 export function narrowCandidates(question: string, locale: Locale): readonly Candidate[] {
   const queryTokens = tokens(question);
   if (queryTokens.length === 0) return [];
 
-  const summaryBySlug = new Map(
-    getCommandLinks(locale).map((link) => [link.slug, link.summary]),
-  );
   const boosts = intentBoosts(question);
 
-  const ranked = COMMAND_ORDER.map((slug) => {
-    const command = getCommand(slug, locale);
-    const summary = summaryBySlug.get(slug) ?? "";
-    const sections = searchableSections(slug, locale, summary);
-    let score = boosts.get(slug) ?? 0;
+  const ranked = searchDocs(locale).map((doc) => {
+    let score = boosts.get(doc.id) ?? 0;
 
-    if (queryTokens.includes(slug)) score += 30;
-    score += sectionScore(queryTokens, sections[0], 4);
-    score += sectionScore(queryTokens, sections[1], 2);
-    score += sectionScore(queryTokens, sections[2], 1);
+    if (queryTokens.includes(doc.id)) score += 30;
+    score += sectionScore(queryTokens, doc.sections[0], 4);
+    score += sectionScore(queryTokens, doc.sections[1], 2);
+    score += sectionScore(queryTokens, doc.sections[2], 1);
 
     return {
-      id: slug,
-      name: command.name,
-      summary,
-      context: candidateContext(command),
+      id: doc.id,
+      name: doc.name,
+      summary: doc.summary,
+      context: doc.context,
       score,
     };
   })

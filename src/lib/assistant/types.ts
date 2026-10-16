@@ -1,5 +1,5 @@
 import { isLocale as isSiteLocale, type Locale } from "../../i18n/config";
-import type { Slug } from "../../i18n/commands/base";
+import type { CommandId } from "./catalog";
 
 export const ASSISTANT_LIMITS = {
   maxBodyCharacters: 2_048,
@@ -7,6 +7,7 @@ export const ASSISTANT_LIMITS = {
   maxQuestionCharacters: 480,
   maxTurns: 3,
   maxCandidates: 8,
+  detailedCandidates: 4,
   maxSuggestions: 3,
   maxCompletionTokens: 48,
   inferenceTimeoutMs: 5_000,
@@ -14,7 +15,7 @@ export const ASSISTANT_LIMITS = {
   clientRequestsPerWindow: 10,
   dailyRequests: 200,
   cacheSeconds: 15 * 60,
-  cacheNamespace: "assistant-v2",
+  cacheNamespace: "assistant-v3",
 } as const;
 
 export type AssistantSource = "workers-ai" | "deterministic";
@@ -44,12 +45,12 @@ export type AssistantResponse = {
   readonly kind: AssistantKind;
   readonly source: AssistantSource;
   readonly reason: AssistantReason;
-  readonly commandId: Slug | null;
-  readonly candidateIds: readonly Slug[];
+  readonly commandId: CommandId | null;
+  readonly candidateIds: readonly CommandId[];
 };
 
 export type Candidate = {
-  readonly id: Slug;
+  readonly id: CommandId;
   readonly name: string;
   readonly summary: string;
   /** A few lines of symptom→fix and example captions from the static docs,
@@ -59,7 +60,7 @@ export type Candidate = {
 };
 
 export type ModelSelection =
-  | { readonly action: "command"; readonly commandId: Slug }
+  | { readonly action: "command"; readonly commandId: CommandId }
   | { readonly action: "clarify"; readonly commandId: null };
 
 export function isLocale(value: unknown): value is Locale {

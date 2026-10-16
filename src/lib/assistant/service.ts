@@ -1,5 +1,5 @@
-import type { Slug } from "../../i18n/commands/base";
 import type { AssistantStore } from "./budget";
+import type { CommandId } from "./catalog";
 import {
   explicitCommand,
   narrowCandidates,
@@ -31,8 +31,8 @@ export type AssistantDependencies = {
 function response(
   kind: AssistantResponse["kind"],
   reason: AssistantReason,
-  candidateIds: readonly Slug[],
-  commandId: Slug | null = null,
+  candidateIds: readonly CommandId[],
+  commandId: CommandId | null = null,
   source: AssistantResponse["source"] = "deterministic",
 ): AssistantResponse {
   return {
@@ -46,7 +46,7 @@ function response(
 
 function fromSelection(
   selection: ModelSelection,
-  candidates: readonly Slug[],
+  candidates: readonly CommandId[],
   source: AssistantResponse["source"],
 ): AssistantResponse {
   if (selection.action === "command") {
