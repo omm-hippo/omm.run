@@ -80,3 +80,10 @@ test("leaderboard components use palette tokens only (DIRECTION.md §5.4)", () =
     assert.doesNotMatch(source, /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/u, file);
   }
 });
+
+test("heatmap cells resting on too few battles are not painted as wins", () => {
+  const thin = { ...ranked, pairs: ranked.pairs.map((p) => ({ ...p, battles: 3 })) };
+  const html = renderToStaticMarkup(createElement(Analysis, { artifact: thin, scope: thin, scopeKey: "overall", locale: "ko" }));
+  const heat = html.slice(html.indexOf("02 · 맞대결"), html.indexOf("03 · 품질"));
+  assert.doesNotMatch(heat, /bg-accent\//u);
+});

@@ -3,7 +3,7 @@ import { leaderboardDictionary, type LeaderboardDictionary } from "@/i18n/leader
 import { rankMatrix, scatterPoints, winRates, type WinCell } from "@/lib/leaderboard/charts";
 import { groupLabel } from "@/lib/leaderboard/groups";
 import type { ArenaArtifact, Scope } from "@/lib/leaderboard/types";
-import { modelName } from "@/lib/leaderboard/view";
+import { MIN_PAIR_BATTLES, modelName } from "@/lib/leaderboard/view";
 
 import { Label } from "./Hero";
 
@@ -164,8 +164,10 @@ function Row({
   );
 }
 
-function heatClass(rate: number | null): string {
+function heatClass(rate: number | null, battles: number): string {
   if (rate === null) return "border border-dashed border-line-1";
+  // Too few battles to call a winner: show the number, but never as a win.
+  if (battles < MIN_PAIR_BATTLES) return "bg-bg-1 text-ink-3";
   if (rate >= 0.8) return "bg-accent/80 font-bold text-accent-ink";
   if (rate >= 0.7) return "bg-accent/60 font-bold text-accent-ink";
   if (rate >= 0.6) return "bg-accent/40 text-ink-0";
@@ -195,7 +197,7 @@ function HeatRow({
         ) : (
           <div
             key={index}
-            className={`rounded-sm py-3 text-center ${heatClass(cell.rate)}`}
+            className={`rounded-sm py-3 text-center ${heatClass(cell.rate, cell.battles)}`}
             title={cell.rate === null ? undefined : t.heatCell(rowName, name(cell.col), Math.round(cell.rate * 100), cell.battles)}
           >
             {cell.rate === null ? "" : Math.round(cell.rate * 100)}

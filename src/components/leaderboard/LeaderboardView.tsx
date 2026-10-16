@@ -50,18 +50,22 @@ export default function LeaderboardView({
   const navCurrent = view.fellBack ? view.requested : view.key;
 
   if (state.kind === "collecting" || !view.scope.ranked) {
+    // Nothing ranked is shown, so the date is when these counts were taken.
+    const someGroupRanked = artifact.groups.some((group) => group.ranked);
     return (
       <>
         <div className={wrap}>
-          <Hero t={t} artifact={artifact} example={state.example} />
+          <Hero t={t} artifact={artifact} updatedAt={artifact.generated_at} example={state.example} />
         </div>
         <div className="border-t border-line-0" />
         <div className={wrap}>
           <div className="mt-6 mb-24 grid grid-cols-[minmax(0,1fr)] overflow-hidden rounded-lg border border-line-1 bg-bg-1 lg:grid-cols-[208px_minmax(0,1fr)]">
             <ScopeNav t={t} locale={locale} artifact={artifact} current={navCurrent} />
             <section className="min-w-0 p-6">
-              <h2 className="text-[22px] font-semibold text-ink-0">{t.collectingTitle}</h2>
-              <p className="mt-3 max-w-[60ch] text-ink-2">{t.collectingBody}</p>
+              <h2 className="text-[22px] font-semibold text-ink-0">
+                {someGroupRanked ? t.scopeThinTitle : t.collectingTitle}
+              </h2>
+              <p className="mt-3 max-w-[60ch] text-ink-2">{someGroupRanked ? t.scopeThinBody : t.collectingBody}</p>
               <div className="mt-6 max-w-[320px]">
                 <CopyCommand command="omm arena" copyLabel={t.copy} copiedLabel={t.copied} variant="button" />
               </div>
@@ -78,7 +82,7 @@ export default function LeaderboardView({
   return (
     <>
       <div className={wrap}>
-        <Hero t={t} artifact={artifact} example={state.example} />
+        <Hero t={t} artifact={artifact} updatedAt={view.scope.updated_at} example={state.example} />
       </div>
       <div className="border-t border-line-0" />
       <div className={wrap}>

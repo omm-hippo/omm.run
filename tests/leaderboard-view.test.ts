@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { createElement } from "react";
@@ -149,4 +149,27 @@ test("English copy renders on the en locale", () => {
 test("the ranked page includes the analysis; collecting does not", () => {
   assert.match(render({ kind: "ranked", artifact: artifact("ranked") }), /순위 뒤의 숫자/);
   assert.doesNotMatch(render({ kind: "collecting", artifact: artifact("collecting") }), /순위 뒤의 숫자/);
+});
+
+test("the hero date is the shown scope's updated_at, not the run time", () => {
+  const data = artifact("ranked");
+  const kept = { ...data, generated_at: "2026-11-30T04:00:00+00:00", updated_at: "2026-10-01T04:00:00+00:00" };
+  const html = render({ kind: "ranked", artifact: kept });
+  assert.match(html, /2026-10-01 04:00 UTC/);
+  assert.doesNotMatch(html, /2026-11-30/);
+});
+
+test("an unranked scope while a group is ranked says to pick a ranked group", () => {
+  const data = artifact("ranked");
+  const overallThin = { ...data, ranked: false, models: [], tiers: [], pairs: [], provisional_models: [] };
+  const html = render({ kind: "ranked", artifact: overallThin });
+  assert.match(html, /순위가 공개된 구간을 고르세요/);
+  assert.doesNotMatch(html, /충분히 많은 기기에서 투표가 모이면/);
+});
+
+test("no leaderboard component uses box-shadow utilities (DIRECTION §5.5)", () => {
+  const directory = path.join(__dirname, "..", "src", "components", "leaderboard");
+  for (const file of readdirSync(directory)) {
+    assert.doesNotMatch(readFileSync(path.join(directory, file), "utf8"), /shadow-/u, file);
+  }
 });

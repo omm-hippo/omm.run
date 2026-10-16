@@ -126,3 +126,39 @@ test("group labels mirror omm's memory_group.display_label", () => {
   assert.equal(groupFamily("unified:16"), "unified");
   assert.equal(groupFamily("vram:7"), "unknown");
 });
+
+test("a live signature failure falls back to the last verified copy in the store", async () => {
+  const { resolveBoard } = await import("../src/lib/leaderboard/source");
+  const { raw, manifest } = fixture("ranked");
+  const entries = new Map<string, Response>();
+  const store = {
+    match: async (request: Request) => entries.get(request.url)?.clone(),
+    put: async (request: Request, response: Response) => void entries.set(request.url, response),
+  };
+  const good = await resolveBoard({ fetcher: served(publish(raw, manifest)), store, publicKey: TEST_KEY, now: 0 });
+  assert.equal(good.kind, "ranked");
+  const tampered = new TextEncoder().encode(new TextDecoder().decode(raw).replace('"ranked"', '"rankeD"'));
+  // Past the short cache: the live pair is fetched again and fails.
+  const later = await resolveBoard({ fetcher: served(publish(tampered, manifest)), store, publicKey: TEST_KEY, now: 3_600_000 });
+  assert.equal(later.kind, "ranked");
+  const empty = { match: async () => undefined, put: async () => {} };
+  const none = await resolveBoard({ fetcher: served(publish(tampered, manifest)), store: empty, publicKey: TEST_KEY, now: 0 });
+  assert.deepEqual(none, { kind: "error", reason: "verification" });
+});
+
+test("a short-cache hit that no longer verifies is a miss", async () => {
+  const { resolveBoard } = await import("../src/lib/leaderboard/source");
+  const { raw, manifest } = fixture("ranked");
+  const entries = new Map<string, Response>();
+  const store = {
+    match: async (request: Request) => entries.get(request.url)?.clone(),
+    put: async (request: Request, response: Response) => void entries.set(request.url, response),
+  };
+  await resolveBoard({ fetcher: served(publish(raw, manifest)), store, publicKey: TEST_KEY, now: 0 });
+  for (const [url, response] of entries) {
+    const body = (await response.clone().text()).replace("ranked", "rankeD");
+    entries.set(url, new Response(body));
+  }
+  const state = await resolveBoard({ fetcher: served({}), store, publicKey: TEST_KEY, now: 1000 });
+  assert.deepEqual(state, { kind: "error", reason: "unavailable" });
+});

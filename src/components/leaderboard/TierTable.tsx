@@ -93,7 +93,7 @@ function Row({
   const background = on ? (top ? "bg-accent-line/40" : "bg-bg-3") : top ? "bg-accent-wash" : "";
   return (
     <tr className={`border-t border-line-0 ${background}`}>
-      <td className={`px-3 py-2.5 ${top ? "shadow-[inset_2px_0_0_var(--accent)]" : ""}`}>
+      <td className={`border-l-2 px-3 py-2.5 ${top ? "border-accent" : "border-transparent"}`}>
         <a href={scopeHref(scopeKey, model.key)} className="block hover:underline">
           <span className={`block font-sans leading-[1.3] text-ink-0 ${top ? "text-[17px] font-semibold" : "text-[15px] font-medium"}`}>
             {name}

@@ -14,13 +14,17 @@ export function Label({ children, className = "" }: { children: React.ReactNode;
 export default function Hero({
   t,
   artifact,
+  updatedAt,
   example,
 }: {
   t: LeaderboardDictionary;
   artifact?: ArenaArtifact;
+  /** When the shown ranking last changed (its scope's `updated_at`); a kept
+   *  board can be much older than the run that last touched the file. */
+  updatedAt?: string | null;
   example?: boolean;
 }) {
-  const updated = artifact ? formatUpdated(artifact.generated_at) : null;
+  const updated = formatUpdated(updatedAt ?? null);
   return (
     <section className="grid grid-cols-[minmax(0,1fr)] items-end gap-8 pt-10 pb-8 md:pt-16 lg:grid-cols-[7fr_5fr] lg:gap-12">
       <div>

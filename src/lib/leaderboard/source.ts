@@ -113,13 +113,13 @@ export async function loadBoard({
   return decide(fetched.raw, fetched.manifestRaw, publicKey);
 }
 
-type EdgeCache = {
+export type BoardStore = {
   match(request: Request): Promise<Response | undefined>;
   put(request: Request, response: Response): Promise<void>;
 };
 
-function edgeCache(): EdgeCache | null {
-  const store = (globalThis as { caches?: { default?: EdgeCache } }).caches;
+function edgeCache(): BoardStore | null {
+  const store = (globalThis as { caches?: { default?: BoardStore } }).caches;
   return store?.default ?? null;
 }
 
@@ -131,6 +131,77 @@ async function runAfterResponse(promise: Promise<unknown>): Promise<void> {
   } catch {
     await settled;
   }
+}
+
+/** Short cache: steady state is one GitHub round trip per colo per TTL. */
+const SHORT_KEY = "https://omm.run/__cache/arena-leaderboard-v2";
+/** The last pair that verified, kept for a week. Right after a nightly
+ *  publish the raw CDN can serve the new artifact next to the old manifest
+ *  for a few minutes; that must show yesterday's verified board, not an
+ *  error that reads like tampering. */
+const LAST_GOOD_KEY = "https://omm.run/__cache/arena-leaderboard-v2-last-good";
+const LAST_GOOD_TTL_SECONDS = 7 * 24 * 3600;
+
+type Stored = { artifact: string; manifest: string; at: number };
+
+async function readStored(store: BoardStore, key: string, publicKey: string): Promise<{ state: BoardState; at: number } | null> {
+  try {
+    const hit = await store.match(new Request(key));
+    if (!hit) return null;
+    const stored = (await hit.json()) as Stored;
+    const encoder = new TextEncoder();
+    const state = await decide(encoder.encode(stored.artifact), encoder.encode(stored.manifest), publicKey);
+    return state.kind === "error" ? null : { state, at: stored.at };
+  } catch {
+    // A failed or unverifiable cache read is a miss.
+    return null;
+  }
+}
+
+function storedResponse(raw: Uint8Array, manifestRaw: Uint8Array, at: number, ttl: number): Response {
+  const decoder = new TextDecoder();
+  const body: Stored = { artifact: decoder.decode(raw), manifest: decoder.decode(manifestRaw), at };
+  return new Response(JSON.stringify(body), {
+    headers: { "content-type": "application/json", "cache-control": `s-maxage=${ttl}` },
+  });
+}
+
+/**
+ * The board for one request, given a cache store. Every cached pair is
+ * re-verified on read; unverified bytes are never stored or returned.
+ */
+export async function resolveBoard({
+  fetcher = fetch,
+  store,
+  publicKey = ARENA_PUBLIC_KEY,
+  now = Date.now(),
+  defer = (promise: Promise<unknown>) => promise.then(() => {}),
+}: {
+  fetcher?: typeof fetch;
+  store: BoardStore;
+  publicKey?: string;
+  now?: number;
+  defer?: (promise: Promise<unknown>) => Promise<void>;
+}): Promise<BoardState> {
+  const short = await readStored(store, SHORT_KEY, publicKey);
+  if (short && now - short.at < EDGE_CACHE_TTL_SECONDS * 1000) return short.state;
+
+  const lastGood = async (fallback: BoardState) =>
+    (await readStored(store, LAST_GOOD_KEY, publicKey))?.state ?? fallback;
+
+  const fetched = await fetchPair(fetcher, ARTIFACT_URL, MANIFEST_URL);
+  if ("kind" in fetched) return fetched.kind === "unpublished" ? fetched : lastGood(fetched);
+  const state = await decide(fetched.raw, fetched.manifestRaw, publicKey);
+  if (state.kind === "error") return state.reason === "verification" ? lastGood(state) : state;
+  if (fetched.manifestRaw) {
+    await defer(
+      Promise.all([
+        store.put(new Request(SHORT_KEY), storedResponse(fetched.raw, fetched.manifestRaw, now, EDGE_CACHE_TTL_SECONDS)),
+        store.put(new Request(LAST_GOOD_KEY), storedResponse(fetched.raw, fetched.manifestRaw, now, LAST_GOOD_TTL_SECONDS)),
+      ]),
+    );
+  }
+  return state;
 }
 
 /** Dev-only preview of the signed test fixtures (never in production). */
@@ -147,40 +218,11 @@ async function fixtureBoard(): Promise<BoardState | null> {
   return state.kind === "ranked" || state.kind === "collecting" ? { ...state, example: true } : state;
 }
 
-const CACHE_KEY = "https://omm.run/__cache/arena-leaderboard-v2";
-
 /** The verified board for this request. `React.cache` dedupes within a render. */
 export const fetchBoard = cache(async (): Promise<BoardState> => {
   const fixture = await fixtureBoard();
   if (fixture) return fixture;
-
   const store = edgeCache();
-  const key = new Request(CACHE_KEY);
-  if (store) {
-    try {
-      const hit = await store.match(key);
-      if (hit) {
-        const { artifact, manifest } = (await hit.json()) as { artifact: string; manifest: string };
-        const encoder = new TextEncoder();
-        const state = await decide(encoder.encode(artifact), encoder.encode(manifest), ARENA_PUBLIC_KEY);
-        if (state.kind !== "error") return state;
-      }
-    } catch {
-      // A failed or unverifiable cache read is a miss.
-    }
-  }
-
-  const fetched = await fetchPair(fetch, ARTIFACT_URL, MANIFEST_URL);
-  if ("kind" in fetched) return fetched;
-  const { raw, manifestRaw } = fetched;
-  const state = await decide(raw, manifestRaw, ARENA_PUBLIC_KEY);
-  if (store && state.kind !== "error" && manifestRaw) {
-    const decoder = new TextDecoder();
-    const entry = new Response(
-      JSON.stringify({ artifact: decoder.decode(raw), manifest: decoder.decode(manifestRaw) }),
-      { headers: { "content-type": "application/json", "cache-control": `s-maxage=${EDGE_CACHE_TTL_SECONDS}` } },
-    );
-    await runAfterResponse(store.put(key, entry));
-  }
-  return state;
+  if (!store) return loadBoard();
+  return resolveBoard({ store, defer: runAfterResponse });
 });
