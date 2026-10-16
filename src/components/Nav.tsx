@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import {
   LOCALES,
@@ -15,30 +15,86 @@ import {
   type Locale,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from "@/i18n/detect";
 import { publishedVersion, PYPI_RELEASE_URL } from "@/lib/site-metadata";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
-/** Main can be ahead of release. Show only PyPI's confirmed package version. */
-function useLiveVersion(): string | null {
-  const [version, setVersion] = useState<string | null>(null);
+const VERSION_STORAGE_KEY = "omm:pypi-version";
+const VERSION_TTL_MS = 6 * 60 * 60 * 1000;
 
-  useEffect(() => {
-    const controller = new AbortController();
+/* Every section has its own layout, so Nav remounts on each page change.
+   Module state outlives the remount and localStorage outlives the tab: the
+   badge renders at once and subscribers re-render only when it changes. */
+let version: string | null = null;
+let fetchedAt = 0;
+let hydratedFromStorage = false;
+let inflight = false;
+const listeners = new Set<() => void>();
 
-    fetch(PYPI_RELEASE_URL, { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
-      .then((data: unknown) => {
-        if (!controller.signal.aborted) setVersion(publishedVersion(data));
-      })
-      .catch(() => {
-        // A missing badge is preferable to claiming an unverified version.
-      });
+function loadStoredVersion() {
+  if (hydratedFromStorage) return;
+  hydratedFromStorage = true;
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(VERSION_STORAGE_KEY) ?? "null");
+    if (typeof stored === "object" && stored !== null && "v" in stored && "t" in stored) {
+      const { v, t } = stored;
+      // Storage is user-writable: accept only the exact shape we write.
+      if (typeof v === "string" && /^v\d+\.\d+\.\d+$/u.test(v) && typeof t === "number") {
+        version = v;
+        fetchedAt = t;
+      }
+    }
+  } catch {
+    // Storage can be blocked; fall back to fetching.
+  }
+}
 
-    return () => controller.abort();
-  }, []);
+function refreshVersion() {
+  loadStoredVersion();
+  if (inflight || Date.now() - fetchedAt < VERSION_TTL_MS) return;
+  inflight = true;
+  fetch(PYPI_RELEASE_URL)
+    .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+    .then((data: unknown) => {
+      // Main can be ahead of release. Show only PyPI's confirmed package version.
+      const next = publishedVersion(data);
+      if (next === null) return;
+      fetchedAt = Date.now();
+      try {
+        localStorage.setItem(VERSION_STORAGE_KEY, JSON.stringify({ v: next, t: fetchedAt }));
+      } catch {
+        // Not persisting only costs one refetch on the next visit.
+      }
+      if (next !== version) {
+        version = next;
+        listeners.forEach((notify) => notify());
+      }
+    })
+    .catch(() => {
+      // A missing badge is preferable to claiming an unverified version.
+    })
+    .finally(() => {
+      inflight = false;
+    });
+}
 
+function subscribeVersion(notify: () => void) {
+  listeners.add(notify);
+  refreshVersion();
+  return () => {
+    listeners.delete(notify);
+  };
+}
+
+function getVersionSnapshot(): string | null {
+  loadStoredVersion();
   return version;
+}
+
+function useLiveVersion(): string | null {
+  // The server snapshot is null so hydration matches the prerendered HTML.
+  return useSyncExternalStore(subscribeVersion, getVersionSnapshot, () => null);
 }
 
 /** Section ids are owned by the other section components. */
@@ -86,7 +142,11 @@ function LanguageToggle({
             hrefLang={HTML_LANG[candidate]}
             aria-current={active ? "true" : undefined}
             title={LOCALE_NAME[candidate]}
-            onClick={(event) => updateHref(event.currentTarget, candidate)}
+            onClick={(event) => {
+              // Remember the pick so browser-language detection does not override it.
+              document.cookie = `${LOCALE_COOKIE}=${candidate}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
+              updateHref(event.currentTarget, candidate);
+            }}
             onAuxClick={(event) => updateHref(event.currentTarget, candidate)}
             onContextMenu={(event) => updateHref(event.currentTarget, candidate)}
             className={`text-label rounded-md border-b-2 px-2.5 py-1.5 transition-colors duration-[120ms] ease-[var(--ease-micro)] ${
@@ -139,7 +199,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           ) : null}
         </Link>
 
-        <nav className="ml-6 hidden items-center gap-4 lg:flex">
+        <nav className="ml-8 hidden items-center gap-6 xl:flex">
           {SECTION_HREFS.map((href, index) => (
             <a key={href} href={localeHref(href, locale)} className={LINK}>
               {t.sections[index]}
@@ -162,7 +222,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           </Link>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-4 lg:flex">
+        <div className="ml-auto hidden items-center gap-6 xl:flex">
           <a href={REPO} className={LINK} target="_blank" rel="noreferrer">
             {t.github}
           </a>
@@ -181,7 +241,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           aria-expanded={open}
           aria-controls="nav-panel"
           onClick={() => setOpen((v) => !v)}
-          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 lg:hidden"
+          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 xl:hidden"
         >
           {open ? t.close : t.menu}
         </button>
@@ -189,7 +249,7 @@ export default function Nav({ locale }: { locale: Locale }) {
 
       {/* Mobile: plain full-width panel. No slide, no hamburger morph. */}
       {open ? (
-        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 lg:hidden">
+        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 xl:hidden">
           <nav className="mx-auto flex max-w-page flex-col px-5 py-2">
             {SECTION_HREFS.map((href, index) => (
               <a

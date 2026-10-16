@@ -44,17 +44,53 @@ test("switching language preserves the current page, query and fragment", () => 
   assert.equal(switchLocalePath("/en?q=gemma#results", "ko"), "/?q=gemma#results");
 });
 
-test("unprefixed pages rewrite to Korean despite English browser settings and old cookies", () => {
+test("unprefixed pages rewrite to Korean for Korean, unknown and crawler visitors", () => {
+  const cases: Array<Record<string, string>> = [
+    {},
+    { "accept-language": "ko-KR,ko;q=0.9,en;q=0.8" },
+    { "accept-language": "en-US,en;q=0.9,ko;q=0.5" },
+    { "accept-language": "en-US,en;q=0.9", "cf-ipcountry": "KR" },
+    { "accept-language": "en-US", cookie: "omm-locale=ko" },
+    { "accept-language": "en-US", "user-agent": "Mozilla/5.0 (compatible; Googlebot/2.1)" },
+  ];
   for (const path of ["/", "/commands", "/install/windows", "/models/qwen3-8-27b", "/assistant"]) {
-    const response = middleware(new NextRequest(`https://example.test${path}?q=설치`, {
-      headers: { "accept-language": "en-US,en;q=0.9", cookie: "omm_locale=en" },
-    }));
-    const rewrite = new URL(response.headers.get("x-middleware-rewrite")!);
-    assert.equal(rewrite.pathname, path === "/" ? "/ko" : `/ko${path}`);
-    assert.equal(rewrite.searchParams.get("q"), "설치");
-    assert.equal(response.headers.get("location"), null);
-    assert.equal(response.headers.get("x-middleware-request-x-omm-internal-locale-rewrite"), "1");
+    for (const headers of cases) {
+      const response = middleware(new NextRequest(`https://example.test${path}?q=설치`, { headers }));
+      const rewrite = new URL(response.headers.get("x-middleware-rewrite")!);
+      assert.equal(rewrite.pathname, path === "/" ? "/ko" : `/ko${path}`, JSON.stringify(headers));
+      assert.equal(rewrite.searchParams.get("q"), "설치");
+      assert.equal(response.headers.get("location"), null);
+      assert.equal(response.headers.get("x-middleware-request-x-omm-internal-locale-rewrite"), "1");
+    }
   }
+});
+
+test("non-Korean browsers and regions are sent to /en unless they chose Korean", () => {
+  const english: Array<Record<string, string>> = [
+    { "accept-language": "en-US,en;q=0.9" },
+    { "accept-language": "ja,en;q=0.8" },
+    { "accept-language": "ko;q=0,en" },
+    { "cf-ipcountry": "US" },
+    { cookie: "omm-locale=en" },
+  ];
+  for (const path of ["/", "/commands", "/install/windows"]) {
+    for (const headers of english) {
+      const response = middleware(new NextRequest(`https://example.test${path}?q=x`, { headers }));
+      assert.equal(response.status, 307, JSON.stringify(headers));
+      const redirect = new URL(response.headers.get("location")!);
+      assert.equal(redirect.pathname, path === "/" ? "/en" : `/en${path}`);
+      assert.equal(redirect.search, "?q=x");
+      assert.equal(response.headers.get("x-middleware-rewrite"), null);
+    }
+  }
+});
+
+test("an explicit /ko link records the choice so detection does not undo it", () => {
+  const response = middleware(new NextRequest("https://example.test/ko/commands", {
+    headers: { "accept-language": "en-US" },
+  }));
+  assert.equal(response.status, 308);
+  assert.match(response.headers.get("set-cookie") ?? "", /omm-locale=ko/u);
 });
 
 test("legacy /ko links redirect to the public Korean page without losing query or fragment", () => {

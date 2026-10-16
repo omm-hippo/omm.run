@@ -1,11 +1,20 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { DEFAULT_LOCALE, canonicalPath, isLocale, type Locale } from "@/i18n/config";
+import {
+  LOCALE_COOKIE,
+  LOCALE_COOKIE_MAX_AGE,
+  detectLocale,
+  isCrawler,
+} from "@/i18n/detect";
 
 /**
- * Korean-default routing, independent of browser language and old cookies.
+ * Korean-default routing. An unprefixed path goes to English only when the
+ * visitor's saved choice, browser languages or region point away from Korean
+ * (see `detectLocale`); crawlers and non-GET requests always get Korean.
  *
  *   `/install/windows`     → rewritten to `/ko/install/windows` (URL unchanged)
+ *                            or 307 to `/en/install/windows` for non-Korean visitors
  *   `/en/install/windows`  → served in English
  *   `/ko/install/windows`  → 308 to `/install/windows`
  */
@@ -44,10 +53,35 @@ export function middleware(request: NextRequest) {
   if (first === DEFAULT_LOCALE) {
     const url = request.nextUrl.clone();
     url.pathname = canonicalPath(pathname);
-    return NextResponse.redirect(url, 308);
+    const response = NextResponse.redirect(url, 308);
+    /* An explicit /ko link is a choice: keep auto-detection from undoing it. */
+    response.cookies.set(LOCALE_COOKIE, DEFAULT_LOCALE, {
+      path: "/",
+      maxAge: LOCALE_COOKIE_MAX_AGE,
+      sameSite: "lax",
+    });
+    return response;
   }
 
   if (isLocale(first)) return NextResponse.next();
+
+  const locale =
+    request.method === "GET" && !isCrawler(request.headers.get("user-agent"))
+      ? detectLocale({
+          cookie: request.cookies.get(LOCALE_COOKIE)?.value,
+          acceptLanguage: request.headers.get("accept-language"),
+          country: request.headers.get("cf-ipcountry"),
+        })
+      : DEFAULT_LOCALE;
+
+  if (locale !== DEFAULT_LOCALE) {
+    const target = request.nextUrl.clone();
+    target.pathname = withPrefix(pathname, locale);
+    const response = NextResponse.redirect(target, 307);
+    response.headers.set("cache-control", "private, no-store");
+    response.headers.append("vary", "accept-language, cookie");
+    return response;
+  }
 
   const url = request.nextUrl.clone();
   url.pathname = withPrefix(pathname, DEFAULT_LOCALE);
