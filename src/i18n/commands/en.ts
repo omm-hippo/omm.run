@@ -1243,4 +1243,265 @@ export const COMMANDS_EN: CommandTextSet = {
       "Check what's actually installed before deciding what to export.",
     ],
   },
+  compare: {
+    metaTitle: "omm compare — line up catalog models before installing one",
+    metaDescription:
+      "Full reference for omm compare: its arguments and three flags, four examples, a real captured comparison, and the errors it actually prints.",
+    heading: "omm compare",
+    lede: "Put two to five models from the signed recommendation catalog side by side — predicted speed, estimated memory, install state — without downloading, installing or running any of them.",
+    summary: "Compare 2–5 catalog models side by side without installing or running them.",
+
+    overviewBody:
+      "Reach for compare when recommend or search has left you with a short list and you want the numbers next to each other before committing to a download. Each name must match exactly one package in the signed recommendation catalog — a name, repository, filename or install reference — and compare refuses to guess when a name is ambiguous or missing. Speed is predicted for this machine's hardware, memory is an estimate, and STATUS marks the best fit, the fastest, anything already installed or carrying a caution, and anything over the chosen memory profile's budget or below the speed floor. BEST FOR is what the model's publisher declared; add --for to get a separate MEASURED column from locally cached signed quality evidence, where a model with no evidence reads \"Not measured\", never zero. Its only network use is refreshing that signed catalog, and the last line says what it didn't do: compare never downloads, installs or runs a model.",
+
+    optionDescriptions: [
+      "Two to five exact model names, repositories, filenames or install references from the signed recommendation catalog.",
+      "Memory-sharing profile that sets the memory budget each model is checked against.",
+      "Add a MEASURED column for one task, from locally cached signed quality evidence.",
+      "Print the comparison as structured JSON instead of a table.",
+    ],
+
+    exampleCaptions: [
+      "Compare three catalog models on this machine.",
+      "Add measured Coding quality where cached evidence exists.",
+      "Check the same pair against the dedicated memory profile.",
+      "Get the comparison as JSON for a script.",
+    ],
+
+    captureFootnote:
+      "Real omm compare capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME at a 100-column terminal width. The catalog refresh line is real: a fresh home has no cached catalog, so compare fetched the signed one first. The speed and memory figures are this machine's real predictions; on hardware with more memory the two OVER BUDGET rows can read COMPATIBLE.",
+
+    trouble: [
+      {
+        why: "compare needs at least two models to compare, and takes at most five.",
+        fix: "Pass between two and five model names.",
+      },
+      {
+        why: "The name doesn't match any package in the signed recommendation catalog. compare only reads that catalog — it doesn't search HuggingFace or ModelScope.",
+        fix: "Use the exact name recommend shows, or find the model with omm search first.",
+      },
+      {
+        why: "Two of the names resolve to the same catalog package.",
+        fix: "Drop the duplicate, or pass two different models.",
+      },
+      {
+        why: "No signed catalog could be loaded — usually a first run with no network, so there is nothing cached to fall back on.",
+        fix: "Check your connection and run compare again.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Get a ranked shortlist to compare in the first place.",
+      "Install the model that came out on top.",
+    ],
+  },
+
+  evaluate: {
+    metaTitle: "omm evaluate — sandboxed Python coding tasks for one model",
+    metaDescription:
+      "Full reference for omm evaluate: its argument and three flags, three examples, a real captured run, and the errors it actually prints.",
+    heading: "omm evaluate",
+    lede: "Give one model that's already in Ollama a small, versioned pack of Python coding tasks, and run the code it writes only inside a locked-down Docker or Podman container.",
+    summary: "Score one Ollama model on Python coding tasks, run in a Docker or Podman sandbox.",
+
+    overviewBody:
+      "Reach for evaluate when you want to know whether a model can actually write working Python, not just how fast it is — benchmark's question. The built-in pack holds eight generation and repair tasks; every answer the model writes is tested inside a container with no network, a read-only workspace, a non-root user, dropped capabilities, bounded CPU and memory, and a time limit. Model-written code never runs on the host's own Python. Nothing is installed or started for you: evaluate needs Docker or Podman already running with omm's pinned sandbox image already pulled (it never pulls the image itself — the error prints the exact pull command), and Ollama already running with the model already installed. It loads the model to generate, and unloads it afterwards if it wasn't loaded before. Generated code is never stored or uploaded; --output writes only task outcomes and the exact model and pack identity. The pack is a small reproducibility check, not a leaderboard.",
+
+    optionDescriptions: [
+      "The Ollama tag of a model that's already installed in Ollama — not a registry filename.",
+      "Use a different versioned coding pack JSON. It must still use omm's reviewed sandbox image, pinned by digest.",
+      "Also write the structured evidence — outcomes and identity, no generated code — to this JSON file.",
+      "Print the full evidence as JSON instead of the summary table.",
+    ],
+
+    exampleCaptions: [
+      "Run the built-in coding pack against one Ollama model.",
+      "Run it and keep the evidence as a JSON file.",
+      "Get the evidence as JSON on stdout.",
+    ],
+
+    captureFootnote:
+      "Real omm evaluate capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME. Docker is installed here but its service wasn't running, so this is where the run stopped — the sandbox check comes before anything touches Ollama or the model. A completed run (a per-kind solved/tests table) wasn't captured, so none is shown here.",
+
+    trouble: [
+      {
+        why: "The docker (or podman) command exists, but its background service isn't answering — Docker Desktop isn't open, or the Podman machine isn't started.",
+        fix: "Start Docker Desktop or run podman machine start, wait for it to come up, then retry.",
+      },
+      {
+        why: "Neither docker nor podman is on PATH. evaluate never runs model-written code without a container.",
+        fix: "Install Docker or Podman, start it, then retry.",
+      },
+      {
+        why: "The pinned sandbox image isn't in your local image store, and evaluate never pulls images on its own.",
+        fix: "Run the exact pull command the message prints — it names your docker or podman path and the digest-pinned image — then retry.",
+      },
+      {
+        why: "evaluate only talks to an Ollama that's already running, and deliberately starts nothing itself.",
+        fix: "Start Ollama (open the app, or run ollama serve), then retry.",
+      },
+      {
+        why: "The tag isn't in Ollama's own model list. evaluate takes an Ollama tag, not the filename omm list shows.",
+        fix: "Run ollama list and pass a tag exactly as it appears there.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Measure general quality and speed for installed models.",
+      "First check that the model loads and generates at all.",
+    ],
+  },
+
+  arena: {
+    metaTitle: "omm arena — blind battles between two of your models",
+    metaDescription:
+      "Full reference for omm arena: its arguments and flags, five examples, a real captured leaderboard check, and the errors it actually prints.",
+    heading: "omm arena",
+    lede: "Ask two installed models the same question, read both answers without knowing which model wrote which, and vote for the better one.",
+    summary: "Battle two installed models blind on your own prompt and vote; see the community board.",
+
+    overviewBody:
+      "Reach for arena when benchmark numbers don't answer the question that matters to you: which model gives better answers to your own kind of prompt. Each round draws two models omm installed and linked into the runner (Ollama first, LM Studio when Ollama isn't available), sends both your prompt, and shows the answers as Response 1 and Response 2 — no name, runner or timing until you vote with 1, 2, or x for both bad. Which side is which is redrawn every round, even with --keep or a pair you named, so the reveal after one vote never gives away the next. If the runner wasn't running, arena asks before starting it, and stops it again when the session ends. Each vote, including the prompt you typed, is appended to ~/.omm/arena/votes.jsonl on this machine. Only at the end of the session does arena ask once whether to upload that session's votes; --yes never counts as a yes, and the prompt text is never sent either way. Change the default with omm setting upload votes. --leaderboard shows the community ranking for machines with memory like yours instead — falling back to all machines when your group has too few votes — only after its signature verifies, and numbered so omm install 2 or omm arena 1 3 can follow.",
+
+    optionDescriptions: [
+      "Seed the first round with two installed models — filenames, runner tags, or numbers from omm list. Leave both out to draw a random pair.",
+      "Keep the first round's two models for the whole session instead of drawing a new pair each round. Which side each one lands on is still redrawn.",
+      "Show the community leaderboard for this machine's memory group instead of starting a battle.",
+      "Start a stopped runner without asking. It does not answer the upload question — that still defaults to no.",
+      "JSON output, accepted only with --leaderboard. A battle is interactive.",
+    ],
+
+    exampleCaptions: [
+      "Start a session with a random pair of installed models.",
+      "Seed the first round with two specific models.",
+      "Battle models 1 and 3 from omm list for every round.",
+      "See how people with machines like yours rated models.",
+      "Get the leaderboard as JSON.",
+    ],
+
+    captureFootnote:
+      "Real omm arena --leaderboard capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME: the leaderboard file genuinely wasn't published yet when this ran. A battle itself wasn't captured — it needs two real models answering a typed prompt — so no battle transcript is shown.",
+
+    trouble: [
+      {
+        why: "arena only uses models omm installed and linked into the runner it picked. A model you pulled straight into Ollama has no omm identity, so it doesn't count.",
+        fix: "Install a second model with omm install, or adopt the runner's existing models with omm import, then retry.",
+      },
+      {
+        why: "arena takes exactly two models to seed the first round, or none.",
+        fix: "Pass two different models, or none to draw a random pair.",
+      },
+      {
+        why: "--leaderboard only reads the published ranking; it can't also start a battle.",
+        fix: "Run omm arena --leaderboard on its own.",
+      },
+      {
+        why: "The downloaded leaderboard didn't match its signature, so arena shows nothing rather than an unverified ranking. It can briefly happen while a new board is being published.",
+        fix: "Wait a few minutes and try again.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Turn vote uploads on or off — omm setting upload votes.",
+      "Measure quality and speed with a fixed, reproducible pack instead.",
+    ],
+  },
+
+  "bug-report": {
+    metaTitle: "omm bug-report — a privacy-safe diagnostic bundle you can read first",
+    metaDescription:
+      "Full reference for omm bug-report: its flags, four examples, a real captured preview, and the errors it actually prints.",
+    heading: "omm bug-report",
+    lede: "Build a small diagnostic bundle from an allow-list, print every byte of it, and save it only where and when you say. It never uploads anything.",
+    summary: "Preview, and optionally save, a privacy-safe local diagnostic bundle. Never uploads.",
+
+    overviewBody:
+      "Reach for bug-report when you're about to file an issue and want to attach facts about your omm install without leaking anything personal. By default the bundle holds only the omm version, how omm was installed, the most recent command name from the local run log, the exception class of the latest queued crash report, and doctor's overall status with its PASS/WARN/FAIL counts. It never includes usernames, home or personal paths, tokens, environment variables, search text, command arguments, generated text or model names. --include adds three optional groups: os (OS name and CPU architecture), policies (your upload settings) and checks (doctor's check names and their statuses). The whole JSON prints before anything is saved. --save writes exactly what you saw, after you confirm; it refuses to follow a symlink or replace an existing file unless you pass --force. Nothing is uploaded, no GitHub issue is opened, no browser opens, and no message is sent — attaching the file is up to you.",
+
+    optionDescriptions: [
+      "Add one optional group: os, policies or checks. Repeat the flag to add more.",
+      "Save the previewed JSON to this file, after you confirm. Nothing is uploaded.",
+      "Allow --save to replace a file that's already at that path.",
+      "Save without the confirmation question. Without a terminal, --save requires it.",
+      "Print only the bundle's JSON, with no preview heading.",
+    ],
+
+    exampleCaptions: [
+      "Preview the default bundle. Nothing is saved.",
+      "Preview it with the OS and doctor's check names added.",
+      "Preview it, then save it to a file after you confirm.",
+      "Print only the JSON, for piping.",
+    ],
+
+    captureFootnote:
+      "Real omm bug-report capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME — unedited. Two values reflect that setup rather than a typical install: command_name is _bg-version-check, omm's own background update check, which was the only command already in that fresh home's run log; and omm_version 0.3.139 is the stale package metadata of the git-editable install used for the capture, the same mismatch behind doctor's one WARN.",
+
+    trouble: [
+      {
+        why: "--include only knows three groups: os, policies and checks.",
+        fix: "Use one of those names, repeating --include for each group you want.",
+      },
+      {
+        why: "--save asks before writing, and there was no terminal to ask in — a pipe, a script, or --json.",
+        fix: "Read the preview, then run the same command again with --yes to save it.",
+      },
+      {
+        why: "A file already exists at the --save path, and bug-report won't overwrite it without being told.",
+        fix: "Pick a new path, or add --force to replace that file.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "The full read-only diagnosis the bundle summarizes.",
+      "Your own local run log, for the details the bundle leaves out.",
+    ],
+  },
+
+  web: {
+    metaTitle: "omm web — manage models from a local browser page",
+    metaDescription:
+      "Full reference for omm web: its three flags, four examples, a real captured start, and the errors it actually prints.",
+    heading: "omm web",
+    lede: "Start omm's browser interface on this computer only — a loopback address — to review hardware, install recommended models, and manage models and runner links with buttons instead of commands.",
+    summary: "Start a local browser page for installing and managing models.",
+
+    overviewBody:
+      "Reach for web when you'd rather click than type. The server listens only on 127.0.0.1, prints its address, and keeps running until you press Ctrl+C. It won't open a browser unless you pass --open. The page shows your hardware and a memory budget, recommends packages, and lets you install a model, link it into a runner, check that it generates text, or remove it — and every one of those file operations needs a confirmation on the page. Installing verifies the downloaded file and registry, but doesn't load the model, run a benchmark or upload measurements. The page starts from the cached catalog or bundled rules; its update button is what downloads and verifies a newer signed catalog. Job history persists across restarts, and a job whose result was never confirmed shows as interrupted. Only one server runs per omm home — starting a second one prints the first one's address instead. --create-launchers writes two double-click files that run omm web --open, then exits without starting anything.",
+
+    optionDescriptions: [
+      "The local port to listen on. 0 picks any free port.",
+      "Open the page in your default browser once the server is up.",
+      "Write Open-OMM.command (macOS/Linux) and Open-OMM.cmd (Windows) into this directory, then exit without starting the server.",
+    ],
+
+    exampleCaptions: [
+      "Start the local page and print its address.",
+      "Start it and open it in your browser.",
+      "Start it on a fixed port.",
+      "Create double-click launchers on your desktop.",
+    ],
+
+    captureFootnote:
+      "Real omm web capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME and without --open, so no browser started; the server was stopped a few seconds later. The port is whatever was free at the time — 49684 here — and changes from run to run.",
+
+    trouble: [
+      {
+        why: "A local page for the same omm home is already running, so instead of starting a second server omm web prints the first one's address.",
+        fix: "Open that address, or stop the other server with Ctrl+C in its terminal.",
+      },
+      {
+        why: "A different file is already where a launcher would go. omm web won't overwrite a file it didn't write.",
+        fix: "Move or delete that file, or pick another directory.",
+      },
+      {
+        why: "A port number must be between 0 and 65535.",
+        fix: "Pass a valid port, or 0 to let the system pick a free one.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "The same install, from the terminal.",
+      "Check from the terminal what the page shows as installed.",
+    ],
+  },
 };
