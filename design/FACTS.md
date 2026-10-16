@@ -761,3 +761,108 @@ model-argument command (`cli.py:3495-3502`, unchanged).
   demo capture); `omm unlink ... --runner lmstudio` on
   `qwen2.5-0.5b-instruct-fp16.gguf`, immediately relinked with `omm link`;
   `omm export ... ~/Desktop/omm-export-demo`, deleted right after.
+
+### `compare`, `evaluate`, `arena`, `bug-report`, `web`
+Five more commands the CLI shipped without a hand-written page (`compare` and
+`web` were not even in the synced `src/data/commands.json`, which is cut from
+`main`; `arena`, `bug-report` and `evaluate` were, and fell back to the dynamic
+page). Written 2026-10-17 from `~/Project/Localfit` at `origin/beta` commit
+`ce8aaba` (`0.3.175` in `docs/commands.json`); line numbers below are that
+commit's, read with `git show origin/beta:<path>`. Every capture ran through
+`~/Project/Localfit/.venv/bin/omm`, an editable install of that checkout at
+`03103ec` (`feat/arena-leaderboard`) — `git diff 03103ec ce8aaba` is empty, so
+the captured code is byte-identical to `ce8aaba`. Each run used a fresh
+`OMM_HOME=$(mktemp -d)`, `NO_COLOR=1`, `--no-color` and stdin from
+`/dev/null`; the user's own `~/.omm` and installed `omm` were never touched.
+Options and help text: `origin/beta:docs/commands.json` and each command's
+real `--help`. With this batch `scripts/check-omm-sync.mjs` passes against
+`origin/beta` (34 visible commands).
+
+- **`compare`** — `cli.py:4416-4563`; input errors `compare.py:104-174`
+  (`MIN_MODELS`/`MAX_MODELS`/`PURPOSES` at `compare.py:20-22`), printed with
+  exit 2 at `cli.py:4458-4460`. Read-only closing line `cli.py:4563`; catalog
+  refresh line `cli.py:4511-4512`; no-catalog error `cli.py:4440-4442` (quoted
+  from source — needs an offline first run). Provider-fact enrichment
+  (`recommend_facts.apply`) is cache-only, so refreshing the signed catalog is
+  the command's only network use. `PRIVACY.md` ("Local files"): compare sends
+  no comparison or model-list data. Capture: `omm compare tinyllama-1.1b-q4
+  mistral-7b-instruct-q4 llama3.1-8b-instruct-q4` at `COLUMNS=100` (the
+  default 80 wraps the MODEL column), trailing spaces trimmed, otherwise
+  verbatim; this 8 GB dev laptop's real predictions. Real captured errors:
+  `compare requires 2 to 5 models`, `model is not in the signed recommendation
+  catalog: zzzz-fake-model`, `the same model was listed more than once:
+  mistral-7b-instruct-q4` (all exit 2). The CLI prints no deprecation notice
+  and its help never points at `evaluate` (the two answer different
+  questions: catalog packages before install vs. one installed Ollama model's
+  coding ability), so the page doesn't either.
+- **`evaluate`** — `cli.py:10878-10976`; sandbox and pack code
+  `coding_eval.py` (`find_runtime` `:314-319`, `ensure_runtime_available`
+  `:322-335`, `ensure_image_available` `:338-353`, container flags
+  `sandbox_argv` `:356-398` — `--pull never`, `--network none`,
+  `--read-only`, `--user 65534:65534`, `--cap-drop ALL`, memory/CPU/pids
+  limits). Built-in pack `src/omm/data/coding-pack-v1.json`:
+  `omm-python-coding-smoke` 2.0.0, 8 items (`generation`/`repair`), 30 s
+  timeout. Ollama-not-running error `cli.py:10899-10903` and not-installed tag
+  `quality.py:519-525` are quoted from source (the tag in the latter is a
+  placeholder) — this machine's Docker service was stopped, so every live run
+  ended at the sandbox check, which runs before Ollama is contacted. The
+  image-missing message shows this machine's real `shutil.which("docker")`
+  path and the pinned image from `coding_eval.py:27-30`. Capture: `omm
+  evaluate qwen2.5-0.5b-instruct-q4_k_m:latest` → `Docker or Podman is
+  installed but its service is not running` (exit 1). No completed run was
+  captured, and the page says so instead of showing one. Also real:
+  `unsupported coding pack schema` (`--pack` with `{}`).
+- **`arena`** — `cli.py:11494-11590` (`arena_cmd`), round loop
+  `_arena_session` `cli.py:11165-11247`, end-of-session consent
+  `_arena_consent_and_enqueue` `cli.py:11111-11162` (`--yes` answers "no":
+  `_ask_upload_choice` `cli.py:3892-3904`), leaderboard `_arena_leaderboard`
+  `cli.py:11287-11491`; pairing and slot redraw `arena.py:140-185`, vote row
+  (keeps `prompt` locally) `arena.py:42-86`. Privacy wording matches
+  `PRIVACY.md` §4 "Battle votes" and the command's own docstring: votes stay
+  in `~/.omm/arena/votes.jsonl`, upload is asked once at the end of a session,
+  the prompt text is never sent. Capture: `omm arena --leaderboard` → `The
+  arena leaderboard hasn't been published yet.` (`cli.py:11344-11345`, exit
+  0) — true at capture time: `published/arena-leaderboard.json` exists on
+  neither `origin/main` nor `origin/beta`, and the CLI reads it from `main`
+  (`config.py:85-91`). **Re-capture this page once the board is published.**
+  Real captured errors: the needs-2-models line (bare `omm arena` with Ollama
+  already running and an empty registry; the line names whichever runner was
+  picked), the arity and same-model errors (`arena.py:110-124`), and the
+  `--leaderboard` combination error. Signature-failure text quoted from
+  source (`cli.py:11306-11312`). `omm arena --json` really prints the shared
+  `unsupported_json` refusal (exit 2, `cli.py:430-435`). No battle was
+  captured: it needs two real installed models in the scratch home.
+- **`bug-report`** — `cli.py:3548-3616`; payload `support_report.py` (the
+  allow-list, `--include` groups at `:15`, error at `:80-83`). `PRIVACY.md`
+  ("Local files") is the source for what is and isn't included; the command
+  never uploads (no network send path exists in `support_report.py`), so its
+  risk is `inspect`. Capture: plain `omm bug-report`, verbatim. Two values are
+  artifacts of the capture setup, explained in the footnote:
+  `"command_name": "_bg-version-check"` — the command spawns the hidden
+  background update check as it starts, that child's run log lands before
+  `latest_command_name()` reads the log directory, and the function only
+  skips `<arg>` and `bug-report`, so the hidden command's name wins (it did
+  even after a prior `omm doctor` in the same home); `"omm_version":
+  "0.3.139"` — the editable venv's stale package metadata (source is
+  `0.3.178`; doctor's one WARN is the same mismatch). Real captured errors:
+  `unknown report field group: bogus` (exit 2), `Review the complete preview,
+  then pass --yes to save it.` (`--save` without a TTY, exit 1), and the
+  already-exists refusal (exit 1) — its scratch path is shown as
+  `/Users/you/omm-bug-report.json`. `--save ... --yes` was also run into the
+  scratch directory to confirm the `Saved locally:` / `No upload, GitHub
+  issue, browser action, or message was created.` lines (`cli.py:3615-3616`).
+- **`web`** — `cli.py:1416-1436`; server `web/server.py` (binds
+  `("127.0.0.1", port)` at `:34`, start lines `:222-223`, already-running
+  line `:217`, browser only under `--open` `:218-226`); in-page operations
+  limited to install/link/uninstall/verify, each requiring `confirmed: true`
+  (`web/service.py:125-152`); launchers `web/launchers.py` (refusal `:27-31`
+  fires only when an existing file's content differs or it is a symlink).
+  Page behaviour (confirmation per file operation, no auto-load/benchmark/
+  upload after install, catalog refresh button, interrupted jobs) from
+  `README.md:454-467` on `origin/beta`. Capture: `omm web` started for ~5 s
+  without `--open`; `lsof` showed a single `127.0.0.1:49684 (LISTEN)` socket
+  and `/api/identity` answered, then the process was stopped — verbatim, port
+  included. Real captured errors: the launcher refusal and Click's `--port
+  70000` range error (exit 2). The already-running line is quoted from
+  source. Risk `high-impact`: the page itself can download, link and remove
+  models.

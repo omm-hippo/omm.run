@@ -46,7 +46,12 @@ export type Slug =
   | "unpin"
   | "rollback"
   | "unlink"
-  | "export";
+  | "export"
+  | "compare"
+  | "evaluate"
+  | "arena"
+  | "bug-report"
+  | "web";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -78,6 +83,11 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "rollback",
   "unlink",
   "export",
+  "compare",
+  "evaluate",
+  "arena",
+  "bug-report",
+  "web",
 ];
 
 /**
@@ -132,6 +142,11 @@ export const COMMAND_GROUP = {
   rollback: "models",
   export: "models",
   unlink: "maintenance",
+  compare: "start",
+  evaluate: "quality",
+  arena: "quality",
+  "bug-report": "maintenance",
+  web: "models",
 } as const satisfies Record<Slug, CommandGroup>;
 
 /**
@@ -172,6 +187,11 @@ export const COMMAND_RISK = {
   rollback: "caution",
   unlink: "high-impact",
   export: "caution",
+  compare: "caution",
+  evaluate: "caution",
+  arena: "high-impact",
+  "bug-report": "inspect",
+  web: "high-impact",
 } as const satisfies Record<Slug, CommandRisk>;
 
 export type Option = {
@@ -1638,6 +1658,281 @@ LM Studio installed successfully.`,
 
     related: [
       { label: "omm import", href: "/commands/import", internal: true },
+      { label: "omm list", href: "/commands/list", internal: true },
+    ],
+  },
+  compare: {
+    slug: "compare",
+    name: "omm compare",
+    href: "/commands/compare",
+
+    options: [
+      { name: "<models>...", argument: null, default: "required — 2 to 5" },
+      { name: "--profile", argument: "dedicated | balanced | minimal", default: "balanced" },
+      {
+        name: "--for",
+        argument: "General | Coding | Reasoning | Writing | Translation | Documents",
+        default: "off",
+      },
+      { name: "--json", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm compare tinyllama-1.1b-q4 mistral-7b-instruct-q4 llama3.1-8b-instruct-q4" },
+      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --for Coding" },
+      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --profile dedicated" },
+      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --json" },
+    ],
+
+    capture: {
+      title: "omm compare tinyllama-1.1b-q4 mistral-7b-instruct-q4 llama3.1-8b-instruct-q4",
+      text: `Fetched updated recommendation data from GitHub.
+                             Model comparison · balanced
+ MODEL                       TYPE  BEST FOR        SPEED   MEMORY  STATUS
+ tinyllama 1.1b chat v1.0    LLM   General   ~93.7 tok/s  ~0.7 GB  BEST FIT · FASTEST
+ mistral 7b instruct v0.2    LLM   General   ~14.8 tok/s  ~4.6 GB  OVER BUDGET
+ Meta Llama 3.1 8B Instruct  LLM   General   ~13.9 tok/s  ~5.3 GB  OVER BUDGET
+Compare is read-only: it did not download, install, or run a model.`,
+    },
+
+    trouble: [
+      {
+        see: "compare requires 2 to 5 models",
+        source: "src/omm/compare.py:105-106",
+      },
+      {
+        see: "model is not in the signed recommendation catalog: zzzz-fake-model",
+        source: "src/omm/compare.py:126",
+      },
+      {
+        see: "the same model was listed more than once: mistral-7b-instruct-q4",
+        source: "src/omm/compare.py:131-132",
+      },
+      {
+        see: "No signed recommendation catalog is available.",
+        source: "src/omm/cli.py:4440-4442",
+      },
+    ],
+
+    related: [
+      { label: "omm recommend", href: "/commands/recommend", internal: true },
+      { label: "omm install", href: "/commands/install", internal: true },
+    ],
+  },
+
+  evaluate: {
+    slug: "evaluate",
+    name: "omm evaluate",
+    href: "/commands/evaluate",
+
+    options: [
+      { name: "<model>", argument: null, default: "required — an Ollama tag" },
+      { name: "--pack", argument: "PATH", default: "the built-in coding pack" },
+      { name: "--output", argument: "PATH", default: "off" },
+      { name: "--json", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm evaluate qwen2.5-0.5b-instruct-q4_k_m:latest" },
+      {
+        prompt: "$",
+        command: "omm evaluate qwen2.5-0.5b-instruct-q4_k_m:latest --output ~/omm-evaluate.json",
+      },
+      { prompt: "$", command: "omm evaluate qwen2.5-0.5b-instruct-q4_k_m:latest --json" },
+    ],
+
+    capture: {
+      title: "omm evaluate qwen2.5-0.5b-instruct-q4_k_m:latest",
+      text: `Docker or Podman is installed but its service is not running`,
+    },
+
+    trouble: [
+      {
+        see: "Docker or Podman is installed but its service is not running",
+        source: "src/omm/coding_eval.py:322-335",
+      },
+      {
+        see: "Python coding evaluation requires Docker or Podman",
+        source: "src/omm/coding_eval.py:314-319",
+      },
+      {
+        see: "pinned coding sandbox image is not installed; run `/opt/homebrew/bin/docker pull docker.io/library/python:3.12.10-alpine3.21@sha256:9c51ecce261773a684c8345b2d4673700055c513b4d54bc0719337d3e4ee552e` explicitly",
+        source: "src/omm/coding_eval.py:338-353",
+      },
+      {
+        see: "Ollama must already be running for `omm evaluate`; no model or engine was started.",
+        source: "src/omm/cli.py:10899-10903",
+      },
+      {
+        see: "Ollama model 'zzzz-fake-model-xyz' is not installed",
+        source: "src/omm/quality.py:519-525",
+      },
+    ],
+
+    related: [
+      { label: "omm benchmark", href: "/commands/benchmark", internal: true },
+      { label: "omm verify", href: "/commands/verify", internal: true },
+    ],
+  },
+
+  arena: {
+    slug: "arena",
+    name: "omm arena",
+    href: "/commands/arena",
+
+    options: [
+      { name: "[models]...", argument: null, default: "optional — two models, or none" },
+      { name: "--keep", argument: null, default: "off" },
+      { name: "--leaderboard", argument: null, default: "off" },
+      { name: "--yes / -y", argument: null, default: "off" },
+      { name: "--json", argument: null, default: "off — --leaderboard only" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm arena" },
+      {
+        prompt: "$",
+        command: "omm arena qwen2.5-0.5b-instruct-q4_k_m.gguf tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+      },
+      { prompt: "$", command: "omm arena 1 3 --keep" },
+      { prompt: "$", command: "omm arena --leaderboard" },
+      { prompt: "$", command: "omm arena --leaderboard --json" },
+    ],
+
+    capture: {
+      title: "omm arena --leaderboard",
+      text: `The arena leaderboard hasn't been published yet.
+Vote with: omm arena`,
+    },
+
+    trouble: [
+      {
+        see: "`omm arena` needs at least 2 models installed through omm and linked into Ollama; found 0.\n→ Run `omm list` to see what omm manages, `omm install` to add one, or `omm import` to adopt models this runner already has.",
+        source: "src/omm/cli.py:11564-11573",
+      },
+      {
+        see: "`omm arena` takes two models or none at all - pass two models to seed the first round, or no models to draw a random pair.\n→ Run `omm list` to see the models omm manages.",
+        source: "src/omm/arena.py:110-121, src/omm/cli.py:11543-11551",
+      },
+      {
+        see: "`--leaderboard` can't be combined with models or --keep.\n→ Run `omm arena --leaderboard` on its own.",
+        source: "src/omm/cli.py:11527-11534",
+      },
+      {
+        see: "The published arena leaderboard failed its signature check, so it isn't shown.\n→ It may be mid-update; try again in a few minutes.",
+        source: "src/omm/cli.py:11306-11312",
+      },
+    ],
+
+    related: [
+      { label: "omm setting", href: "/commands/setting", internal: true },
+      { label: "omm benchmark", href: "/commands/benchmark", internal: true },
+    ],
+  },
+
+  "bug-report": {
+    slug: "bug-report",
+    name: "omm bug-report",
+    href: "/commands/bug-report",
+
+    options: [
+      { name: "--include", argument: "os | policies | checks", default: "none — repeatable" },
+      { name: "--save", argument: "PATH", default: "off — preview only" },
+      { name: "--force", argument: null, default: "off" },
+      { name: "--yes / -y", argument: null, default: "off" },
+      { name: "--json", argument: null, default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm bug-report" },
+      { prompt: "$", command: "omm bug-report --include os --include checks" },
+      { prompt: "$", command: "omm bug-report --save ~/omm-bug-report.json" },
+      { prompt: "$", command: "omm bug-report --json" },
+    ],
+
+    capture: {
+      title: "omm bug-report",
+      text: `Complete local bug-report preview (nothing has been sent or saved):
+{
+  "command_name": "_bg-version-check",
+  "created_at": "2026-10-16T16:31:19.581301+00:00",
+  "diagnostics": {
+    "counts": {
+      "FAIL": 0,
+      "PASS": 9,
+      "WARN": 1
+    },
+    "status": "WARN"
+  },
+  "error_type": null,
+  "install_source": "git",
+  "omm_version": "0.3.139",
+  "schema_version": 1
+}`,
+    },
+
+    trouble: [
+      {
+        see: "unknown report field group: bogus",
+        source: "src/omm/support_report.py:80-83, src/omm/cli.py:3579-3583",
+      },
+      {
+        see: "Review the complete preview, then pass --yes to save it.",
+        source: "src/omm/cli.py:3602-3605",
+      },
+      {
+        see: "Report destination already exists: /Users/you/omm-bug-report.json. Use --force to replace it.",
+        source: "src/omm/cli.py:3596-3601",
+      },
+    ],
+
+    related: [
+      { label: "omm doctor", href: "/commands/doctor", internal: true },
+      { label: "omm log", href: "/commands/log", internal: true },
+    ],
+  },
+
+  web: {
+    slug: "web",
+    name: "omm web",
+    href: "/commands/web",
+
+    options: [
+      { name: "--port", argument: "0-65535", default: "0 — any free port" },
+      { name: "--open", argument: null, default: "off" },
+      { name: "--create-launchers", argument: "PATH", default: "off" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm web" },
+      { prompt: "$", command: "omm web --open" },
+      { prompt: "$", command: "omm web --port 8765" },
+      { prompt: "$", command: "omm web --create-launchers ~/Desktop" },
+    ],
+
+    capture: {
+      title: "omm web",
+      text: `OMM local manager: http://127.0.0.1:49684/
+Press Ctrl+C to stop. Model operations and files stay on this computer.`,
+    },
+
+    trouble: [
+      {
+        see: "OMM local manager already running: http://127.0.0.1:49684/",
+        source: "src/omm/web/server.py:210-221",
+      },
+      {
+        see: "Refusing to replace existing launcher: Open-OMM.cmd",
+        source: "src/omm/web/launchers.py:27-31",
+      },
+      {
+        see: "Error: Invalid value for '--port': 70000 is not in the range 0<=x<=65535.",
+        source: "src/omm/cli.py:1419",
+      },
+    ],
+
+    related: [
+      { label: "omm install", href: "/commands/install", internal: true },
       { label: "omm list", href: "/commands/list", internal: true },
     ],
   },
