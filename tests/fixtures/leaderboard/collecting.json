@@ -1,0 +1,98 @@
+{
+  "corpus": {
+    "client_count": 40,
+    "effective_votes": 40.0,
+    "largest_client_share": 0.025,
+    "rows_dropped": {},
+    "rows_fetched": 40,
+    "rows_used": 40
+  },
+  "efficiency_components": [],
+  "generated_at": "2026-10-16T04:00:00+00:00",
+  "groups": [
+    {
+      "corpus": {
+        "client_count": 3,
+        "effective_votes": 3.0,
+        "largest_client_share": 0.3333333333333333,
+        "rows_dropped": {},
+        "rows_fetched": 3,
+        "rows_used": 3
+      },
+      "efficiency_components": [],
+      "key": "cpu:32",
+      "memory_bucket": "32",
+      "memory_kind": "cpu",
+      "models": [],
+      "pairs": [],
+      "provisional_models": [],
+      "ranked": false,
+      "reasons": [
+        "only 3.0 effective votes, need 100",
+        "only 0 ranked models, need 3"
+      ],
+      "tiers": [],
+      "updated_at": null
+    },
+    {
+      "corpus": {
+        "client_count": 20,
+        "effective_votes": 20.0,
+        "largest_client_share": 0.05,
+        "rows_dropped": {},
+        "rows_fetched": 20,
+        "rows_used": 20
+      },
+      "efficiency_components": [],
+      "key": "unified:16",
+      "memory_bucket": "16",
+      "memory_kind": "unified",
+      "models": [],
+      "pairs": [],
+      "provisional_models": [],
+      "ranked": false,
+      "reasons": [
+        "only 20.0 effective votes, need 100",
+        "only 0 ranked models, need 3"
+      ],
+      "tiers": [],
+      "updated_at": null
+    },
+    {
+      "corpus": {
+        "client_count": 11,
+        "effective_votes": 11.0,
+        "largest_client_share": 0.09090909090909091,
+        "rows_dropped": {},
+        "rows_fetched": 11,
+        "rows_used": 11
+      },
+      "efficiency_components": [],
+      "key": "vram:8",
+      "memory_bucket": "8",
+      "memory_kind": "vram",
+      "models": [],
+      "pairs": [],
+      "provisional_models": [],
+      "ranked": false,
+      "reasons": [
+        "only 11.0 effective votes, need 100",
+        "only 0 ranked models, need 3"
+      ],
+      "tiers": [],
+      "updated_at": null
+    }
+  ],
+  "models": [],
+  "pairs": [],
+  "provisional_models": [],
+  "ranked": false,
+  "reasons": [
+    "only 40.0 effective votes, need 200",
+    "only 0 ranked models, need 5"
+  ],
+  "schema_version": 2,
+  "status": "collecting",
+  "tiers": [],
+  "updated_at": null
+}

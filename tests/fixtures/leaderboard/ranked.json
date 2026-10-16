@@ -1,0 +1,1417 @@
+{
+  "corpus": {
+    "client_count": 97,
+    "effective_votes": 1800.0,
+    "largest_client_share": 0.010555555555555556,
+    "rows_dropped": {},
+    "rows_fetched": 1800,
+    "rows_used": 1800
+  },
+  "efficiency_components": [
+    {
+      "component": 0,
+      "model_count": 8
+    }
+  ],
+  "generated_at": "2026-10-16T04:00:00+00:00",
+  "groups": [
+    {
+      "corpus": {
+        "client_count": 60,
+        "effective_votes": 60.0,
+        "largest_client_share": 0.016666666666666666,
+        "rows_dropped": {},
+        "rows_fetched": 60,
+        "rows_used": 60
+      },
+      "efficiency_components": [],
+      "key": "cpu:32",
+      "memory_bucket": "32",
+      "memory_kind": "cpu",
+      "models": [],
+      "pairs": [],
+      "provisional_models": [],
+      "ranked": false,
+      "reasons": [
+        "only 60.0 effective votes, need 100",
+        "only 2 ranked models, need 3"
+      ],
+      "tiers": [],
+      "updated_at": null
+    },
+    {
+      "corpus": {
+        "client_count": 97,
+        "effective_votes": 900.0,
+        "largest_client_share": 0.011111111111111112,
+        "rows_dropped": {},
+        "rows_fetched": 900,
+        "rows_used": 900
+      },
+      "efficiency_components": [
+        {
+          "component": 0,
+          "model_count": 8
+        }
+      ],
+      "key": "unified:16",
+      "memory_bucket": "16",
+      "memory_kind": "unified",
+      "models": [
+        {
+          "battles": 288,
+          "both_bad_rate": 0.052083333333333336,
+          "display_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 288.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.073694487798118,
+            "raw_median_tok_s_per_gb": 22.5,
+            "sample": 288
+          },
+          "efficiency_comparable": true,
+          "key": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 1.17857429778359,
+            "ci_low": 0.6970204995958319,
+            "strength": 0.9748903370374795,
+            "tier": 1
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "Qwen/Qwen2.5-7B-Instruct-GGUF"
+        },
+        {
+          "battles": 316,
+          "both_bad_rate": 0.05379746835443038,
+          "display_filename": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 316.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.17761994048344876,
+            "raw_median_tok_s_per_gb": 17.5,
+            "sample": 316
+          },
+          "efficiency_comparable": true,
+          "key": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 1.0587857176511108,
+            "ci_low": 0.5650976144388137,
+            "strength": 0.8182558698519451,
+            "tier": 1
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+        },
+        {
+          "battles": 280,
+          "both_bad_rate": 0.06428571428571428,
+          "display_filename": "gemma-2-9b-it-Q5_K_M.gguf",
+          "effective_battles": 280.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.5140921771029803,
+            "raw_median_tok_s_per_gb": 12.5,
+            "sample": 280
+          },
+          "efficiency_comparable": true,
+          "key": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 0.3665279322714355,
+            "ci_low": -0.0799988376914359,
+            "strength": 0.1584464068506552,
+            "tier": 2
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/gemma-2-9b-it-GGUF"
+        },
+        {
+          "battles": 277,
+          "both_bad_rate": 0.07942238267148015,
+          "display_filename": "Mistral-Nemo-Instruct-2407-Q4_K_M.gguf",
+          "effective_battles": 277.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.6194526927615157,
+            "raw_median_tok_s_per_gb": 11.25,
+            "sample": 277
+          },
+          "efficiency_comparable": true,
+          "key": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 0.2266858562706017,
+            "ci_low": -0.3154298281842598,
+            "strength": 0.06720872073436844,
+            "tier": 2
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Mistral-Nemo-Instruct-2407-GGUF"
+        },
+        {
+          "battles": 302,
+          "both_bad_rate": 0.07947019867549669,
+          "display_filename": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 302.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.6490586327008567,
+            "raw_median_tok_s_per_gb": 40.0,
+            "sample": 302
+          },
+          "efficiency_comparable": true,
+          "key": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": -0.48729974894920397,
+            "ci_low": -1.1568869884425634,
+            "strength": -0.7817910736203044,
+            "tier": 3
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Llama-3.2-3B-Instruct-GGUF"
+        },
+        {
+          "battles": 300,
+          "both_bad_rate": 0.05333333333333334,
+          "display_filename": "Phi-3.5-mini-instruct-Q4_K_M.gguf",
+          "effective_battles": 300.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.5155272400776512,
+            "raw_median_tok_s_per_gb": 35.0,
+            "sample": 300
+          },
+          "efficiency_comparable": true,
+          "key": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": -0.23298509897804628,
+            "ci_low": -0.7781418525968276,
+            "strength": -0.5406646554095387,
+            "tier": 3
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Phi-3.5-mini-instruct-GGUF"
+        },
+        {
+          "battles": 27,
+          "both_bad_rate": 0.0,
+          "display_filename": "local-merge-Q4_K_M.gguf",
+          "effective_battles": 27.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.3317706203122304,
+            "raw_median_tok_s_per_gb": 15.0,
+            "sample": 27
+          },
+          "efficiency_comparable": true,
+          "key": "filename:local-merge-q4_k_m.gguf",
+          "provider": null,
+          "provisional": false,
+          "quality": {
+            "ci_high": -0.1438985087375308,
+            "ci_low": -1.4981212671114195,
+            "strength": -0.789724912982425,
+            "tier": 3
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": null
+        },
+        {
+          "battles": 10,
+          "both_bad_rate": 0.0,
+          "display_filename": "tinyllama-1.1b-chat-Q4_K_M.gguf",
+          "effective_battles": 10.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.8722021840162347,
+            "raw_median_tok_s_per_gb": 50.0,
+            "sample": 10
+          },
+          "efficiency_comparable": true,
+          "key": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": true,
+          "quality": {
+            "ci_high": 0.018080374643769218,
+            "ci_low": -2.0044637471851283,
+            "strength": -0.825849030953881,
+            "tier": null
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
+        }
+      ],
+      "pairs": [
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "battles": 51,
+          "both_bad": 5.0,
+          "wins_a": 33.0,
+          "wins_b": 13.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:local-merge-q4_k_m.gguf",
+          "battles": 4,
+          "both_bad": 0.0,
+          "wins_a": 2.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 68,
+          "both_bad": 2.0,
+          "wins_a": 30.0,
+          "wins_b": 36.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 49,
+          "both_bad": 5.0,
+          "wins_a": 20.0,
+          "wins_b": 24.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 51,
+          "both_bad": 3.0,
+          "wins_a": 30.0,
+          "wins_b": 18.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 55,
+          "both_bad": 3.0,
+          "wins_a": 14.0,
+          "wins_b": 38.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 2,
+          "both_bad": 0.0,
+          "wins_a": 2.0,
+          "wins_b": 0.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:local-merge-q4_k_m.gguf",
+          "battles": 3,
+          "both_bad": 0.0,
+          "wins_a": 0.0,
+          "wins_b": 3.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 62,
+          "both_bad": 6.0,
+          "wins_a": 3.0,
+          "wins_b": 53.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 55,
+          "both_bad": 6.0,
+          "wins_a": 20.0,
+          "wins_b": 29.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 69,
+          "both_bad": 4.0,
+          "wins_a": 32.0,
+          "wins_b": 33.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 61,
+          "both_bad": 3.0,
+          "wins_a": 7.0,
+          "wins_b": 51.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 7,
+          "both_bad": 0.0,
+          "wins_a": 0.0,
+          "wins_b": 7.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 8,
+          "both_bad": 0.0,
+          "wins_a": 2.0,
+          "wins_b": 6.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 0.0,
+          "wins_b": 1.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 4,
+          "both_bad": 0.0,
+          "wins_a": 0.0,
+          "wins_b": 4.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 52,
+          "both_bad": 3.0,
+          "wins_a": 35.0,
+          "wins_b": 14.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 65,
+          "both_bad": 3.0,
+          "wins_a": 50.0,
+          "wins_b": 12.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 62,
+          "both_bad": 3.0,
+          "wins_a": 25.0,
+          "wins_b": 34.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 58,
+          "both_bad": 4.0,
+          "wins_a": 34.0,
+          "wins_b": 20.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 51,
+          "both_bad": 4.0,
+          "wins_a": 19.0,
+          "wins_b": 28.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 4,
+          "both_bad": 0.0,
+          "wins_a": 2.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 54,
+          "both_bad": 2.0,
+          "wins_a": 10.0,
+          "wins_b": 42.0
+        },
+        {
+          "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 2,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 1.0
+        },
+        {
+          "a": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        }
+      ],
+      "provisional_models": [
+        "filename:tinyllama-1.1b-chat-q4_k_m.gguf"
+      ],
+      "ranked": true,
+      "reasons": [],
+      "tiers": [
+        {
+          "model_keys": [
+            "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+            "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf"
+          ],
+          "tier": 1
+        },
+        {
+          "model_keys": [
+            "filename:gemma-2-9b-it-q5_k_m.gguf",
+            "filename:mistral-nemo-instruct-2407-q4_k_m.gguf"
+          ],
+          "tier": 2
+        },
+        {
+          "model_keys": [
+            "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+            "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+            "filename:local-merge-q4_k_m.gguf"
+          ],
+          "tier": 3
+        }
+      ],
+      "updated_at": "2026-10-16T04:00:00+00:00"
+    },
+    {
+      "corpus": {
+        "client_count": 97,
+        "effective_votes": 480.0,
+        "largest_client_share": 0.0125,
+        "rows_dropped": {},
+        "rows_fetched": 480,
+        "rows_used": 480
+      },
+      "efficiency_components": [
+        {
+          "component": 0,
+          "model_count": 8
+        }
+      ],
+      "key": "vram:8",
+      "memory_bucket": "8",
+      "memory_kind": "vram",
+      "models": [
+        {
+          "battles": 143,
+          "both_bad_rate": 0.04195804195804196,
+          "display_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 143.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.08760611290259487,
+            "raw_median_tok_s_per_gb": 22.5,
+            "sample": 143
+          },
+          "efficiency_comparable": true,
+          "key": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 1.4817849872985254,
+            "ci_low": 0.8290234640005277,
+            "strength": 1.1633829439432737,
+            "tier": 1
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "Qwen/Qwen2.5-7B-Instruct-GGUF"
+        },
+        {
+          "battles": 146,
+          "both_bad_rate": 0.03424657534246575,
+          "display_filename": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 146.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.16370831537894714,
+            "raw_median_tok_s_per_gb": 17.5,
+            "sample": 146
+          },
+          "efficiency_comparable": true,
+          "key": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 1.2886305455273954,
+            "ci_low": 0.637027567515682,
+            "strength": 0.9685768298575801,
+            "tier": 1
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+        },
+        {
+          "battles": 25,
+          "both_bad_rate": 0.08,
+          "display_filename": "local-merge-Q4_K_M.gguf",
+          "effective_battles": 25.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.31785899520690536,
+            "raw_median_tok_s_per_gb": 18.0,
+            "sample": 25
+          },
+          "efficiency_comparable": true,
+          "key": "filename:local-merge-q4_k_m.gguf",
+          "provider": null,
+          "provisional": false,
+          "quality": {
+            "ci_high": 0.9964040492407797,
+            "ci_low": -0.4005731787523806,
+            "strength": 0.32110696746733913,
+            "tier": 1
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": null
+        },
+        {
+          "battles": 160,
+          "both_bad_rate": 0.05,
+          "display_filename": "gemma-2-9b-it-Q5_K_M.gguf",
+          "effective_battles": 160.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.5001805519986537,
+            "raw_median_tok_s_per_gb": 12.5,
+            "sample": 160
+          },
+          "efficiency_comparable": true,
+          "key": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 0.25470867339379905,
+            "ci_low": -0.3172725858278961,
+            "strength": 0.009513795694532843,
+            "tier": 2
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/gemma-2-9b-it-GGUF"
+        },
+        {
+          "battles": 160,
+          "both_bad_rate": 0.06875,
+          "display_filename": "Mistral-Nemo-Instruct-2407-Q4_K_M.gguf",
+          "effective_battles": 160.0,
+          "efficiency": {
+            "component": 0,
+            "rating": -0.6055410676568441,
+            "raw_median_tok_s_per_gb": 11.25,
+            "sample": 160
+          },
+          "efficiency_comparable": true,
+          "key": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": 0.443882640543024,
+            "ci_low": -0.07023408673368323,
+            "strength": 0.14532664718269186,
+            "tier": 2
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Mistral-Nemo-Instruct-2407-GGUF"
+        },
+        {
+          "battles": 161,
+          "both_bad_rate": 0.08695652173913043,
+          "display_filename": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+          "effective_battles": 161.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.6629702578053485,
+            "raw_median_tok_s_per_gb": 40.0,
+            "sample": 161
+          },
+          "efficiency_comparable": true,
+          "key": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": -0.6336265731331654,
+            "ci_low": -1.3543541554048182,
+            "strength": -0.9559599835025635,
+            "tier": 3
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Llama-3.2-3B-Instruct-GGUF"
+        },
+        {
+          "battles": 159,
+          "both_bad_rate": 0.050314465408805034,
+          "display_filename": "Phi-3.5-mini-instruct-Q4_K_M.gguf",
+          "effective_battles": 159.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.529438865181913,
+            "raw_median_tok_s_per_gb": 35.0,
+            "sample": 159
+          },
+          "efficiency_comparable": true,
+          "key": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": false,
+          "quality": {
+            "ci_high": -0.2730971090228229,
+            "ci_low": -0.8292485533450101,
+            "strength": -0.5161925210936685,
+            "tier": 3
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "bartowski/Phi-3.5-mini-instruct-GGUF"
+        },
+        {
+          "battles": 6,
+          "both_bad_rate": 0.0,
+          "display_filename": "tinyllama-1.1b-chat-Q4_K_M.gguf",
+          "effective_battles": 6.0,
+          "efficiency": {
+            "component": 0,
+            "rating": 0.8861138091203729,
+            "raw_median_tok_s_per_gb": 60.0,
+            "sample": 6
+          },
+          "efficiency_comparable": true,
+          "key": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "provider": "huggingface",
+          "provisional": true,
+          "quality": {
+            "ci_high": -0.14699984812276964,
+            "ci_low": -3.197912933466174,
+            "strength": -1.585645967363622,
+            "tier": null
+          },
+          "quality_warning": false,
+          "quant_bits": null,
+          "repo_id": "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
+        }
+      ],
+      "pairs": [
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "battles": 33,
+          "both_bad": 1.0,
+          "wins_a": 27.0,
+          "wins_b": 5.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:local-merge-q4_k_m.gguf",
+          "battles": 4,
+          "both_bad": 1.0,
+          "wins_a": 1.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 32,
+          "both_bad": 2.0,
+          "wins_a": 10.0,
+          "wins_b": 20.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 30,
+          "both_bad": 2.0,
+          "wins_a": 9.0,
+          "wins_b": 19.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 32,
+          "both_bad": 0.0,
+          "wins_a": 19.0,
+          "wins_b": 13.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 28,
+          "both_bad": 2.0,
+          "wins_a": 6.0,
+          "wins_b": 20.0
+        },
+        {
+          "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:local-merge-q4_k_m.gguf",
+          "battles": 4,
+          "both_bad": 1.0,
+          "wins_a": 1.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 28,
+          "both_bad": 1.0,
+          "wins_a": 4.0,
+          "wins_b": 23.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 28,
+          "both_bad": 5.0,
+          "wins_a": 7.0,
+          "wins_b": 16.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 37,
+          "both_bad": 6.0,
+          "wins_a": 13.0,
+          "wins_b": 18.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 29,
+          "both_bad": 0.0,
+          "wins_a": 4.0,
+          "wins_b": 25.0
+        },
+        {
+          "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 2,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 1.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "battles": 3,
+          "both_bad": 0.0,
+          "wins_a": 0.0,
+          "wins_b": 3.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 5,
+          "both_bad": 0.0,
+          "wins_a": 3.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 6,
+          "both_bad": 0.0,
+          "wins_a": 5.0,
+          "wins_b": 1.0
+        },
+        {
+          "a": "filename:local-merge-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 3,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 2.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "battles": 26,
+          "both_bad": 0.0,
+          "wins_a": 20.0,
+          "wins_b": 6.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 23,
+          "both_bad": 2.0,
+          "wins_a": 16.0,
+          "wins_b": 5.0
+        },
+        {
+          "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 34,
+          "both_bad": 0.0,
+          "wins_a": 16.0,
+          "wins_b": 18.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "battles": 41,
+          "both_bad": 0.0,
+          "wins_a": 29.0,
+          "wins_b": 12.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 29,
+          "both_bad": 4.0,
+          "wins_a": 4.0,
+          "wins_b": 21.0
+        },
+        {
+          "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        },
+        {
+          "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "battles": 19,
+          "both_bad": 0.0,
+          "wins_a": 4.0,
+          "wins_b": 15.0
+        },
+        {
+          "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        },
+        {
+          "a": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+          "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+          "battles": 1,
+          "both_bad": 0.0,
+          "wins_a": 1.0,
+          "wins_b": 0.0
+        }
+      ],
+      "provisional_models": [
+        "filename:tinyllama-1.1b-chat-q4_k_m.gguf"
+      ],
+      "ranked": true,
+      "reasons": [],
+      "tiers": [
+        {
+          "model_keys": [
+            "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+            "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+            "filename:local-merge-q4_k_m.gguf"
+          ],
+          "tier": 1
+        },
+        {
+          "model_keys": [
+            "filename:gemma-2-9b-it-q5_k_m.gguf",
+            "filename:mistral-nemo-instruct-2407-q4_k_m.gguf"
+          ],
+          "tier": 2
+        },
+        {
+          "model_keys": [
+            "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+            "filename:phi-3.5-mini-instruct-q4_k_m.gguf"
+          ],
+          "tier": 3
+        }
+      ],
+      "updated_at": "2026-10-16T04:00:00+00:00"
+    }
+  ],
+  "models": [
+    {
+      "battles": 593,
+      "both_bad_rate": 0.048903878583473864,
+      "display_filename": "Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+      "effective_battles": 593.0,
+      "efficiency": {
+        "component": 0,
+        "rating": 0.07637537506660542,
+        "raw_median_tok_s_per_gb": 22.5,
+        "sample": 593
+      },
+      "efficiency_comparable": true,
+      "key": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": 1.0337071370941937,
+        "ci_low": 0.7496147994719641,
+        "strength": 0.9101761544865171,
+        "tier": 1
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "Qwen/Qwen2.5-7B-Instruct-GGUF"
+    },
+    {
+      "battles": 589,
+      "both_bad_rate": 0.05263157894736842,
+      "display_filename": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "effective_battles": 589.0,
+      "efficiency": {
+        "component": 0,
+        "rating": -0.17493905321513353,
+        "raw_median_tok_s_per_gb": 17.5,
+        "sample": 589
+      },
+      "efficiency_comparable": true,
+      "key": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": 0.8453130383647618,
+        "ci_low": 0.5431593585218331,
+        "strength": 0.6767630444061451,
+        "tier": 1
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+    },
+    {
+      "battles": 59,
+      "both_bad_rate": 0.03389830508474576,
+      "display_filename": "local-merge-Q4_K_M.gguf",
+      "effective_battles": 59.0,
+      "efficiency": {
+        "component": 0,
+        "rating": -0.3290897330434917,
+        "raw_median_tok_s_per_gb": 15.0,
+        "sample": 59
+      },
+      "efficiency_comparable": true,
+      "key": "filename:local-merge-q4_k_m.gguf",
+      "provider": null,
+      "provisional": false,
+      "quality": {
+        "ci_high": 0.055872713068843956,
+        "ci_low": -0.7783224339022587,
+        "strength": -0.3462114679677259,
+        "tier": 2
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": null
+    },
+    {
+      "battles": 564,
+      "both_bad_rate": 0.06205673758865248,
+      "display_filename": "gemma-2-9b-it-Q5_K_M.gguf",
+      "effective_battles": 564.0,
+      "efficiency": {
+        "component": 0,
+        "rating": -0.511411289834222,
+        "raw_median_tok_s_per_gb": 12.5,
+        "sample": 564
+      },
+      "efficiency_comparable": true,
+      "key": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": 0.1392513335566392,
+        "ci_low": -0.188147786875304,
+        "strength": -0.029498144813702474,
+        "tier": 2
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "bartowski/gemma-2-9b-it-GGUF"
+    },
+    {
+      "battles": 574,
+      "both_bad_rate": 0.06445993031358885,
+      "display_filename": "Mistral-Nemo-Instruct-2407-Q4_K_M.gguf",
+      "effective_battles": 574.0,
+      "efficiency": {
+        "component": 0,
+        "rating": -0.6167718054929814,
+        "raw_median_tok_s_per_gb": 11.25,
+        "sample": 574
+      },
+      "efficiency_comparable": true,
+      "key": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": -0.0044746663015694434,
+        "ci_low": -0.2940801344230992,
+        "strength": -0.13180958942062523,
+        "tier": 2
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "bartowski/Mistral-Nemo-Instruct-2407-GGUF"
+    },
+    {
+      "battles": 600,
+      "both_bad_rate": 0.07,
+      "display_filename": "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+      "effective_battles": 600.0,
+      "efficiency": {
+        "component": 0,
+        "rating": 0.6517395199691598,
+        "raw_median_tok_s_per_gb": 40.0,
+        "sample": 600
+      },
+      "efficiency_comparable": true,
+      "key": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": -0.8230903849332037,
+        "ci_low": -1.161334138353395,
+        "strength": -0.9926299700089651,
+        "tier": 3
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "bartowski/Llama-3.2-3B-Instruct-GGUF"
+    },
+    {
+      "battles": 602,
+      "both_bad_rate": 0.04983388704318937,
+      "display_filename": "Phi-3.5-mini-instruct-Q4_K_M.gguf",
+      "effective_battles": 602.0,
+      "efficiency": {
+        "component": 0,
+        "rating": 0.5182081273461021,
+        "raw_median_tok_s_per_gb": 35.0,
+        "sample": 602
+      },
+      "efficiency_comparable": true,
+      "key": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": false,
+      "quality": {
+        "ci_high": -0.4910907018602674,
+        "ci_low": -0.8644682495600882,
+        "strength": -0.7195917105678881,
+        "tier": 3
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "bartowski/Phi-3.5-mini-instruct-GGUF"
+    },
+    {
+      "battles": 19,
+      "both_bad_rate": 0.0,
+      "display_filename": "tinyllama-1.1b-chat-Q4_K_M.gguf",
+      "effective_battles": 19.0,
+      "efficiency": {
+        "component": 0,
+        "rating": 0.8748830712845248,
+        "raw_median_tok_s_per_gb": 50.0,
+        "sample": 19
+      },
+      "efficiency_comparable": true,
+      "key": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "provider": "huggingface",
+      "provisional": true,
+      "quality": {
+        "ci_high": -0.4787440505209766,
+        "ci_low": -1.8567384181584292,
+        "strength": -0.9658950892892326,
+        "tier": null
+      },
+      "quality_warning": false,
+      "quant_bits": null,
+      "repo_id": "TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
+    }
+  ],
+  "pairs": [
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "battles": 109,
+      "both_bad": 6.0,
+      "wins_a": 77.0,
+      "wins_b": 26.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:local-merge-q4_k_m.gguf",
+      "battles": 10,
+      "both_bad": 1.0,
+      "wins_a": 4.0,
+      "wins_b": 5.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "battles": 115,
+      "both_bad": 6.0,
+      "wins_a": 45.0,
+      "wins_b": 64.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "battles": 100,
+      "both_bad": 8.0,
+      "wins_a": 45.0,
+      "wins_b": 47.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "battles": 109,
+      "both_bad": 3.0,
+      "wins_a": 69.0,
+      "wins_b": 37.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 118,
+      "both_bad": 11.0,
+      "wins_a": 24.0,
+      "wins_b": 83.0
+    },
+    {
+      "a": "filename:gemma-2-9b-it-q5_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 3,
+      "both_bad": 0.0,
+      "wins_a": 3.0,
+      "wins_b": 0.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:local-merge-q4_k_m.gguf",
+      "battles": 9,
+      "both_bad": 1.0,
+      "wins_a": 1.0,
+      "wins_b": 7.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "battles": 112,
+      "both_bad": 8.0,
+      "wins_a": 12.0,
+      "wins_b": 92.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "battles": 110,
+      "both_bad": 12.0,
+      "wins_a": 34.0,
+      "wins_b": 64.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "battles": 136,
+      "both_bad": 12.0,
+      "wins_a": 58.0,
+      "wins_b": 66.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 121,
+      "both_bad": 3.0,
+      "wins_a": 14.0,
+      "wins_b": 104.0
+    },
+    {
+      "a": "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 3,
+      "both_bad": 0.0,
+      "wins_a": 2.0,
+      "wins_b": 1.0
+    },
+    {
+      "a": "filename:local-merge-q4_k_m.gguf",
+      "b": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "battles": 10,
+      "both_bad": 0.0,
+      "wins_a": 0.0,
+      "wins_b": 10.0
+    },
+    {
+      "a": "filename:local-merge-q4_k_m.gguf",
+      "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "battles": 14,
+      "both_bad": 0.0,
+      "wins_a": 5.0,
+      "wins_b": 9.0
+    },
+    {
+      "a": "filename:local-merge-q4_k_m.gguf",
+      "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "battles": 7,
+      "both_bad": 0.0,
+      "wins_a": 5.0,
+      "wins_b": 2.0
+    },
+    {
+      "a": "filename:local-merge-q4_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 9,
+      "both_bad": 0.0,
+      "wins_a": 2.0,
+      "wins_b": 7.0
+    },
+    {
+      "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "b": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "battles": 106,
+      "both_bad": 4.0,
+      "wins_a": 77.0,
+      "wins_b": 25.0
+    },
+    {
+      "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "battles": 118,
+      "both_bad": 8.0,
+      "wins_a": 87.0,
+      "wins_b": 23.0
+    },
+    {
+      "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 126,
+      "both_bad": 5.0,
+      "wins_a": 51.0,
+      "wins_b": 70.0
+    },
+    {
+      "a": "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 2,
+      "both_bad": 0.0,
+      "wins_a": 1.0,
+      "wins_b": 1.0
+    },
+    {
+      "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "b": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "battles": 125,
+      "both_bad": 5.0,
+      "wins_a": 82.0,
+      "wins_b": 38.0
+    },
+    {
+      "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 114,
+      "both_bad": 8.0,
+      "wins_a": 30.0,
+      "wins_b": 76.0
+    },
+    {
+      "a": "filename:mistral-nemo-instruct-2407-q4_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 5,
+      "both_bad": 0.0,
+      "wins_a": 3.0,
+      "wins_b": 2.0
+    },
+    {
+      "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "b": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "battles": 103,
+      "both_bad": 2.0,
+      "wins_a": 24.0,
+      "wins_b": 77.0
+    },
+    {
+      "a": "filename:phi-3.5-mini-instruct-q4_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 4,
+      "both_bad": 0.0,
+      "wins_a": 2.0,
+      "wins_b": 2.0
+    },
+    {
+      "a": "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+      "b": "filename:tinyllama-1.1b-chat-q4_k_m.gguf",
+      "battles": 2,
+      "both_bad": 0.0,
+      "wins_a": 2.0,
+      "wins_b": 0.0
+    }
+  ],
+  "provisional_models": [
+    "filename:tinyllama-1.1b-chat-q4_k_m.gguf"
+  ],
+  "ranked": true,
+  "reasons": [],
+  "schema_version": 2,
+  "status": "ranked",
+  "tiers": [
+    {
+      "model_keys": [
+        "filename:qwen2.5-7b-instruct-q4_k_m.gguf",
+        "filename:meta-llama-3.1-8b-instruct-q4_k_m.gguf"
+      ],
+      "tier": 1
+    },
+    {
+      "model_keys": [
+        "filename:local-merge-q4_k_m.gguf",
+        "filename:gemma-2-9b-it-q5_k_m.gguf",
+        "filename:mistral-nemo-instruct-2407-q4_k_m.gguf"
+      ],
+      "tier": 2
+    },
+    {
+      "model_keys": [
+        "filename:llama-3.2-3b-instruct-q4_k_m.gguf",
+        "filename:phi-3.5-mini-instruct-q4_k_m.gguf"
+      ],
+      "tier": 3
+    }
+  ],
+  "updated_at": "2026-10-16T04:00:00+00:00"
+}

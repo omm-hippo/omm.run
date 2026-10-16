@@ -110,6 +110,31 @@ if (!sourceDir) {
 }
 
 const resolvedSourceDir = path.resolve(sourceDir);
+
+// The arena leaderboard is verified server-side with omm's catalog key; a
+// rotation upstream must fail here, not silently blank the page. Checked
+// first so it still runs when the command list below has drifted.
+const configPath = path.join(resolvedSourceDir, "src/omm/config.py");
+const leaderboardVerifyPath = fileURLToPath(
+  new URL("../src/lib/leaderboard/verify.ts", import.meta.url),
+);
+let configSource;
+let leaderboardVerifySource;
+try {
+  [configSource, leaderboardVerifySource] = await Promise.all([
+    readFile(configPath, "utf8"),
+    readFile(leaderboardVerifyPath, "utf8"),
+  ]);
+} catch (error) {
+  fail(error.message);
+}
+const upstreamKey = configSource.match(/"catalog_public_key":\s*"([^"]+)"/u)?.[1];
+const siteKey = leaderboardVerifySource.match(/ARENA_PUBLIC_KEY\s*=\s*"([^"]+)"/u)?.[1];
+if (!upstreamKey || !siteKey) fail("could not read the catalog public key on both sides");
+if (upstreamKey !== siteKey) {
+  fail(`leaderboard key ${siteKey} != omm catalog_public_key ${upstreamKey}`);
+}
+
 const cliPath = path.join(resolvedSourceDir, "src/omm/cli.py");
 const siteBasePath = fileURLToPath(
   new URL("../src/i18n/commands/base.ts", import.meta.url),
@@ -182,5 +207,5 @@ assertFlags(
 );
 
 process.stdout.write(
-  `OMM command sync check passed: ${siteCommandIds.length} visible commands, ${aliases.size} aliases, recommend/profile, and memory-guard flags match ${resolvedSourceDir}.\n`,
+  `OMM command sync check passed: ${siteCommandIds.length} visible commands, ${aliases.size} aliases, recommend/profile, memory-guard flags, and the leaderboard signing key match ${resolvedSourceDir}.\n`,
 );
