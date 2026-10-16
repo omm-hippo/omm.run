@@ -4,6 +4,7 @@ import { groupLabel } from "@/lib/leaderboard/groups";
 import { rankedModels, scopeOf } from "@/lib/leaderboard/view";
 import type { BoardState } from "@/lib/leaderboard/types";
 
+import Analysis from "./Analysis";
 import BoardMessage from "./BoardMessage";
 import CopyCommand from "./CopyCommand";
 import Hero, { Label } from "./Hero";
@@ -18,13 +19,11 @@ export default function LeaderboardView({
   locale,
   scope: requested = "overall",
   model: requestedModel,
-  analysis,
 }: {
   state: BoardState;
   locale: Locale;
   scope?: string;
   model?: string;
-  analysis?: React.ReactNode;
 }) {
   const t = leaderboardDictionary(locale);
   const wrap = "mx-auto w-full max-w-page px-5 md:px-8";
@@ -103,7 +102,7 @@ export default function LeaderboardView({
           {selected ? <ModelDrawer t={t} scope={view.scope} model={selected} /> : null}
         </div>
       </div>
-      {analysis}
+      <Analysis artifact={artifact} scope={view.scope} scopeKey={view.key} locale={locale} />
     </>
   );
 }

@@ -145,3 +145,8 @@ test("English copy renders on the en locale", () => {
   assert.match(html, /All machines/);
   assert.match(html, /\+ 1 model with too few votes/);
 });
+
+test("the ranked page includes the analysis; collecting does not", () => {
+  assert.match(render({ kind: "ranked", artifact: artifact("ranked") }), /순위 뒤의 숫자/);
+  assert.doesNotMatch(render({ kind: "collecting", artifact: artifact("collecting") }), /순위 뒤의 숫자/);
+});
