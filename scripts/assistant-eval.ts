@@ -10,9 +10,10 @@
  * never touches the D1 budget, the cache, or the deployed Worker.
  *
  * Modes:
- *   narrowed — what production did before: only the token-overlap ranker's
- *              top 8 (with context) reach the model; none means no answer.
- *   hybrid   — every command's summary, context on the ranker's top few.
+ *   narrowed — the previous production path: only the token-overlap
+ *              ranker's top 8 (with context) reach the model.
+ *   hybrid   — the production path (`modelCandidates`): every command's
+ *              summary, context on the ranker's top few.
  */
 
 import { getPlatformProxy } from "wrangler";

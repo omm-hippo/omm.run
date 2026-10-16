@@ -1,9 +1,11 @@
 # OMM AI assistant backend
 
 The assistant is a constrained command selector, not a general chatbot. The
-browser sends `{ locale, question, turnCount }`. The server narrows the
-question to at most eight entries derived from the existing command docs. A
-Workers AI model may return only one candidate `commandId` or `clarify`.
+browser sends `{ locale, question, turnCount }`. A token-overlap ranker
+orders the commands; a question that overlaps none of them gets no model call.
+Otherwise Workers AI sees every command — the ranker's top four with
+symptom/example context, the rest with their one-line summary — and may return
+only one of those `commandId`s or `clarify`.
 Options, examples, risk labels, links, and shell text always come from the
 static OMM command catalog.
 
@@ -34,14 +36,21 @@ npx tsx scripts/assistant-eval.ts --mode hybrid     # every command, context on 
 
 Measured 2026-10-17 with `@cf/meta/llama-3.3-70b-instruct-fp8-fast`:
 
-| mode | correct | clarify | prompt tokens (51 calls) |
-|---|---|---|---|
-| narrowed | 35/51 | 11 | 41,356 |
-| hybrid | 40/51 | 9 | 79,243 |
+| mode | catalog | prompt | correct | clarify | prompt tokens (51 calls) |
+|---|---|---|---|---|---|
+| narrowed (previous production) | 29 docs + reference | old | 35/51 | 11 | 41,356 |
+| hybrid | 29 docs + reference | old | 40/51 | 9 | 79,243 |
+| hybrid (production) | 34 docs | current | 46/51 | 1 | 87,888 |
 
 The ranker alone reaches the right command for 38/51 questions; hybrid
-removes that ceiling. Most remaining hybrid misses are `clarify` on a question
-that has a clear answer.
+removes that ceiling. The old prompt let the model `clarify` whenever wording
+did not match a summary; the current one asks it to match intent and to
+clarify only for off-topic or genuinely two-way questions. That prompt was
+revised after reading the second row's misses on this same set, so the last
+row is optimistic: add fresh questions before trusting a further gain.
+
+Prompts are about 1,700 tokens instead of 800, so the 200-call daily cap now
+bounds this application near 350,000 input tokens a day.
 
 ## Runtime contract
 
