@@ -465,6 +465,11 @@ export const en = {
         description: "May download, change settings, remove local data, or upload results.",
       },
     },
+    riskUnknown: {
+      label: "Not yet reviewed",
+      description:
+        "This command has no written doc page yet, so its effects have not been classified. Check its options in the reference before running it.",
+    },
     changeNote:
       "This classification and the example come from the static omm docs. Read the full reference for option-level effects.",
     openReference: "Open full command reference",

@@ -11,9 +11,9 @@ import type {
   AssistantResult,
   AssistantSource,
 } from "@/components/assistant/types";
-import type { Slug } from "@/components/commands/commands";
 import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary } from "@/i18n/dictionaries";
+import type { CommandId } from "@/lib/assistant/catalog";
 import { ASSISTANT_LIMITS } from "@/lib/assistant/types";
 
 const MAX_QUESTION_LENGTH = ASSISTANT_LIMITS.maxQuestionCharacters;
@@ -91,7 +91,7 @@ function parseResponse(
   if (rawIds.some((id) => !allowedIds.has(id))) return null;
   const commandIds = rawIds.filter(
     (id, index, ids) => ids.indexOf(id) === index,
-  ) as Slug[];
+  ) as CommandId[];
 
   if (value.kind === "command" && value.commandId === null) return null;
 

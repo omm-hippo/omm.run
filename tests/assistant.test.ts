@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { AssistantStore } from "../src/lib/assistant/budget";
+import { COMMAND_IDS } from "../src/lib/assistant/catalog";
 import {
   narrowCandidates,
   needsOpenAiModelClarification,
@@ -281,6 +282,39 @@ test("mocked inference returns only static IDs and repeated questions use cache"
     "reason",
     "source",
   ]);
+});
+
+test("the model sees every command and may pick one the ranker missed", async () => {
+  const question = "I need to install a model";
+  const ranked = narrowCandidates(question, "en").map(({ id }) => id);
+  assert.ok(!ranked.includes("rollback"), "pick a command outside the ranker's list");
+
+  let offered: readonly string[] = [];
+  const result = await answerAssistantQuestion(
+    { locale: "en", question, turnCount: 0 },
+    {
+      ai: {
+        async run(_model, input) {
+          const payload = JSON.parse(
+            (input.messages as { content: string }[])[1].content,
+          ) as { candidates: { id: string; context: string }[] };
+          offered = payload.candidates.map(({ id }) => id);
+          const detailed = payload.candidates.filter(({ context }) => context !== "");
+          assert.ok(detailed.length <= ASSISTANT_LIMITS.detailedCandidates);
+          assert.equal(detailed[0].id, ranked[0], "ranker's best comes first, detailed");
+          return { response: { action: "command", commandId: "rollback" } };
+        },
+      },
+      store: new MemoryStore(),
+      clientIdentity: "198.51.100.3",
+      hashSalt: "sixteen-byte-salt",
+      now: 1_788_019_200,
+    },
+  );
+
+  assert.deepEqual([...offered].sort(), [...COMMAND_IDS].sort());
+  assert.equal(result.kind, "command");
+  assert.equal(result.commandId, "rollback");
 });
 
 test("selection cache namespace invalidates pre-policy cache entries", async () => {

@@ -1,11 +1,56 @@
 # OMM AI assistant backend
 
 The assistant is a constrained command selector, not a general chatbot. The
-browser sends `{ locale, question, turnCount }`. The server narrows the
-question to at most eight entries derived from the existing command docs. A
-Workers AI model may return only one candidate `commandId` or `clarify`.
+browser sends `{ locale, question, turnCount }`. A token-overlap ranker
+orders the commands; a question that overlaps none of them gets no model call.
+Otherwise Workers AI sees every command — the ranker's top four with
+symptom/example context, the rest with their one-line summary — and may return
+only one of those `commandId`s or `clarify`.
 Options, examples, risk labels, links, and shell text always come from the
 static OMM command catalog.
+
+## Command catalog
+
+The selectable commands are every hand-written command doc
+(`COMMAND_ORDER`) plus every top-level command in the CLI reference
+(`src/data/commands.json`) that has no hand-written page yet
+(`src/lib/assistant/catalog.ts`). A reference-only command is described with
+the CLI's own English `--help` summary and usage line, links to its generated
+`/commands/<name>` page, and its card says its change impact is not yet
+classified instead of guessing a risk level. A command therefore becomes
+selectable the day the reference is synced, not the day its page is written.
+
+## Evaluation
+
+`tests/fixtures/assistant-eval.json` holds 51 held-out questions (English
+and Korean, written as a user would ask) with the commands that answer each.
+`tests/assistant-eval.test.ts` checks the deterministic ranker's recall
+against a floor without calling a model. `scripts/assistant-eval.ts` measures
+live accuracy against Workers AI and **bills the account** — one call per
+question:
+
+```sh
+npx tsx scripts/assistant-eval.ts --mode narrowed   # ranker top 8 only
+npx tsx scripts/assistant-eval.ts --mode hybrid     # every command, context on top 4
+```
+
+Measured 2026-10-17 with `@cf/meta/llama-3.3-70b-instruct-fp8-fast`:
+
+| mode | catalog | prompt | correct | clarify | prompt tokens (51 calls) |
+|---|---|---|---|---|---|
+| narrowed (previous production) | 29 docs + reference | old | 35/51 | 11 | 41,356 |
+| hybrid | 29 docs + reference | old | 40/51 | 9 | 79,243 |
+| hybrid (production) | 34 docs | current | 46/51 | 1 | 87,888 |
+
+The ranker alone reaches the right command for 38/51 questions; hybrid
+removes that ceiling. The old prompt let the model `clarify` whenever wording
+did not match a summary; the current one asks it to match intent and to
+clarify only for off-topic or genuinely two-way questions. That prompt was
+revised after reading the second row's misses on this same set, so the last
+row is optimistic: add fresh questions before trusting a further gain.
+
+Prompts are about 1,700 tokens instead of 800, so the 200-call daily cap now
+bounds this application near 350,000 input tokens a day.
 
 ## Runtime contract
 

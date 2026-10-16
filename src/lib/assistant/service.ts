@@ -1,7 +1,8 @@
-import type { Slug } from "../../i18n/commands/base";
 import type { AssistantStore } from "./budget";
+import type { CommandId } from "./catalog";
 import {
   explicitCommand,
+  modelCandidates,
   narrowCandidates,
   needsOpenAiModelClarification,
 } from "./knowledge";
@@ -31,8 +32,8 @@ export type AssistantDependencies = {
 function response(
   kind: AssistantResponse["kind"],
   reason: AssistantReason,
-  candidateIds: readonly Slug[],
-  commandId: Slug | null = null,
+  candidateIds: readonly CommandId[],
+  commandId: CommandId | null = null,
   source: AssistantResponse["source"] = "deterministic",
 ): AssistantResponse {
   return {
@@ -46,7 +47,7 @@ function response(
 
 function fromSelection(
   selection: ModelSelection,
-  candidates: readonly Slug[],
+  candidates: readonly CommandId[],
   source: AssistantResponse["source"],
 ): AssistantResponse {
   if (selection.action === "command") {
@@ -92,7 +93,11 @@ export async function answerAssistantQuestion(
 
   const explicit = explicitCommand(request.question);
   if (explicit) return response("command", "matched", [explicit], explicit);
+  // No overlap with any command at all: off-topic, so spend no inference.
   if (candidates.length === 0) return response("fallback", "no_match", []);
+  // The ranker only orders and details the list; the model sees every command.
+  const offered = modelCandidates(candidates, request.locale);
+  const offeredIds = offered.map(({ id }) => id);
 
   const { ai, store, hashSalt } = dependencies;
   const model = resolveWorkersAiModel(dependencies.model);
@@ -110,7 +115,7 @@ export async function answerAssistantQuestion(
     const cached = await store.getSelection(questionHash, now);
     if (
       cached &&
-      (cached.action === "clarify" || candidateIds.includes(cached.commandId))
+      (cached.action === "clarify" || offeredIds.includes(cached.commandId))
     ) {
       return fromSelection(cached, candidateIds, "deterministic");
     }
@@ -142,7 +147,7 @@ export async function answerAssistantQuestion(
     model,
     request.locale,
     request.question,
-    candidates,
+    offered,
   );
   if (!inference.ok) return response("fallback", inference.reason, candidateIds);
   const { selection } = inference;

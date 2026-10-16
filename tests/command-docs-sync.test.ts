@@ -12,7 +12,12 @@ import {
 import { COMMANDS_EN } from "../src/i18n/commands/en";
 import { COMMANDS_KO } from "../src/i18n/commands/ko";
 import { getCommand } from "../src/components/commands/commands";
-import { isCommandId } from "../src/lib/assistant/catalog";
+import {
+  COMMAND_IDS,
+  REFERENCE_ONLY_IDS,
+  isCommandId,
+} from "../src/lib/assistant/catalog";
+import { getEntry, referenceNames } from "../src/lib/commands/reference";
 import {
   explicitCommand,
   narrowCandidates,
@@ -131,11 +136,14 @@ test("every internal related link resolves to a command doc", () => {
   }
 });
 
-test("assistant allowlist and deterministic candidates stay inside command docs", () => {
-  const expected = sorted(COMMAND_ORDER);
+test("assistant allowlist is the command docs plus the CLI reference, nothing else", () => {
+  // Hand-written docs first; any top-level command the CLI exports without a
+  // written page is still selectable, so a new command is never invisible.
+  const expected = sorted(new Set([...COMMAND_ORDER, ...referenceNames()]));
   const probeUniverse = [
     ...Object.keys(COMMAND_BASE),
     ...Object.keys(COMMAND_RISK),
+    ...referenceNames(),
     "not-a-command",
     "relink",
     "_bg-version-check",
@@ -143,14 +151,16 @@ test("assistant allowlist and deterministic candidates stay inside command docs"
   const allowed = sorted(new Set(probeUniverse.filter(isCommandId)));
 
   assert.deepEqual(allowed, expected);
+  assert.deepEqual(sorted(COMMAND_IDS), expected);
   assert.equal(isCommandId("not-a-command"), false);
+  assert.equal(isCommandId("_bg-version-check"), false);
 
-  for (const slug of COMMAND_ORDER) {
-    assert.equal(isCommandId(slug), true);
-    assert.equal(explicitCommand(`omm ${slug}`), slug);
+  for (const id of COMMAND_IDS) {
+    assert.equal(isCommandId(id), true);
+    assert.equal(explicitCommand(`omm ${id}`), id);
   }
 
-  const commandIds = new Set<string>(COMMAND_ORDER);
+  const commandIds = new Set<string>(COMMAND_IDS);
   for (const [question, locale] of [
     ["install, diagnose, link, benchmark, or remove a local model", "en"],
     ["로컬 모델 설치 진단 연결 벤치마크 삭제", "ko"],
@@ -159,6 +169,19 @@ test("assistant allowlist and deterministic candidates stay inside command docs"
       assert.ok(commandIds.has(candidate.id));
       assert.ok(isCommandId(candidate.id));
     }
+  }
+});
+
+test("a reference-only command reaches the assistant with the CLI's own text", () => {
+  for (const id of REFERENCE_ONLY_IDS) {
+    const entry = getEntry(id);
+    assert.ok(entry, `${id} is in the reference`);
+    // Its own summary, verbatim, is enough to put it among the candidates.
+    const candidates = narrowCandidates(entry.summary, "en");
+    const match = candidates.find((candidate) => candidate.id === id);
+    assert.ok(match, `${id} not reached by its own summary`);
+    assert.equal(match.name, `omm ${id}`);
+    assert.equal(match.summary, entry.summary);
   }
 });
 

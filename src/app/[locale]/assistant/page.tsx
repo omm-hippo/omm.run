@@ -17,6 +17,8 @@ import {
   localeHref,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { REFERENCE_ONLY_IDS } from "@/lib/assistant/catalog";
+import { flagLabel, getEntry, ownOptions } from "@/lib/commands/reference";
 
 const PATH = "/assistant";
 
@@ -71,6 +73,30 @@ export default async function AssistantPage({
     };
   });
 
+  // Commands the CLI exports with no written page yet: the CLI's own summary
+  // and usage line, linking to the generated reference page. Unclassified, so
+  // the card says so instead of guessing a risk level.
+  const referenceCards: readonly AssistantCommandCard[] = REFERENCE_ONLY_IDS.flatMap(
+    (id) => {
+      const entry = getEntry(id);
+      if (!entry) return [];
+      const own = ownOptions(entry);
+      const visibleOptions = own.slice(0, 3).map(flagLabel);
+      return [
+        {
+          id,
+          name: `omm ${id}`,
+          summary: entry.summary,
+          href: `/commands/${id}`,
+          example: entry.usage,
+          options: visibleOptions,
+          remainingOptionCount: Math.max(0, own.length - visibleOptions.length),
+          risk: null,
+        },
+      ];
+    },
+  );
+
   return (
     <>
       <Nav locale={locale} />
@@ -87,7 +113,7 @@ export default async function AssistantPage({
           </div>
 
           <div className="mt-16 border-y border-line-0 py-8 lg:py-12">
-            <AssistantClient cards={cards} locale={locale} />
+            <AssistantClient cards={[...cards, ...referenceCards]} locale={locale} />
           </div>
         </div>
       </main>

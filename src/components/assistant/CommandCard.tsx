@@ -12,6 +12,7 @@ export default function CommandCard({
   readonly locale: Locale;
 }) {
   const t = getDictionary(locale).assistant;
+  const risk = card.risk ? t.risk[card.risk] : t.riskUnknown;
 
   return (
     <article className="border-t border-line-1 py-6 first:border-t-0 first:pt-0">
@@ -53,9 +54,9 @@ export default function CommandCard({
 
           <div className="mt-4 border-l border-accent-line pl-4">
             <p className="text-label text-ink-2">{t.changeCheck}</p>
-            <p className="mt-2 font-medium text-ink-0">{t.risk[card.risk].label}</p>
+            <p className="mt-2 font-medium text-ink-0">{risk.label}</p>
             <p className="text-small mt-1 max-w-[68ch]">
-              {t.risk[card.risk].description}
+              {risk.description}
             </p>
             <p className="text-small mt-2 max-w-[68ch] text-ink-3">
               {t.changeNote}
