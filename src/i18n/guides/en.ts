@@ -16,10 +16,25 @@ const PYPI_ALT = {
   ],
   notes: [
     "The distribution name is omm-model; the installed command and Python import remain omm.",
-    "Upgrade and remove it with the same tool that installed it: python -m pip install --upgrade omm-model, or pipx upgrade omm-model. Both preserve downloaded models and settings under OMM_HOME.",
+    "Upgrade and remove it with the same tool that installed it: python3 -m pip install --upgrade omm-model (Windows: py -m pip install --upgrade omm-model), or pipx upgrade omm-model. Both preserve downloaded models and settings under OMM_HOME.",
     "This does not go through the signed-commit verification described above; it relies on PyPI's own account security and TLS, the same trust model as installing any other PyPI package.",
     "omm update only updates a canonical omm Git-source installation. On a pip or pipx install it changes nothing and prints the matching package manager command instead. The Git-only beta channel is likewise unavailable to package-managed installations.",
   ],
+} as const;
+
+const NPM_ALT = {
+  heading: "Or install a standalone command with npm",
+  body: "Requires Node.js 22.14 or newer. npm installs a platform-specific native binary, so this path does not require Python, pipx or git.",
+  captions: [
+    "Install globally",
+    "Check the installed version",
+    "Update with npm",
+    "Remove with npm"
+  ],
+  notes: [
+    "Published binaries support macOS Apple Silicon/Intel, glibc-based Linux ARM64/x86_64, and Windows x64. Use the Python-based installer or PyPI on other platform/libc combinations.",
+    "npm removal preserves downloaded models and settings under OMM_HOME. This path uses native npm packages rather than the Git-source signature and pipx steps below."
+  ]
 } as const;
 
 const AFTER_BODY =
@@ -35,12 +50,6 @@ const SCAN_STEP = {
 
 const SCAN_RUNNERS_ROW = "Local AI runners — one row per runner, with its status";
 
-const WIZARD_LISTS_INSTALLED =
-  "Every runner already installed is listed in the wizard too, marked as installed rather than hidden, so the checklist always reflects what omm actually detects.";
-
-const MANUAL_MEANS =
-  "Manual here means only that the wizard will not run the vendor's installer for you; it prints the download link, and once the app exists omm detects and links it like any other runner.";
-
 const LMSTUDIO_NOTE =
   "Ollama's own model location follows OLLAMA_MODELS. LM Studio follows its home pointer; set OMM_LMSTUDIO_MODELS_DIR when LM Studio uses a custom directory omm cannot discover.";
 
@@ -51,7 +60,7 @@ const UNINSTALL_MARKS =
   "Installers mark custom homes so uninstallers can refuse ambiguous or unsafe locations, and shell profiles are never rewritten during uninstall.";
 
 const UNINSTALL_PYPI =
-  "If you installed from PyPI instead, use python -m pip uninstall omm-model or pipx uninstall omm-model. Both preserve models and settings.";
+  "If you installed from PyPI instead, use python3 -m pip uninstall omm-model (Windows: py -m pip uninstall omm-model) or pipx uninstall omm-model. Both preserve models and settings.";
 
 const OLD_GIT = {
   why: "Your git is too old to check SSH commit signatures. The installer treats cannot verify exactly like a bad signature.",
@@ -127,7 +136,7 @@ export const GUIDES_EN: GuideTextSet = {
         "Required, because omm is installed from a verified Git checkout. If it is missing, the installer asks winget for MinGit.",
         "Built into Windows 10 2004 and later and into Windows 11. On anything older it is absent, so install Python 3.10+ and git yourself first — the installer will not be able to.",
         "omm is tested on Windows, macOS and Linux with Python 3.10+. Windows 10 22H2 / 11 is the supported Windows baseline.",
-        "The optional NVIDIA detector is installed only when nvidia-smi shows an NVIDIA driver is present. Nothing to do either way.",
+        "The optional NVIDIA detector is installed only when nvidia-smi shows an NVIDIA driver is present.",
       ],
     },
 
@@ -138,7 +147,7 @@ export const GUIDES_EN: GuideTextSet = {
         "irm downloads the script and iex runs it. Both are PowerShell commands, which is why the tab has to be PowerShell.",
         "Open a new PowerShell window afterward so your PATH picks up omm.",
       ],
-      alts: [PYPI_ALT],
+      alts: [PYPI_ALT, NPM_ALT],
     },
 
     after: {
@@ -159,18 +168,18 @@ export const GUIDES_EN: GuideTextSet = {
     runners: {
       body: "omm links one central copy of each model into every runner it finds. The setup wizard can install some of those runners for you — which ones depends on the operating system, because it only uses each vendor's own supported package.",
       rows: [
-        "Automated",
-        "Automated — headless lms CLI",
         "Automated — winget",
-        "Automated on 64-bit x86 (AMD64)",
-        "Automated on 64-bit x86",
-        "Automated on 64-bit x86 (AMD64)",
-        "Automated on 64-bit x86 (AMD64)",
+        "Automated — package manager",
+        "Automated — winget",
+        "Manual — install it yourself; omm still links it",
+        "Manual — install it yourself; omm still links it",
+        "Manual — automatic artifact installation disabled",
+        "Manual — automatic artifact installation disabled"
       ],
       notes: [
-        "Neither AnythingLLM nor Msty Studio has a winget package — AnythingLLM's community manifest was withdrawn in 2025, and no winget package targets the current Msty Studio app rather than its retired predecessor. On 64-bit Windows, omm downloads each vendor's own installer directly instead and runs it silently; on ARM Windows it prints the download link.",
-        WIZARD_LISTS_INSTALLED,
-        "On Windows, Ollama is detected through its HTTP API first, so a freshly installed tray app is found even before this terminal receives the new PATH.",
+        "The Windows setup wizard automates Ollama, LM Studio and Jan through supported package-manager routes. AnythingLLM and Msty require manual installation.",
+        "KoboldCpp and text-generation-webui automatic installation is disabled because release artifacts have no pinned SHA-256; install them from their official sites.",
+        "Already installed runners stay visible in setup. Ollama can also be detected through its local HTTP API before this shell receives a new PATH."
       ],
       linking: [
         "omm keeps one file in the hub and exposes it to each runner. On Windows it tries an unprivileged same-volume hard link first.",
@@ -256,9 +265,9 @@ export const GUIDES_EN: GuideTextSet = {
     metaDescription:
       "Step-by-step omm install for macOS: opening Terminal, the Python 3.10+ requirement macOS does not satisfy on its own, the exact command, what the installer verifies, and what each error message means.",
     heading: "Install omm on macOS",
-    lede: "One command in Terminal. The part worth reading first is the Python requirement: the version of Python that ships with macOS is usually too old, and the installer will not replace it for you.",
+    lede: "Install from Terminal. The Git-source script finds a usable Python 3.10+ and git, bootstrapping missing dependencies through Homebrew. npm is a separate option without Python.",
     summary:
-      "Terminal, why the bundled Python is usually too old, and the Homebrew-backed runner coverage.",
+      "Terminal, Homebrew dependency setup, npm, and current runner support.",
 
     app: {
       heading: "Open Terminal",
@@ -266,7 +275,7 @@ export const GUIDES_EN: GuideTextSet = {
       open: [
         "Press Command and Space, type Terminal, and press Enter. Terminal is also in Applications › Utilities.",
         "iTerm2, Warp, Ghostty, or the terminal built into your editor are all fine.",
-        "You do not need sudo to install omm.",
+        "The isolated omm install does not need sudo; bootstrapping Homebrew may ask for your Mac login password.",
       ],
       samplesIntro:
         "The prompt tells you which shell you are in. All of these are fine.",
@@ -280,7 +289,7 @@ export const GUIDES_EN: GuideTextSet = {
       body: "The installer fills in whatever is missing through Homebrew. If Homebrew itself isn't installed, it bootstraps Homebrew first, using Homebrew's own official installer (export OMM_AUTO_INSTALL_HOMEBREW=0 first if you'd rather install Homebrew yourself).",
       requirements: [
         "The python3 that comes with macOS is usually older than 3.10. If no Python 3.10+ is found, the installer installs one through Homebrew, bootstrapping Homebrew itself first if needed.",
-        "macOS ships a git stub that opens Apple's Command Line Tools installer the first time you run it; accepting that dialog satisfies this on its own. If git is still missing after that, the installer installs it through Homebrew the same way it does Python.",
+        "The installer skips Apple's python3/git stubs when Command Line Tools are absent. It looks for usable tools and uses Homebrew to install missing dependencies; Homebrew setup may require your login password and Command Line Tools.",
         "The installer installs pipx for you through the exact Python it validated, retrying with --break-system-packages when a Homebrew or PEP 668 Python refuses a plain --user install.",
       ],
     },
@@ -308,6 +317,7 @@ export const GUIDES_EN: GuideTextSet = {
           ],
         },
         PYPI_ALT,
+        NPM_ALT,
       ],
     },
 
@@ -328,18 +338,17 @@ export const GUIDES_EN: GuideTextSet = {
     runners: {
       body: "omm links one central copy of each model into every runner it finds. The setup wizard can install some of those runners for you — which ones depends on the operating system, because it only uses each vendor's own supported package. macOS has the widest coverage of the three.",
       rows: [
-        "Automated",
-        "Automated — headless lms CLI",
         "Automated — Homebrew cask",
         "Automated — Homebrew cask",
         "Automated — Homebrew cask",
-        "Automated on Apple Silicon; Intel Macs are manual",
-        "Automated on any Mac",
+        "Automated — Homebrew cask",
+        "Automated — Homebrew cask",
+        "Manual — automatic artifact installation disabled",
+        "Manual — automatic artifact installation disabled"
       ],
       notes: [
-        "The three Homebrew rows need Homebrew installed. Without it the wizard reports Homebrew not found - install manually from … and gives you the vendor's link rather than guessing at a download URL.",
-        "KoboldCpp publishes no Intel Mac build, so on an Intel Mac the wizard prints the download page instead of installing.",
-        WIZARD_LISTS_INSTALLED,
+        "Automated entries require Homebrew; install manually if its package-manager route is unavailable.",
+        "KoboldCpp and text-generation-webui automatic installation is disabled because release artifacts have no pinned SHA-256. Manually installed runners can still be detected and linked."
       ],
       linking: null,
     },
@@ -397,7 +406,7 @@ export const GUIDES_EN: GuideTextSet = {
         fix: "Use a full path to a subdirectory, for example export OMM_HOME=/Volumes/Models/omm.",
       },
       {
-        why: "This is the setup wizard, not the installer: the three Homebrew-based runners need brew on PATH. omm never guesses a direct download URL.",
+        why: "This is the setup wizard, not the installer: the Homebrew-based runners need brew on PATH. omm never guesses a direct download URL.",
         fix: "Install Homebrew and re-run omm setup, or install that runner yourself from the printed link — omm links models into it either way.",
       },
       UNRECOGNIZED_HOME,
@@ -410,11 +419,11 @@ export const GUIDES_EN: GuideTextSet = {
   linux: {
     metaTitle: "Install omm on Linux",
     metaDescription:
-      "Step-by-step omm install for Linux: the one-line installer, what it bootstraps through apt and what it leaves to you on Fedora, Arch and openSUSE, plus what each installer error message means.",
+      "Step-by-step omm install for Linux: the one-line installer, dependency setup through apt-get, dnf, yum, pacman or apk, the npm alternative, plus what each installer error message means.",
     heading: "Install omm on Linux",
-    lede: "One command in any terminal. On Debian and Ubuntu the installer can fetch its own dependencies; on other distributions you install python3 and git first, and everything after that is identical.",
+    lede: "One command in any terminal. The installer can prepare dependencies through apt-get, dnf, yum, pacman or apk. On other distributions, install Python 3.10+ and git yourself first.",
     summary:
-      "Any terminal, what the apt bootstrap does, and what to install yourself on Fedora, Arch or openSUSE.",
+      "Terminal, supported dependency bootstraps, npm, and distributions that need manual preparation.",
 
     app: {
       heading: "Open a terminal",
@@ -422,7 +431,7 @@ export const GUIDES_EN: GuideTextSet = {
       open: [
         "Most desktops open a terminal with Ctrl, Alt and T together.",
         "Otherwise find Terminal, Konsole or Console in your application menu.",
-        "You do not need to be root. The installer asks for sudo only if it has to install packages through apt.",
+        "You do not need to be root. The installer asks for sudo when a supported system package manager needs permission.",
       ],
       samplesIntro:
         "The prompt tells you which shell you are in. All of these are fine.",
@@ -448,7 +457,7 @@ export const GUIDES_EN: GuideTextSet = {
         "Open a new shell afterward so your PATH picks up omm.",
         "The -f and -s flags make curl silent on failure. If nothing at all happens, see the troubleshooting section below.",
       ],
-      alts: [PYPI_ALT],
+      alts: [PYPI_ALT, NPM_ALT],
     },
 
     after: {
@@ -468,19 +477,18 @@ export const GUIDES_EN: GuideTextSet = {
     runners: {
       body: "omm links one central copy of each model into every runner it finds. The setup wizard can install some of those runners for you — which ones depends on the operating system, because it only uses each vendor's own supported package.",
       rows: [
-        "Automated",
-        "Automated — headless lms CLI",
+        "Manual — install it yourself; omm still links it",
+        "Manual — install it yourself; omm still links it",
         "Automated — Flatpak",
-        "Automated on x86_64",
-        "Automated on x86_64",
-        "Manual — install it yourself, omm still links to it",
-        "Manual — install it yourself, omm still links to it",
+        "Manual — automatic artifact installation disabled",
+        "Manual — automatic artifact installation disabled",
+        "Manual — install it yourself; omm still links it",
+        "Manual — install it yourself; omm still links it"
       ],
       notes: [
-        MANUAL_MEANS,
-        "Jan needs flatpak on PATH. Without it the wizard reports flatpak not found - install manually from https://jan.ai/download.",
-        "AnythingLLM's only official Linux install is an interactive installer that prompts for an AppArmor profile and has no documented silent flag, and Msty has no Linux package at all — which is why neither is automated here.",
-        "KoboldCpp and text-generation-webui publish x86_64 Linux builds only, so on ARM the wizard prints the download page instead.",
+        "Jan uses Flatpak; if flatpak is absent, the wizard prints manual installation guidance.",
+        "Ollama, LM Studio, AnythingLLM and Msty require manual installation on Linux. KoboldCpp and text-generation-webui artifact installation is disabled because no pinned SHA-256 is available.",
+        "Manually installed runners can still be detected and linked."
       ],
       linking: null,
     },

@@ -7,9 +7,9 @@ import CommandBlock from "@/components/install/CommandBlock";
 import type { Slug } from "@/components/install/guides";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 
-type Method = "curl" | "irm" | "brew" | "pipx";
+type Method = "curl" | "irm" | "brew" | "pipx" | "npm";
 
-const METHODS: readonly Method[] = ["curl", "irm", "brew", "pipx"];
+const METHODS: readonly Method[] = ["curl", "irm", "brew", "pipx", "npm"];
 
 /** Verbatim from the omm README install section. */
 const COMMAND: Record<Method, { readonly prompt: string; readonly command: string }> = {
@@ -21,13 +21,15 @@ const COMMAND: Record<Method, { readonly prompt: string; readonly command: strin
   },
   brew: { prompt: "$", command: "brew install omm-hippo/omm/omm" },
   pipx: { prompt: "$", command: "pipx install omm-model" },
+  npm: { prompt: "$", command: "npm install --global @omm-hippo/omm" },
 };
 
-/** README "Requirements": Python 3.10+ and git have to exist before any
- *  install route can do anything. */
-const DEPENDENCIES = [
+const PYTHON_DEPENDENCIES = [
   { label: "python.org/downloads", href: "https://www.python.org/downloads/" },
-  { label: "git-scm.com/downloads", href: "https://git-scm.com/downloads" },
+  { label: "pipx.pypa.io", href: "https://pipx.pypa.io" },
+] as const;
+const NODE_DEPENDENCIES = [
+  { label: "nodejs.org/download", href: "https://nodejs.org/en/download" },
 ] as const;
 
 const subscribeNever = () => () => {};
@@ -79,7 +81,7 @@ export default function InstallTabs({ t, ui, guides }: Props) {
           role="tablist"
           aria-label={t.aria}
           onKeyDown={onTabListKeyDown}
-          className="inline-flex gap-1 rounded-md border border-line-1 bg-bg-0 p-1"
+          className="inline-flex max-w-full flex-wrap justify-center gap-1 rounded-md border border-line-1 bg-bg-0 p-1"
         >
           {METHODS.map((id) => {
             const active = id === method;
@@ -141,9 +143,9 @@ export default function InstallTabs({ t, ui, guides }: Props) {
                 ))}
               </ul>
 
-              <p className="text-small mt-2 text-left text-ink-2">
+              {id === "pipx" || id === "npm" ? <p className="text-small mt-2 text-left text-ink-2">
                 {t.needThemFirst}{" "}
-                {DEPENDENCIES.map((dependency, index) => (
+                {(id === "npm" ? NODE_DEPENDENCIES : PYTHON_DEPENDENCIES).map((dependency, index) => (
                   <span key={dependency.href}>
                     {index > 0 ? " · " : ""}
                     <a
@@ -156,7 +158,7 @@ export default function InstallTabs({ t, ui, guides }: Props) {
                     </a>
                   </span>
                 ))}
-              </p>
+              </p> : null}
             </div>
           );
         })}

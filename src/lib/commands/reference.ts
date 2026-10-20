@@ -54,7 +54,7 @@ export type CommandReferenceFile = {
 /** The whole exported document, typed. Everything below reads from it. */
 export const REFERENCE = data as CommandReferenceFile;
 
-/** The omm release the reference was exported from. */
+/** The CLI version this reference was generated from; not a publication claim. */
 export const OMM_REFERENCE_VERSION = REFERENCE.omm_version;
 
 /** Top-level commands, in the order the export wrote them (sorted by path). */

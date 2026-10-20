@@ -81,6 +81,16 @@ function diffPaths(local, remote) {
 }
 
 async function fetchRemote() {
+  // Allow an offline comparison against an explicitly selected trusted checkout.
+  // This also makes documentation refreshes reproducible at a known commit.
+  if (process.env.OMM_SOURCE_DIR?.trim()) {
+    const sourcePath = path.resolve(process.env.OMM_SOURCE_DIR.trim(), "docs/commands.json");
+    try {
+      return validate(JSON.parse(await readFile(sourcePath, "utf8")), sourcePath);
+    } catch (error) {
+      fail(`could not read ${sourcePath}: ${error.message}`);
+    }
+  }
   let response;
   try {
     response = await fetch(SOURCE_URL, {

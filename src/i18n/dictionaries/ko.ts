@@ -14,7 +14,7 @@
  *
  * Left in English on purpose: commands and flags, environment variables, file
  * paths, verbatim installer output, product and runner names, and the mono
- * token lines (`MIT · Python 3.10+ · Windows, macOS, Linux`).
+ * token lines (`MIT · Windows, macOS, Linux`).
  */
 
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -46,7 +46,7 @@ export const ko = {
   },
 
   hero: {
-    eyebrow: "MIT · Python 3.10+ · Windows, macOS, Linux",
+    eyebrow: "MIT · Windows, macOS, Linux",
     heading: "GGUF 파일은 하나만, 모든 러너에 자동으로 연결됩니다.",
     lede: "디스크에는 모델마다 사본을 하나만 두고 Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui에 그대로 링크하며, 무엇이든 내려받기 전에 남은 메모리부터 확인합니다.",
     cta: "omm 설치하기",
@@ -144,21 +144,21 @@ export const ko = {
       manual: "그 외 수동",
     },
     manual: [
-      "—",
-      "—",
+      "Linux",
+      "Linux",
       "해당 패키지 매니저가 없는 환경",
-      "Linux, ARM Windows",
-      "Linux, ARM Windows",
-      "Intel Mac 및 기타 아키텍처",
-      "ARM Linux/Windows",
+      "Windows, Linux",
+      "Windows, Linux",
+      "모든 플랫폼",
+      "모든 플랫폼",
     ],
   },
 
   install: {
     label: "설치",
-    heading: "한 줄이면 끝, 설치 전엔 서명 검증부터 안전하게.",
-    lede: "Windows 10 22H2 이상, macOS 또는 Linux에서 Python 3.10+가 필요합니다. 스크립트가 빠진 부분을 알아서 채운 다음, omm을 격리된 pipx CLI로 설치합니다.",
-    whatItDoes: "설치 스크립트가 하는 일",
+    heading: "내 컴퓨터에 맞는 설치 방법을 고르세요.",
+    lede: "Windows 10 22H2·11, macOS, Linux에서는 Git 소스 스크립트가 Python 3.10+와 격리된 pipx CLI를 준비합니다. Node.js 22.14 이상을 쓴다면 Python이 필요 없는 npm 설치도 가능합니다.",
+    whatItDoes: "Git 소스 설치 스크립트가 하는 일",
     steps: [
       {
         title: "스테이징 클론",
@@ -182,6 +182,7 @@ export const ko = {
         irm: "irm",
         brew: "Homebrew",
         pipx: "pipx",
+        npm: "npm",
       },
       curl: {
         notes: [
@@ -197,19 +198,44 @@ export const ko = {
         ],
       },
       brew: {
-        notes: ["macOS · Homebrew Tap"],
+        notes: [
+          "macOS · Homebrew Tap",
+        ],
       },
       pipx: {
         notes: [
+          "Python 3.10+와 pipx를 미리 설치해야 합니다.",
           "모든 OS · PyPI 경유, 서명 검증 없음 — 배포 이름은 omm-model이지만 명령은 그대로 omm입니다",
+        ],
+      },
+      npm: {
+        notes: [
+          "Node.js 22.14 이상이 필요합니다. 독립 실행 파일을 설치하므로 Python은 필요하지 않습니다.",
+          "macOS Apple Silicon·Intel, glibc Linux ARM64·x86_64, Windows x64를 지원합니다. 그 외 환경에서는 Python 기반 설치 경로를 사용하세요.",
+          "omm --version으로 확인하세요. 업데이트는 npm update --global @omm-hippo/omm, 제거는 npm uninstall --global @omm-hippo/omm으로 하며 OMM_HOME의 모델과 설정은 보존합니다.",
         ],
       },
       guideLink: "{os} 설치 가이드",
     },
+    quickStart: {
+      heading: "설치 후, 첫 모델 실행까지",
+      body: "아래 순서대로 진행하세요. <name>은 omm list에 표시된 설치 모델 이름으로 바꿉니다. 추천은 적합성 추정이며, verify는 내 컴퓨터에서 실제 로드와 텍스트 생성을 확인합니다.",
+      steps: [
+        "하드웨어를 스캔하고 로컬 AI 러너를 선택합니다.",
+        "호환 모델을 살펴보고 설치할 모델을 고릅니다.",
+        "다음 단계에서 쓸 설치 모델 이름을 확인합니다.",
+        "Ollama 또는 LM Studio에서 로드와 텍스트 생성을 확인합니다.",
+        "선택한 모델을 로컬 러너에서 사용합니다.",
+      ],
+      webBody: "브라우저가 편하다면 로컬 관리 화면을 실행하세요. 추천 확인, 모델 설치, 러너 연결과 응답 확인을 할 수 있습니다. 이 컴퓨터의 127.0.0.1에서 실행되며, 모델 작업에는 확인이 필요합니다.",
+      webLabel: "OMM 로컬 관리 화면 실행",
+      webLink: "로컬 관리 화면 사용법",
+      trouble: "설정이나 러너가 동작하지 않으면 omm doctor와 omm log --lines 5부터 확인하세요. OMM 설치나 모델 다운로드만으로 텍스트 생성이 검증되지는 않습니다.",
+    },
   },
 
   footer: {
-    tagline: "MIT · Python 3.10+ · Windows, macOS, Linux",
+    tagline: "MIT · Windows, macOS, Linux",
     aria: "푸터",
     docs: {
       title: "문서",

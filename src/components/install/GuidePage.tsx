@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import CommandBlock from "@/components/install/CommandBlock";
+import QuickStart from "@/components/install/QuickStart";
 import {
   getGuideLinks,
   type Command,
@@ -454,6 +455,8 @@ export default function GuidePage({
                 ) : null}
               </Reveal>
             </section>
+
+            <QuickStart locale={locale} />
 
             {/* 06 — runners */}
             <section

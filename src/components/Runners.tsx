@@ -24,56 +24,13 @@ type Chip = { os: string; note?: string };
 type RunnerRow = { runner: string; automated: Chip[] };
 
 const ROWS: RunnerRow[] = [
-  {
-    runner: "Ollama",
-    automated: [{ os: "macOS" }, { os: "Linux" }, { os: "Windows" }],
-  },
-  {
-    runner: "LM Studio",
-    automated: [
-      { os: "macOS" },
-      { os: "Linux" },
-      { os: "Windows", note: "headless lms CLI" },
-    ],
-  },
-  {
-    runner: "Jan",
-    automated: [
-      { os: "macOS", note: "Homebrew" },
-      { os: "Windows", note: "winget" },
-      { os: "Linux", note: "Flatpak" },
-    ],
-  },
-  {
-    runner: "AnythingLLM",
-    automated: [
-      { os: "macOS", note: "Homebrew" },
-      { os: "Windows", note: "x86_64" },
-    ],
-  },
-  {
-    runner: "Msty",
-    automated: [
-      { os: "macOS", note: "Homebrew" },
-      { os: "Windows", note: "x86_64" },
-    ],
-  },
-  {
-    runner: "KoboldCpp",
-    automated: [
-      { os: "macOS", note: "Apple Silicon" },
-      { os: "Linux", note: "x86_64" },
-      { os: "Windows", note: "x86_64" },
-    ],
-  },
-  {
-    runner: "text-generation-webui",
-    automated: [
-      { os: "macOS", note: "any arch" },
-      { os: "Linux", note: "x86_64" },
-      { os: "Windows", note: "x86_64" },
-    ],
-  },
+  { runner: "Ollama", automated: [{ os: "macOS", note: "Homebrew" }, { os: "Windows", note: "winget" }] },
+  { runner: "LM Studio", automated: [{ os: "macOS", note: "Homebrew" }, { os: "Windows", note: "winget" }] },
+  { runner: "Jan", automated: [{ os: "macOS", note: "Homebrew" }, { os: "Windows", note: "winget" }, { os: "Linux", note: "Flatpak" }] },
+  { runner: "AnythingLLM", automated: [{ os: "macOS", note: "Homebrew" }] },
+  { runner: "Msty", automated: [{ os: "macOS", note: "Homebrew" }] },
+  { runner: "KoboldCpp", automated: [] },
+  { runner: "text-generation-webui", automated: [] },
 ];
 
 const CONTAINER = "mx-auto w-full max-w-page px-5 md:px-8";
@@ -123,6 +80,7 @@ export default function Runners({ locale }: { locale: Locale }) {
                     </div>
 
                     <div role="cell" className="md:col-span-6">
+                      {row.automated.length === 0 ? <span className="text-small text-ink-3">—</span> : null}
                       <ul className="flex flex-wrap gap-2">
                         {row.automated.map((chip) => (
                           <li
