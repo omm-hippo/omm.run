@@ -204,6 +204,7 @@ export const en = {
       },
       pipx: {
         notes: [
+          "Requires an existing Python 3.10+ and pipx installation.",
           "Any OS via PyPI, no signature verification — the distribution is omm-model, the command stays omm",
         ],
       },

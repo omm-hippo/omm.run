@@ -204,6 +204,7 @@ export const ko = {
       },
       pipx: {
         notes: [
+          "Python 3.10+와 pipx를 미리 설치해야 합니다.",
           "모든 OS · PyPI 경유, 서명 검증 없음 — 배포 이름은 omm-model이지만 명령은 그대로 omm입니다",
         ],
       },

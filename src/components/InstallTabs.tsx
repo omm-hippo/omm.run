@@ -26,7 +26,7 @@ const COMMAND: Record<Method, { readonly prompt: string; readonly command: strin
 
 const PYTHON_DEPENDENCIES = [
   { label: "python.org/downloads", href: "https://www.python.org/downloads/" },
-  { label: "git-scm.com/downloads", href: "https://git-scm.com/downloads" },
+  { label: "pipx.pypa.io", href: "https://pipx.pypa.io" },
 ] as const;
 const NODE_DEPENDENCIES = [
   { label: "nodejs.org/download", href: "https://nodejs.org/en/download" },
