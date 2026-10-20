@@ -1,5 +1,6 @@
 import InstallTabs from "@/components/InstallTabs";
 import Reveal from "@/components/Reveal";
+import QuickStart from "@/components/install/QuickStart";
 import { getGuideLinks } from "@/components/install/guides";
 import { fill, getDictionary } from "@/i18n/dictionaries";
 import { localeHref, type Locale } from "@/i18n/config";
@@ -51,6 +52,7 @@ export default function Install({ locale }: { locale: Locale }) {
               ))}
             </ol>
           </div>
+          <QuickStart locale={locale} />
         </div>
       </div>
     </section>

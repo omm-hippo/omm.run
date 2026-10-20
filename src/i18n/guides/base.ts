@@ -31,9 +31,18 @@ const GIT_DOWNLOADS = {
  *  except for the shell prompt glyph. */
 const pypiCommands = (prompt: string) =>
   [
-    { prompt, command: "python -m pip install omm-model" },
+    { prompt, command: `${prompt === "PS >" ? "py" : "python3"} -m pip install omm-model` },
     { prompt, command: "pipx install omm-model" },
   ] as const;
+
+
+/** README npm distribution: standalone binary, no Python dependency. */
+const npmCommands = (prompt: string) => [
+  { prompt, command: "npm install --global @omm-hippo/omm" },
+  { prompt, command: "omm --version" },
+  { prompt, command: "npm update --global @omm-hippo/omm" },
+  { prompt, command: "npm uninstall --global @omm-hippo/omm" },
+] as const;
 
 export const GUIDE_BASE = {
   windows: {
@@ -71,7 +80,7 @@ export const GUIDE_BASE = {
         prompt: "PS >",
         command: `[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm ${RAW}/install.ps1 | iex`,
       },
-      alts: [{ commands: pypiCommands("PS >") }],
+      alts: [{ commands: pypiCommands("PS >") }, { commands: npmCommands("PS >") }],
     },
     after: {
       steps: [
@@ -108,10 +117,10 @@ export const GUIDE_BASE = {
         { runner: "Ollama", automated: true },
         { runner: "LM Studio", automated: true },
         { runner: "Jan", automated: true },
-        { runner: "KoboldCpp", automated: true },
-        { runner: "text-generation-webui", automated: true },
-        { runner: "AnythingLLM", automated: true },
-        { runner: "Msty", automated: true },
+        { runner: "KoboldCpp", automated: false },
+        { runner: "text-generation-webui", automated: false },
+        { runner: "AnythingLLM", automated: false },
+        { runner: "Msty", automated: false },
       ],
     },
     keeping: {
@@ -221,6 +230,7 @@ export const GUIDE_BASE = {
           ],
         },
         { commands: pypiCommands("$") },
+        { commands: npmCommands("$") },
       ],
     },
     after: {
@@ -248,8 +258,8 @@ export const GUIDE_BASE = {
         { runner: "Jan", automated: true },
         { runner: "AnythingLLM", automated: true },
         { runner: "Msty", automated: true },
-        { runner: "KoboldCpp", automated: true },
-        { runner: "text-generation-webui", automated: true },
+        { runner: "KoboldCpp", automated: false },
+        { runner: "text-generation-webui", automated: false },
       ],
     },
     keeping: {
@@ -338,7 +348,7 @@ export const GUIDE_BASE = {
     },
     install: {
       command: { prompt: "$", command: `curl -fsSL ${RAW}/install.sh | sh` },
-      alts: [{ commands: pypiCommands("$") }],
+      alts: [{ commands: pypiCommands("$") }, { commands: npmCommands("$") }],
     },
     after: {
       steps: [
@@ -360,11 +370,11 @@ export const GUIDE_BASE = {
     },
     runners: {
       rows: [
-        { runner: "Ollama", automated: true },
-        { runner: "LM Studio", automated: true },
+        { runner: "Ollama", automated: false },
+        { runner: "LM Studio", automated: false },
         { runner: "Jan", automated: true },
-        { runner: "KoboldCpp", automated: true },
-        { runner: "text-generation-webui", automated: true },
+        { runner: "KoboldCpp", automated: false },
+        { runner: "text-generation-webui", automated: false },
         { runner: "AnythingLLM", automated: false },
         { runner: "Msty", automated: false },
       ],

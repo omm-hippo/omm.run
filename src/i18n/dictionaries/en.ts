@@ -41,7 +41,7 @@ export const en = {
   },
 
   hero: {
-    eyebrow: "MIT · Python 3.10+ · Windows, macOS, Linux",
+    eyebrow: "MIT · Windows, macOS, Linux",
     heading: "One GGUF on disk. Linked into every runner automatically.",
     lede: "One copy of each model on disk, linked into Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp and text-generation-webui — and checked against your free memory before it downloads anything.",
     cta: "Install omm",
@@ -141,22 +141,22 @@ export const en = {
     },
     /** One per row of `ROWS` in `Runners.tsx`; `—` where there is no gap. */
     manual: [
-      "—",
-      "—",
+      "Linux",
+      "Linux",
       "wherever that package manager isn't installed",
-      "Linux, ARM Windows",
-      "Linux, ARM Windows",
-      "Intel Mac, other architectures",
-      "ARM Linux/Windows",
+      "Windows, Linux",
+      "Windows, Linux",
+      "all platforms",
+      "all platforms",
     ],
   },
 
   install: {
     label: "Install",
     heading:
-      "One line. It verifies the signed commit before it installs anything.",
-    lede: "Requires Python 3.10+ on Windows 10 22H2 or later, macOS, or Linux. The script bootstraps whatever is missing, then installs omm as an isolated pipx CLI.",
-    whatItDoes: "What the installer does",
+      "Choose an installation path for your computer.",
+    lede: "On Windows 10 22H2/11, macOS or Linux, the Git-source script sets up Python 3.10+ and an isolated pipx CLI. Already use Node.js 22.14+? Choose npm for a standalone command without Python.",
+    whatItDoes: "What the Git-source installer does",
     /** README "Supported platforms" — the three things the one-liner does. */
     steps: [
       {
@@ -182,6 +182,7 @@ export const en = {
         irm: "irm",
         brew: "Homebrew",
         pipx: "pipx",
+        npm: "npm",
       },
       curl: {
         notes: [
@@ -197,20 +198,44 @@ export const en = {
         ],
       },
       brew: {
-        notes: ["macOS · Homebrew Tap"],
+        notes: [
+          "macOS · Homebrew Tap",
+        ],
       },
       pipx: {
         notes: [
           "Any OS via PyPI, no signature verification — the distribution is omm-model, the command stays omm",
         ],
       },
+      npm: {
+        notes: [
+          "Requires Node.js 22.14 or newer. Installs a standalone binary; Python is not required.",
+          "Supports macOS Apple Silicon/Intel, glibc Linux ARM64/x86_64 and Windows x64. Use the Python installer on other platforms.",
+          "Check with omm --version. Update with npm update --global @omm-hippo/omm; remove with npm uninstall --global @omm-hippo/omm. Models and settings stay under OMM_HOME.",
+        ],
+      },
       /** `{os}` is the guide's OS name. */
       guideLink: "{os} install guide",
+    },
+    quickStart: {
+      heading: "After installation: get your first model running",
+      body: "Run these commands in order. Replace <name> with the installed model name shown by omm list. A recommendation estimates fit; verify checks local loading and generation.",
+      steps: [
+        "Scan hardware and choose a local AI runner.",
+        "Review compatible models and choose one to install.",
+        "Find the installed model name to use below.",
+        "Check loading and text generation through Ollama or LM Studio.",
+        "Use the selected model in its local runner.",
+      ],
+      webBody: "Prefer a browser? Start the local manager to review recommendations, install models, manage runner links and confirm a response. It runs on this computer at 127.0.0.1. Model operations require confirmation.",
+      webLabel: "Start the local OMM manager",
+      webLink: "Local manager guide",
+      trouble: "If setup or a runner fails, start with omm doctor and omm log --lines 5. Installing OMM or downloading a model alone does not verify generation.",
     },
   },
 
   footer: {
-    tagline: "MIT · Python 3.10+ · Windows, macOS, Linux",
+    tagline: "MIT · Windows, macOS, Linux",
     aria: "Footer",
     docs: {
       title: "Docs",

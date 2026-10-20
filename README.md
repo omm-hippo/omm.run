@@ -37,6 +37,9 @@ from `src/omm/cli.py`. Do not edit the copy by hand:
 ```sh
 npm run sync-commands   # fetch the current export and write the copy
 npm run check-commands  # fail if the committed copy has drifted
+
+# Or compare against a trusted, pinned local product checkout without fetching:
+OMM_SOURCE_DIR=/path/to/omm npm run check-commands
 ```
 
 `.github/workflows/commands-sync.yml` runs the check on every pull request and
@@ -60,6 +63,7 @@ or deploying it.
 ```sh
 npm test
 npm run lint
+npx next typegen
 npx tsc --noEmit
 npm run build
 ```

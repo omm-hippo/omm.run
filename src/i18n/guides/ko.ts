@@ -52,10 +52,25 @@ const PYPI_ALT = {
   captions: [null, "격리된 명령줄 설치를 원한다면 pipx를 권장합니다"],
   notes: [
     "배포 이름은 omm-model이지만, 설치되는 명령과 Python import는 그대로 omm입니다.",
-    "설치할 때 쓴 도구로 그대로 업그레이드하거나 제거하세요: python -m pip install --upgrade omm-model 또는 pipx upgrade omm-model. 둘 다 OMM_HOME 아래의 다운로드된 모델과 설정을 그대로 보존합니다.",
+    "설치할 때 쓴 도구로 그대로 업그레이드하거나 제거하세요: python3 -m pip install --upgrade omm-model(Windows: py -m pip install --upgrade omm-model) 또는 pipx upgrade omm-model. 둘 다 OMM_HOME 아래의 다운로드된 모델과 설정을 그대로 보존합니다.",
     "이 방법은 앞서 설명한 서명된 커밋 검증을 거치지 않고, PyPI 자체의 계정 보안과 TLS에 의존합니다. 다른 PyPI 패키지를 설치할 때와 다르지 않은 신뢰 모델입니다.",
     "omm update는 정식 omm Git 소스 설치만 업데이트합니다. pip나 pipx로 설치했다면 아무것도 바꾸지 않고 해당하는 패키지 매니저 명령만 출력합니다. Git 전용 베타 채널도 패키지 매니저로 설치한 경우에는 쓸 수 없습니다.",
   ],
+} as const;
+
+const NPM_ALT = {
+  heading: "또는 npm으로 독립 실행 파일 설치",
+  body: "Node.js 22.14 이상이 필요합니다. 플랫폼에 맞는 실행 파일을 설치하므로 이 경로에는 Python, pipx, git이 필요하지 않습니다.",
+  captions: [
+    "전역 설치",
+    "설치 버전 확인",
+    "npm으로 업데이트",
+    "npm으로 제거"
+  ],
+  notes: [
+    "macOS Apple Silicon·Intel, glibc 기반 Linux ARM64·x86_64, Windows x64 바이너리를 제공합니다. 그 외 플랫폼·libc 조합은 Python 설치 스크립트나 PyPI를 사용하세요.",
+    "npm으로 제거해도 OMM_HOME의 모델과 설정은 보존합니다. 이 경로는 아래 Git 소스 서명 검증·pipx 전환 대신 npm 네이티브 패키지를 사용합니다."
+  ]
 } as const;
 
 const AFTER_BODY =
@@ -71,12 +86,6 @@ const SCAN_STEP = {
 
 const SCAN_RUNNERS_ROW = "로컬 AI 러너 — 러너마다 한 행씩, 상태와 함께 표시";
 
-const WIZARD_LISTS_INSTALLED =
-  "이미 설치된 러너도 마법사 목록에 빠짐없이 나타납니다. 숨기지 않고 installed로 표시하므로, 체크리스트는 항상 omm이 실제로 감지한 상태를 그대로 반영합니다.";
-
-const MANUAL_MEANS =
-  "여기서 '수동'이라는 말은 마법사가 제조사의 설치 프로그램을 대신 실행해 주지는 않는다는 뜻일 뿐입니다. 대신 다운로드 링크를 출력해 주고, 앱만 존재하면 omm은 다른 러너와 똑같이 이를 감지하고 링크합니다.";
-
 const LMSTUDIO_NOTE =
   "Ollama 자체의 모델 위치는 OLLAMA_MODELS를 따릅니다. LM Studio는 자체 home 포인터를 따르므로, LM Studio가 omm이 찾을 수 없는 사용자 지정 디렉터리를 쓰고 있다면 OMM_LMSTUDIO_MODELS_DIR을 설정하세요.";
 
@@ -87,7 +96,7 @@ const UNINSTALL_MARKS =
   "설치 스크립트는 사용자 지정 홈 디렉터리에 표시를 남겨 두어, 제거 스크립트가 모호하거나 안전하지 않은 위치는 건드리지 않고 거부할 수 있게 합니다. 제거하는 동안 셸 프로필을 다시 쓰는 일은 절대 없습니다.";
 
 const UNINSTALL_PYPI =
-  "PyPI로 설치했다면 대신 python -m pip uninstall omm-model 또는 pipx uninstall omm-model을 쓰세요. 둘 다 모델과 설정을 보존합니다.";
+  "PyPI로 설치했다면 대신 python3 -m pip uninstall omm-model(Windows: py -m pip uninstall omm-model) 또는 pipx uninstall omm-model을 쓰세요. 둘 다 모델과 설정을 보존합니다.";
 
 const OLD_GIT = {
   why: "git 버전이 너무 오래되어 SSH 커밋 서명을 확인할 수 없습니다. 설치 스크립트는 이런 '검증 불가' 상태를 서명 오류와 똑같이 취급합니다.",
@@ -177,7 +186,7 @@ export const GUIDES_KO: GuideTextSet = {
         "irm은 스크립트를 내려받고 iex는 이를 실행합니다. 둘 다 PowerShell 명령이라 탭이 반드시 PowerShell이어야 하는 이유이기도 합니다.",
         "설치 후에는 새 PowerShell 창을 열어야 PATH에 omm이 반영됩니다.",
       ],
-      alts: [PYPI_ALT],
+      alts: [PYPI_ALT, NPM_ALT],
     },
 
     after: {
@@ -198,18 +207,18 @@ export const GUIDES_KO: GuideTextSet = {
     runners: {
       body: "omm은 모델마다 중앙에 사본 하나만 두고, 이를 찾아낸 모든 러너에 링크합니다. 설정 마법사는 이 러너 중 일부를 대신 설치해 주는데, 어떤 것이 가능한지는 운영체제에 따라 갈립니다. 각 제조사가 공식 지원하는 패키지만 쓰기 때문입니다.",
       rows: [
-        "자동 설치",
-        "자동 설치 — headless lms CLI",
+        "자동 설치 — 패키지 매니저",
+        "자동 설치 — 패키지 매니저",
         "자동 설치 — winget",
-        "64비트 x86(AMD64)에서 자동 설치",
-        "64비트 x86에서 자동 설치",
-        "64비트 x86(AMD64)에서 자동 설치",
-        "64비트 x86(AMD64)에서 자동 설치",
+        "수동 — 직접 설치하면 omm이 링크합니다",
+        "수동 — 직접 설치하면 omm이 링크합니다",
+        "수동 — 아티팩트 자동 설치 비활성화",
+        "수동 — 아티팩트 자동 설치 비활성화"
       ],
       notes: [
-        "AnythingLLM도 Msty Studio도 winget 패키지가 없습니다 — AnythingLLM의 커뮤니티 매니페스트는 2025년에 철회됐고, Msty Studio는 단종된 이전 버전용 winget 패키지만 있을 뿐 현재 앱을 겨냥한 것은 없습니다. 대신 64비트 Windows에서는 omm이 각 제조사의 공식 설치 프로그램을 직접 내려받아 조용히 실행합니다. ARM Windows에서는 다운로드 링크만 출력합니다.",
-        WIZARD_LISTS_INSTALLED,
-        "Windows에서는 Ollama를 HTTP API로 먼저 감지하므로, 방금 설치된 트레이 앱도 이 터미널이 새 PATH를 받기 전에 이미 잡힙니다.",
+        "Windows 설정 마법사는 지원되는 패키지 매니저로 Ollama, LM Studio, Jan을 설치합니다. AnythingLLM과 Msty는 직접 설치해야 합니다.",
+        "KoboldCpp와 text-generation-webui는 릴리스 파일의 고정 SHA-256이 없어 자동 설치가 비활성화되어 있습니다. 공식 사이트에서 직접 설치하세요.",
+        "이미 설치된 러너도 설정 목록에 표시됩니다. Ollama는 새 PATH가 적용되기 전에도 로컬 HTTP API로 감지할 수 있습니다."
       ],
       linking: [
         "omm은 허브에 파일 하나만 두고 이를 각 러너에 노출합니다. Windows에서는 먼저 권한이 필요 없는 동일 볼륨 하드 링크를 시도합니다.",
@@ -295,9 +304,9 @@ export const GUIDES_KO: GuideTextSet = {
     metaDescription:
       "macOS용 omm 설치 단계별 안내: Terminal 열기, macOS가 기본으로는 충족하지 못하는 Python 3.10+ 요구 사항, 정확한 명령, 설치 스크립트가 검증하는 항목, 오류 메시지마다의 의미까지 다룹니다.",
     heading: "macOS에 omm 설치하기",
-    lede: "Terminal에서 명령 하나면 끝입니다. 먼저 읽어 둘 만한 부분은 Python 요구 사항입니다. macOS에 기본 탑재된 Python은 대개 버전이 너무 낮고, 설치 스크립트가 이를 대신 바꿔 주지는 않습니다.",
+    lede: "Terminal에서 설치하세요. Git 소스 스크립트는 사용 가능한 Python 3.10+와 git을 찾고, 빠진 의존성을 Homebrew로 설치합니다. Python이 필요 없는 npm 경로도 있습니다.",
     summary:
-      "Terminal, 기본 탑재 Python이 대개 너무 오래된 이유, 그리고 Homebrew 기반 러너 지원 범위.",
+      "Terminal, Homebrew 의존성 준비, npm, 현재 러너 지원 범위.",
 
     app: {
       heading: "Terminal 열기",
@@ -305,7 +314,7 @@ export const GUIDES_KO: GuideTextSet = {
       open: [
         "Command와 Space를 함께 누르고 Terminal을 입력한 뒤 Enter를 누르세요. Terminal은 Applications › Utilities에서도 찾을 수 있습니다.",
         "iTerm2, Warp, Ghostty, 또는 에디터에 내장된 터미널을 써도 모두 괜찮습니다.",
-        "omm을 설치하는 데 sudo는 필요 없습니다.",
+        "격리된 omm 설치에는 sudo가 필요 없지만 Homebrew 준비 중 Mac 로그인 암호를 요청할 수 있습니다.",
       ],
       samplesIntro:
         "프롬프트를 보면 지금 어떤 셸에 있는지 알 수 있습니다. 아래 어느 쪽이든 상관없습니다.",
@@ -319,7 +328,7 @@ export const GUIDES_KO: GuideTextSet = {
       body: "설치 스크립트는 빠진 부분을 Homebrew로 채워 넣습니다. Homebrew 자체가 없다면 Homebrew의 공식 설치 프로그램으로 Homebrew부터 부트스트랩합니다(직접 Homebrew를 설치해 두고 싶다면 먼저 OMM_AUTO_INSTALL_HOMEBREW=0을 export하세요).",
       requirements: [
         "macOS에 기본 포함된 python3는 대개 3.10보다 낮습니다. Python 3.10+를 찾지 못하면 설치 스크립트가 Homebrew로 설치합니다 — 필요하면 Homebrew 자체도 먼저 부트스트랩합니다.",
-        "macOS에는 처음 실행하면 Apple의 Command Line Tools 설치 프로그램을 띄우는 git 스텁이 들어 있습니다. 그 대화상자를 수락하는 것만으로 이 요구 사항은 충족됩니다. 그래도 git이 없다면 설치 스크립트가 Python과 같은 방식으로 Homebrew를 통해 git을 설치합니다.",
+        "Command Line Tools가 없으면 설치 스크립트는 Apple의 python3·git 스텁을 실행하지 않고 건너뜁니다. 사용 가능한 도구를 찾고 Homebrew로 빠진 의존성을 설치하며, Homebrew 준비에는 Mac 로그인 암호와 Command Line Tools 설치가 필요할 수 있습니다.",
         "설치 스크립트는 방금 검증을 마친 그 Python으로 pipx까지 대신 설치합니다. Homebrew나 PEP 668 Python이 일반 --user 설치를 거부하면 --break-system-packages를 붙여 재시도합니다.",
       ],
     },
@@ -347,6 +356,7 @@ export const GUIDES_KO: GuideTextSet = {
           ],
         },
         PYPI_ALT,
+        NPM_ALT,
       ],
     },
 
@@ -367,18 +377,17 @@ export const GUIDES_KO: GuideTextSet = {
     runners: {
       body: "omm은 모델마다 중앙에 사본 하나만 두고, 이를 찾아낸 모든 러너에 링크합니다. 설정 마법사는 이 러너 중 일부를 대신 설치해 주는데, 어떤 것이 가능한지는 운영체제에 따라 갈립니다. 각 제조사가 공식 지원하는 패키지만 쓰기 때문입니다. 세 운영체제 중에서는 macOS의 지원 범위가 가장 넓습니다.",
       rows: [
-        "자동 설치",
-        "자동 설치 — headless lms CLI",
         "자동 설치 — Homebrew cask",
         "자동 설치 — Homebrew cask",
         "자동 설치 — Homebrew cask",
-        "Apple Silicon에서는 자동 설치, Intel Mac은 수동",
-        "모든 Mac에서 자동 설치",
+        "자동 설치 — Homebrew cask",
+        "자동 설치 — Homebrew cask",
+        "수동 — 아티팩트 자동 설치 비활성화",
+        "수동 — 아티팩트 자동 설치 비활성화"
       ],
       notes: [
-        "Homebrew를 쓰는 세 행은 Homebrew가 설치돼 있어야 동작합니다. 없으면 마법사는 Homebrew not found - install manually from …라고 알려 주고, 다운로드 URL을 짐작하는 대신 제조사 링크를 그대로 제공합니다.",
-        "KoboldCpp는 Intel Mac용 빌드를 내놓지 않으므로, Intel Mac에서는 마법사가 설치 대신 다운로드 페이지를 보여 줍니다.",
-        WIZARD_LISTS_INSTALLED,
+        "자동 설치 항목은 Homebrew가 필요합니다. 패키지 매니저 경로를 사용할 수 없다면 직접 설치하세요.",
+        "KoboldCpp와 text-generation-webui는 릴리스 파일의 고정 SHA-256이 없어 자동 설치가 비활성화되어 있습니다. 직접 설치한 러너도 감지하고 모델을 링크할 수 있습니다."
       ],
       linking: null,
     },
@@ -436,7 +445,7 @@ export const GUIDES_KO: GuideTextSet = {
         fix: "하위 디렉터리까지 이어지는 전체 경로를 쓰세요. 예: export OMM_HOME=/Volumes/Models/omm.",
       },
       {
-        why: "이건 설치 스크립트가 아니라 설정 마법사 이야기입니다. Homebrew 기반의 세 러너는 PATH에 brew가 있어야 합니다. omm은 다운로드 URL을 직접 추측하지 않습니다.",
+        why: "이건 설치 스크립트가 아니라 설정 마법사 이야기입니다. Homebrew 기반 러너는 PATH에 brew가 있어야 합니다. omm은 다운로드 URL을 직접 추측하지 않습니다.",
         fix: "Homebrew를 설치하고 omm setup을 다시 실행하거나, 출력된 링크에서 해당 러너를 직접 설치하세요 — 어느 쪽이든 omm은 모델을 링크해 줍니다.",
       },
       UNRECOGNIZED_HOME,
@@ -449,11 +458,11 @@ export const GUIDES_KO: GuideTextSet = {
   linux: {
     metaTitle: "Linux에 omm 설치하기",
     metaDescription:
-      "Linux용 omm 설치 단계별 안내: 한 줄짜리 설치 스크립트, apt로 자동 설치되는 항목과 Fedora·Arch·openSUSE에서 직접 해야 하는 항목, 그리고 설치 오류 메시지마다의 의미까지 다룹니다.",
+      "Linux용 omm 설치 단계별 안내: 한 줄짜리 설치 스크립트, apt-get·dnf·yum·pacman·apk 의존성 준비와 npm 설치 경로, 그리고 설치 오류 메시지마다의 의미까지 다룹니다.",
     heading: "Linux에 omm 설치하기",
-    lede: "어떤 터미널에서든 명령 하나면 됩니다. Debian과 Ubuntu에서는 설치 스크립트가 필요한 의존성을 알아서 받아 오고, 다른 배포판에서는 python3와 git만 먼저 직접 설치하면 그 뒤 과정은 완전히 똑같습니다.",
+    lede: "어떤 터미널에서든 시작할 수 있습니다. 설치 스크립트는 apt-get, dnf, yum, pacman, apk로 의존성을 준비합니다. 그 외 배포판은 Python 3.10+와 git을 먼저 직접 설치하세요.",
     summary:
-      "아무 터미널이나 좋다는 점, apt 자동 설치가 하는 일, 그리고 Fedora·Arch·openSUSE에서 직접 설치해야 하는 것.",
+      "터미널, 지원되는 패키지 매니저의 의존성 준비, npm, 수동 설치가 필요한 환경.",
 
     app: {
       heading: "터미널 열기",
@@ -487,7 +496,7 @@ export const GUIDES_KO: GuideTextSet = {
         "설치 후에는 새 셸을 열어야 PATH에 omm이 반영됩니다.",
         "-f와 -s 플래그는 실패 시 curl을 조용하게 만듭니다. 아무 반응도 없다면 아래 문제 해결 섹션을 확인하세요.",
       ],
-      alts: [PYPI_ALT],
+      alts: [PYPI_ALT, NPM_ALT],
     },
 
     after: {
@@ -507,19 +516,18 @@ export const GUIDES_KO: GuideTextSet = {
     runners: {
       body: "omm은 모델마다 중앙에 사본 하나만 두고, 이를 찾아낸 모든 러너에 링크합니다. 설정 마법사는 이 러너 중 일부를 대신 설치해 주는데, 어떤 것이 가능한지는 운영체제에 따라 갈립니다. 각 제조사가 공식 지원하는 패키지만 쓰기 때문입니다.",
       rows: [
-        "자동 설치",
-        "자동 설치 — headless lms CLI",
+        "수동 — 직접 설치하면 omm이 링크합니다",
+        "수동 — 직접 설치하면 omm이 링크합니다",
         "자동 설치 — Flatpak",
-        "x86_64에서 자동 설치",
-        "x86_64에서 자동 설치",
-        "수동 — 직접 설치하면 omm이 그대로 링크합니다",
-        "수동 — 직접 설치하면 omm이 그대로 링크합니다",
+        "수동 — 아티팩트 자동 설치 비활성화",
+        "수동 — 아티팩트 자동 설치 비활성화",
+        "수동 — 직접 설치하면 omm이 링크합니다",
+        "수동 — 직접 설치하면 omm이 링크합니다"
       ],
       notes: [
-        MANUAL_MEANS,
-        "Jan은 PATH에 flatpak이 있어야 합니다. 없으면 마법사는 flatpak not found - install manually from https://jan.ai/download라고 알려 줍니다.",
-        "AnythingLLM의 공식 Linux 설치 방법은 AppArmor 프로필을 물어보는 대화형 설치 프로그램뿐이고 문서화된 silent 플래그도 없으며, Msty는 Linux용 패키지 자체가 없습니다 — 여기서 둘 다 자동 설치되지 않는 이유입니다.",
-        "KoboldCpp와 text-generation-webui는 x86_64 Linux 빌드만 내놓으므로, ARM에서는 마법사가 대신 다운로드 페이지를 보여 줍니다.",
+        "Jan은 Flatpak으로 설치합니다. flatpak이 없으면 마법사에서 수동 설치를 안내합니다.",
+        "Linux에서 Ollama, LM Studio, AnythingLLM, Msty는 직접 설치해야 합니다. KoboldCpp와 text-generation-webui는 고정 SHA-256이 없어 릴리스 파일 자동 설치가 비활성화되어 있습니다.",
+        "직접 설치한 러너도 감지하고 모델을 링크할 수 있습니다."
       ],
       linking: null,
     },
@@ -545,7 +553,7 @@ export const GUIDES_KO: GuideTextSet = {
     trouble: [
       CURL_SILENT,
       {
-        why: "python3나 python 3.10 이상 버전을 찾지 못했습니다. 설치 스크립트의 자동 설치는 apt-get이 있는 곳에서만 동작하고, 그런 곳에서도 apt가 실패하면 조용히 포기합니다.",
+        why: "python3나 python 3.10 이상 버전을 찾지 못했습니다. apt-get, dnf, yum, pacman, apk 중 지원되는 패키지 매니저가 없거나 의존성 설치가 실패한 경우입니다.",
         fix: "배포판의 패키지 매니저로 Python 3.10 이상을 설치하세요 — sudo apt install python3 python3-venv python3-pip, sudo dnf install python3, sudo pacman -S python 등 — 그런 다음 설치 명령을 다시 실행하세요.",
       },
       {

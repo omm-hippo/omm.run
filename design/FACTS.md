@@ -866,3 +866,32 @@ real `--help`. With this batch `scripts/check-omm-sync.mjs` passes against
   70000` range error (exit 2). The already-running line is quoted from
   source. Risk `high-impact`: the page itself can download, link and remove
   models.
+
+
+## Current product refresh — 2026-10-20
+
+The following facts supersede older installation/runner coverage above. Source:
+`omm-hippo/omm` main at `0cf03f3` (pyproject version `0.4.0`). This is a source
+snapshot, not a claim that every package channel has published 0.4.0.
+
+- `README.md`, npm: Node.js >=22.14; standalone native binary, no Python;
+  macOS arm64/x64, glibc Linux arm64/x64, Windows x64. npm update/uninstall
+  preserve `OMM_HOME`. Git-source signature/pipx steps apply to the script path.
+- `scripts/export_command_reference.py` generated the site's 51-entry export
+  directly from that CLI. Content matches upstream `docs/commands.json` apart
+  from its intentionally ignored version field (upstream still says 0.3.175).
+- `src/omm/linker.py:has_automated_installer`: Ollama and LM Studio on macOS/
+  Windows; Jan on macOS/Windows/Linux; AnythingLLM and Msty on macOS only;
+  KoboldCpp/text-generation-webui automated artifact installs disabled (no
+  pinned SHA-256). Model detection/linking remains separate from installation.
+- `install.sh:is_macos_clt_stub` skips Apple's Python/git stubs without CLT;
+  Homebrew bootstrap can require a login password and install CLT.
+- `docs/local-web.md`: local manager on loopback; browser opens only with
+  `--open`; response checks require Ollama/LM Studio APIs and loading consent;
+  fixed text probe is not task-quality evidence. Release only owned loads;
+  failed checks preserve model files. Click launchers require an existing OMM
+  installation and do not enable login auto-start.
+- `README.md`, Quick start: setup -> recommend -> list -> verify <name> ->
+  run <name>; troubleshoot with doctor and log --lines 5.
+- `src/omm/hardware.py:18` still uses a 1.0 GB minimum RAM reserve, despite the
+  README's older 2 GB wording. Keep the code-backed site arithmetic unchanged.
