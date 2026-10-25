@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import CommandCard from "@/components/assistant/CommandCard";
 import type {
@@ -106,12 +106,20 @@ function parseResponse(
 export default function AssistantClient({
   cards,
   locale,
+  compact = false,
+  contextCommand,
 }: {
   readonly cards: readonly AssistantCommandCard[];
   readonly locale: Locale;
+  readonly compact?: boolean;
+  readonly contextCommand?: CommandId;
 }) {
   const t = getDictionary(locale).assistant;
+  const resultSection = useRef<HTMLElement>(null);
+  const questionInput = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { if (compact && !questionInput.current?.closest("[hidden]")) questionInput.current?.focus(); }, [compact]);
   const [question, setQuestion] = useState("");
+  const [submittedQuestion, setSubmittedQuestion] = useState("");
   const [turnCount, setTurnCount] = useState(0);
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [result, setResult] = useState<AssistantResult | null>(null);
@@ -130,7 +138,8 @@ export default function AssistantClient({
     : [];
   const trimmed = question.trim();
   const turnLimitReached = turnCount >= MAX_TURNS;
-  const searchHref = `${localeHref("/commands", locale)}?q=${encodeURIComponent(trimmed)}`;
+  const privateInput = result?.reason === "sensitive_input" || result?.reason === "unsafe_input";
+  const searchHref = privateInput ? localeHref("/commands", locale) : `${localeHref("/commands", locale)}?q=${encodeURIComponent(trimmed)}`;
 
   async function submitQuestion(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -141,6 +150,7 @@ export default function AssistantClient({
       return;
     }
 
+    setSubmittedQuestion(trimmed);
     setStatus("loading");
     setError(null);
     setResult(null);
@@ -151,7 +161,7 @@ export default function AssistantClient({
       const response = await fetch("/api/assistant", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ locale, question: trimmed, turnCount }),
+        body: JSON.stringify({ locale, question: trimmed, turnCount, ...(contextCommand ? { contextCommand } : {}) }),
         signal: controller.signal,
       });
 
@@ -171,11 +181,16 @@ export default function AssistantClient({
 
   function reset() {
     setQuestion("");
+    setSubmittedQuestion("");
     setTurnCount(0);
     setStatus("idle");
     setResult(null);
     setError(null);
   }
+
+  useEffect(() => {
+    if (compact && (result || error)) resultSection.current?.scrollIntoView({ block: "nearest" });
+  }, [compact, result, error]);
 
   const resultLabel =
     result?.kind === "clarify"
@@ -185,7 +200,7 @@ export default function AssistantClient({
         : t.resultLabel;
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className={compact ? "assistant-compact" : "mx-auto max-w-3xl"}>
       <div>
         <form onSubmit={submitQuestion} noValidate>
           <label htmlFor="assistant-question" className="text-h3 block">
@@ -193,6 +208,7 @@ export default function AssistantClient({
           </label>
           <div className="mt-5 rounded-lg border border-line-1 bg-bg-1 focus-within:border-accent-line">
             <textarea
+              ref={questionInput}
               id="assistant-question"
               value={question}
               onChange={(event) => {
@@ -200,9 +216,14 @@ export default function AssistantClient({
                 if (error) setError(null);
               }}
               placeholder={t.placeholder}
-              rows={6}
+              onKeyDown={(event) => {
+                if (compact && event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
+                  event.preventDefault(); event.currentTarget.form?.requestSubmit();
+                }
+              }}
+              rows={compact ? 3 : 6}
               aria-describedby="assistant-privacy assistant-counter"
-              disabled={turnLimitReached}
+              disabled={turnLimitReached || status === "loading"}
               className="block w-full resize-y bg-transparent px-4 pt-4 text-[16px] leading-7 text-ink-0 outline-none placeholder:text-ink-3 disabled:cursor-not-allowed disabled:text-ink-3"
             />
             <div className="flex items-center justify-between border-t border-line-0 px-4 py-3">
@@ -231,7 +252,7 @@ export default function AssistantClient({
             </p>
           ) : null}
 
-          <div className="mt-8 border-t border-line-0 pt-6">
+          {(!compact || (!result && status === "idle")) ? <div className="mt-8 border-t border-line-0 pt-6">
             <p className="text-label">{t.quickLabel}</p>
             <div className="mt-3 flex flex-col items-start gap-2">
               {t.quickQuestions.map((example) => (
@@ -249,15 +270,16 @@ export default function AssistantClient({
                 </button>
               ))}
             </div>
-          </div>
+          </div> : null}
         </form>
       </div>
 
-      <section
+      {(status !== "idle" || error || !compact) ? <section ref={resultSection}
         aria-live="polite"
         aria-busy={status === "loading"}
         className="mt-10 min-h-80 border-t border-line-1 pt-8"
       >
+        {compact && submittedQuestion ? <p className="assistant-question-echo">{submittedQuestion}</p> : null}
         {status === "loading" ? (
           <div className="flex min-h-64 items-center border-y border-line-0">
             <p className="font-mono text-[13px] text-ink-2">{t.submitting}</p>
@@ -338,7 +360,7 @@ export default function AssistantClient({
             </div>
           </div>
         ) : null}
-      </section>
+      </section> : null}
     </div>
   );
 }

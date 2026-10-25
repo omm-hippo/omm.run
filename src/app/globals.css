@@ -663,3 +663,39 @@
 
 .footer-site-links { display: flex; flex-wrap: wrap; gap: 16px 32px; padding-bottom: 28px; margin-bottom: 32px; border-bottom: 1px solid var(--line-0); font-size: 15px; color: var(--ink-1); }
 .footer-site-links a:hover { color: var(--accent); }
+
+/* Persistent assistant. Its example-free launcher never sends a model request. */
+.assistant-dock { position: fixed; z-index: 80; right: max(20px,env(safe-area-inset-right)); bottom: calc(18px + env(safe-area-inset-bottom)); }
+.assistant-launcher { display: flex; align-items: center; gap: 6px; min-height: 60px; padding: 8px 14px 8px 9px; border: 1px solid var(--line-1); border-radius: 32px; background: var(--bg-1); color: var(--ink-0); }
+.assistant-launcher svg { width: 42px; height: 42px; color: var(--accent); }
+.assistant-launcher > span { font-size: 12px; font-weight: 500; }
+.assistant-launcher:hover { border-color: var(--accent); }
+.assistant-launcher:focus-visible, .assistant-dock-header button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.assistant-dock-panel { width: 440px; max-height: min(720px,calc(100dvh - 110px)); display: flex; flex-direction: column; position: absolute; right: 0; bottom: 76px; border: 1px solid var(--line-1); border-radius: 10px; background: var(--bg-0); box-shadow: 0 8px 36px #0008; }
+.assistant-dock-panel[hidden] { display: none; }
+.assistant-dock-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 18px 20px; border-bottom: 1px solid var(--line-0); }
+.assistant-dock-header h2 { font-size: 17px; font-weight: 600; color: var(--ink-0); }
+.assistant-dock-header p { font-size: 13px; line-height: 1.7; color: var(--ink-2); margin-top: 4px; }
+.assistant-dock-header button { font-size: 26px; line-height: 1; padding: 0 2px; color: var(--ink-1); }
+.assistant-dock-content { overflow-y: auto; overscroll-behavior: contain; padding: 18px 20px 22px; min-height: 0; }
+.assistant-page-context { margin-bottom: 12px; font-size: 12px; color: var(--accent); }
+.assistant-compact { font-size: 14px; line-height: 1.75; }
+.assistant-compact .text-h3 { font-size: 15px; line-height: 1.6; }
+.assistant-compact .mt-5 { margin-top: 12px; }
+.assistant-compact .mt-8 { margin-top: 20px; }
+.assistant-compact .mt-10 { margin-top: 20px; }
+.assistant-compact .mt-6 { margin-top: 16px; }
+.assistant-compact .min-h-80 { min-height: 0; }
+.assistant-compact .min-h-64 { min-height: 64px; }
+.assistant-compact .text-small { font-size: 12px; line-height: 1.8; }
+.assistant-compact article .grid { display: block; }
+.assistant-compact article .text-label { font-size: 10px; letter-spacing: 0.06em; }
+.assistant-compact article code { overflow-wrap: anywhere; white-space: pre-wrap; }
+.assistant-compact article { padding-block: 18px; }
+@media (max-width: 540px) {
+  .assistant-dock { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .assistant-launcher { min-height: 54px; padding: 5px 11px 5px 7px; }
+  .assistant-launcher svg { width: 38px; height: 38px; }
+  .assistant-dock-panel { width: calc(100vw - 24px); bottom: 66px; max-height: calc(100dvh - 98px); }
+}
+.assistant-question-echo { margin-bottom: 18px; border-left: 2px solid var(--accent); padding: 8px 12px; background: var(--bg-1); color: var(--ink-0); font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }

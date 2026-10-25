@@ -5,11 +5,16 @@ import { buildCommitSha } from "./src/lib/site-metadata";
 
 const nextConfig: NextConfig = {
   async redirects() {
-    return ["", "/en", "/ko"].map((prefix) => ({
+    const comparisonRedirects = ["", "/en", "/ko"].map((prefix) => ({
       source: `${prefix}/commands/compare`,
       destination: `${prefix}/commands/info`,
       permanent: true,
     }));
+    return [...comparisonRedirects, ...["", "/en", "/ko"].map((prefix) => ({
+      source: `${prefix}/assistant`,
+      destination: `${prefix || "/"}?assistant=open`,
+      permanent: true,
+    }))];
   },
   // Cloudflare bindings are supplied by the Worker. Plain `next dev` uses the
   // assistant route's deterministic fallback without opening remote sessions.

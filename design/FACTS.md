@@ -987,3 +987,25 @@ CLI/install facts are preserved.
   native summary keyboard controls, hash reveal, and 12 actual downloads with
   saved file contents checked. The local workerd test excludes AI/D1 bindings;
   it does not establish actual model execution or credentialed integrations.
+
+## Assistant dock and command retrieval — 2026-10-25
+
+- The assistant is now a persistent bottom-right launcher in the locale root,
+  not a separate destination. Opening fetches static catalog data only; inference
+  requires an explicit submitted question. Old /assistant URLs use static 308
+  redirects to the home-page dock, including in the Worker cache environment.
+- Drafts, results and turn count stay in memory across client-side navigation
+  and closing/reopening. No saved conversation store, provider switch, tunnel,
+  port exposure or Mac mini runtime configuration is introduced.
+- Validated `contextCommand` IDs support narrow questions about the current
+  command page. Secret/URL checks run first. No page body, arbitrary URL or
+  private file contents are attached as context. Sensitive fallback text is not
+  copied into a search-link query string.
+- Long overviews have lower retrieval weight, domain intent priors disambiguate
+  related operations, and group cards show safe help entry points. The existing
+  51-question inspected regression set changed from top-1 24/top-3 30/top-8 40
+  to 47/51/51. These are deterministic retrieval counts, not live LLM accuracy.
+- Local workerd + browser checks cover KO/EN, desktop/mobile, initial focus,
+  no automatic inference, IME Enter suppression, actual local POST responses,
+  page context, draft preservation and legacy redirects. Workers AI model
+  quality and a Mac mini provider remain unverified.

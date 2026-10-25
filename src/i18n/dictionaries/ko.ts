@@ -457,7 +457,7 @@ export const ko = {
     fallbackLabel: "일반 명령어 검색으로 전환",
     source: {
       "workers-ai": "선택 방식: Workers AI 분류기",
-      deterministic: "선택 방식: 결정적 대체 검색",
+      deterministic: "선택 방식: 문서 기반 검색",
     },
     messages: {
       matched: "설명한 작업과 가장 가까운 문서화된 명령어입니다.",
