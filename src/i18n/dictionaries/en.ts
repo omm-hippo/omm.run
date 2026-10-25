@@ -16,7 +16,7 @@ export const en = {
   meta: {
     title: "omm — Open source Model Manager",
     description:
-      "omm is an apt/brew-style package manager for local LLMs (GGUF). It installs models into a central hub, links them into seven local AI runners automatically, and can recommend a model that fits your hardware.",
+      "Find, install and manage local AI models in one place. OMM helps you choose a model for your computer and connect it to supported apps such as Ollama and LM Studio.",
   },
 
   ui: {

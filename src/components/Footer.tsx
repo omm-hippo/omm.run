@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { fill, getDictionary } from "@/i18n/dictionaries";
 import { localeHref, type Locale } from "@/i18n/config";
+import { primaryNavigation } from "@/lib/site-navigation";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -71,6 +72,9 @@ export default function Footer({ locale }: { locale: Locale }) {
   return (
     <footer className="border-t border-line-0 bg-bg-0 py-16">
       <div className="mx-auto w-full max-w-page px-5 md:px-8">
+        <nav aria-label={locale === 'ko' ? '사이트 전체 메뉴' : 'Site sections'} className="footer-site-links">
+          {primaryNavigation(locale).map((item) => <Link key={item.id} href={localeHref(item.href, locale)} prefetch={false}>{item.label}</Link>)}
+        </nav>
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
           <div className="shrink-0 lg:w-64">
             <p className="font-mono font-medium lowercase text-ink-0">omm</p>

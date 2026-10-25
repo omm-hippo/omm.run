@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 
 import {
   LOCALES,
@@ -10,13 +10,13 @@ import {
   LOCALE_NAME,
   HTML_LANG,
   localeHref,
-  canonicalPath,
   switchLocalePath,
   type Locale,
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from "@/i18n/detect";
 import { publishedVersion, PYPI_RELEASE_URL } from "@/lib/site-metadata";
+import { navigationGroup, primaryNavigation } from "@/lib/site-navigation";
 
 const REPO = "https://github.com/omm-hippo/omm";
 
@@ -97,10 +97,6 @@ function useLiveVersion(): string | null {
   return useSyncExternalStore(subscribeVersion, getVersionSnapshot, () => null);
 }
 
-/** Section ids are owned by the other section components. */
-/* Absolute so the same nav works from /install/* as well as from "/". */
-const SECTION_HREFS = ["/#how-it-works"] as const;
-
 const LINK =
   "border-b border-transparent pb-0.5 text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0";
 
@@ -165,13 +161,13 @@ function LanguageToggle({
 
 export default function Nav({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const t = getDictionary(locale).nav;
   const close = () => setOpen(false);
   const version = useLiveVersion();
   const pathname = usePathname();
-  const modelsPath = canonicalPath(pathname);
-  const modelsActive = modelsPath === "/models" || modelsPath.startsWith("/models/");
-  const arenaActive = modelsPath === "/arena";
+  const activeGroup = navigationGroup(pathname);
+  const items = primaryNavigation(locale);
 
   /** Link to "/" is a no-op navigation when already on the home page, so
    *  Next.js never fires its scroll-to-top. Do it by hand in that case. */
@@ -183,7 +179,12 @@ export default function Nav({ locale }: { locale: Locale }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92">
+    <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92" onKeyDown={(event) => {
+      if (event.key === 'Escape' && open) {
+        setOpen(false);
+        menuButton.current?.focus();
+      }
+    }}>
       <div className="mx-auto flex h-14 max-w-page items-center px-5 md:px-8">
         <Link
           href={localeHref("/", locale)}
@@ -199,21 +200,12 @@ export default function Nav({ locale }: { locale: Locale }) {
           ) : null}
         </Link>
 
-        <nav className="ml-8 hidden items-center gap-6 xl:flex">
-          {SECTION_HREFS.map((href, index) => (
-            <a key={href} href={localeHref(href, locale)} className={LINK}>
-              {t.sections[index]}
-            </a>
-          ))}
-          <Link href={localeHref("/install", locale)} prefetch={false} className={LINK}>
-            {t.installGuides}
-          </Link>
-          <Link href={localeHref("/commands", locale)} prefetch={false} className={LINK}>
-            {t.commands}
-          </Link>
-          <Link href={localeHref("/models", locale)} prefetch={false} className={modelsActive ? "border-b border-accent pb-0.5 text-small text-ink-0 transition-colors duration-[120ms] ease-micro" : LINK} aria-current={modelsActive ? "page" : undefined}>
-            {t.models}
-          </Link>
+        <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="ml-8 hidden items-center gap-6 xl:flex">
+          {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} prefetch={false}
+            aria-current={activeGroup === item.id ? 'page' : undefined}
+            className={activeGroup === item.id ? "border-b border-accent pb-0.5 text-small text-ink-0" : LINK}>
+            {item.label}
+          </Link>)}
         </nav>
 
         <div className="ml-auto hidden items-center gap-6 xl:flex">
@@ -222,7 +214,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           </a>
           <LanguageToggle locale={locale} label={t.language} />
           <Link
-            href={localeHref("/#install", locale)}
+            href={localeHref("/install", locale)}
             className="focus-ring-neutral rounded-md bg-accent px-4 py-1.5 text-small font-medium text-accent-ink transition-colors duration-[120ms] ease-micro hover:bg-accent-press"
             prefetch={false}
           >
@@ -231,6 +223,7 @@ export default function Nav({ locale }: { locale: Locale }) {
         </div>
 
         <button
+          ref={menuButton}
           type="button"
           aria-expanded={open}
           aria-controls="nav-panel"
@@ -244,53 +237,12 @@ export default function Nav({ locale }: { locale: Locale }) {
       {/* Mobile: plain full-width panel. No slide, no hamburger morph. */}
       {open ? (
         <div id="nav-panel" className="border-t border-line-0 bg-bg-0 xl:hidden">
-          <nav className="mx-auto flex max-w-page flex-col px-5 py-2">
-            {SECTION_HREFS.map((href, index) => (
-              <a
-                key={href}
-                href={localeHref(href, locale)}
-                onClick={close}
-                className="border-b border-line-0 py-3 text-small text-ink-2"
-              >
-                {t.sections[index]}
-              </a>
-            ))}
-            <Link
-              href={localeHref("/install", locale)}
-              onClick={close}
-              className="border-b border-line-0 py-3 text-small text-ink-2"
-              prefetch={false}
-            >
-              {t.installGuides}
-            </Link>
-            <Link
-              href={localeHref("/commands", locale)}
-              onClick={close}
-              className="border-b border-line-0 py-3 text-small text-ink-2"
-              prefetch={false}
-            >
-              {t.commands}
-            </Link>
-            <Link
-              href={localeHref("/models", locale)}
-              onClick={close}
-              className={`border-b border-line-0 py-3 text-small ${modelsActive ? "text-accent" : "text-ink-2"}`}
-              aria-current={modelsActive ? "page" : undefined}
-              prefetch={false}
-            >
-              {t.models}
-            </Link>
-            <Link
-              href={localeHref("/assistant", locale)}
-              onClick={close}
-              className="border-b border-line-0 py-3 text-small text-ink-2"
-              prefetch={false}
-            >
-              {t.assistant}
-            </Link>
-            <Link href={localeHref("/arena", locale)} onClick={close} prefetch={false} className={`border-b border-line-0 py-3 text-small ${arenaActive ? "text-accent" : "text-ink-2"}`} aria-current={arenaActive ? "page" : undefined}>
-              {locale === "ko" ? "리더보드" : "Leaderboard"}
-            </Link>
+          <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="mx-auto flex max-w-page flex-col px-5 py-2">
+            {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} onClick={close}
+              prefetch={false} aria-current={activeGroup === item.id ? 'page' : undefined}
+              className={`border-b border-line-0 py-3 text-small ${activeGroup === item.id ? 'text-accent' : 'text-ink-2'}`}>
+              {item.label}
+            </Link>)}
             <a
               href={REPO}
               target="_blank"
@@ -307,7 +259,7 @@ export default function Nav({ locale }: { locale: Locale }) {
               />
             </div>
             <Link
-              href={localeHref("/#install", locale)}
+              href={localeHref("/install", locale)}
               onClick={close}
               className="focus-ring-neutral mt-4 mb-2 rounded-md bg-accent px-4 py-2 text-center text-small font-medium text-accent-ink"
               prefetch={false}

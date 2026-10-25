@@ -23,7 +23,7 @@ export const ko = {
   meta: {
     title: "omm — 오픈소스 모델 매니저",
     description:
-      "omm은 로컬 LLM(GGUF)을 위한 apt·brew 방식 패키지 매니저입니다. 모델을 중앙 허브 하나에 설치한 뒤 로컬 AI 러너 일곱 개에 자동으로 링크하고, 하드웨어에 맞는 모델을 추천해 줍니다.",
+      "내 컴퓨터에서 쓸 AI 모델을 찾고, 설치하고, 한곳에서 관리하세요. OMM은 컴퓨터 사양에 맞는 모델 선택과 Ollama·LM Studio 같은 지원 앱의 연결을 돕습니다.",
   },
 
   ui: {

@@ -1,9 +1,9 @@
 import type { Locale } from './config';
 
 const en = {
-  heading: ['AI for your computer.', 'Choose it. Install it. Start a conversation.'],
-  intro: 'OMM connects model selection, installation and local conversation setup in one understandable flow.',
-  install: 'Install OMM', explore: 'Explore models first', preview: 'Interface example · no model is run on this website',
+  heading: ['Local AI models,', 'managed in one place.'],
+  intro: 'Find a model for your computer, download it and connect it to supported apps such as Ollama and LM Studio.',
+  install: 'Install OMM', explore: 'See how to use it', preview: 'Interface example · no model is run on this website',
   tabs: ['Choose a model', 'Installation flow', 'Prepare to chat'],
   previewIntro: ['Start with the task you want to do. Open the wiki for the exact checkpoint and its limits.', 'Choose an installation path, then prepare a model in your local OMM workspace.', 'Turn on the runner’s local API. OMM checks an actual response before opening chat.'],
   previewModel: 'Model', previewUse: 'When to try it', previewSize: 'Published size', viewWiki: 'Read wiki →',
@@ -34,9 +34,9 @@ const en = {
   docsIntro: 'Short explanations first. Expand the technical details when you need them.',
 };
 const ko: typeof en = {
-  heading: ['내 컴퓨터에서 쓸 AI,', '고르고 설치하고 대화하세요.'],
-  intro: '모델 선택부터 설치와 로컬 대화 준비까지, OMM이 흐름을 이어 줍니다.',
-  install: 'OMM 설치하기', explore: '모델 먼저 둘러보기', preview: '화면 예시 · 이 웹사이트에서 모델을 실행하지 않습니다',
+  heading: ['내 컴퓨터에서 쓸 AI 모델,', '한곳에서 관리하세요.'],
+  intro: '컴퓨터 사양에 맞는 모델을 찾고, 내려받은 모델을 Ollama와 LM Studio 같은 지원 앱에 연결하세요.',
+  install: 'OMM 설치하기', explore: '사용 방법 보기', preview: '화면 예시 · 이 웹사이트에서 모델을 실행하지 않습니다',
   tabs: ['모델 고르기', '설치 흐름', '대화 준비'],
   previewIntro: ['어떤 작업에 쓸지부터 고르세요. 정확한 체크포인트와 조건은 모델 위키에서 확인할 수 있습니다.', '설치 경로를 고른 뒤 내 컴퓨터의 OMM 작업 화면에서 러너와 모델을 준비합니다.', '러너의 로컬 API를 켜세요. OMM은 실제 응답을 확인한 뒤 대화를 엽니다.'],
   previewModel: '모델', previewUse: '이럴 때 검토하세요', previewSize: '공개된 규모', viewWiki: '위키에서 보기 →',
@@ -55,10 +55,10 @@ const ko: typeof en = {
   resourceBodies: ['체크포인트별 사실과 조건을 비교합니다.', '운영체제에 맞는 순서를 따라갑니다.', '필요할 때 볼 명령 순서를 저장합니다.', '모델을 받기 전에 확인할 질문입니다.', '실제 위키 자료를 JSON으로 저장합니다.', '하고 싶은 작업을 설명해 보세요.', '공개된 평가 근거를 확인합니다.'],
   faq: '시작 전에 궁금한 점',
   questions: [
-    { title: '모델은 어디서 실행되나요?', body: '로컬 모델은 내 컴퓨터에 설치한 러너에서 실행됩니다. 이 웹사이트는 사용 흐름을 안내하며, 모델을 실행하거나 내 컴퓨터에 자동으로 연결하지 않습니다.' },
-    { title: '추천된 모델이면 좋은 답변이 보장되나요?', body: '추천은 하드웨어 적합성의 추정이고, 응답 확인은 실제 생성이 되는지 보는 과정입니다. 내가 할 작업의 품질은 직접 준비한 예시로 평가해야 합니다. 세 가지는 서로 다른 확인입니다.' },
+    { title: '모델은 어디서 실행되나요?', body: '로컬 모델은 내 컴퓨터에 설치한 Ollama·LM Studio 같은 실행 앱에서 작동합니다. 이 웹사이트는 사용 흐름을 안내하며, 모델을 실행하거나 내 컴퓨터에 자동으로 연결하지 않습니다.' },
+    { title: '추천된 모델이면 좋은 답변이 보장되나요?', body: '추천은 내 컴퓨터의 메모리로 실행할 수 있을지 추정한 결과입니다. 실행이 되더라도 답변의 정확도와 품질은 작업마다 다릅니다. 실제로 할 질문이나 작업으로 직접 확인해 보세요.' },
     { title: '어떤 설치 방법을 고르나요?', body: 'Windows·macOS·Linux 가이드에서 경로를 고르면 됩니다. npm 독립 실행 경로는 Node.js 22.14 이상, Python 기반 경로는 Python 3.10 이상이 필요합니다. 모델과 러너 지원 범위는 플랫폼에 따라 다릅니다.' },
-    { title: '열자마자 모델을 다운로드하나요?', body: '사이트를 둘러보는 것만으로 모델을 받지 않습니다. 로컬 관리 화면에서는 선택한 패키지를 살펴보고 작업을 확인합니다. 대화를 준비하기 전에는 러너의 로컬 API를 켜야 합니다.' },
+    { title: '열자마자 모델을 다운로드하나요?', body: '사이트를 둘러보는 것만으로 모델을 받지 않습니다. 로컬 관리 화면에서도 선택한 모델과 설치 내용을 먼저 확인합니다. 대화를 시작하려면 사용할 실행 앱의 로컬 API를 켜야 합니다.' },
     { title: '어떤 정보가 내 컴퓨터 밖으로 나가나요?', body: '검색·다운로드·업데이트 확인에는 네트워크를 사용합니다. 벤치마크·사용 통계·크래시·아레나 투표의 공유는 각각 동의 정책을 따릅니다. 개인정보 문서와 선택한 모델의 이용 조건을 함께 확인하세요.' },
   ],
   technical: '소스 설치 스크립트의 동작', documents: '이어 볼 문서', fileLinks: '참고 파일 저장',
