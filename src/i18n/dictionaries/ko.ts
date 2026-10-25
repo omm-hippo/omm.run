@@ -33,7 +33,7 @@ export const ko = {
   },
 
   nav: {
-    sections: ["문제", "기능", "러너"],
+    sections: ["사용 흐름", "기능", "러너"],
     installGuides: "가이드",
     commands: "명령어",
     models: "모델 위키",

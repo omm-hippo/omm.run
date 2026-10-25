@@ -16,10 +16,10 @@ export default async function ModelsPage({ params }: PageProps<"/[locale]/models
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getModelDictionary(locale);
-  return <main className="flex-1">
+  return <main className="document-page flex-1">
     <div className="mx-auto w-full max-w-page px-5 pt-8 pb-20 md:px-8 md:pt-16">
       <div className="border-b border-line-1 pb-6 md:pb-8">
-        <p className="text-label text-accent">{t.eyebrow} / 01</p>
+        <p className="document-caption">{t.eyebrow}</p>
         <h1 className="mt-4 max-w-[24ch] text-[28px] leading-[1.2] font-semibold tracking-tight text-ink-0 md:text-[48px]">{t.heading}</h1>
         <div className="mt-5 flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
           <p className="max-w-[65ch] text-ink-2"><span className="sm:hidden">{t.mobileLede}</span><span className="hidden sm:inline">{t.lede}</span></p>

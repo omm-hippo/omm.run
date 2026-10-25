@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DocumentText from "@/components/DocumentText";
 
 import CommandBlock from "@/components/install/CommandBlock";
 import QuickStart from "@/components/install/QuickStart";
@@ -33,24 +34,26 @@ function SectionHead({
   id,
   title,
   body,
+  locale,
   os,
 }: {
   n: string;
   id: string;
   title: string;
   body?: string;
+  locale: Locale;
   os: string;
 }) {
   return (
     <>
-      <p className="text-label">
+      <p className="doc-section-index text-label">
         <span className="text-ink-2">{n}</span>
         <span> / 08 · {os}</span>
       </p>
       <h2 id={`${id}-title`} className="text-h2 mt-3">
         {title}
       </h2>
-      {body ? <p className="text-lede mt-4 max-w-[62ch]">{body}</p> : null}
+      {body ? <DocumentText text={body} locale={locale} className="mt-4" /> : null}
     </>
   );
 }
@@ -90,7 +93,7 @@ function LinkRow({
 
 function NoteList({ notes }: { notes: readonly string[] }) {
   return (
-    <ul className="mt-4 flex flex-col gap-2">
+    <ul className="document-list mt-4">
       {notes.map((note) => (
         <li key={note} className="text-small max-w-[68ch]">
           {note}
@@ -152,10 +155,10 @@ export default function GuidePage({
   }));
 
   return (
-    <main>
+    <main className="document-page">
       {/* Header. `.grid-bg` bookends the landing page's Install section, which
           this page is the long form of. */}
-      <section className="relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
+      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">
@@ -230,7 +233,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="01"
                   os={guide.os}
                   id="which-app"
@@ -275,7 +278,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="02"
                   os={guide.os}
                   id="before"
@@ -309,7 +312,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="03"
                   os={guide.os}
                   id="install"
@@ -349,7 +352,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="04"
                   os={guide.os}
                   id="verification"
@@ -385,7 +388,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="05"
                   os={guide.os}
                   id="after"
@@ -465,7 +468,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="06"
                   os={guide.os}
                   id="runners"
@@ -511,7 +514,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="07"
                   os={guide.os}
                   id="keeping"
@@ -565,7 +568,7 @@ export default function GuidePage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead
+                <SectionHead locale={locale}
                   n="08"
                   os={guide.os}
                   id="trouble"

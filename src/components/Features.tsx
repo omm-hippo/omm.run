@@ -11,7 +11,7 @@ import FeatureBudgetBar from "@/components/FeatureBudgetBar";
 import FeatureBenchTable from "@/components/FeatureBenchTable";
 import FeatureCatalogDiff from "@/components/FeatureCatalogDiff";
 import Reveal from "@/components/Reveal";
-import RichText from "@/components/RichText";
+import RichTextBlocks from "@/components/RichTextBlocks";
 import type { Locale } from "@/i18n/config";
 import { getDictionary, type Dictionary } from "@/i18n/dictionaries";
 
@@ -34,7 +34,7 @@ export default function Features({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <section id="features">
+    <section id="technical-features" className="explanatory-section">
       {rows.map((row, index) => (
         <div
           key={row.id}
@@ -44,7 +44,7 @@ export default function Features({ locale }: { locale: Locale }) {
           className={index === 0 ? undefined : "border-t border-line-0"}
         >
           <div
-            className={`mx-auto w-full max-w-page px-5 py-24 md:px-8 ${
+            className={`mx-auto w-full max-w-page px-5 py-16 md:px-8 ${
               index === 0 ? "pt-32" : index === rows.length - 1 ? "pb-32" : ""
             }`}
           >
@@ -58,9 +58,7 @@ export default function Features({ locale }: { locale: Locale }) {
               >
                 <p className="text-label">{t[row.id].eyebrow}</p>
                 <h2 className="mt-4 text-h2">{t[row.id].title}</h2>
-                <p className="mt-6 max-w-[52ch]">
-                  <RichText segments={t[row.id].body} />
-                </p>
+                <RichTextBlocks segments={t[row.id].body} locale={locale} className="mt-6 max-w-[52ch]" />
               </div>
 
               <div

@@ -1,0 +1,17 @@
+OMM first steps — 2026-10-25
+This is a readable guide. It does not execute commands.
+
+1. Choose an installation path: https://omm.run/en/install
+   npm needs Node.js 22.14+; Python paths need Python 3.10+.
+2. Run omm setup to inspect hardware and choose a runner.
+3. Run omm recommend to review candidates and select a model.
+4. Find its installed name with omm list.
+5. Enable the Ollama or LM Studio local API.
+6. Run omm verify <name> to check loading and actual text generation.
+7. Run omm run <name> to use it.
+
+Local browser workspace: omm web --open
+Replace <name> with the actual installed model name.
+A recommendation estimates fit; a successful response does not establish task quality.
+Troubleshoot with omm doctor and omm log --lines 5.
+Model-specific terms and primary sources: https://omm.run/en/models

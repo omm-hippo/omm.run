@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Disclosure from "@/components/Disclosure";
+import DocumentText from "@/components/DocumentText";
 
 import { localeHref, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -14,26 +16,20 @@ export default function Workspace({ locale }: { locale: Locale }) {
   const t = getDictionary(locale).workspace;
 
   return (
-    <section id="workspace" aria-labelledby="workspace-title" className="border-t border-line-0">
+    <section id="workspace" aria-labelledby="workspace-title" className="explanatory-section border-t border-line-0">
       <div className="mx-auto w-full max-w-page px-5 py-24 md:px-8">
         <p className="text-label">{t.label}</p>
         <h2 id="workspace-title" className="text-h2 mt-4 max-w-[26ch]">{t.heading}</h2>
         <p className="text-small mt-6 max-w-[68ch]">{t.body}</p>
-        <ol className="mt-12 border-t border-line-0">
+        <ol className="mt-8">
           {DESTINATIONS.map(({ id, command, href }, index) => (
-            <li key={id} className="grid grid-cols-1 gap-4 border-b border-line-0 py-8 md:grid-cols-12 md:gap-6">
-              <div className="md:col-span-5">
-                <p className="text-label text-accent" aria-hidden>{String(index + 1).padStart(2, "0")}</p>
-                <h3 className="text-h3 mt-3">{t[id].title}</h3>
-                <code className="text-terminal mt-4 block break-words text-ink-2">{command}</code>
-              </div>
-              <div className="md:col-span-7">
-                <p className="max-w-[62ch]">{t[id].body}</p>
-                <p className="text-small mt-3 max-w-[68ch]">{t[id].requirement}</p>
-                <Link href={localeHref(href, locale)} prefetch={false} className="focus-ring-neutral text-small mt-5 inline-block border-b border-line-1 pb-0.5 text-ink-0 hover:border-accent">
-                  {t[id].link} <span aria-hidden>→</span>
-                </Link>
-              </div>
+            <li key={id}>
+              <Disclosure id={`workspace-${id}`} title={`${String(index + 1).padStart(2, "0")} · ${t[id].title}`}>
+                <code className="text-terminal text-ink-2">{command}</code>
+                <DocumentText text={t[id].body} locale={locale} className="mt-4" />
+                <DocumentText text={t[id].requirement} locale={locale} className="document-caption mt-3" />
+                <Link href={localeHref(href, locale)} prefetch={false} className="home-inline-link">{t[id].link} →</Link>
+              </Disclosure>
             </li>
           ))}
         </ol>

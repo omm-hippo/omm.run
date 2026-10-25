@@ -28,7 +28,7 @@ export const en = {
 
   nav: {
     /** Aligned with the section anchors in `Nav.tsx`. */
-    sections: ["Problem", "Features", "Runners"],
+    sections: ["How it works", "Features", "Runners"],
     installGuides: "Guide",
     commands: "Commands",
     models: "Model wiki",

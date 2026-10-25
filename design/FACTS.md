@@ -955,11 +955,35 @@ gpt-oss 20B/120B, SmolLM3 and Mistral Small 3.2.
 - The labelled 4-bit weight illustration is `parameterScaleB * 4 / 8` decimal
   GB. It uses total MoE size, excludes metadata, other components, context/KV
   cache and runtime overhead, and is not an actual file or RAM measurement.
-- The existing page structure is retained. The later user instruction defers
-  a Notion/Alt-inspired site-wide redesign, new disclosure controls, and new
-  cross-page/file navigation until a later decision. No deferred design draft
-  or generated concept asset is part of the change.
+- The user's latest correction explicitly authorizes implementing disclosures,
+  document/file links, and the Notion/Alt-inspired explanation redesign together
+  in PR #21. This supersedes the earlier, mistaken deferred-scope description.
 - Live source checking found `Supported platforms`, `Storage location`, and
   `Local AI runners` moved from README.md to docs/install.md. Those mirrors now
   use the installation source with a separate cache key; repository-relative
   links retain the docs directory. Refresh purges both known document keys.
+
+## Explanation redesign and file navigation — latest clarified scope, 2026-10-25
+
+The current implementation supersedes the earlier scope misunderstanding: native
+▶ disclosures, document/file links, and the Notion/Alt-inspired explanation
+redesign are implemented together for PR #21. The 23 model records and existing
+CLI/install facts are preserved.
+
+- Home now leads with the choose/install/respond workflow and a three-tab,
+  explicitly labelled interface example. It makes no model request, performs
+  no hardware detection and starts no download or local connection automatically.
+- The example links use actual Qwen3-8B and Gemma 3 4B wiki records. The hub
+  illustration names supported Ollama, LM Studio and Jan runners; generated
+  concept text is not treated as a factual runner-support source.
+- Model and command pages use a shared reading width, paragraph rhythm and
+  property alignment. Native details/summary controls retain their content in
+  HTML, support keyboard toggling, and reveal their target for fragment links.
+  Exact CLI anchors remain unchanged.
+- `public/resources/` contains four authored, bilingual, readable TXT/Markdown
+  files, not executable installers. JSON download links use the real model API.
+  Guidance and reference downloads are linked from home, models and commands.
+- Browser verification covers Korean/English at 1440×1000 and 390×844, tabs,
+  native summary keyboard controls, hash reveal, and 12 actual downloads with
+  saved file contents checked. The local workerd test excludes AI/D1 bindings;
+  it does not establish actual model execution or credentialed integrations.

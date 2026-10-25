@@ -99,7 +99,7 @@ function useLiveVersion(): string | null {
 
 /** Section ids are owned by the other section components. */
 /* Absolute so the same nav works from /install/* as well as from "/". */
-const SECTION_HREFS = ["/#problem", "/#features", "/#runners"] as const;
+const SECTION_HREFS = ["/#how-it-works"] as const;
 
 const LINK =
   "border-b border-transparent pb-0.5 text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0";
@@ -213,12 +213,6 @@ export default function Nav({ locale }: { locale: Locale }) {
           </Link>
           <Link href={localeHref("/models", locale)} prefetch={false} className={modelsActive ? "border-b border-accent pb-0.5 text-small text-ink-0 transition-colors duration-[120ms] ease-micro" : LINK} aria-current={modelsActive ? "page" : undefined}>
             {t.models}
-          </Link>
-          <Link href={localeHref("/assistant", locale)} prefetch={false} className={LINK}>
-            {t.assistant}
-          </Link>
-          <Link href={localeHref("/arena", locale)} prefetch={false} className={arenaActive ? "border-b border-accent pb-0.5 text-small text-ink-0" : LINK} aria-current={arenaActive ? "page" : undefined}>
-            {locale === "ko" ? "리더보드" : "Leaderboard"}
           </Link>
         </nav>
 

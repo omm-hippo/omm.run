@@ -1,0 +1,17 @@
+OMM 빠른 시작 — 2026-10-25
+이 파일은 읽기용 안내입니다. 명령은 자동으로 실행되지 않습니다.
+
+1. 운영체제에 맞는 설치 방법: https://omm.run/install
+   npm 경로는 Node.js 22.14+, Python 경로는 Python 3.10+가 필요합니다.
+2. 터미널에서 omm setup 으로 하드웨어와 러너를 확인합니다.
+3. omm recommend 로 후보를 살펴보고 모델을 선택합니다.
+4. omm list 에 표시되는 설치 모델 이름을 확인합니다.
+5. Ollama 또는 LM Studio 로컬 API를 켭니다.
+6. omm verify <name> 으로 실제 로드와 텍스트 생성을 확인합니다.
+7. omm run <name> 으로 모델을 사용합니다.
+
+브라우저 관리 화면: omm web --open
+<name>은 실제 설치 모델 이름으로 바꿉니다.
+추천은 하드웨어 적합성 추정이며, 응답 성공은 작업 품질을 보장하지 않습니다.
+문제 확인: omm doctor / omm log --lines 5
+모델별 이용 조건과 공식 출처: https://omm.run/models

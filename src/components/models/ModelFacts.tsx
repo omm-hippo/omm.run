@@ -28,8 +28,8 @@ export function ModelFacts({ model, locale }: { model: ModelView; locale: Locale
     [t.evaluation, t.notMeasured],
   ] as const;
   return (
-    <dl className="divide-y divide-line-0 border-y border-line-0">
-      {facts.map(([label, value]) => <div key={label} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-4 py-4 text-small">
+    <dl className="document-properties">
+      {facts.map(([label, value]) => <div key={label} className="document-property">
         <dt className="text-ink-2">{label}</dt><dd className="min-w-0 text-ink-1">{value}</dd>
       </div>)}
     </dl>

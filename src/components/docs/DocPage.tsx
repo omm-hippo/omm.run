@@ -36,8 +36,8 @@ export default function DocPage({
   const page = t.pages[slug];
 
   return (
-    <main>
-      <section className="relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
+    <main className="document-page">
+      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
         <div
           className="grid-bg pointer-events-none absolute inset-0"
           aria-hidden
