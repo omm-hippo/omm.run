@@ -39,6 +39,8 @@ function decode(text: string): string {
 type RenderOptions = {
   /** Drop a leading heading — the page chrome already shows the title. */
   skipLeadingHeading?: boolean;
+  /** Resolve repository-relative links from the mirrored source file. */
+  sourcePath?: "README.md" | "docs/install.md";
 };
 
 export function renderMarkdown(
@@ -51,6 +53,13 @@ export function renderMarkdown(
     if (first !== -1 && tokens[first].type === "heading") {
       tokens = tokens.slice(first + 1) as typeof tokens;
     }
+  }
+  if (options.sourcePath) {
+    marked.walkTokens(tokens, (token) => {
+      if ((token.type === "link" || token.type === "image") && typeof token.href === "string" && !/^(?:[a-z][a-z0-9+.-]*:|\/\/|\/)/iu.test(token.href)) {
+        token.href = new URL(token.href, (token.type === "image" ? REPO_RAW : REPO_BLOB) + options.sourcePath).href;
+      }
+    });
   }
   return <div className="text-[15px] leading-[1.72] text-ink-1">{renderBlocks(tokens)}</div>;
 }

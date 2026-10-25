@@ -935,3 +935,31 @@ This is development-source coverage, not a package-publication claim.
 - `src/omm/install_safety.py`, `src/omm/linker.py`: managed runner installation
   and update stop when mandatory checks fail or cannot run; OS protection
   bypasses are rejected. Named-check success does not assess all vulnerabilities.
+
+## Model wiki information review — 2026-10-25
+
+`src/data/model-wiki.json` expands the seven-entry website set to 23 reviewed
+checkpoints. The records keep bilingual use cases, publisher claims, editorial
+cautions, runtime notes and linked primary sources separate. New coverage includes
+Qwen3 sizes, Qwen2.5-Coder, Gemma 3 sizes, Gemma 4 E4B/31B, Llama 3.3 70B,
+gpt-oss 20B/120B, SmolLM3 and Mistral Small 3.2.
+
+- Official cards were checked on 2026-10-25. Gemma 3 uses Gemma terms; Gemma 4
+  uses Apache 2.0. E4B denotes effective size, while its full embedding-inclusive
+  footprint is labelled 8B. Its audio input must not be inherited by 31B.
+- Qwen2.5-Coder's shipped 32,768-token configuration is distinguished from
+  its YaRN-enabled 131,072 range. Native, configured and extended contexts stay
+  checkpoint-specific. Published language lists do not prove Korean quality.
+- Example questions and review criteria are editorial test prompts, not captured
+  model outputs. OMM evaluation remains null for every checkpoint.
+- The labelled 4-bit weight illustration is `parameterScaleB * 4 / 8` decimal
+  GB. It uses total MoE size, excludes metadata, other components, context/KV
+  cache and runtime overhead, and is not an actual file or RAM measurement.
+- The existing page structure is retained. The later user instruction defers
+  a Notion/Alt-inspired site-wide redesign, new disclosure controls, and new
+  cross-page/file navigation until a later decision. No deferred design draft
+  or generated concept asset is part of the change.
+- Live source checking found `Supported platforms`, `Storage location`, and
+  `Local AI runners` moved from README.md to docs/install.md. Those mirrors now
+  use the installation source with a separate cache key; repository-relative
+  links retain the docs directory. Refresh purges both known document keys.

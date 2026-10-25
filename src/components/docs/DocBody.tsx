@@ -6,7 +6,7 @@ import {
 } from "@/lib/omm-docs/errors";
 import { renderMarkdown } from "@/lib/omm-docs/markdown";
 import { extractSection } from "@/lib/omm-docs/section";
-import { fetchReadme } from "@/lib/omm-docs/source";
+import { fetchReadme, type DocSource } from "@/lib/omm-docs/source";
 
 import DocFallback from "./DocFallback";
 
@@ -18,17 +18,19 @@ import DocFallback from "./DocFallback";
 export default async function DocBody({
   locale,
   section,
+  source = "readme",
 }: {
   locale: Locale;
   /** Heading text to slice out; omitted for the full README. */
   section?: string;
+  source?: DocSource;
 }) {
   const t = getDictionary(locale).docs;
 
   try {
-    const readme = await fetchReadme();
+    const readme = await fetchReadme(source);
     const markdown = section ? extractSection(readme, section) : readme;
-    return renderMarkdown(markdown, { skipLeadingHeading: true });
+    return renderMarkdown(markdown, { skipLeadingHeading: true, sourcePath: source === "install" ? "docs/install.md" : "README.md" });
   } catch (error) {
     if (
       error instanceof OmmDocsUnavailable ||

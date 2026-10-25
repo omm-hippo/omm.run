@@ -301,7 +301,7 @@ export const ko = {
     sourceLink: "GitHub에서 원문 보기",
     unavailable: {
       title: "GitHub에서 불러오지 못했습니다",
-      body: "이 페이지는 omm README를 실시간으로 가져와 그대로 보여줍니다. 방금은 GitHub가 응답하지 않았습니다 — 저장소에서 직접 확인해 주세요.",
+      body: "이 페이지는 OMM 공식 문서를 가져와 보여줍니다. 방금은 GitHub가 응답하지 않았습니다 — 저장소에서 직접 확인해 주세요.",
     },
     pages: {
       readme: {
@@ -314,30 +314,30 @@ export const ko = {
       "supported-platforms": {
         metaTitle: "지원 플랫폼 — omm",
         metaDescription:
-          "omm이 테스트되는 운영체제, Python 버전, Node.js 버전 — omm README에서 미러링.",
+          "omm이 테스트되는 운영체제, Python 버전, Node.js 버전 — 공식 문서에서 미러링.",
         heading: "지원 플랫폼",
-        lede: "omm이 테스트되는 운영체제와 언어 런타임을 README에서 미러링합니다.",
+        lede: "omm이 테스트되는 운영체제와 언어 런타임을 공식 문서에서 미러링합니다.",
       },
       "storage-location": {
         metaTitle: "저장 위치 — omm",
         metaDescription:
-          "omm이 모델 허브와 상태를 두는 위치, 그리고 이를 옮기는 환경 변수 — omm README에서 미러링.",
+          "omm이 모델 허브와 상태를 두는 위치, 그리고 이를 옮기는 환경 변수 — 공식 문서에서 미러링.",
         heading: "저장 위치",
-        lede: "모델 허브와 omm 상태가 저장되는 위치, 그리고 옮기는 방법을 README에서 미러링합니다.",
+        lede: "모델 허브와 omm 상태가 저장되는 위치, 그리고 옮기는 방법을 공식 문서에서 미러링합니다.",
       },
       scripting: {
         metaTitle: "스크립팅 — omm",
         metaDescription:
-          "스크립트에서 omm을 구동할 때의 동작: stderr, --json 출력, --yes — omm README에서 미러링.",
+          "스크립트에서 omm을 구동할 때의 동작: stderr, --json 출력, --yes — 공식 문서에서 미러링.",
         heading: "스크립팅",
-        lede: "스크립트로 omm을 구동할 때의 stdout, stderr, --json, --yes — README에서 미러링합니다.",
+        lede: "스크립트로 omm을 구동할 때의 stdout, stderr, --json, --yes — 공식 문서에서 미러링합니다.",
       },
       "local-ai-runners": {
         metaTitle: "호환 프로그램 — omm",
         metaDescription:
-          "omm이 설치하거나 연결하는 로컬 AI 러너 — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — 와 각 플랫폼별 자동화 범위를 omm README에서 미러링.",
+          "omm이 설치하거나 연결하는 로컬 AI 러너 — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — 와 각 플랫폼별 자동화 범위를 공식 문서에서 미러링.",
         heading: "호환 프로그램",
-        lede: "omm이 설치하거나 연결할 수 있는 로컬 AI 러너와 플랫폼별 자동화 범위를 README에서 미러링합니다.",
+        lede: "omm이 설치하거나 연결할 수 있는 로컬 AI 러너와 플랫폼별 자동화 범위를 공식 문서에서 미러링합니다.",
       },
     },
   },

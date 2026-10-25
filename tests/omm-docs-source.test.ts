@@ -100,3 +100,16 @@ test("an upstream redirect is rejected instead of followed", async () => {
   );
   assert.equal(upstream.mock.callCount(), 1);
 });
+
+test('moved install sections use the installation document with a distinct cache key', async () => {
+  const { INSTALL_GUIDE_URL, README_URL, readmeCacheKey } = await import('../src/lib/omm-docs/source');
+  Reflect.deleteProperty(globalThis, 'caches');
+  const upstream = mock.method(globalThis, 'fetch', async (url: unknown) => {
+    assert.equal(url, INSTALL_GUIDE_URL);
+    return new Response('# Install\n\n## Supported platforms\nLinux, macOS, Windows.');
+  });
+  assert.match(await fetchReadme('install'), /Supported platforms/);
+  assert.equal(upstream.mock.callCount(), 1);
+  assert.equal(readmeCacheKey().url, README_URL);
+  assert.equal(readmeCacheKey('install').url, INSTALL_GUIDE_URL);
+});

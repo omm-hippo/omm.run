@@ -49,6 +49,7 @@ export default async function ModelPage({ params }: PageProps<"/[locale]/models/
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_350px] lg:gap-16">
         <div className="min-w-0 space-y-9">
           <section><h2 className="text-h3">{t.chooseWhen}</h2><p className="mt-4 text-ink-1">{model.chooseWhen}</p><p className="text-small mt-2 text-ink-2">{t.editorial}</p></section>
+          <section><h2 className="text-h3">{t.example}</h2><p className="text-small mt-2 text-ink-2">{t.exampleNote}</p><h3 className="mt-4 font-medium text-ink-0">{t.examplePrompt}</h3><p className="mt-2 text-ink-1">{model.example.prompt}</p><h3 className="mt-4 font-medium text-ink-0">{t.exampleCheck}</h3><p className="mt-2 text-ink-1">{model.example.check}</p></section>
           <section><h2 className="text-h3">{t.strengths}</h2><Claims claims={model.strengths} model={model} locale={locale} /></section>
           <section><h2 className="text-h3">{t.cautions}</h2><Claims claims={model.cautions} model={model} locale={locale} /></section>
           <section><h2 className="text-h3">{t.runtime}</h2><p className="mt-4 text-ink-1">{model.runtimeNote}</p><p className="text-small mt-2 text-ink-2">{t.evidenceNote}</p></section>
@@ -59,7 +60,7 @@ export default async function ModelPage({ params }: PageProps<"/[locale]/models/
         </div>
         <aside className="min-w-0">
           <ModelFacts model={model} locale={locale} />
-          <p className="text-small mt-4 text-ink-2">{t.sizeNote}</p>
+          <p className="text-small mt-4 text-ink-2">{t.sizeNote}</p><p className="text-small mt-3 text-ink-2">{t.rawWeightNote}</p>
           <section className="mt-8"><h2 className="text-label">{t.officialSources}</h2><ul className="mt-4 space-y-4">{model.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer" className="text-small break-words text-ink-1 hover:text-accent">{source.title} ↗</a><p className="text-[12px] text-ink-2">{t.reviewed} {source.accessedAt}</p></li>)}</ul></section>
           <a href={`/api/models?locale=${locale}&id=${model.id}`} className="text-small mt-8 inline-block text-accent">{t.json} ↗</a>
           <p className="text-small mt-5 text-ink-2">{t.openWeightsNote}</p>

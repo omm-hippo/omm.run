@@ -314,7 +314,7 @@ export const en = {
     sourceLink: "View the source on GitHub",
     unavailable: {
       title: "Couldn’t load this from GitHub",
-      body: "This page mirrors the omm README and the text is fetched live. GitHub did not answer just now — read it on the repository instead.",
+      body: "This page mirrors OMM source documentation. GitHub did not answer just now — read it on the repository instead.",
     },
     pages: {
       readme: {
@@ -327,28 +327,28 @@ export const en = {
       "supported-platforms": {
         metaTitle: "Supported platforms — omm",
         metaDescription:
-          "Which operating systems, Python versions, and Node.js versions omm is tested against, mirrored from the omm README.",
+          "Which operating systems, Python versions, and Node.js versions omm is tested against, mirrored from the official documentation.",
         heading: "Supported platforms",
         lede: "The operating systems and language runtimes omm is tested against, mirrored from the README.",
       },
       "storage-location": {
         metaTitle: "Storage location — omm",
         metaDescription:
-          "Where omm keeps the model hub and its state, and the environment variables that move them, mirrored from the omm README.",
+          "Where omm keeps the model hub and its state, and the environment variables that move them, mirrored from the official documentation.",
         heading: "Storage location",
         lede: "Where the model hub and omm state live, and how to move them, mirrored from the README.",
       },
       scripting: {
         metaTitle: "Scripting — omm",
         metaDescription:
-          "How omm behaves when driven from a script: stderr, --json output, and --yes, mirrored from the omm README.",
+          "How omm behaves when driven from a script: stderr, --json output, and --yes, mirrored from the official documentation.",
         heading: "Scripting",
         lede: "stdout, stderr, --json, and --yes when you drive omm from a script — mirrored from the README.",
       },
       "local-ai-runners": {
         metaTitle: "Compatible programs — omm",
         metaDescription:
-          "The local AI runners omm installs or links — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — and which platforms each is automated on, mirrored from the omm README.",
+          "The local AI runners omm installs or links — Ollama, LM Studio, Jan, AnythingLLM, Msty, KoboldCpp, text-generation-webui — and which platforms each is automated on, mirrored from the official documentation.",
         heading: "Compatible programs",
         lede: "The local AI runners omm can install or link, and which platform each is automated on, mirrored from the README.",
       },

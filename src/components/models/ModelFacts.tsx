@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import { getModelDictionary } from "@/i18n/models";
+import { rawWeightIllustration } from "@/lib/models/memory";
 import type { ModelView } from "@/lib/models/types";
 
 export function ContextValue({ model, locale }: { model: ModelView; locale: Locale }) {
@@ -19,9 +20,10 @@ export function ModelFacts({ model, locale }: { model: ModelView; locale: Locale
   const facts = [
     [t.architecture, model.architecture === "moe" ? t.moe : t.dense],
     [t.specs, `${model.sizeLabel} ${t.total}${model.activeParametersB ? ` / ${model.activeParametersB}B ${t.active}` : ""}`],
+    [t.rawWeights, `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(rawWeightIllustration(model.parameterScaleB, 4))} GB`],
     [t.context, <ContextValue key="context" model={model} locale={locale} />],
     [t.input, model.inputs.map((input) => t.inputs[input]).join(" / ")],
-    [t.tools, model.toolCalling === true ? t.documented : t.unconfirmed],
+    [t.tools, model.toolCalling === true ? t.documented : model.toolCalling === false ? t.notSupported : t.unconfirmed],
     [t.license, <a key="license" href={model.license.url} target="_blank" rel="noreferrer" className="text-ink-0 underline decoration-line-1 underline-offset-4 hover:text-accent">{model.license.label} ↗</a>],
     [t.evaluation, t.notMeasured],
   ] as const;
