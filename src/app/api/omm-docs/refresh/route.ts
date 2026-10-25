@@ -3,7 +3,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { edgeCache, readmeCacheKey } from "@/lib/omm-docs/source";
 
 /**
- * Drops the cached README so the next `/docs/*` render pulls it fresh.
+ * Drops the cached README and installation guide so the next `/docs/*` render pulls it fresh.
  *
  * Called by a GitHub Action in `omm-hippo/omm` on any push to `main` that
  * touches `README.md`. `caches.default` is per-colo, so this refreshes the
@@ -57,6 +57,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const cache = edgeCache();
-  const purged = cache ? await cache.delete(readmeCacheKey()) : false;
+  const results = cache ? await Promise.all([cache.delete(readmeCacheKey()), cache.delete(readmeCacheKey("install"))]) : [];
+  const purged = results.some(Boolean);
   return Response.json({ purged }, { headers: NO_STORE });
 }

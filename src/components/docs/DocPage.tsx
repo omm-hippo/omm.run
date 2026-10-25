@@ -4,6 +4,7 @@ import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary, type Dictionary } from "@/i18n/dictionaries";
 
 import DocBody from "./DocBody";
+import type { DocSource } from "@/lib/omm-docs/source";
 import DocSkeleton from "./DocSkeleton";
 
 const GITHUB_README = "https://github.com/omm-hippo/omm#readme";
@@ -21,6 +22,7 @@ export default function DocPage({
   slug,
   section,
   wide = false,
+  source = "readme",
 }: {
   locale: Locale;
   slug: DocSlug;
@@ -28,13 +30,14 @@ export default function DocPage({
   section?: string;
   /** Full-width body (the full README); sections stay at reading width. */
   wide?: boolean;
+  source?: DocSource;
 }) {
   const t = getDictionary(locale).docs;
   const page = t.pages[slug];
 
   return (
-    <main>
-      <section className="relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
+    <main className="document-page">
+      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
         <div
           className="grid-bg pointer-events-none absolute inset-0"
           aria-hidden
@@ -61,13 +64,13 @@ export default function DocPage({
       <div className="mx-auto w-full max-w-page px-5 pb-24 md:px-8">
         <div className={`mt-12 ${wide ? "max-w-[94ch]" : "max-w-[72ch]"}`}>
           <Suspense fallback={<DocSkeleton />}>
-            <DocBody locale={locale} section={section} />
+            <DocBody locale={locale} section={section} source={source} />
           </Suspense>
         </div>
 
         <p className="mt-16 border-t border-line-0 pt-6">
           <a
-            href={GITHUB_README}
+            href={source === "install" ? "https://github.com/omm-hippo/omm/blob/main/docs/install.md" : GITHUB_README}
             target="_blank"
             rel="noreferrer"
             className="text-small border-b border-line-1 text-ink-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"

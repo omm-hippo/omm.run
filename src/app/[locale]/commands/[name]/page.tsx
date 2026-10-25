@@ -76,8 +76,8 @@ export default async function CommandReferencePage({
   const t = dictionary.commandReference;
 
   return (
-    <main>
-      <section className="relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
+    <main className="document-page">
+      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">

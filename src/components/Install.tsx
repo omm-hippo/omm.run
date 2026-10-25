@@ -1,3 +1,5 @@
+import Disclosure from "@/components/Disclosure";
+import { getExperience } from "@/i18n/experience";
 import InstallTabs from "@/components/InstallTabs";
 import Reveal from "@/components/Reveal";
 import QuickStart from "@/components/install/QuickStart";
@@ -33,8 +35,7 @@ export default function Install({ locale }: { locale: Locale }) {
             <InstallTabs t={t.tabs} ui={dictionary.ui} guides={guides} />
           </div>
 
-          <div className="mt-16 border-t border-line-0">
-            <p className="text-label pt-8">{t.whatItDoes}</p>
+          <Disclosure id="installer-details" title={getExperience(locale).technical} className="mt-10">
             <ol className="mt-6 flex flex-col">
               {t.steps.map((item, index) => (
                 <li
@@ -51,8 +52,8 @@ export default function Install({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ol>
-          </div>
-          <QuickStart locale={locale} />
+          </Disclosure>
+          <Disclosure title={t.quickStart.heading}><QuickStart locale={locale} /></Disclosure>
         </div>
       </div>
     </section>

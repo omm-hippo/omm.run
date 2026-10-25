@@ -153,6 +153,7 @@ test("assistant allowlist is the command docs plus the CLI reference, nothing el
   assert.deepEqual(allowed, expected);
   assert.deepEqual(sorted(COMMAND_IDS), expected);
   assert.equal(isCommandId("not-a-command"), false);
+  assert.equal(isCommandId("compare"), false);
   assert.equal(isCommandId("_bg-version-check"), false);
 
   for (const id of COMMAND_IDS) {

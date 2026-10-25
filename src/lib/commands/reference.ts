@@ -73,11 +73,16 @@ export function getEntry(name: string): ReferenceEntry | undefined {
   );
 }
 
-/** The sub-commands of a group, which render as `#<sub>` anchors on its page. */
+/** All descendants, including nested groups, rendered on the top-level page. */
 export function subEntries(name: string): readonly ReferenceEntry[] {
   return REFERENCE.commands.filter(
-    (entry) => entry.path.length === 2 && entry.path[0] === name,
+    (entry) => entry.path.length > 1 && entry.path[0] === name,
   );
+}
+
+/** Keep the CLI's parent anchors, with unique anchors for deeper commands. */
+export function referenceAnchor(entry: ReferenceEntry): string {
+  return entry.path.slice(1).join("-");
 }
 
 /** A command's own options — the shared ones get one note instead. */

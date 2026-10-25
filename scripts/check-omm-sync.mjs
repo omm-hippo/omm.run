@@ -152,6 +152,13 @@ try {
 }
 
 const siteCommandIds = extractSiteCommandIds(siteBaseSource);
+const reference = JSON.parse(await readFile(
+  new URL("../src/data/commands.json", import.meta.url), "utf8",
+));
+const referenceCommandIds = reference.commands
+  .filter((entry) => entry.path.length === 1)
+  .map((entry) => entry.path[0]);
+const documentedCommandIds = [...new Set([...siteCommandIds, ...referenceCommandIds])];
 const upstreamCommands = [
   ...extractDecoratedCommands(cliSource, "app"),
   ...extractAddedTyperGroups(cliSource),
@@ -160,8 +167,8 @@ const upstreamCommands = [
 if (new Set(upstreamCommands).size !== upstreamCommands.length) {
   fail(`duplicate visible upstream commands: ${upstreamCommands.join(", ")}`);
 }
-if (!sameSet(siteCommandIds, upstreamCommands)) {
-  const site = new Set(siteCommandIds);
+if (!sameSet(documentedCommandIds, upstreamCommands)) {
+  const site = new Set(documentedCommandIds);
   const upstream = new Set(upstreamCommands);
   const missingFromSite = sorted([...upstream].filter((id) => !site.has(id)));
   const missingFromUpstream = sorted([...site].filter((id) => !upstream.has(id)));
@@ -207,5 +214,5 @@ assertFlags(
 );
 
 process.stdout.write(
-  `OMM command sync check passed: ${siteCommandIds.length} visible commands, ${aliases.size} aliases, recommend/profile, memory-guard flags, and the leaderboard signing key match ${resolvedSourceDir}.\n`,
+  `OMM command sync check passed: ${documentedCommandIds.length} visible commands (${siteCommandIds.length} editorial pages), ${aliases.size} aliases, recommend/profile, memory-guard flags, and the leaderboard signing key match ${resolvedSourceDir}.\n`,
 );

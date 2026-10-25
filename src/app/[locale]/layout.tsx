@@ -91,7 +91,7 @@ export default async function RootLayout({
       lang={HTML_LANG[locale]}
       className={`${archivo.variable} ${jetbrainsMono.variable} ${notoSansKr.variable} h-full antialiased`}
     >
-      <body className="grain min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

@@ -1,3 +1,4 @@
+import Disclosure from "@/components/Disclosure";
 /**
  * The verbatim CLI reference for one command.
  *
@@ -11,6 +12,7 @@
 import {
   flagLabel,
   ownOptions,
+  referenceAnchor,
   sharedFlags,
   type ReferenceEntry,
 } from "@/lib/commands/reference";
@@ -142,14 +144,11 @@ export default function CommandReference({
           </Heading>
           <div className="mt-4 flex flex-col border-t border-line-0">
             {subs.map((sub) => (
-              <section
+              <Disclosure
                 key={sub.path.join(" ")}
-                id={sub.path[1]}
-                className="scroll-mt-14 border-b border-line-0 py-6"
+                id={referenceAnchor(sub)}
+                title={`omm ${sub.path.join(" ")}`}
               >
-                <h4 className="text-terminal text-ink-0">
-                  {`omm ${sub.path.join(" ")}`}
-                </h4>
                 {sub.summary ? (
                   <p className="text-small mt-2 max-w-[68ch]">{sub.summary}</p>
                 ) : null}
@@ -160,7 +159,7 @@ export default function CommandReference({
                   </p>
                 ) : null}
                 <OptionRows entry={sub} t={t} />
-              </section>
+              </Disclosure>
             ))}
           </div>
         </>

@@ -1,4 +1,7 @@
 import Link from "next/link";
+import Disclosure from "@/components/Disclosure";
+import ResourceLinks from "@/components/ResourceLinks";
+import DocumentText from "@/components/DocumentText";
 
 import CommandBlock from "@/components/install/CommandBlock";
 import CommandCapture from "@/components/commands/CommandCapture";
@@ -33,23 +36,25 @@ function SectionHead({
   id,
   title,
   body,
+  locale,
 }: {
   n: string;
   total: string;
   id: string;
   title: string;
   body?: string;
+  locale: Locale;
 }) {
   return (
     <>
-      <p className="text-label">
+      <p className="doc-section-index text-label">
         <span className="text-ink-2">{n}</span>
         <span> / {total}</span>
       </p>
       <h2 id={`${id}-title`} className="text-h2 mt-3">
         {title}
       </h2>
-      {body ? <p className="text-lede mt-4 max-w-[62ch]">{body}</p> : null}
+      {body ? <DocumentText text={body} locale={locale} className="mt-4" /> : null}
     </>
   );
 }
@@ -88,8 +93,8 @@ export default function CommandDocPage({
   const total = String(sections.length).padStart(2, "0");
 
   return (
-    <main>
-      <section className="relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
+    <main className="document-page">
+      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">
@@ -155,7 +160,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="01" total={total} id="overview" title={t.sections[0]} body={command.overviewBody} />
+                <SectionHead locale={locale} n="01" total={total} id="overview" title={t.sections[0]} body={command.overviewBody} />
               </Reveal>
             </section>
 
@@ -166,7 +171,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="02" total={total} id="options" title={t.sections[1]} body={t.optionsIntro} />
+                <SectionHead locale={locale} n="02" total={total} id="options" title={t.sections[1]} body={t.optionsIntro} />
                 {command.options.length > 0 ? (
                   <Rows>
                     {command.options.map((option) => (
@@ -197,7 +202,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="03" total={total} id="examples" title={t.sections[2]} body={t.examplesIntro} />
+                <SectionHead locale={locale} n="03" total={total} id="examples" title={t.sections[2]} body={t.examplesIntro} />
                 <div className="mt-6 flex flex-col gap-6">
                   {command.examples.map((example) => (
                     <div key={example.command}>
@@ -221,14 +226,16 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="04" total={total} id="capture" title={t.sections[3]} />
+                <SectionHead locale={locale} n="04" total={total} id="capture" title={t.sections[3]} />
                 <div className="mt-8">
-                  <CommandCapture
+                  <Disclosure title={command.capture.title}>
+                <CommandCapture
                     command={command.capture.title}
                     output={command.capture.text}
                     footnote={command.capture.footnote}
                     label={fill(t.captureAria, { command: command.capture.title })}
                   />
+                </Disclosure>
                 </div>
               </Reveal>
             </section>
@@ -240,7 +247,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="05" total={total} id="related" title={t.sections[4]} />
+                <SectionHead locale={locale} n="05" total={total} id="related" title={t.sections[4]} />
                 <ul className="mt-6 flex flex-col border-t border-line-0">
                   {command.related.map((entry) => (
                     <li key={entry.label} className="border-b border-line-0">
@@ -266,7 +273,7 @@ export default function CommandDocPage({
               className="scroll-mt-14 border-b border-line-0 py-12"
             >
               <Reveal>
-                <SectionHead n="06" total={total} id="trouble" title={t.sections[5]} body={t.troubleBody} />
+                <SectionHead locale={locale} n="06" total={total} id="trouble" title={t.sections[5]} body={t.troubleBody} />
                 <ol className="mt-6 flex flex-col border-t border-line-0">
                   {command.trouble.map((entry) => (
                     <li key={entry.see} className="border-b border-line-0 py-6">
@@ -302,7 +309,7 @@ export default function CommandDocPage({
                 className="scroll-mt-14 border-b border-line-0 py-12"
               >
                 <Reveal>
-                  <SectionHead
+                  <SectionHead locale={locale}
                     n="07"
                     total={total}
                     id="reference"
@@ -354,6 +361,7 @@ export default function CommandDocPage({
           </div>
         </div>
       </div>
+      <div className="mx-auto max-w-page px-5 pb-12 md:px-8"><ResourceLinks locale={locale} compact /></div>
     </main>
   );
 }

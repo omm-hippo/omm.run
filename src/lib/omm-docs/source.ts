@@ -3,7 +3,7 @@ import { cache } from "react";
 import { OmmDocsUnavailable } from "./errors";
 
 /**
- * The omm docs pages mirror this file. It is fetched at request time, not at
+ * The omm docs pages mirror these source documents. Each is fetched at request time, not at
  * build time, so a change upstream shows up without a redeploy.
  *
  * The OpenNext static-assets incremental cache is build-time only, so Next's
@@ -15,6 +15,10 @@ import { OmmDocsUnavailable } from "./errors";
  */
 export const README_URL =
   "https://raw.githubusercontent.com/omm-hippo/omm/main/README.md";
+
+export const INSTALL_GUIDE_URL =
+  "https://raw.githubusercontent.com/omm-hippo/omm/main/docs/install.md";
+export type DocSource = "readme" | "install";
 
 const EDGE_CACHE_TTL_SECONDS = 3600;
 const FETCH_TIMEOUT_MS = 5_000;
@@ -35,8 +39,8 @@ export function edgeCache(): EdgeCache | null {
 }
 
 /** The key both the read path and the refresh route address. */
-export function readmeCacheKey(): Request {
-  return new Request(README_URL, { method: "GET" });
+export function readmeCacheKey(source: DocSource = "readme"): Request {
+  return new Request(source === "install" ? INSTALL_GUIDE_URL : README_URL, { method: "GET" });
 }
 
 async function runAfterResponse(promise: Promise<unknown>): Promise<void> {
@@ -51,11 +55,11 @@ async function runAfterResponse(promise: Promise<unknown>): Promise<void> {
   }
 }
 
-async function fetchFromGitHub(): Promise<string> {
+async function fetchFromGitHub(source: DocSource): Promise<string> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    const response = await fetch(README_URL, {
+    const response = await fetch(source === "install" ? INSTALL_GUIDE_URL : README_URL, {
       cache: "no-store",
       signal: controller.signal,
       redirect: "manual",
@@ -73,15 +77,15 @@ async function fetchFromGitHub(): Promise<string> {
 }
 
 /**
- * The README markdown. `React.cache` dedupes the call within a single render
+ * Source markdown. `React.cache` dedupes the call within a single render
  * (the full-README page fetches once even though the body renders in a nested
  * component).
  */
-export const fetchReadme = cache(async (): Promise<string> => {
+export const fetchReadme = cache(async (source: DocSource = "readme"): Promise<string> => {
   const store = edgeCache();
-  if (!store) return fetchFromGitHub();
+  if (!store) return fetchFromGitHub(source);
 
-  const key = readmeCacheKey();
+  const key = readmeCacheKey(source);
   try {
     const hit = await store.match(key);
     if (hit) return await hit.text();
@@ -89,7 +93,7 @@ export const fetchReadme = cache(async (): Promise<string> => {
     // A failed cache read is a miss, not a document outage.
   }
 
-  const markdown = await fetchFromGitHub();
+  const markdown = await fetchFromGitHub(source);
   const entry = new Response(markdown, {
     headers: {
       "content-type": "text/markdown; charset=utf-8",

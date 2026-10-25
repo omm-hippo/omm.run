@@ -47,7 +47,6 @@ export type Slug =
   | "rollback"
   | "unlink"
   | "export"
-  | "compare"
   | "evaluate"
   | "arena"
   | "bug-report"
@@ -83,7 +82,6 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "rollback",
   "unlink",
   "export",
-  "compare",
   "evaluate",
   "arena",
   "bug-report",
@@ -142,7 +140,6 @@ export const COMMAND_GROUP = {
   rollback: "models",
   export: "models",
   unlink: "maintenance",
-  compare: "start",
   evaluate: "quality",
   arena: "quality",
   "bug-report": "maintenance",
@@ -187,7 +184,6 @@ export const COMMAND_RISK = {
   rollback: "caution",
   unlink: "high-impact",
   export: "caution",
-  compare: "caution",
   evaluate: "caution",
   arena: "high-impact",
   "bug-report": "inspect",
@@ -1659,64 +1655,6 @@ LM Studio installed successfully.`,
     related: [
       { label: "omm import", href: "/commands/import", internal: true },
       { label: "omm list", href: "/commands/list", internal: true },
-    ],
-  },
-  compare: {
-    slug: "compare",
-    name: "omm compare",
-    href: "/commands/compare",
-
-    options: [
-      { name: "<models>...", argument: null, default: "required — 2 to 5" },
-      { name: "--profile", argument: "dedicated | balanced | minimal", default: "balanced" },
-      {
-        name: "--for",
-        argument: "General | Coding | Reasoning | Writing | Translation | Documents",
-        default: "off",
-      },
-      { name: "--json", argument: null, default: "off" },
-    ],
-
-    examples: [
-      { prompt: "$", command: "omm compare tinyllama-1.1b-q4 mistral-7b-instruct-q4 llama3.1-8b-instruct-q4" },
-      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --for Coding" },
-      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --profile dedicated" },
-      { prompt: "$", command: "omm compare mistral-7b-instruct-q4 llama3.1-8b-instruct-q4 --json" },
-    ],
-
-    capture: {
-      title: "omm compare tinyllama-1.1b-q4 mistral-7b-instruct-q4 llama3.1-8b-instruct-q4",
-      text: `Fetched updated recommendation data from GitHub.
-                             Model comparison · balanced
- MODEL                       TYPE  BEST FOR        SPEED   MEMORY  STATUS
- tinyllama 1.1b chat v1.0    LLM   General   ~93.7 tok/s  ~0.7 GB  BEST FIT · FASTEST
- mistral 7b instruct v0.2    LLM   General   ~14.8 tok/s  ~4.6 GB  OVER BUDGET
- Meta Llama 3.1 8B Instruct  LLM   General   ~13.9 tok/s  ~5.3 GB  OVER BUDGET
-Compare is read-only: it did not download, install, or run a model.`,
-    },
-
-    trouble: [
-      {
-        see: "compare requires 2 to 5 models",
-        source: "src/omm/compare.py:105-106",
-      },
-      {
-        see: "model is not in the signed recommendation catalog: zzzz-fake-model",
-        source: "src/omm/compare.py:126",
-      },
-      {
-        see: "the same model was listed more than once: mistral-7b-instruct-q4",
-        source: "src/omm/compare.py:131-132",
-      },
-      {
-        see: "No signed recommendation catalog is available.",
-        source: "src/omm/cli.py:4440-4442",
-      },
-    ],
-
-    related: [
-      { label: "omm recommend", href: "/commands/recommend", internal: true },
-      { label: "omm install", href: "/commands/install", internal: true },
     ],
   },
 

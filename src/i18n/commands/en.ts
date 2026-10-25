@@ -863,13 +863,13 @@ export const COMMANDS_EN: CommandTextSet = {
   setting: {
     metaTitle: "omm setting — view or change omm's settings",
     metaDescription:
-      "Full reference for omm setting: all nine subcommands including the three outbound-data channels, five examples, a real captured display, and the four errors it actually prints.",
+      "OMM settings and complete subcommand reference: sharing policies, memory protection, agent connection and restoration, automatic import and local web auto-start.",
     heading: "omm setting",
     lede: "View or change telemetry, what anonymous data may leave this machine, memory protection, the update channel, the color theme, calibration, and signed-catalog trust — interactively, or one subcommand at a time.",
     summary: "View or change omm's settings — telemetry, outbound data, theme, update channel, and more.",
 
     overviewBody:
-      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting. Everything omm may ever send is now grouped under one subcommand, omm setting upload, with a separate policy per channel: benchmark results, anonymous usage stats, and crash reports. Usage stats and crash reports are off until you turn them on.",
+      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting. Everything omm may ever send is now grouped under one subcommand, omm setting upload, with a separate policy per channel: benchmark results, anonymous usage stats, and crash reports. Usage stats and crash reports are off until you turn them on. Arena votes have a separate votes sharing policy too. Use agent local, status and cloud to manage local Ollama routing for Claude Code, Codex or pi and restore the original routing. Here cloud means restoring prior settings; it does not change account authentication. web-autostart controls login startup without opening a browser. See the CLI reference below for every argument and flag.",
 
     optionDescriptions: [
       "Configure where benchmark telemetry is sent, or clear it with --endpoint none.",
@@ -968,7 +968,7 @@ export const COMMANDS_EN: CommandTextSet = {
     summary: "Install one local AI runner program directly, skipping the setup checklist.",
 
     overviewBody:
-      "Reach for engine install when you want one more runner without repeating the whole setup wizard — after installing it, omm scan or omm link will pick it up and start linking models into it like any other runner. With no argument it shows the same checklist setup does; with an engine key it installs that one directly, using whichever package manager is automated for it on this platform (see the runner coverage table on the landing page for which ones that is, per OS).",
+      "Install another runner without repeating setup. With no argument, engine install opens the setup checklist; an engine key uses that platform's supported installation route. The CLI reference below also covers status, update and uninstall. OMM-managed installation and updates require safety checks and stop if a required check cannot run or fails. They do not disable or bypass operating-system protections. Passing those checks does not establish the absence of all vulnerabilities. App installation, local API availability and actual model generation require separate checks. See the runner table on the home page for automated installation coverage by platform.",
 
     optionDescriptions: [
       "Which runner to install: ollama, lmstudio, jan, anythingllm, mstystudio, textgenwebui, or koboldcpp. Left out, shows an interactive checklist instead.",
@@ -1243,58 +1243,6 @@ export const COMMANDS_EN: CommandTextSet = {
       "Check what's actually installed before deciding what to export.",
     ],
   },
-  compare: {
-    metaTitle: "omm compare — line up catalog models before installing one",
-    metaDescription:
-      "Full reference for omm compare: its arguments and three flags, four examples, a real captured comparison, and the errors it actually prints.",
-    heading: "omm compare",
-    lede: "Put two to five models from the signed recommendation catalog side by side — predicted speed, estimated memory, install state — without downloading, installing or running any of them.",
-    summary: "Compare 2–5 catalog models side by side without installing or running them.",
-
-    overviewBody:
-      "Reach for compare when recommend or search has left you with a short list and you want the numbers next to each other before committing to a download. Each name must match exactly one package in the signed recommendation catalog — a name, repository, filename or install reference — and compare refuses to guess when a name is ambiguous or missing. Speed is predicted for this machine's hardware, memory is an estimate, and STATUS marks the best fit, the fastest, anything already installed or carrying a caution, and anything over the chosen memory profile's budget or below the speed floor. BEST FOR is what the model's publisher declared; add --for to get a separate MEASURED column from locally cached signed quality evidence, where a model with no evidence reads \"Not measured\", never zero. Its only network use is refreshing that signed catalog, and the last line says what it didn't do: compare never downloads, installs or runs a model.",
-
-    optionDescriptions: [
-      "Two to five exact model names, repositories, filenames or install references from the signed recommendation catalog.",
-      "Memory-sharing profile that sets the memory budget each model is checked against.",
-      "Add a MEASURED column for one task, from locally cached signed quality evidence.",
-      "Print the comparison as structured JSON instead of a table.",
-    ],
-
-    exampleCaptions: [
-      "Compare three catalog models on this machine.",
-      "Add measured Coding quality where cached evidence exists.",
-      "Check the same pair against the dedicated memory profile.",
-      "Get the comparison as JSON for a script.",
-    ],
-
-    captureFootnote:
-      "Real omm compare capture, 2026-10-17 (KST), this dev machine, against a throwaway OMM_HOME at a 100-column terminal width. The catalog refresh line is real: a fresh home has no cached catalog, so compare fetched the signed one first. The speed and memory figures are this machine's real predictions; on hardware with more memory the two OVER BUDGET rows can read COMPATIBLE.",
-
-    trouble: [
-      {
-        why: "compare needs at least two models to compare, and takes at most five.",
-        fix: "Pass between two and five model names.",
-      },
-      {
-        why: "The name doesn't match any package in the signed recommendation catalog. compare only reads that catalog — it doesn't search HuggingFace or ModelScope.",
-        fix: "Use the exact name recommend shows, or find the model with omm search first.",
-      },
-      {
-        why: "Two of the names resolve to the same catalog package.",
-        fix: "Drop the duplicate, or pass two different models.",
-      },
-      {
-        why: "No signed catalog could be loaded — usually a first run with no network, so there is nothing cached to fall back on.",
-        fix: "Check your connection and run compare again.",
-      },
-    ],
-
-    relatedBlurbs: [
-      "Get a ranked shortlist to compare in the first place.",
-      "Install the model that came out on top.",
-    ],
-  },
 
   evaluate: {
     metaTitle: "omm evaluate — sandboxed Python coding tasks for one model",
@@ -1462,11 +1410,11 @@ export const COMMANDS_EN: CommandTextSet = {
     metaDescription:
       "Full reference for omm web: its three flags, four examples, a real captured start, and the errors it actually prints.",
     heading: "omm web",
-    lede: "Start omm's browser interface on this computer only — a loopback address — to review hardware, install recommended models, and manage models and runner links with buttons instead of commands.",
-    summary: "Start a local browser page for installing and managing models.",
+    lede: "Open a loopback workspace on this computer to find and install models, then continue with local conversations and document questions.",
+    summary: "Open the local workspace for model search, installation, chat and document questions.",
 
     overviewBody:
-      "Reach for web when you'd rather click than type. The server listens only on 127.0.0.1, prints its address, and keeps running until you press Ctrl+C. It won't open a browser unless you pass --open. The page shows your hardware and a memory budget, recommends packages, and lets you install a model, link it into a runner, check that it generates text, or remove it — and every one of those file operations needs a confirmation on the page. Installing verifies the downloaded file and registry, but doesn't load the model, run a benchmark or upload measurements. The page starts from the cached catalog or bundled rules; its update button is what downloads and verifies a newer signed catalog. Job history persists across restarts, and a job whose result was never confirmed shows as interrupted. Only one server runs per omm home — starting a second one prints the first one's address instead. --create-launchers writes two double-click files that run omm web --open, then exits without starting anything. Response checks require a running Ollama or LM Studio native API and consent before loading. A short fixed probe verifies text generation, not task quality. Only a load started by this check is released; already loaded models keep their settings. Memory pressure or an API failure leaves the downloaded file in place. Desktop launchers require OMM to be installed first; they are not installers and do not register login auto-start.",
+      "The server listens only on 127.0.0.1 and opens a browser only with --open. Find models through recommendations or wiki packages, then manage files, runner links and runtime profiles under My models. Prepare and start chat uses one confirmation for any needed runner installation and safety checks, model download and linking, and an actual response check. An unreachable local API stops preparation before downloading. A different loaded model is preserved and blocks a new load. Chat opens only after a successful response; durable jobs retain progress, failed stages and interrupted outcomes across server restarts. Conversations use local Ollama or LM Studio APIs and completed records are stored under OMM_HOME/web-chats. The workspace renders Markdown, copies answers or code, and ignores composition Enter while entering Korean or Japanese. Document questions show source passages alongside answers. Performance comparison uses a separate web protocol, so its scores must not be combined with CLI benchmarks. Individual installation, linking and removal also require confirmation. Downloading a file alone proves neither generation nor task quality. Refresh recommendation data explicitly with its update button. Appearance controls and menu search are available. --create-launchers creates files that open an existing OMM installation; it neither installs OMM nor registers login auto-start. Enable or disable the latter separately with omm setting web-autostart.",
 
     optionDescriptions: [
       "The local port to listen on. 0 picks any free port.",

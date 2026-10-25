@@ -26,9 +26,11 @@ export type WikiModel = {
   readonly tasks: readonly ModelTask[];
   readonly architecture: "dense" | "moe";
   readonly sizeLabel: string;
+  /** Published size/class used only for a labelled raw-weight illustration. */
+  readonly parameterScaleB: number;
   readonly activeParametersB: number | null;
   readonly context: { readonly tokens: number; readonly basis: "native" | "config"; readonly extendedTokens?: number; readonly sourceId: string };
-  readonly inputs: readonly ("text" | "image" | "video")[];
+  readonly inputs: readonly ("text" | "image" | "video" | "audio")[];
   /** null means unconfirmed; it must never be displayed as unsupported. */
   readonly toolCalling: boolean | null;
   readonly license: { readonly label: string; readonly url: string };
@@ -39,16 +41,18 @@ export type WikiModel = {
   readonly runtimeNote: Localized;
   readonly sources: readonly ModelSource[];
   readonly reviewedAt: string;
+  readonly example: { readonly prompt: Localized; readonly check: Localized };
   /** Populate only with a real, linked OMM evaluation; null is not a score. */
   readonly ommEvaluation: null;
 };
 
-export type ModelView = Omit<WikiModel, "summary" | "chooseWhen" | "strengths" | "cautions" | "runtimeNote"> & {
+export type ModelView = Omit<WikiModel, "summary" | "chooseWhen" | "strengths" | "cautions" | "runtimeNote" | "example"> & {
   readonly summary: string;
   readonly chooseWhen: string;
   readonly strengths: readonly (Omit<ModelClaim, "text"> & { readonly text: string })[];
   readonly cautions: readonly (Omit<ModelClaim, "text"> & { readonly text: string })[];
   readonly runtimeNote: string;
+  readonly example: { readonly prompt: string; readonly check: string };
 };
 
 export function isModelTask(value: string): value is ModelTask {

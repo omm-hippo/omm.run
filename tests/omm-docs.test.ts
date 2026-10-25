@@ -180,19 +180,29 @@ test("every /docs route directory has a page and a dictionary entry", async () =
 });
 
 test(
-  "the live omm README still has the sections the pages slice",
+  "the live OMM source documents still have every mirrored section",
   { skip: process.env.OMM_SKIP_NETWORK_TESTS ? "network disabled" : false },
   async () => {
     const response = await fetch(README_URL);
     assert.ok(response.ok, `README fetch: HTTP ${response.status}`);
     const readme = await response.text();
 
+    const installResponse = await fetch("https://raw.githubusercontent.com/omm-hippo/omm/main/docs/install.md");
+    assert.ok(installResponse.ok, `Install guide fetch: HTTP ${installResponse.status}`);
+    const installGuide = await installResponse.text();
     for (const [slug, heading] of Object.entries(PAGES)) {
       if (!heading) continue;
+      const source = slug === "scripting" ? readme : installGuide;
       assert.doesNotThrow(
-        () => extractSection(readme, heading),
+        () => extractSection(source, heading),
         `README "${heading}" section gone — /docs/${slug} would show the fallback`,
       );
     }
   },
 );
+
+test('mirrored installation links keep their source directory and anchors', () => {
+  const html = renderToStaticMarkup(renderMarkdown('[Engine notes](engine-management.md#ownership) and [Windows](#windows)', { sourcePath: 'docs/install.md' }));
+  assert.match(html, /href="https:\/\/github\.com\/omm-hippo\/omm\/blob\/main\/docs\/engine-management\.md#ownership"/);
+  assert.match(html, /href="https:\/\/github\.com\/omm-hippo\/omm\/blob\/main\/docs\/install\.md#windows"/);
+});

@@ -43,5 +43,5 @@ export default async function Page({
 }: PageProps<"/[locale]/docs/storage-location">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return <DocPage locale={locale} slug={SLUG} section={SECTION} />;
+  return <DocPage locale={locale} slug={SLUG} section={SECTION} source="install" />;
 }

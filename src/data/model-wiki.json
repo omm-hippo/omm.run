@@ -1,0 +1,2063 @@
+[
+  {
+    "id": "qwen3-8-27b",
+    "name": "Qwen3.8-27B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3.8-27B",
+    "aliases": [
+      "Qwen 3.8",
+      "Qwen3.8",
+      "큐웬 3.8",
+      "퀀 3.8"
+    ],
+    "tasks": [
+      "agents",
+      "coding",
+      "reasoning",
+      "vision"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "27B",
+    "activeParametersB": null,
+    "context": {
+      "tokens": 262144,
+      "basis": "native",
+      "extendedTokens": 1000000,
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text",
+      "image",
+      "video"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-27B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "Multi-step agents with native image and video understanding.",
+      "ko": "여러 단계의 에이전트 작업과 이미지·영상 이해를 함께 다루는 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for agents that inspect visual inputs and act on feedback.",
+      "ko": "화면이나 문서를 보고, 도구 실행 결과를 반영해 다음 작업을 이어가는 에이전트에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Publisher reports improved planning and recovery in long-horizon tasks.",
+          "ko": "개발사는 장기 작업의 계획 수립과 실행 피드백 처리 개선을 보고합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Native vision; thinking depth is configurable.",
+          "ko": "이미지·영상을 입력받고 추론 깊이를 조절할 수 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Hosted built-in tools are not automatically included in local weights.",
+          "ko": "호스팅 서비스의 내장 도구가 로컬 가중치에 그대로 포함되는 것은 아닙니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Verify the runner, quantization, vision adapter and tool parser separately. Extended context needs configuration.",
+      "ko": "러너·양자화·비전 어댑터·도구 파서를 각각 확인하세요. 확장 컨텍스트에는 별도 설정이 필요합니다."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3.8-27B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 27.0,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen3-coder-next",
+    "name": "Qwen3-Coder-Next",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-Coder-Next",
+    "aliases": [
+      "Qwen Coder",
+      "큐웬 코더",
+      "코딩 에이전트"
+    ],
+    "tasks": [
+      "coding",
+      "agents"
+    ],
+    "architecture": "moe",
+    "sizeLabel": "80B",
+    "activeParametersB": 3,
+    "context": {
+      "tokens": 262144,
+      "basis": "native",
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next"
+    },
+    "summary": {
+      "en": "A specialist for coding agents, tools and repository work.",
+      "ko": "코딩 에이전트의 도구 사용과 저장소 작업에 초점을 맞춘 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for code edits and debugging loops across a repository.",
+      "ko": "저장소를 읽고 코드를 수정하며 실행 오류를 해결하는 개발 에이전트에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Trained for complex tool use and recovery from execution failures.",
+          "ko": "복잡한 도구 사용과 실행 실패 후 복구를 목표로 학습했습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "80B total, 3B active parameters; non-thinking output only.",
+          "ko": "전체 80B 중 3B가 활성화되는 MoE이며, 출력은 non-thinking 방식입니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "3B active does not mean 3B of weights to store or load.",
+          "ko": "활성 파라미터 3B를 저장·로딩해야 할 전체 가중치 크기로 해석하면 안 됩니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Check full weight size and the qwen3_coder tool parser. Reduce context if memory is tight.",
+      "ko": "전체 가중치 크기와 qwen3_coder 도구 파서를 확인하세요. 메모리가 부족하면 컨텍스트를 줄이세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-Coder-Next · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-Coder-Next",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 80.0,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "glm-4-7-flash",
+    "name": "GLM-4.7-Flash",
+    "publisher": "Z.ai",
+    "repository": "zai-org/GLM-4.7-Flash",
+    "aliases": [
+      "GLM Flash",
+      "지엘엠",
+      "GLM 4.7"
+    ],
+    "tasks": [
+      "agents",
+      "coding",
+      "reasoning"
+    ],
+    "architecture": "moe",
+    "sizeLabel": "30B",
+    "activeParametersB": 3,
+    "context": {
+      "tokens": 202752,
+      "basis": "config",
+      "sourceId": "config"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "MIT",
+      "url": "https://huggingface.co/zai-org/GLM-4.7-Flash"
+    },
+    "summary": {
+      "en": "A 30B MoE option for coding and tool-driven tasks.",
+      "ko": "코딩과 도구를 사용하는 작업에 검토할 수 있는 30B MoE 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare with coding-agent candidates when a 30B weight footprint is practical.",
+      "ko": "30B 가중치를 운용할 수 있는 환경에서 코딩 에이전트 후보를 비교할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Publisher evaluates coding, reasoning and agent benchmarks.",
+          "ko": "개발사는 코딩·추론·에이전트 벤치마크 결과를 공개합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Multi-turn agent evaluations use preserved thinking.",
+          "ko": "여러 턴의 에이전트 평가에는 추론 내용 보존 설정을 사용합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Published benchmarks use different prompts and settings; they are not a universal ranking.",
+          "ko": "공개 점수는 프롬프트와 설정이 서로 달라 단일 순위로 비교하기 어렵습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Check architecture support and tool/thinking parsers in the exact runner version.",
+      "ko": "사용할 러너의 정확한 버전에서 아키텍처 지원과 도구·추론 파서를 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "zai-org/GLM-4.7-Flash · Model card",
+        "url": "https://huggingface.co/zai-org/GLM-4.7-Flash",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "zai-org/GLM-4.7-Flash · config.json",
+        "url": "https://huggingface.co/zai-org/GLM-4.7-Flash/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 30.0,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "qwen3-8b",
+    "name": "Qwen3-8B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-8B",
+    "aliases": [
+      "Qwen 3 8B",
+      "큐웬 8B",
+      "번역",
+      "translation"
+    ],
+    "tasks": [
+      "multilingual",
+      "reasoning",
+      "compact"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "8.2B",
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "extendedTokens": 131072,
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-8B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A smaller multilingual model with switchable thinking.",
+      "ko": "추론 모드를 켜고 끌 수 있는 소형 다국어 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for multilingual chat and translation with optional reasoning.",
+      "ko": "다국어 대화·번역에 쓰면서 필요할 때만 추론 모드를 켜려는 경우 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Supports thinking and non-thinking modes in one checkpoint.",
+          "ko": "하나의 체크포인트에서 thinking·non-thinking 모드를 지원합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Publisher reports support for over 100 languages and dialects.",
+          "ko": "개발사는 100개 이상의 언어·방언 지원을 명시합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Multilingual coverage alone does not establish Korean quality for your task.",
+          "ko": "다국어 지원만으로 특정 작업의 한국어 품질이 입증되지는 않습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Native context is 32,768 tokens; 131,072 requires YaRN. Match the chat template to thinking mode.",
+      "ko": "기본 컨텍스트는 32,768토큰이며 131,072토큰은 YaRN 설정이 필요합니다. 추론 모드에 맞는 채팅 템플릿을 쓰세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-8B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-8B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 8.2,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "gemma-3-4b-it",
+    "name": "Gemma 3 4B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-3-4b-it",
+    "aliases": [
+      "Gemma3",
+      "젬마",
+      "이미지",
+      "사진",
+      "image"
+    ],
+    "tasks": [
+      "vision",
+      "multilingual",
+      "compact"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "4B",
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "model-guide"
+    },
+    "inputs": [
+      "text",
+      "image"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Gemma terms",
+      "url": "https://ai.google.dev/gemma/terms"
+    },
+    "summary": {
+      "en": "Compact image understanding and multilingual text generation.",
+      "ko": "작은 크기로 이미지 이해와 다국어 텍스트 생성을 다루는 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for image questions and summaries in a smaller model class.",
+      "ko": "작은 모델로 사진에 질문하거나 문서를 요약하려는 경우 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The 4B checkpoint accepts text and images, and generates text.",
+          "ko": "4B 체크포인트는 텍스트·이미지를 입력받아 텍스트를 생성합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Publisher reports coverage of over 140 languages.",
+          "ko": "개발사는 140개 이상의 언어 지원을 명시합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Open weights under Gemma terms, not Apache/MIT. The 1B variant has different vision/context support.",
+          "ko": "Apache·MIT 대신 Gemma 이용약관이 적용됩니다. 1B 모델은 비전·컨텍스트 조건이 다릅니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Vision needs the matching adapter. Original HF files require accepting Gemma terms.",
+      "ko": "비전 입력에는 맞는 어댑터가 필요합니다. HF 원본 파일은 Gemma 이용약관 동의가 필요합니다."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-3-4b-it · Model card",
+        "url": "https://huggingface.co/google/gemma-3-4b-it",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "model-guide",
+        "title": "google/gemma-3-4b-it · config.json",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_3",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 4.0,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "phi-4-mini-instruct",
+    "name": "Phi-4-mini-instruct",
+    "publisher": "Microsoft",
+    "repository": "microsoft/Phi-4-mini-instruct",
+    "aliases": [
+      "Phi4",
+      "파이",
+      "경량",
+      "lightweight",
+      "수학",
+      "math"
+    ],
+    "tasks": [
+      "compact",
+      "reasoning"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "3.8B",
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "MIT",
+      "url": "https://huggingface.co/microsoft/Phi-4-mini-instruct/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A small model focused on instructions, math and logic.",
+      "ko": "지시 수행과 수학·논리에 초점을 맞춘 소형 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for resource-constrained text tasks and short reasoning problems.",
+      "ko": "자원이 제한된 환경의 텍스트 작업과 짧은 수학·논리 문제에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "3.8B parameters; intended for constrained and latency-sensitive workloads.",
+          "ko": "3.8B 크기로 메모리·연산량과 지연시간이 제한된 환경을 목표로 합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Provides a dedicated function-calling prompt format.",
+          "ko": "함수 호출을 위한 전용 프롬프트 형식을 제공합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Publisher notes limited factual knowledge; retrieval can help. Language quality varies.",
+          "ko": "개발사는 사실 지식의 한계를 명시합니다. 검색을 결합할 수 있고 언어별 품질은 다를 수 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use its documented chat/tool template. This checkpoint is text-only, distinct from Phi multimodal models.",
+      "ko": "문서에 명시된 채팅·도구 템플릿을 사용하세요. Phi 멀티모달 모델과 구별되는 텍스트 전용 체크포인트입니다."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "microsoft/Phi-4-mini-instruct · Model card",
+        "url": "https://huggingface.co/microsoft/Phi-4-mini-instruct",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 3.8,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "deepseek-r1-distill-qwen-7b",
+    "name": "DeepSeek-R1-Distill-Qwen-7B",
+    "publisher": "DeepSeek",
+    "repository": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "aliases": [
+      "DeepSeek R1 7B",
+      "딥시크",
+      "증류",
+      "수학",
+      "math"
+    ],
+    "tasks": [
+      "reasoning",
+      "compact"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "7B class",
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "config",
+      "sourceId": "config"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "MIT · Qwen-derived",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B#7-license"
+    },
+    "summary": {
+      "en": "R1-style reasoning distilled into a smaller Qwen checkpoint.",
+      "ko": "R1의 추론 데이터를 작은 Qwen 체크포인트에 증류한 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider for step-by-step math and reasoning experiments on smaller hardware.",
+      "ko": "작은 모델로 단계별 수학·추론 풀이를 실험하려는 경우 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Fine-tuned from Qwen2.5-Math-7B using R1-generated data.",
+          "ko": "Qwen2.5-Math-7B를 R1이 생성한 데이터로 미세조정했습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      },
+      {
+        "text": {
+          "en": "Publisher provides separate benchmark results for each distilled size.",
+          "ko": "개발사는 각 증류 모델 크기의 평가 결과를 따로 공개합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "The 7B distill is not the full 671B R1; do not inherit its scores or capabilities.",
+          "ko": "7B 증류 모델은 전체 671B R1과 다릅니다. 원본의 점수·기능을 그대로 적용하면 안 됩니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Publisher recommends temperature 0.5–0.7 and user-prompt instructions instead of a system prompt.",
+      "ko": "개발사는 temperature 0.5–0.7과 system prompt 대신 user prompt에 지시를 담는 방식을 권장합니다."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B · Model card",
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B · config.json",
+        "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "parameterScaleB": 7.0,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen3-4b",
+    "name": "Qwen3-4B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-4B",
+    "aliases": [
+      "Qwen3 4B",
+      "Qwen"
+    ],
+    "tasks": [
+      "multilingual",
+      "reasoning",
+      "compact"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "4B",
+    "parameterScaleB": 4,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "sourceId": "card",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-4B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A 4B text model with selectable reasoning for multilingual work.",
+      "ko": "추론 모드를 선택할 수 있는 4B 다국어 텍스트 모델."
+    },
+    "chooseWhen": {
+      "en": "Start with short multilingual tasks on a smaller weight budget.",
+      "ko": "작은 가중치 예산으로 짧은 다국어 작업을 시작할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "One checkpoint offers both reasoning and direct responses; the card documents multilingual and tool workflows.",
+          "ko": "한 체크포인트에서 추론·일반 응답 모드를 전환하며 공식 카드에 다국어·도구 사용 예시가 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "An extended 131K window needs YaRN. Active parameter count is not the memory footprint.",
+          "ko": "131K 확장에는 YaRN이 필요합니다. 활성 파라미터 수를 메모리 요구량으로 해석하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Start at the native 32,768-token setting and check thinking-mode and tool-template support separately.",
+      "ko": "우선 기본 32,768토큰으로 시작하고 추론 모드·도구 템플릿 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-4B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-4B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen3-14b",
+    "name": "Qwen3-14B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-14B",
+    "aliases": [
+      "Qwen3 14B",
+      "Qwen"
+    ],
+    "tasks": [
+      "multilingual",
+      "reasoning",
+      "agents"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "14.8B",
+    "parameterScaleB": 14.8,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "sourceId": "card",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-14B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A 14.8B text model with selectable reasoning for multilingual work.",
+      "ko": "추론 모드를 선택할 수 있는 14.8B 다국어 텍스트 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare against the smaller Qwen3 models using the same prompts and quantization.",
+      "ko": "작은 Qwen3 모델과 같은 프롬프트·양자화로 결과를 비교할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "One checkpoint offers both reasoning and direct responses; the card documents multilingual and tool workflows.",
+          "ko": "한 체크포인트에서 추론·일반 응답 모드를 전환하며 공식 카드에 다국어·도구 사용 예시가 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "An extended 131K window needs YaRN. Active parameter count is not the memory footprint.",
+          "ko": "131K 확장에는 YaRN이 필요합니다. 활성 파라미터 수를 메모리 요구량으로 해석하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Start at the native 32,768-token setting and check thinking-mode and tool-template support separately.",
+      "ko": "우선 기본 32,768토큰으로 시작하고 추론 모드·도구 템플릿 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-14B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-14B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen3-30b-a3b",
+    "name": "Qwen3-30B-A3B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-30B-A3B",
+    "aliases": [
+      "Qwen3 30B A3B",
+      "Qwen"
+    ],
+    "tasks": [
+      "multilingual",
+      "reasoning",
+      "agents"
+    ],
+    "architecture": "moe",
+    "sizeLabel": "30.5B",
+    "parameterScaleB": 30.5,
+    "activeParametersB": 3.3,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "sourceId": "card",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-30B-A3B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A sparse 30.5B multilingual reasoning model; 3.3B parameters are active per token.",
+      "ko": "전체 30.5B 중 3.3B가 활성화되는 다국어 추론 MoE 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare sparse and dense models when the full 30.5B weights fit.",
+      "ko": "전체 30.5B 가중치를 담을 수 있을 때 Dense 모델과 비교하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "One checkpoint offers both reasoning and direct responses; the card documents multilingual and tool workflows.",
+          "ko": "한 체크포인트에서 추론·일반 응답 모드를 전환하며 공식 카드에 다국어·도구 사용 예시가 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "An extended 131K window needs YaRN. Active parameter count is not the memory footprint.",
+          "ko": "131K 확장에는 YaRN이 필요합니다. 활성 파라미터 수를 메모리 요구량으로 해석하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Start at the native 32,768-token setting and check thinking-mode and tool-template support separately.",
+      "ko": "우선 기본 32,768토큰으로 시작하고 추론 모드·도구 템플릿 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-30B-A3B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-30B-A3B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen3-32b",
+    "name": "Qwen3-32B",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen3-32B",
+    "aliases": [
+      "Qwen3 32B",
+      "Qwen"
+    ],
+    "tasks": [
+      "multilingual",
+      "reasoning",
+      "agents"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "32.8B",
+    "parameterScaleB": 32.8,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "sourceId": "card",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen3-32B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A 32.8B text model with selectable reasoning for multilingual work.",
+      "ko": "추론 모드를 선택할 수 있는 32.8B 다국어 텍스트 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare against the smaller Qwen3 models using the same prompts and quantization.",
+      "ko": "작은 Qwen3 모델과 같은 프롬프트·양자화로 결과를 비교할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "One checkpoint offers both reasoning and direct responses; the card documents multilingual and tool workflows.",
+          "ko": "한 체크포인트에서 추론·일반 응답 모드를 전환하며 공식 카드에 다국어·도구 사용 예시가 있습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "An extended 131K window needs YaRN. Active parameter count is not the memory footprint.",
+          "ko": "131K 확장에는 YaRN이 필요합니다. 활성 파라미터 수를 메모리 요구량으로 해석하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Start at the native 32,768-token setting and check thinking-mode and tool-template support separately.",
+      "ko": "우선 기본 32,768토큰으로 시작하고 추론 모드·도구 템플릿 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen3-32B · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen3-32B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "qwen2-5-coder-7b-instruct",
+    "name": "Qwen2.5-Coder-7B-Instruct",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "aliases": [
+      "Qwen2.5 Coder 7B Instruct",
+      "Qwen"
+    ],
+    "tasks": [
+      "coding"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "7.61B",
+    "parameterScaleB": 7.61,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "config",
+      "sourceId": "config",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "An instruction-tuned 7B-class checkpoint for code generation, review and repair.",
+      "ko": "코드 생성·검토·수정에 집중한 7B급 지시 학습 체크포인트."
+    },
+    "chooseWhen": {
+      "en": "Use for a bounded code task with tests, rather than assuming a complete coding agent.",
+      "ko": "테스트로 확인할 수 있는 코드 작업에 사용하세요. 모델만으로 완성된 코딩 에이전트가 되지는 않습니다."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The publisher describes code synthesis, reasoning and repair training.",
+          "ko": "개발사는 코드 작성·코드 추론·수정에 초점을 둔 학습을 설명합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "The shipped config is 32,768 tokens; the advertised 131,072 window requires YaRN.",
+          "ko": "배포 설정은 32,768토큰이며, 공개된 131,072토큰 범위에는 YaRN 설정이 필요합니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use the Instruct chat template. Treat generated code as a candidate and run its tests.",
+      "ko": "Instruct용 채팅 템플릿을 사용하세요. 생성한 코드는 후보로 보고 테스트를 실행하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen2.5-Coder-7B-Instruct · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "Qwen/Qwen2.5-Coder-7B-Instruct · config.json",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "qwen2-5-coder-32b-instruct",
+    "name": "Qwen2.5-Coder-32B-Instruct",
+    "publisher": "Qwen",
+    "repository": "Qwen/Qwen2.5-Coder-32B-Instruct",
+    "aliases": [
+      "Qwen2.5 Coder 32B Instruct",
+      "Qwen"
+    ],
+    "tasks": [
+      "coding"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "32.5B",
+    "parameterScaleB": 32.5,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "config",
+      "sourceId": "config",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "An instruction-tuned 32B-class checkpoint for code generation, review and repair.",
+      "ko": "코드 생성·검토·수정에 집중한 32B급 지시 학습 체크포인트."
+    },
+    "chooseWhen": {
+      "en": "Use for a bounded code task with tests, rather than assuming a complete coding agent.",
+      "ko": "테스트로 확인할 수 있는 코드 작업에 사용하세요. 모델만으로 완성된 코딩 에이전트가 되지는 않습니다."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The publisher describes code synthesis, reasoning and repair training.",
+          "ko": "개발사는 코드 작성·코드 추론·수정에 초점을 둔 학습을 설명합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "The shipped config is 32,768 tokens; the advertised 131,072 window requires YaRN.",
+          "ko": "배포 설정은 32,768토큰이며, 공개된 131,072토큰 범위에는 YaRN 설정이 필요합니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use the Instruct chat template. Treat generated code as a candidate and run its tests.",
+      "ko": "Instruct용 채팅 템플릿을 사용하세요. 생성한 코드는 후보로 보고 테스트를 실행하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "Qwen/Qwen2.5-Coder-32B-Instruct · Model card",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "Qwen/Qwen2.5-Coder-32B-Instruct · config.json",
+        "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "gemma-3-1b-it",
+    "name": "Gemma 3 1B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-3-1b-it",
+    "aliases": [
+      "Gemma 3 1B IT",
+      "Google"
+    ],
+    "tasks": [
+      "multilingual",
+      "compact"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "1B",
+    "parameterScaleB": 1,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 32768,
+      "basis": "native",
+      "sourceId": "model-guide"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Gemma terms",
+      "url": "https://ai.google.dev/gemma/terms"
+    },
+    "summary": {
+      "en": "A small text-only instruction model with a 32K context.",
+      "ko": "32K 컨텍스트를 갖는 텍스트 전용 소형 지시 학습 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider short text tasks where a smaller download matters more than vision.",
+      "ko": "이미지 기능보다 작은 다운로드가 중요한 짧은 텍스트 작업에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The 1B checkpoint is text-only, unlike the larger Gemma 3 sizes.",
+          "ko": "1B 체크포인트는 더 큰 Gemma 3 변형과 달리 텍스트 전용입니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Gemma 3 uses its own terms; Gemma 4 licensing and capabilities must not be inherited.",
+          "ko": "Gemma 3에는 자체 이용약관이 적용됩니다. Gemma 4의 라이선스나 기능을 그대로 적용하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use the text model architecture; a vision adapter will not add image support.",
+      "ko": "텍스트 모델 아키텍처를 사용하세요. 비전 어댑터를 붙여도 이미지 모델이 되지 않습니다."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-3-1b-it · Model card",
+        "url": "https://huggingface.co/google/gemma-3-1b-it",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "model-guide",
+        "title": "google/gemma-3-1b-it · config.json",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_3",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Summarize the supplied passage in three bullets without adding facts outside it.",
+        "ko": "아래 글을 세 항목으로 요약하되, 원문에 없는 사실은 추가하지 마."
+      },
+      "check": {
+        "en": "Check coverage, invented facts and the requested language against the supplied passage.",
+        "ko": "원문과 대조해 핵심 누락·추가된 사실·요청 언어 준수 여부를 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "gemma-3-12b-it",
+    "name": "Gemma 3 12B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-3-12b-it",
+    "aliases": [
+      "Gemma 3 12B IT",
+      "Google"
+    ],
+    "tasks": [
+      "multilingual",
+      "vision"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "12B",
+    "parameterScaleB": 12,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "model-guide"
+    },
+    "inputs": [
+      "text",
+      "image"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Gemma terms",
+      "url": "https://ai.google.dev/gemma/terms"
+    },
+    "summary": {
+      "en": "A 12B instruction model for text and image questions.",
+      "ko": "텍스트·이미지 질문을 다루는 12B 지시 학습 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare image-grounded question answering against Gemma 3 4B.",
+      "ko": "이미지 근거 질문을 Gemma 3 4B와 비교할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "This checkpoint supports image inputs and text outputs.",
+          "ko": "이 체크포인트는 이미지를 입력받아 텍스트로 답합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Gemma 3 uses its own terms; Gemma 4 licensing and capabilities must not be inherited.",
+          "ko": "Gemma 3에는 자체 이용약관이 적용됩니다. Gemma 4의 라이선스나 기능을 그대로 적용하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Check the matching vision projector and model format in your runner.",
+      "ko": "러너에서 모델 형식과 일치하는 비전 프로젝터를 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-3-12b-it · Model card",
+        "url": "https://huggingface.co/google/gemma-3-12b-it",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "model-guide",
+        "title": "google/gemma-3-12b-it · config.json",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_3",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "gemma-3-27b-it",
+    "name": "Gemma 3 27B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-3-27b-it",
+    "aliases": [
+      "Gemma 3 27B IT",
+      "Google"
+    ],
+    "tasks": [
+      "multilingual",
+      "vision"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "27B",
+    "parameterScaleB": 27,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "model-guide"
+    },
+    "inputs": [
+      "text",
+      "image"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Gemma terms",
+      "url": "https://ai.google.dev/gemma/terms"
+    },
+    "summary": {
+      "en": "A 27B instruction model for text and image questions.",
+      "ko": "텍스트·이미지 질문을 다루는 27B 지시 학습 모델."
+    },
+    "chooseWhen": {
+      "en": "Compare image-grounded question answering against Gemma 3 4B.",
+      "ko": "이미지 근거 질문을 Gemma 3 4B와 비교할 때 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "This checkpoint supports image inputs and text outputs.",
+          "ko": "이 체크포인트는 이미지를 입력받아 텍스트로 답합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Gemma 3 uses its own terms; Gemma 4 licensing and capabilities must not be inherited.",
+          "ko": "Gemma 3에는 자체 이용약관이 적용됩니다. Gemma 4의 라이선스나 기능을 그대로 적용하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Check the matching vision projector and model format in your runner.",
+      "ko": "러너에서 모델 형식과 일치하는 비전 프로젝터를 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-3-27b-it · Model card",
+        "url": "https://huggingface.co/google/gemma-3-27b-it",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "model-guide",
+        "title": "google/gemma-3-27b-it · config.json",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_3",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "llama-3-3-70b-instruct",
+    "name": "Llama 3.3 70B Instruct",
+    "publisher": "Meta",
+    "repository": "meta-llama/Llama-3.3-70B-Instruct",
+    "aliases": [
+      "Llama 3.3 70B Instruct",
+      "Meta"
+    ],
+    "tasks": [
+      "multilingual"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "70B",
+    "parameterScaleB": 70,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Llama 3.3 Community License",
+      "url": "https://github.com/meta-llama/llama-models/blob/main/models/llama3_3/LICENSE"
+    },
+    "summary": {
+      "en": "A large text-only conversation model covering eight officially supported languages.",
+      "ko": "공식 지원 언어가 8개인 대규모 텍스트 대화 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider text dialogue on a system that can hold the 70B weight footprint.",
+      "ko": "70B 가중치를 운용할 수 있는 환경에서 텍스트 대화 후보로 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The publisher specifies a 128K context and eight supported languages.",
+          "ko": "개발사는 128K 컨텍스트와 8개 지원 언어를 명시합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Korean is not among those eight languages, and this checkpoint does not accept images.",
+          "ko": "한국어는 공식 8개 지원 언어에 포함되지 않으며 이 체크포인트는 이미지를 받지 않습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Match the exact architecture and chat template in your runner before selecting a converted model file.",
+      "ko": "변환 파일을 고르기 전에 러너의 정확한 아키텍처 지원과 채팅 템플릿을 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "meta-llama/Llama-3.3-70B-Instruct · Model card",
+        "url": "https://github.com/meta-llama/llama-models/blob/main/models/llama3_3/MODEL_CARD.md",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Summarize the supplied passage in three bullets without adding facts outside it.",
+        "ko": "아래 글을 세 항목으로 요약하되, 원문에 없는 사실은 추가하지 마."
+      },
+      "check": {
+        "en": "Check coverage, invented facts and the requested language against the supplied passage.",
+        "ko": "원문과 대조해 핵심 누락·추가된 사실·요청 언어 준수 여부를 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "gpt-oss-20b",
+    "name": "gpt-oss-20b",
+    "publisher": "OpenAI",
+    "repository": "openai/gpt-oss-20b",
+    "aliases": [
+      "gpt oss 20b",
+      "OpenAI"
+    ],
+    "tasks": [
+      "reasoning",
+      "agents",
+      "coding"
+    ],
+    "architecture": "moe",
+    "sizeLabel": "21B",
+    "parameterScaleB": 21,
+    "activeParametersB": 3.6,
+    "context": {
+      "tokens": 131072,
+      "basis": "config",
+      "sourceId": "config"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/openai/gpt-oss-20b/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "An open-weight reasoning MoE with 21B total and 3.6B active parameters.",
+      "ko": "전체 21B·활성 3.6B인 오픈 웨이트 추론 MoE 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider tool-oriented text workflows with a runtime that implements Harmony.",
+      "ko": "Harmony 형식을 지원하는 런타임에서 텍스트·도구 작업에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Reasoning effort is adjustable; expert weights are released with MXFP4 quantization.",
+          "ko": "추론 강도를 조절할 수 있으며 전문가 가중치는 MXFP4 양자화로 공개됩니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Tools must be provided by the application. Model weights do not include a browser or Python runtime.",
+          "ko": "브라우저와 Python 실행기는 애플리케이션이 제공해야 합니다. 가중치 안에 도구 실행기가 포함되지 않습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use Harmony formatting and an MXFP4-compatible or reviewed conversion path; do not treat it as an arbitrary GGUF.",
+      "ko": "Harmony 형식과 MXFP4 지원 또는 검토한 변환 경로를 확인하세요. 임의의 GGUF처럼 취급하지 마세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "openai/gpt-oss-20b · Model card",
+        "url": "https://huggingface.co/openai/gpt-oss-20b",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "openai/gpt-oss-20b · config.json",
+        "url": "https://huggingface.co/openai/gpt-oss-20b/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "gpt-oss-120b",
+    "name": "gpt-oss-120b",
+    "publisher": "OpenAI",
+    "repository": "openai/gpt-oss-120b",
+    "aliases": [
+      "gpt oss 120b",
+      "OpenAI"
+    ],
+    "tasks": [
+      "reasoning",
+      "agents",
+      "coding"
+    ],
+    "architecture": "moe",
+    "sizeLabel": "117B",
+    "parameterScaleB": 117,
+    "activeParametersB": 5.1,
+    "context": {
+      "tokens": 131072,
+      "basis": "config",
+      "sourceId": "config"
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/openai/gpt-oss-120b/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "An open-weight reasoning MoE with 117B total and 5.1B active parameters.",
+      "ko": "전체 117B·활성 5.1B인 오픈 웨이트 추론 MoE 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider tool-oriented text workflows with a runtime that implements Harmony.",
+      "ko": "Harmony 형식을 지원하는 런타임에서 텍스트·도구 작업에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Reasoning effort is adjustable; expert weights are released with MXFP4 quantization.",
+          "ko": "추론 강도를 조절할 수 있으며 전문가 가중치는 MXFP4 양자화로 공개됩니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Tools must be provided by the application. Model weights do not include a browser or Python runtime.",
+          "ko": "브라우저와 Python 실행기는 애플리케이션이 제공해야 합니다. 가중치 안에 도구 실행기가 포함되지 않습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use Harmony formatting and an MXFP4-compatible or reviewed conversion path; do not treat it as an arbitrary GGUF.",
+      "ko": "Harmony 형식과 MXFP4 지원 또는 검토한 변환 경로를 확인하세요. 임의의 GGUF처럼 취급하지 마세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "openai/gpt-oss-120b · Model card",
+        "url": "https://huggingface.co/openai/gpt-oss-120b",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "openai/gpt-oss-120b · config.json",
+        "url": "https://huggingface.co/openai/gpt-oss-120b/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Given this function and failing test, propose the smallest fix and one regression test.",
+        "ko": "이 함수와 실패한 테스트를 보고 최소 수정안과 회귀 테스트 하나를 제안해 줘."
+      },
+      "check": {
+        "en": "Run the test in an isolated project and review the diff. A plausible explanation is not execution evidence.",
+        "ko": "격리된 프로젝트에서 테스트를 실행하고 변경 내역을 확인하세요. 그럴듯한 설명은 실행 증거가 아닙니다."
+      }
+    }
+  },
+  {
+    "id": "smollm3-3b",
+    "name": "SmolLM3-3B",
+    "publisher": "Hugging Face",
+    "repository": "HuggingFaceTB/SmolLM3-3B",
+    "aliases": [
+      "SmolLM3 3B",
+      "Hugging Face"
+    ],
+    "tasks": [
+      "compact",
+      "reasoning",
+      "multilingual"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "3B",
+    "parameterScaleB": 3,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 65536,
+      "basis": "native",
+      "sourceId": "card",
+      "extendedTokens": 131072
+    },
+    "inputs": [
+      "text"
+    ],
+    "toolCalling": null,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A 3B model with optional reasoning and documented training details.",
+      "ko": "추론 모드를 선택할 수 있고 학습 세부 내용이 공개된 3B 모델."
+    },
+    "chooseWhen": {
+      "en": "Use for small-model experiments with short evaluation tasks.",
+      "ko": "작은 모델로 짧은 평가 작업을 반복하는 실험에 검토하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "Training uses 64K context; 128K is available through YaRN extrapolation.",
+          "ko": "학습 컨텍스트는 64K이며 YaRN 외삽으로 128K를 사용합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Korean is not in the six native languages listed in the model summary.",
+          "ko": "한국어는 모델 요약에 명시된 6개 기본 지원 언어에 포함되지 않습니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Compare reasoning on/off with the documented chat template; validate Korean separately.",
+      "ko": "공식 채팅 템플릿으로 추론 모드 켜기·끄기를 비교하고 한국어는 따로 평가하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "HuggingFaceTB/SmolLM3-3B · Model card",
+        "url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Solve this problem. State the assumptions, then verify the result by substitution.",
+        "ko": "이 문제의 조건을 정리해 풀고, 답을 원래 식에 대입해 검산해 줘."
+      },
+      "check": {
+        "en": "Use a known answer and compare correctness and response time with reasoning enabled and disabled.",
+        "ko": "정답을 아는 문제로 정확도와 시간을 비교하세요. 추론 모드를 지원하면 켜기·끄기를 함께 시험하세요."
+      }
+    }
+  },
+  {
+    "id": "mistral-small-3-2-24b",
+    "name": "Mistral Small 3.2 24B",
+    "publisher": "Mistral AI",
+    "repository": "mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+    "aliases": [
+      "Mistral Small 3.2 24B",
+      "Mistral AI"
+    ],
+    "tasks": [
+      "vision",
+      "coding",
+      "agents",
+      "multilingual"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "24B",
+    "parameterScaleB": 24,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "config",
+      "sourceId": "config"
+    },
+    "inputs": [
+      "text",
+      "image"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A 24B multimodal instruction checkpoint with revised tool formatting.",
+      "ko": "도구 호출 템플릿을 개선한 24B 멀티모달 지시 학습 체크포인트."
+    },
+    "chooseWhen": {
+      "en": "Compare image and tool workflows when a 24B-class model is practical.",
+      "ko": "24B급 모델을 운용할 수 있을 때 이미지·도구 작업을 함께 비교하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The 3.2 card reports improved instruction following and fewer repetitive outputs versus 3.1.",
+          "ko": "3.2 카드는 3.1 대비 지시 수행과 반복 출력 개선을 보고합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "Version 3.1 results and settings are not automatically measurements of your 3.2 conversion.",
+          "ko": "3.1 결과나 설정을 현재 사용 중인 3.2 변환 파일의 실측값으로 간주하지 마세요."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Check the Mistral3 vision path, processor and function-calling template together.",
+      "ko": "Mistral3 비전 경로·프로세서·함수 호출 템플릿을 함께 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "mistralai/Mistral-Small-3.2-24B-Instruct-2506 · Model card",
+        "url": "https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506",
+        "accessedAt": "2026-10-25"
+      },
+      {
+        "id": "config",
+        "title": "mistralai/Mistral-Small-3.2-24B-Instruct-2506 · config.json",
+        "url": "https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506/blob/main/config.json",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "gemma-4-e4b-it",
+    "name": "Gemma 4 E4B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-4-E4B-it",
+    "aliases": [
+      "Gemma 4 E4B IT",
+      "Google"
+    ],
+    "tasks": [
+      "vision",
+      "reasoning",
+      "agents",
+      "multilingual"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "8B",
+    "parameterScaleB": 8,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 131072,
+      "basis": "native",
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text",
+      "image",
+      "video",
+      "audio"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/google/gemma-4-E4B-it/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A multimodal edge checkpoint: 4.5B effective, 8B including embeddings.",
+      "ko": "유효 4.5B·임베딩 포함 8B인 멀티모달 경량 체크포인트."
+    },
+    "chooseWhen": {
+      "en": "Consider mixed visual inputs and configurable reasoning; check each input path in the runner.",
+      "ko": "시각 입력과 선택적 추론을 함께 쓸 때 검토하되 러너의 입력별 지원을 확인하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "E4B supports audio as well as image inputs.",
+          "ko": "E4B는 이미지 외에 오디오 입력도 지원합니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "E4B is an effective-size label, not its complete storage footprint.",
+          "ko": "E4B는 유효 규모 표기이며 전체 저장 가중치 크기가 아닙니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use a Gemma 4-aware template and check vision/audio processors separately.",
+      "ko": "Gemma 4용 템플릿을 쓰고 비전·오디오 프로세서 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-4-E4B-it · Model card",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_4",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  },
+  {
+    "id": "gemma-4-31b-it",
+    "name": "Gemma 4 31B IT",
+    "publisher": "Google",
+    "repository": "google/gemma-4-31B-it",
+    "aliases": [
+      "Gemma 4 31B IT",
+      "Google"
+    ],
+    "tasks": [
+      "vision",
+      "reasoning",
+      "agents",
+      "multilingual"
+    ],
+    "architecture": "dense",
+    "sizeLabel": "30.7B",
+    "parameterScaleB": 30.7,
+    "activeParametersB": null,
+    "context": {
+      "tokens": 262144,
+      "basis": "native",
+      "sourceId": "card"
+    },
+    "inputs": [
+      "text",
+      "image",
+      "video"
+    ],
+    "toolCalling": true,
+    "license": {
+      "label": "Apache 2.0",
+      "url": "https://huggingface.co/google/gemma-4-31B-it/blob/main/LICENSE"
+    },
+    "summary": {
+      "en": "A dense 30.7B multimodal model with a 256K context.",
+      "ko": "256K 컨텍스트를 갖는 Dense 30.7B 멀티모달 모델."
+    },
+    "chooseWhen": {
+      "en": "Consider mixed visual inputs and configurable reasoning; check each input path in the runner.",
+      "ko": "시각 입력과 선택적 추론을 함께 쓸 때 검토하되 러너의 입력별 지원을 확인하세요."
+    },
+    "strengths": [
+      {
+        "text": {
+          "en": "The 31B checkpoint supports text, image and video-frame input.",
+          "ko": "31B 체크포인트는 텍스트·이미지·영상 프레임을 입력받습니다."
+        },
+        "basis": "publisher",
+        "sourceId": "card"
+      }
+    ],
+    "cautions": [
+      {
+        "text": {
+          "en": "31B does not inherit the audio input of the E4B variant.",
+          "ko": "31B에 E4B의 오디오 입력 기능을 적용하면 안 됩니다."
+        },
+        "basis": "editorial"
+      }
+    ],
+    "runtimeNote": {
+      "en": "Use a Gemma 4-aware template and check vision/audio processors separately.",
+      "ko": "Gemma 4용 템플릿을 쓰고 비전·오디오 프로세서 지원을 각각 확인하세요."
+    },
+    "sources": [
+      {
+        "id": "card",
+        "title": "google/gemma-4-31B-it · Model card",
+        "url": "https://ai.google.dev/gemma/docs/core/model_card_4",
+        "accessedAt": "2026-10-25"
+      }
+    ],
+    "reviewedAt": "2026-10-25",
+    "ommEvaluation": null,
+    "example": {
+      "prompt": {
+        "en": "Read this chart. List its axes and units, then separate visible values from guesses.",
+        "ko": "이 그래프의 축과 단위를 읽고, 실제로 보이는 값과 추정한 내용을 나눠 설명해 줘."
+      },
+      "check": {
+        "en": "Compare every number with the image; test the vision adapter before using document pages.",
+        "ko": "숫자를 이미지와 대조하세요. 문서를 맡기기 전에 비전 어댑터가 실제 입력을 전달하는지 확인하세요."
+      }
+    }
+  }
+]

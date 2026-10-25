@@ -895,3 +895,95 @@ snapshot, not a claim that every package channel has published 0.4.0.
   run <name>; troubleshoot with doctor and log --lines 5.
 - `src/omm/hardware.py:18` still uses a 1.0 GB minimum RAM reserve, despite the
   README's older 2 GB wording. Keep the code-backed site arithmetic unchanged.
+
+## Current product refresh — 2026-10-25
+
+Source: `omm-hippo/omm` main at `4498b760` (pyproject version `0.4.41`).
+This is development-source coverage, not a package-publication claim.
+
+- `docs/commands.json` at that commit contains 101 entries, exported with
+  version `0.4.31`. Keep this generated version verbatim when syncing; do not
+  relabel it as a newer export. There are 35 top-level commands. The local
+  source check compares the combined editorial/reference coverage with CLI
+  declarations, and the export check compares every argument, flag and help
+  string against the trusted source file.
+- `src/omm/command_reference.py:NESTED_GROUPS` recursively exports `cluster`,
+  `engine`, `rag` and `setting`. CLI URLs for deeper commands target their
+  parent subgroup (`#agent`, `#remote`, `#token`). The site preserves those
+  anchors and adds unique descendant anchors (`#agent-local`, `#remote-set`,
+  `#token-add`) rather than dropping deeper entries or duplicating IDs.
+- `src/omm/cli.py:info`, `README.md` Usage: comparisons use `omm info MODEL_A
+  MODEL_B`; `compare` is no longer a registered command. Remove it from the
+  selector and assistant allowlist, and redirect old bilingual page URLs to
+  the info page. Historical compare captures above are superseded.
+- `docs/local-web.md`, `src/omm/web`: model preparation and chat, durable job
+  stages, API preflight before download, preservation of existing runtime
+  loads, Markdown, composition-safe sending, document questions and locally
+  stored conversations. A response probe proves generation, not task quality.
+- `src/omm/rag_cli.py`, `docs/rag-mcp.md`: local stdio MCP connections for
+  Claude Code/Codex/pi/Cursor; remote-head configuration, collection sharing
+  and team ACLs require explicit configuration and employee tokens.
+- `docs/agent-connections.md`, `src/omm/cli.py:agent_local`: separately installed
+  Claude/Codex/pi, local Ollama 0.14.0+, tool metadata and 32K+ context required.
+  `cloud` restores original routing, not account authentication. Existing
+  sessions are not switched. Metadata validation is not a real agent-workflow
+  verification.
+- `src/omm/cluster/{commands,preflight}.py`: cluster nodes require macOS 26.2+;
+  setup configures Thunderbolt networking, firewall and sleep, needs admin
+  authorization, and prints RDMA guidance. Matching OS builds are required for
+  RDMA. No cluster setup is executed while maintaining this website.
+- `src/omm/install_safety.py`, `src/omm/linker.py`: managed runner installation
+  and update stop when mandatory checks fail or cannot run; OS protection
+  bypasses are rejected. Named-check success does not assess all vulnerabilities.
+
+## Model wiki information review — 2026-10-25
+
+`src/data/model-wiki.json` expands the seven-entry website set to 23 reviewed
+checkpoints. The records keep bilingual use cases, publisher claims, editorial
+cautions, runtime notes and linked primary sources separate. New coverage includes
+Qwen3 sizes, Qwen2.5-Coder, Gemma 3 sizes, Gemma 4 E4B/31B, Llama 3.3 70B,
+gpt-oss 20B/120B, SmolLM3 and Mistral Small 3.2.
+
+- Official cards were checked on 2026-10-25. Gemma 3 uses Gemma terms; Gemma 4
+  uses Apache 2.0. E4B denotes effective size, while its full embedding-inclusive
+  footprint is labelled 8B. Its audio input must not be inherited by 31B.
+- Qwen2.5-Coder's shipped 32,768-token configuration is distinguished from
+  its YaRN-enabled 131,072 range. Native, configured and extended contexts stay
+  checkpoint-specific. Published language lists do not prove Korean quality.
+- Example questions and review criteria are editorial test prompts, not captured
+  model outputs. OMM evaluation remains null for every checkpoint.
+- The labelled 4-bit weight illustration is `parameterScaleB * 4 / 8` decimal
+  GB. It uses total MoE size, excludes metadata, other components, context/KV
+  cache and runtime overhead, and is not an actual file or RAM measurement.
+- The user's latest correction explicitly authorizes implementing disclosures,
+  document/file links, and the Notion/Alt-inspired explanation redesign together
+  in PR #21. This supersedes the earlier, mistaken deferred-scope description.
+- Live source checking found `Supported platforms`, `Storage location`, and
+  `Local AI runners` moved from README.md to docs/install.md. Those mirrors now
+  use the installation source with a separate cache key; repository-relative
+  links retain the docs directory. Refresh purges both known document keys.
+
+## Explanation redesign and file navigation — latest clarified scope, 2026-10-25
+
+The current implementation supersedes the earlier scope misunderstanding: native
+▶ disclosures, document/file links, and the Notion/Alt-inspired explanation
+redesign are implemented together for PR #21. The 23 model records and existing
+CLI/install facts are preserved.
+
+- Home now leads with the choose/install/respond workflow and a three-tab,
+  explicitly labelled interface example. It makes no model request, performs
+  no hardware detection and starts no download or local connection automatically.
+- The example links use actual Qwen3-8B and Gemma 3 4B wiki records. The hub
+  illustration names supported Ollama, LM Studio and Jan runners; generated
+  concept text is not treated as a factual runner-support source.
+- Model and command pages use a shared reading width, paragraph rhythm and
+  property alignment. Native details/summary controls retain their content in
+  HTML, support keyboard toggling, and reveal their target for fragment links.
+  Exact CLI anchors remain unchanged.
+- `public/resources/` contains four authored, bilingual, readable TXT/Markdown
+  files, not executable installers. JSON download links use the real model API.
+  Guidance and reference downloads are linked from home, models and commands.
+- Browser verification covers Korean/English at 1440×1000 and 390×844, tabs,
+  native summary keyboard controls, hash reveal, and 12 actual downloads with
+  saved file contents checked. The local workerd test excludes AI/D1 bindings;
+  it does not establish actual model execution or credentialed integrations.
