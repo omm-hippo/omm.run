@@ -1,5 +1,5 @@
 {
-  "about": "Held-out questions for the OMM assistant. Written as a user would ask, not from the doc wording. `accept` lists every command that fully answers the question. Used by tests/assistant-eval.test.ts (deterministic candidate recall, no model) and scripts/assistant-eval.ts (live Workers AI accuracy).",
+  "about": "Fixed regression/development questions for the OMM assistant; inspected during prompt/ranker revisions, not a held-out accuracy estimate. Written as a user would ask, not from the doc wording. `accept` lists every command that fully answers the question. Used by tests/assistant-eval.test.ts (deterministic candidate recall, no model) and scripts/assistant-eval.ts (live Workers AI accuracy).",
   "questions": [
     { "locale": "en", "q": "how do I find a small coding model", "accept": ["search"] },
     { "locale": "en", "q": "download llama and use it in ollama and lm studio", "accept": ["install"] },

@@ -478,7 +478,7 @@ export const en = {
     fallbackLabel: "Command search fallback",
     source: {
       "workers-ai": "Selection: Workers AI classifier",
-      deterministic: "Selection: deterministic fallback",
+      deterministic: "Selection: documented lookup",
     },
     messages: {
       matched: "This documented command is the closest match for the task you described.",

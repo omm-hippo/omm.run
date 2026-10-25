@@ -91,6 +91,11 @@ export async function answerAssistantQuestion(
     );
   }
 
+  // Deictic help questions can use a validated command-page context. Safety
+  // checks above still run first; unrelated questions never inherit the page.
+  if (request.contextCommand && /^(?:(?:이거|이것|이\s*명령어|이\s*명령|이\s*옵션)(?:는|은|을|를)?\s*(?:뭐야|뭔가요|무슨.{0,30}|어떻게.{0,30}|설명.{0,20}|사용법.{0,20}|주의할.{0,20})|what does this(?: command)? do|how do i use this(?: command)?|explain this(?: command)?|what is this(?: command)?)[?.! ]*$/iu.test(request.question.trim())) {
+    return response("command", "matched", [request.contextCommand], request.contextCommand);
+  }
   const explicit = explicitCommand(request.question);
   if (explicit) return response("command", "matched", [explicit], explicit);
   // No overlap with any command at all: off-topic, so spend no inference.

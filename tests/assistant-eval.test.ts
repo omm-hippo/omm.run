@@ -51,3 +51,11 @@ test("the model always sees the accepted command, with context only on the top f
     assert.ok(detailed <= ASSISTANT_LIMITS.detailedCandidates, q);
   }
 });
+
+// This fixed development/regression set was inspected while improving the
+// ranker. It is not a held-out estimate of Workers AI or a local model.
+test("the first three deterministic suggestions retain regression-set coverage", () => {
+  for (const {q,locale,accept} of QUESTIONS) {
+    assert.ok(narrowCandidates(q,locale).slice(0,3).some(({id}) => accept.includes(id)), q);
+  }
+});

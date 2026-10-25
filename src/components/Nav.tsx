@@ -280,14 +280,7 @@ export default function Nav({ locale }: { locale: Locale }) {
             >
               {t.models}
             </Link>
-            <Link
-              href={localeHref("/assistant", locale)}
-              onClick={close}
-              className="border-b border-line-0 py-3 text-small text-ink-2"
-              prefetch={false}
-            >
-              {t.assistant}
-            </Link>
+            <a href="#omm-assistant" onClick={close} className="border-b border-line-0 py-3 text-small text-ink-2">{t.assistant}</a>
             <Link href={localeHref("/arena", locale)} onClick={close} prefetch={false} className={`border-b border-line-0 py-3 text-small ${arenaActive ? "text-accent" : "text-ink-2"}`} aria-current={arenaActive ? "page" : undefined}>
               {locale === "ko" ? "리더보드" : "Leaderboard"}
             </Link>

@@ -16,7 +16,7 @@ export type AssistantCommandCard = {
   readonly example: string;
   readonly options: readonly string[];
   readonly remainingOptionCount: number;
-  /** `null` for a reference-only command: no written page has classified it. */
+  /** `null` when the command has not yet received a documented risk classification. */
   readonly risk: CommandRisk | null;
 };
 

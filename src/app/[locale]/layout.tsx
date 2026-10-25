@@ -12,6 +12,7 @@ import {
 } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import "../globals.css";
+import FloatingAssistant from "@/components/assistant/FloatingAssistant";
 
 // Variable Archivo: wght 100–900 plus the wdth axis (62–125) so `.text-display`
 // can set `font-variation-settings: "wdth" 90`. Weights actually used: 400–700.
@@ -91,7 +92,7 @@ export default async function RootLayout({
       lang={HTML_LANG[locale]}
       className={`${archivo.variable} ${jetbrainsMono.variable} ${notoSansKr.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">{children}<FloatingAssistant key={locale} locale={locale} /></body>
     </html>
   );
 }

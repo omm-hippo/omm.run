@@ -14,15 +14,15 @@ static OMM command catalog.
 The selectable commands are every hand-written command doc
 (`COMMAND_ORDER`) plus every top-level command in the CLI reference
 (`src/data/commands.json`) that has no hand-written page yet
-(`src/lib/assistant/catalog.ts`). A reference-only command is described with
-the CLI's own English `--help` summary and usage line, links to its generated
-`/commands/<name>` page, and its card says its change impact is not yet
-classified instead of guessing a risk level. A command therefore becomes
+(`src/lib/assistant/catalog.ts`). Reference-only commands link to their generated
+`/commands/<name>` page. Known groups use concise bilingual descriptions and
+conservative documented change-risk labels; an unclassified new entry remains
+explicitly unclassified. Group examples use `--help` rather than a write action. A command therefore becomes
 selectable the day the reference is synced, not the day its page is written.
 
 ## Evaluation
 
-`tests/fixtures/assistant-eval.json` holds 51 held-out questions (English
+`tests/fixtures/assistant-eval.json` holds 51 regression/development questions (English
 and Korean, written as a user would ask) with the commands that answer each.
 `tests/assistant-eval.test.ts` checks the deterministic ranker's recall
 against a floor without calling a model. `scripts/assistant-eval.ts` measures
@@ -42,7 +42,7 @@ Measured 2026-10-17 with `@cf/meta/llama-3.3-70b-instruct-fp8-fast`:
 | hybrid | 29 docs + reference | old | 40/51 | 9 | 79,243 |
 | hybrid (production) | 34 docs | current | 46/51 | 1 | 87,888 |
 
-The ranker alone reaches the right command for 38/51 questions; hybrid
+At that historical snapshot the ranker reached the right command among its candidates for 38/51 questions; hybrid
 removes that ceiling. The old prompt let the model `clarify` whenever wording
 did not match a summary; the current one asks it to match intent and to
 clarify only for off-topic or genuinely two-way questions. That prompt was
@@ -159,3 +159,48 @@ repository.
   deliberately combines Workers AI with a storage service.
 - [OpenNext adapter](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/):
   route handlers remain supported for existing OpenNext applications.
+
+## Persistent dock and retrieval revision — 2026-10-25
+
+The assistant is mounted once in the locale root layout as a bottom-right dock.
+It lazy-loads the static `/api/assistant/catalog` projection and the form after
+an explicit open action. Opening, closing and browsing do not invoke inference.
+Unsent drafts and results remain in memory across client-side page navigation;
+no conversation storage is added. Legacy `/assistant` links redirect to the
+home page with `assistant=open` instead of opening a separate assistant page.
+
+The request may include `contextCommand`, a validated public command ID. Narrow
+questions such as “How do I use this command?” resolve from that page's static
+documentation after the same secret/URL checks. No page URL, page body, private
+file content or arbitrary endpoint is sent as context.
+
+Long overview text is now a lower-weight search field. Intent priors distinguish
+model/runner installation, generation/speed checks, update/upgrade, unlink/remove,
+collections/MCP and clusters. Group cards use safe `--help` entry points instead
+of showing an installation example for every operation in the group. Budget,
+timeout, no-retry, output allowlist and static-card restrictions remain in place;
+the selection cache namespace is bumped to v4.
+
+On the existing **development/regression** set of 51 questions, the measured
+ranking changed from top-1 24 / top-3 30 / top-8 40 to top-1 47 / top-3 51 /
+top-8 51. The set was inspected during development, so this is not held-out
+accuracy or a new live Workers AI score. Additional task paraphrases, negative
+recommendation wording and validated-context cases are covered by unit tests.
+No paid inference was called for this revision.
+
+### Mac mini option — recommendation, not a configured provider
+
+A self-hosted option can use `browser → OMM Worker → authenticated gateway →
+Mac mini Ollama`. Keep gateway credentials in server-side secrets, restrict the
+backend to the approved command-selection schema, and retain bounded input,
+queueing, timeouts and per-client/daily budgets. Ollama normally listens on
+loopback; serving remote callers requires an explicitly configured access path.
+The self-hosted choice means inference on the operator's Mac mini, not on each
+visitor's device. Do not silently resend a self-hosted question to a cloud model
+on failure; make that routing choice explicit.
+
+Before enabling it, identify the actual Mac mini/model, network endpoint,
+authentication and expected concurrency, then compare latency and answer
+selection on a fresh evaluation set. This revision does not expose a port,
+create a tunnel, change a runtime, or add an unverified provider switch.
+Primary reference: https://docs.ollama.com/faq#how-can-i-expose-ollama-on-my-network

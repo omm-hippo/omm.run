@@ -4,6 +4,8 @@ import {
   type AssistantRequest,
 } from "./types";
 
+import { isCommandId } from "./catalog";
+
 type ParseResult =
   | { readonly ok: true; readonly value: AssistantRequest }
   | { readonly ok: false };
@@ -72,8 +74,9 @@ export function parseAssistantRequestText(text: string): ParseResult {
     return { ok: false };
   }
 
+  if (body.contextCommand !== undefined && !isCommandId(body.contextCommand)) return { ok: false };
   return {
     ok: true,
-    value: { locale: body.locale, question, turnCount: turnCount as number },
+    value: { locale: body.locale, question, turnCount: turnCount as number, ...(isCommandId(body.contextCommand) ? { contextCommand: body.contextCommand } : {}) },
   };
 }
