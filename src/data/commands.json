@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generated_by": "scripts/export_command_reference.py",
-  "omm_version": "0.4.0",
+  "omm_version": "0.4.31",
   "docs_base_url": "https://omm.run/commands",
   "commands": [
     {
@@ -93,7 +93,7 @@
       "kind": "command",
       "aliases": [],
       "summary": "Measure a small reproducible quality pack and decode speed.",
-      "description": "",
+      "description": "On Ollama, each measured speed also updates this machine's local speed correction for `omm recommend`. It stays in ~/.omm and is never uploaded.",
       "usage": "omm benchmark [OPTIONS] {models}...",
       "arguments": [
         {
@@ -205,7 +205,7 @@
           ],
           "metavar": "<str>",
           "is_flag": false,
-          "help": "Add one optional group: os, policies, or checks. Repeat as needed.",
+          "help": "Add one optional group: os, policies, checks, or stages. Repeat as needed.",
           "default": null,
           "global": false
         },
@@ -281,7 +281,7 @@
       "kind": "command",
       "aliases": [],
       "summary": "Clean up leftover partial downloads and broken runner symlinks.",
-      "description": "Removes orphaned partial or unregistered .gguf downloads left behind by interrupted installs, plus symlinks in AI runner model directories whose source .gguf was deleted without going through `omm uninstall`. Also reclaims orphaned `omm pin` archives (see MODEL_ARCHIVE_DIR) - an archived version whose model is still registered, pinned or not, is never touched here.",
+      "description": "Removes orphaned partial or unregistered .gguf downloads left behind by interrupted installs, plus symlinks in AI runner model directories whose source .gguf was deleted without going through `omm uninstall`. Also reclaims orphaned `omm pin` archives (see MODEL_ARCHIVE_DIR) - an archived version whose model is still registered, pinned or not, is never touched here. Finally discards install records that no running install needs: interrupted or failed installs (which can no longer resume once their partial file is gone), finished installs of models that were since removed, and unreadable record files.",
       "usage": "omm cleanup [OPTIONS]",
       "arguments": [],
       "options": [
@@ -311,41 +311,242 @@
     },
     {
       "path": [
-        "compare"
+        "cluster"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Join Thunderbolt-linked Macs into one exo cluster that employees reach through a token-checked gateway (macOS 26.2+).",
+      "description": "",
+      "usage": "omm cluster [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/cluster"
+    },
+    {
+      "path": [
+        "cluster",
+        "init"
       ],
       "kind": "command",
       "aliases": [],
-      "summary": "Compare selected catalog packages without installing or running them.",
+      "summary": "Make this Mac the cluster head: exo, firewall, and the employee gateway.",
       "description": "",
-      "usage": "omm compare [OPTIONS] {models}...",
+      "usage": "omm cluster init [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#init"
+    },
+    {
+      "path": [
+        "cluster",
+        "join"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Add this Mac to the cluster the head Mac created.",
+      "description": "",
+      "usage": "omm cluster join [OPTIONS] {namespace}",
       "arguments": [
         {
-          "name": "models...",
-          "help": "Two to five exact model names, repositories, filenames, or install references from the signed recommendation catalog.",
+          "name": "namespace",
+          "help": "Cluster name printed by omm cluster init on the head Mac",
           "required": true
         }
       ],
       "options": [
         {
           "flags": [
-            "--profile"
+            "--quiet",
+            "-q"
           ],
-          "metavar": "<str>",
-          "is_flag": false,
-          "help": "Memory-sharing profile: dedicated, balanced, or minimal.",
-          "default": "balanced",
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#join"
+    },
+    {
+      "path": [
+        "cluster",
+        "leave"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Remove this Mac's cluster firewall, services and settings.",
+      "description": "",
+      "usage": "omm cluster leave [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--yes",
+            "-y"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Skip confirmation prompts. For scripting.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#leave"
+    },
+    {
+      "path": [
+        "cluster",
+        "model"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Recommend models that fit the cluster, or load or unload one.",
+      "description": "",
+      "usage": "omm cluster model [OPTIONS] [model]",
+      "arguments": [
+        {
+          "name": "model",
+          "help": "exo model id to load; omit to see what fits",
+          "required": false
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--unload"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Stop serving this model instead of loading it.",
+          "default": null,
           "global": false
         },
         {
           "flags": [
-            "--for"
+            "--quiet",
+            "-q"
           ],
-          "metavar": "<str>",
-          "is_flag": false,
-          "help": "Optional measured-quality task: General, Coding, Reasoning, Writing, Translation, or Documents.",
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
           "default": null,
-          "global": false
+          "global": true
         },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#model"
+    },
+    {
+      "path": [
+        "cluster",
+        "restart"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Restart exo on this Mac when status lists Macs that are on but missing.",
+      "description": "",
+      "usage": "omm cluster restart [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#restart"
+    },
+    {
+      "path": [
+        "cluster",
+        "status"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Show nodes, memory, RDMA, firewall and gateway, and list any problems.",
+      "description": "",
+      "usage": "omm cluster status [OPTIONS]",
+      "arguments": [],
+      "options": [
         {
           "flags": [
             "--json"
@@ -378,7 +579,144 @@
           "global": true
         }
       ],
-      "docs_url": "https://omm.run/commands/compare"
+      "docs_url": "https://omm.run/commands/cluster#status"
+    },
+    {
+      "path": [
+        "cluster",
+        "token"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Create, list, and revoke employee access tokens for the cluster gateway (head Mac only).",
+      "description": "",
+      "usage": "omm cluster token [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/cluster#token"
+    },
+    {
+      "path": [
+        "cluster",
+        "token",
+        "add"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Create a token for one employee and show it once.",
+      "description": "",
+      "usage": "omm cluster token add [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Who the token is for, e.g. kim",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#token"
+    },
+    {
+      "path": [
+        "cluster",
+        "token",
+        "list"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "List employee tokens by name and creation time.",
+      "description": "",
+      "usage": "omm cluster token list [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#token"
+    },
+    {
+      "path": [
+        "cluster",
+        "token",
+        "revoke"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Revoke one employee token; the gateway rejects it at once.",
+      "description": "",
+      "usage": "omm cluster token revoke [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Token name to revoke",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/cluster#token"
     },
     {
       "path": [
@@ -1208,13 +1546,13 @@
       ],
       "kind": "command",
       "aliases": [],
-      "summary": "Show what a model is - source repo, version, size and linked-program run commands once installed, or author, downloads, license and architecture for a search result. `omm fit` is what tells you whether it runs here.",
-      "description": "",
-      "usage": "omm info [OPTIONS] {model_name}",
+      "summary": "Inspect one model, or compare several models side by side.",
+      "description": "Installed and remote packages can be mixed; no recommendation catalog is required. A single model keeps its detailed view and flat JSON response.",
+      "usage": "omm info [OPTIONS] {model_names}...",
       "arguments": [
         {
-          "name": "model_name",
-          "help": "Installed model, curated id, repo/file, or search number.",
+          "name": "model_names...",
+          "help": "One or more installed models, curated ids, repo/files, or search numbers.",
           "required": true
         }
       ],
@@ -1596,6 +1934,841 @@
     },
     {
       "path": [
+        "rag"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Search local documents by meaning and words (hybrid), and serve them to coding agents over a local MCP server. Text and questions stay on this computer; embeddings use local Ollama only. After `omm rag remote set`, the same commands use collections shared on the company cluster head instead.",
+      "description": "",
+      "usage": "omm rag [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag"
+    },
+    {
+      "path": [
+        "rag",
+        "add"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Add text PDF, TXT, Markdown, HTML, or HWPX files to a collection.",
+      "description": "",
+      "usage": "omm rag add [OPTIONS] {collection} {paths}...",
+      "arguments": [
+        {
+          "name": "collection",
+          "help": "Existing collection name.",
+          "required": true
+        },
+        {
+          "name": "paths...",
+          "help": "Files or directories (searched recursively).",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--replace"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Replace a document that has the same file name.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Print output as JSON where supported.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#add"
+    },
+    {
+      "path": [
+        "rag",
+        "collection"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Create, list, or delete named document collections.",
+      "description": "",
+      "usage": "omm rag collection [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#collection"
+    },
+    {
+      "path": [
+        "rag",
+        "collection",
+        "create"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Create an empty named collection (on the cluster head when `omm rag remote` is set).",
+      "description": "",
+      "usage": "omm rag collection create [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Collection name, e.g. 인사규정.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#collection"
+    },
+    {
+      "path": [
+        "rag",
+        "collection",
+        "delete"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Delete a collection with its stored text and index. Original files are kept.",
+      "description": "",
+      "usage": "omm rag collection delete [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Collection to delete.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--yes",
+            "-y"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Skip confirmation prompts. For scripting.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#collection"
+    },
+    {
+      "path": [
+        "rag",
+        "collection",
+        "list"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "List collections you can search with document counts, owner and shares.",
+      "description": "",
+      "usage": "omm rag collection list [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Print output as JSON where supported.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#collection"
+    },
+    {
+      "path": [
+        "rag",
+        "connect"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Register OMM document search as an MCP server in a coding agent, backing up its settings.",
+      "description": "",
+      "usage": "omm rag connect [OPTIONS] {harness}",
+      "arguments": [
+        {
+          "name": "harness",
+          "help": "claude-code, codex, pi or cursor.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--remote"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Register the cluster head's shared document search (set with `omm rag remote set`) instead of this PC's.",
+          "default": null,
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#connect"
+    },
+    {
+      "path": [
+        "rag",
+        "disconnect"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Remove only the OMM MCP entry from a coding agent and keep other settings.",
+      "description": "",
+      "usage": "omm rag disconnect [OPTIONS] {harness}",
+      "arguments": [
+        {
+          "name": "harness",
+          "help": "claude-code, codex, pi or cursor.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#disconnect"
+    },
+    {
+      "path": [
+        "rag",
+        "embedding-model"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Show or change the local Ollama embedding model used for semantic search.",
+      "description": "",
+      "usage": "omm rag embedding-model [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#embedding-model"
+    },
+    {
+      "path": [
+        "rag",
+        "embedding-model",
+        "set"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Change the embedding model; documents then need `omm rag reindex`.",
+      "description": "",
+      "usage": "omm rag embedding-model set [OPTIONS] {model}",
+      "arguments": [
+        {
+          "name": "model",
+          "help": "Ollama embedding model tag, e.g. bge-m3.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--base-url"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Local Ollama loopback origin (default http://127.0.0.1:11434).",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--keep-alive"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "How long Ollama keeps the embedding model in memory after a search or import, e.g. 30s, 5m (default), 1h; 0 unloads at once.",
+          "default": null,
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#embedding-model"
+    },
+    {
+      "path": [
+        "rag",
+        "mcp"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Run the local document search MCP server on stdin/stdout (started by a coding agent).",
+      "description": "",
+      "usage": "omm rag mcp [OPTIONS]",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#mcp"
+    },
+    {
+      "path": [
+        "rag",
+        "reindex"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Rebuild semantic vectors with the current embedding model from stored text.",
+      "description": "",
+      "usage": "omm rag reindex [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--collection"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Reindex only this collection.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--all"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Rebuild vectors even for documents that are current.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Print output as JSON where supported.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#reindex"
+    },
+    {
+      "path": [
+        "rag",
+        "remote"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Use shared collections on the cluster head from this PC.",
+      "description": "",
+      "usage": "omm rag remote [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#remote"
+    },
+    {
+      "path": [
+        "rag",
+        "remote",
+        "clear"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Forget the cluster head; `omm rag` uses this PC's documents again.",
+      "description": "",
+      "usage": "omm rag remote clear [OPTIONS]",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#remote"
+    },
+    {
+      "path": [
+        "rag",
+        "remote",
+        "set"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Point `omm rag` at the cluster head after checking the employee token.",
+      "description": "",
+      "usage": "omm rag remote set [OPTIONS] {url}",
+      "arguments": [
+        {
+          "name": "url",
+          "help": "Cluster head address, e.g. 192.168.0.10 or http://head.local:52440.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--token"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Employee token. Omit it to type the token hidden (or pipe it on stdin) so it stays out of shell history.",
+          "default": null,
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#remote"
+    },
+    {
+      "path": [
+        "rag",
+        "remove"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Remove one document's stored text and index. The original file is kept.",
+      "description": "",
+      "usage": "omm rag remove [OPTIONS] {collection} {name}",
+      "arguments": [
+        {
+          "name": "collection",
+          "help": "Collection name.",
+          "required": true
+        },
+        {
+          "name": "name",
+          "help": "Document file name inside the collection.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--yes",
+            "-y"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Skip confirmation prompts. For scripting.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#remove"
+    },
+    {
+      "path": [
+        "rag",
+        "search"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Find source passages with hybrid search; falls back to words only and says why.",
+      "description": "",
+      "usage": "omm rag search [OPTIONS] {question}",
+      "arguments": [
+        {
+          "name": "question",
+          "help": "Question or keywords.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--collection"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Search only this collection.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--limit"
+          ],
+          "metavar": "<int range>",
+          "is_flag": false,
+          "help": "Maximum passages to show (1-10).",
+          "default": 3,
+          "global": false
+        },
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Print output as JSON where supported.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#search"
+    },
+    {
+      "path": [
+        "rag",
+        "share"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Let an employee or a team search a collection (its owner or the head administrator).",
+      "description": "",
+      "usage": "omm rag share [OPTIONS] {collection} [person]",
+      "arguments": [
+        {
+          "name": "collection",
+          "help": "Collection name.",
+          "required": true
+        },
+        {
+          "name": "person",
+          "help": "Employee token name (see `omm cluster token list` on the head).",
+          "required": false
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--team"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Share with a team instead of one person.",
+          "default": null,
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#share"
+    },
+    {
+      "path": [
+        "rag",
+        "status"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Show collections, the embedding model, and which documents need reindexing.",
+      "description": "",
+      "usage": "omm rag status [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--json"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Print output as JSON where supported.",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#status"
+    },
+    {
+      "path": [
+        "rag",
+        "team"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Manage employee teams for sharing collections (on the cluster head).",
+      "description": "",
+      "usage": "omm rag team [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "team",
+        "add"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Add an employee (token name) to a team.",
+      "description": "",
+      "usage": "omm rag team add [OPTIONS] {team} {member}",
+      "arguments": [
+        {
+          "name": "team",
+          "help": "Team name.",
+          "required": true
+        },
+        {
+          "name": "member",
+          "help": "Employee token name.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "team",
+        "create"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Create an empty team.",
+      "description": "",
+      "usage": "omm rag team create [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Team name, e.g. sales.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "team",
+        "delete"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Delete a team and every collection share made to it.",
+      "description": "",
+      "usage": "omm rag team delete [OPTIONS] {name}",
+      "arguments": [
+        {
+          "name": "name",
+          "help": "Team to delete.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "team",
+        "list"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "List teams and their members.",
+      "description": "",
+      "usage": "omm rag team list [OPTIONS]",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "team",
+        "remove"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Remove an employee from a team.",
+      "description": "",
+      "usage": "omm rag team remove [OPTIONS] {team} {member}",
+      "arguments": [
+        {
+          "name": "team",
+          "help": "Team name.",
+          "required": true
+        },
+        {
+          "name": "member",
+          "help": "Employee token name.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/rag#team"
+    },
+    {
+      "path": [
+        "rag",
+        "unshare"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Stop sharing a collection with an employee or a team (its owner or the head administrator).",
+      "description": "",
+      "usage": "omm rag unshare [OPTIONS] {collection} [person]",
+      "arguments": [
+        {
+          "name": "collection",
+          "help": "Collection name.",
+          "required": true
+        },
+        {
+          "name": "person",
+          "help": "Employee token name.",
+          "required": false
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--team"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Withdraw a team share instead of a person's.",
+          "default": null,
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/rag#unshare"
+    },
+    {
+      "path": [
         "recommend"
       ],
       "kind": "command",
@@ -1916,12 +3089,110 @@
       ],
       "kind": "group",
       "aliases": [],
-      "summary": "View or change omm settings (telemetry, upload policy, version, calibration, catalog trust).",
+      "summary": "View or change omm settings (telemetry, upload policy, version, catalog trust).",
       "description": "",
       "usage": "omm setting [OPTIONS] COMMAND [ARGS]...",
       "arguments": [],
       "options": [],
       "docs_url": "https://omm.run/commands/setting"
+    },
+    {
+      "path": [
+        "setting",
+        "agent"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Connect Claude Code, Codex or pi to local Ollama and restore original settings.",
+      "description": "",
+      "usage": "omm setting agent [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/setting#agent"
+    },
+    {
+      "path": [
+        "setting",
+        "agent",
+        "cloud"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Restore original routing while preserving unrelated settings edits.",
+      "description": "",
+      "usage": "omm setting agent cloud [OPTIONS] {harness}",
+      "arguments": [
+        {
+          "name": "harness",
+          "help": "claude, codex or pi.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/setting#agent"
+    },
+    {
+      "path": [
+        "setting",
+        "agent",
+        "local"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Back up settings and connect a harness to a downloaded local Ollama model.",
+      "description": "",
+      "usage": "omm setting agent local [OPTIONS] {harness}",
+      "arguments": [
+        {
+          "name": "harness",
+          "help": "claude, codex or pi.",
+          "required": true
+        }
+      ],
+      "options": [
+        {
+          "flags": [
+            "--model"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Installed tool-capable Ollama model tag (32K+ context).",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--base-url"
+          ],
+          "metavar": "<str>",
+          "is_flag": false,
+          "help": "Local Ollama HTTP(S) loopback origin.",
+          "default": "http://127.0.0.1:11434",
+          "global": false
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#agent"
+    },
+    {
+      "path": [
+        "setting",
+        "agent",
+        "status"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Show saved connection state without loading a model or exposing credentials.",
+      "description": "",
+      "usage": "omm setting agent status [OPTIONS] {harness}",
+      "arguments": [
+        {
+          "name": "harness",
+          "help": "claude, codex or pi.",
+          "required": true
+        }
+      ],
+      "options": [],
+      "docs_url": "https://omm.run/commands/setting#agent"
     },
     {
       "path": [
@@ -1940,20 +3211,15 @@
     {
       "path": [
         "setting",
-        "calibrate"
+        "auto-import",
+        "disable"
       ],
       "kind": "command",
       "aliases": [],
-      "summary": "Correct this machine's local speed estimate without uploading data.",
+      "summary": "Turn off background auto-import.",
       "description": "",
-      "usage": "omm setting calibrate [OPTIONS] [model_name]",
-      "arguments": [
-        {
-          "name": "model_name",
-          "help": "Installed Ollama-linked model; defaults to the smallest available model.",
-          "required": false
-        }
-      ],
+      "usage": "omm setting auto-import disable [OPTIONS]",
+      "arguments": [],
       "options": [
         {
           "flags": [
@@ -1977,7 +3243,81 @@
           "global": true
         }
       ],
-      "docs_url": "https://omm.run/commands/setting#calibrate"
+      "docs_url": "https://omm.run/commands/setting#auto-import"
+    },
+    {
+      "path": [
+        "setting",
+        "auto-import",
+        "enable"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Turn on background auto-import: watches Ollama/LM Studio/etc. and adopts new models into the omm hub without a prompt.",
+      "description": "",
+      "usage": "omm setting auto-import enable [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#auto-import"
+    },
+    {
+      "path": [
+        "setting",
+        "auto-import",
+        "status"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Show whether background auto-import is enabled and registered with the OS.",
+      "description": "",
+      "usage": "omm setting auto-import status [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#auto-import"
     },
     {
       "path": [
@@ -2408,6 +3748,274 @@
     {
       "path": [
         "setting",
+        "upload",
+        "benchmark"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Configure the benchmark-upload send policy; see `omm setting telemetry` for the destination.",
+      "description": "",
+      "usage": "omm setting upload benchmark [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--enable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Always send benchmark results without asking.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--disable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Never send benchmark results.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--ask"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Ask before sending (default); `omm install`/`omm benchmark` ask each time, `omm contribute` asks once per run.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#upload"
+    },
+    {
+      "path": [
+        "setting",
+        "upload",
+        "crash"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Configure the opt-in crash-report policy; see docs/crash-reports.md for exactly what is sent. Crash reports go to their own write-only channel, separate from benchmark telemetry and usage stats.",
+      "description": "",
+      "usage": "omm setting upload crash [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--enable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Always send scrubbed crash reports without asking.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--disable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Never send crash reports (the default).",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--ask"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Ask once per `omm contribute` run before sending.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#upload"
+    },
+    {
+      "path": [
+        "setting",
+        "upload",
+        "usage"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Anonymous daily usage stats (opt-in, off by default). See PRIVACY.md for the exact fields. Run with no flags to print the current policy and the exact payload that would be sent next.",
+      "description": "",
+      "usage": "omm setting upload usage [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--enable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Send the anonymous daily usage batch.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--disable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Never send usage stats (the default).",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--reset-id"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Generate a new random install id, unlinking future rows from past ones.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#upload"
+    },
+    {
+      "path": [
+        "setting",
+        "upload",
+        "votes"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Arena battle vote uploads (opt-in, asked after each session).",
+      "description": "The prompt you typed is never uploaded - only which model won, the two models' identities, and their measured speed and memory. See PRIVACY.md. Run with no flags to print the current policy and how many votes wait.",
+      "usage": "omm setting upload votes [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--enable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Always upload battle votes.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--disable"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Never upload battle votes.",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--ask"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Ask after each battle session (the default).",
+          "default": null,
+          "global": false
+        },
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#upload"
+    },
+    {
+      "path": [
+        "setting",
         "version"
       ],
       "kind": "command",
@@ -2460,6 +4068,131 @@
         }
       ],
       "docs_url": "https://omm.run/commands/setting#version"
+    },
+    {
+      "path": [
+        "setting",
+        "web-autostart"
+      ],
+      "kind": "group",
+      "aliases": [],
+      "summary": "Start the local web manager (omm web, no browser) when you sign in. Off by default; nothing is sent anywhere.",
+      "description": "",
+      "usage": "omm setting web-autostart [OPTIONS] COMMAND [ARGS]...",
+      "arguments": [],
+      "options": [],
+      "docs_url": "https://omm.run/commands/setting#web-autostart"
+    },
+    {
+      "path": [
+        "setting",
+        "web-autostart",
+        "disable"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Stop starting the local web manager at sign-in. Models and settings are kept.",
+      "description": "",
+      "usage": "omm setting web-autostart disable [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#web-autostart"
+    },
+    {
+      "path": [
+        "setting",
+        "web-autostart",
+        "enable"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Start the local web manager at sign-in (and now), without opening a browser.",
+      "description": "",
+      "usage": "omm setting web-autostart enable [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#web-autostart"
+    },
+    {
+      "path": [
+        "setting",
+        "web-autostart",
+        "status"
+      ],
+      "kind": "command",
+      "aliases": [],
+      "summary": "Show whether the local web manager is registered to start at sign-in.",
+      "description": "",
+      "usage": "omm setting web-autostart status [OPTIONS]",
+      "arguments": [],
+      "options": [
+        {
+          "flags": [
+            "--quiet",
+            "-q"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Suppress progress bars and background status/hint lines (errors and results still print).",
+          "default": null,
+          "global": true
+        },
+        {
+          "flags": [
+            "--no-color"
+          ],
+          "metavar": null,
+          "is_flag": true,
+          "help": "Disable colored output.",
+          "default": null,
+          "global": true
+        }
+      ],
+      "docs_url": "https://omm.run/commands/setting#web-autostart"
     },
     {
       "path": [

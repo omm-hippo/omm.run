@@ -151,6 +151,38 @@ export const en = {
     ],
   },
 
+  workspace: {
+    label: "Beyond the model file",
+    heading: "Chat, search your documents, and connect your tools.",
+    body: "Keep managing models from the terminal, or open the local workspace. Choose the next step for your own computer or a shared Mac cluster.",
+    web: {
+      title: "Prepare a model and start chatting",
+      body: "The local browser workspace brings model search, installation, runner links and chat together. One confirmation can prepare a model, check a real response, and open its conversation. Progress and the failed stage remain visible across restarts.",
+      requirement: "Requires a reachable Ollama or LM Studio local API. An existing loaded model is preserved; a download alone is never marked as a successful response.",
+      link: "Open the local workspace guide",
+    },
+    rag: {
+      title: "Find evidence in your documents",
+      body: "Organize documents into collections and search passages with their names, pages and source text. Connect that search to Claude Code, Codex, pi or Cursor through MCP; cluster collections can also be shared with selected people or teams.",
+      requirement: "Local MCP uses standard input/output. Shared search requires a configured cluster head and token. Model answers still need to be checked against the original passages.",
+      link: "Read the document search commands",
+    },
+    agent: {
+      title: "Connect a coding agent to local Ollama",
+      body: "Back up the user routing settings for Claude Code, Codex or pi, connect an installed local model, and inspect the connection status. The cloud subcommand restores the original routing settings.",
+      requirement: "Install the agent separately. Requires Ollama 0.14.0+ and a tool-capable model with at least 32K context. Start a new agent session and check its effective model and server.",
+      link: "Read the agent connection commands",
+    },
+    cluster: {
+      title: "Serve a model across multiple Macs",
+      body: "Create an exo-backed cluster, join the other Macs, inspect their connections and choose a model that fits their available memory. Issue and revoke a separate gateway token for each person.",
+      requirement: "Cluster nodes require macOS 26.2+ and a Thunderbolt network. Setup changes networking, firewall rules and idle sleep, and needs administrator authorization. RDMA also requires matching OS builds.",
+      link: "Read the cluster commands",
+    },
+    versionNote: "These features follow the current main development source. Availability depends on your installed package and release channel.",
+    releases: "Check published releases →",
+  },
+
   install: {
     label: "Install",
     heading:
@@ -228,7 +260,7 @@ export const en = {
         "Check loading and text generation through Ollama or LM Studio.",
         "Use the selected model in its local runner.",
       ],
-      webBody: "Prefer a browser? Start the local manager to review recommendations, install models, manage runner links and confirm a response. It runs on this computer at 127.0.0.1. Model operations require confirmation.",
+      webBody: "In the browser, choose a model and Prepare and start chat. The workspace prepares the runner and model, checks an actual response and then opens chat. Enable the Ollama or LM Studio local API first; an existing loaded model is preserved and blocks a new load.",
       webLabel: "Start the local OMM manager",
       webLink: "Local manager guide",
       trouble: "If setup or a runner fails, start with omm doctor and omm log --lines 5. Installing OMM or downloading a model alone does not verify generation.",
@@ -562,7 +594,7 @@ export const en = {
     sharedFlags: "Shared flags",
     /** `{flags}` is the comma-separated list of flags every command accepts. */
     sharedFlagsBody:
-      "Every omm command also accepts {flags}, so they are listed here once instead of on each command.",
+      "The CLI reuses these flags: {flags}. Support varies by command; check the selected subcommand's --help before using them.",
     readmeTitle: "README — Usage",
     readmeBlurb: "Every omm command, one line each.",
     /** `{version}` is the omm release the reference was exported from. */

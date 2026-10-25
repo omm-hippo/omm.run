@@ -11,6 +11,7 @@
 import {
   flagLabel,
   ownOptions,
+  referenceAnchor,
   sharedFlags,
   type ReferenceEntry,
 } from "@/lib/commands/reference";
@@ -144,7 +145,7 @@ export default function CommandReference({
             {subs.map((sub) => (
               <section
                 key={sub.path.join(" ")}
-                id={sub.path[1]}
+                id={referenceAnchor(sub)}
                 className="scroll-mt-14 border-b border-line-0 py-6"
               >
                 <h4 className="text-terminal text-ink-0">

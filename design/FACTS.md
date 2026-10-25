@@ -895,3 +895,43 @@ snapshot, not a claim that every package channel has published 0.4.0.
   run <name>; troubleshoot with doctor and log --lines 5.
 - `src/omm/hardware.py:18` still uses a 1.0 GB minimum RAM reserve, despite the
   README's older 2 GB wording. Keep the code-backed site arithmetic unchanged.
+
+## Current product refresh — 2026-10-25
+
+Source: `omm-hippo/omm` main at `4498b760` (pyproject version `0.4.41`).
+This is development-source coverage, not a package-publication claim.
+
+- `docs/commands.json` at that commit contains 101 entries, exported with
+  version `0.4.31`. Keep this generated version verbatim when syncing; do not
+  relabel it as a newer export. There are 35 top-level commands. The local
+  source check compares the combined editorial/reference coverage with CLI
+  declarations, and the export check compares every argument, flag and help
+  string against the trusted source file.
+- `src/omm/command_reference.py:NESTED_GROUPS` recursively exports `cluster`,
+  `engine`, `rag` and `setting`. CLI URLs for deeper commands target their
+  parent subgroup (`#agent`, `#remote`, `#token`). The site preserves those
+  anchors and adds unique descendant anchors (`#agent-local`, `#remote-set`,
+  `#token-add`) rather than dropping deeper entries or duplicating IDs.
+- `src/omm/cli.py:info`, `README.md` Usage: comparisons use `omm info MODEL_A
+  MODEL_B`; `compare` is no longer a registered command. Remove it from the
+  selector and assistant allowlist, and redirect old bilingual page URLs to
+  the info page. Historical compare captures above are superseded.
+- `docs/local-web.md`, `src/omm/web`: model preparation and chat, durable job
+  stages, API preflight before download, preservation of existing runtime
+  loads, Markdown, composition-safe sending, document questions and locally
+  stored conversations. A response probe proves generation, not task quality.
+- `src/omm/rag_cli.py`, `docs/rag-mcp.md`: local stdio MCP connections for
+  Claude Code/Codex/pi/Cursor; remote-head configuration, collection sharing
+  and team ACLs require explicit configuration and employee tokens.
+- `docs/agent-connections.md`, `src/omm/cli.py:agent_local`: separately installed
+  Claude/Codex/pi, local Ollama 0.14.0+, tool metadata and 32K+ context required.
+  `cloud` restores original routing, not account authentication. Existing
+  sessions are not switched. Metadata validation is not a real agent-workflow
+  verification.
+- `src/omm/cluster/{commands,preflight}.py`: cluster nodes require macOS 26.2+;
+  setup configures Thunderbolt networking, firewall and sleep, needs admin
+  authorization, and prints RDMA guidance. Matching OS builds are required for
+  RDMA. No cluster setup is executed while maintaining this website.
+- `src/omm/install_safety.py`, `src/omm/linker.py`: managed runner installation
+  and update stop when mandatory checks fail or cannot run; OS protection
+  bypasses are rejected. Named-check success does not assess all vulnerabilities.

@@ -15,8 +15,8 @@ Open <http://localhost:3000>. Korean is served without a language prefix;
 English is served under `/en` (for example, `/en/commands`). Legacy `/ko` URLs
 redirect to the same unprefixed Korean page, preserving query strings. Language
 controls switch between the same Korean and English page while preserving the
-query and fragment. Browser language and old `omm_locale` cookies do not change
-the language of an unprefixed URL.
+query and fragment. Unprefixed GET requests may redirect to English according
+to the saved language choice, browser language or region; crawlers use Korean.
 
 `next dev` does not initialize Cloudflare bindings, so local development does not
 require Cloudflare authentication or invoke remote Workers AI. The assistant
@@ -29,6 +29,11 @@ page ends with a "CLI reference" section showing that command's usage line,
 arguments, options and sub-commands exactly as `omm <name> --help` prints them.
 A command the CLI exports but this site has no hand-written page for still gets
 a reference-only page from `src/app/[locale]/commands/[name]`.
+
+Nested groups and their descendants share the top-level page. CLI help links
+such as `/commands/setting#agent` remain valid; deeper entries also have unique
+anchors such as `#agent-local`. The retired `/commands/compare` route redirects
+permanently to `/commands/info` in both languages.
 
 All of it renders from `src/data/commands.json`, a copy of `docs/commands.json`
 in [omm-hippo/omm](https://github.com/omm-hippo/omm), which is generated there
@@ -89,3 +94,10 @@ OMM_SOURCE_DIR=/path/to/omm npm run check:omm-sync
 
 `npm run deploy` changes the Cloudflare account and production Worker. Do not
 run it without explicit deployment approval.
+
+The `undici` override pins the patched 7.30.1 release for Miniflare's HTTP
+client. Keep it within major version 7 until Wrangler updates its pinned
+transitive dependency, then reassess the override with a fresh audit and local
+Worker verification.
+The scoped `@node-minify/core` override selects glob 10.5.0 while leaving the
+adapter's own glob dependency on its supported major version.
