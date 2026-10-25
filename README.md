@@ -22,6 +22,45 @@ to the saved language choice, browser language or region; crawlers use Korean.
 require Cloudflare authentication or invoke remote Workers AI. The assistant
 uses its deterministic fallback without the live inference configuration.
 
+## Site sections and future Notion links
+
+The primary navigation has five destinations: overview (`/`), use cases
+(`/use-cases`), models (`/models`), documentation (`/docs`) and news (`/news`).
+The same structure is available under `/en`. Existing model, command,
+installation and synced-document URLs remain available. Installation commands
+now live at `/install#quick-install`; the old home `#install` anchor offers a
+direct link to that page. FAQ and troubleshooting have their own documentation
+pages. The five use-case guides link back to the existing command reference.
+
+Notion is optional further reading. There is no Notion authentication, API call,
+account dependency or automatic content import. Keep core installation and
+command instructions on this site. To connect the future `omm.hippo` workspace:
+
+1. Create a public **OMM 안내서** page, keeping private drafts outside its tree.
+2. Create the articles below. Each should include its audience, applicable OMM
+   version, last checked date, requirements, a concrete example and source links.
+3. Publish the intended pages and verify each public URL while logged out.
+4. Set `hubUrl` and the relevant article `url` values in
+   `src/data/notion-publications.json`, then rebuild and review the site.
+   Null or invalid URLs render no link, title, placeholder or empty article list.
+   HTTPS links on `notion.site` and `notion.so` are accepted; custom domains need
+   an explicit allowlist update. URL shape validation does not prove publication
+   or logged-out access. Public links do not require an integration token.
+
+| Article ID | Page to prepare | Main content |
+| --- | --- | --- |
+| `why-omm` | OMM은 어떤 문제를 해결하나요? | Intended users, one before/after workflow, OMM's role |
+| `choosing-models` | 내 컴퓨터에 맞는 모델 고르기 | RAM, task, file size, memory fit and a real quality check |
+| `runners-and-omm` | Ollama·LM Studio와 함께 쓰기 | App roles, model connection, local API setup and screenshots |
+| `document-search` | 내 문서에서 답변의 근거 찾기 | A non-private sample file, indexing, query and checked source passage |
+| `mac-cluster` | 여러 Mac을 연결하기 전에 알아둘 것 | Requirements, device roles, network setup and measured limits |
+| `dev-notes` | OMM 개발 노트 | Dated changes, reasons, release links and unverified work |
+
+Configured articles appear on `/news` and matching use-case pages. Publishing
+edits in Notion updates the Notion page; it does not replace site copy. No links
+are configured until the owner supplies published URLs. Do not infer a public
+URL from the account or workspace name.
+
 ## Command reference
 
 `/commands` lists every command the CLI exports, and each `/commands/<name>`

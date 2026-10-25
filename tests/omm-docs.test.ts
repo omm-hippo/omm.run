@@ -153,7 +153,7 @@ test("malformed or non-web image URLs degrade to their alternative text", () => 
   assert.ok(!html.includes("<img"));
 });
 
-test("every /docs route directory has a page and a dictionary entry", async () => {
+test("all docs routes exist and mirrored documents have matching dictionary entries", async () => {
   const entries = await readdir(DOCS_ROUTES, { withFileTypes: true });
   const slugs = new Set<string>();
   for (const entry of entries) {
@@ -162,7 +162,8 @@ test("every /docs route directory has a page and a dictionary entry", async () =
     slugs.add(entry.name);
   }
 
-  assert.deepEqual([...slugs].sort(), Object.keys(PAGES).sort());
+  // FAQ and troubleshooting are local guides, not sections fetched from OMM's README.
+  assert.deepEqual([...slugs].sort(), [...Object.keys(PAGES), 'faq', 'troubleshooting'].sort());
 
   const en = await readFile(
     path.join(REPO_ROOT, "src/i18n/dictionaries/en.ts"),
@@ -172,7 +173,7 @@ test("every /docs route directory has a page and a dictionary entry", async () =
     path.join(REPO_ROOT, "src/i18n/dictionaries/ko.ts"),
     "utf8",
   );
-  for (const slug of slugs) {
+  for (const slug of Object.keys(PAGES)) {
     const key = slug.includes("-") ? `"${slug}"` : slug;
     assert.ok(en.includes(`${key}: {`), `en.ts missing docs.pages.${slug}`);
     assert.ok(ko.includes(`${key}: {`), `ko.ts missing docs.pages.${slug}`);

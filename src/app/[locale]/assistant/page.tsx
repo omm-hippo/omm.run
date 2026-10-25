@@ -1,3 +1,4 @@
+import SectionNav from "@/components/SectionNav";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -99,7 +100,7 @@ export default async function AssistantPage({
 
   return (
     <>
-      <Nav locale={locale} />
+      <Nav locale={locale} /><SectionNav locale={locale} group="docs" />
       <main className="relative flex-1 border-b border-line-0 bg-bg-0">
         <div className="grid-bg pointer-events-none absolute inset-x-0 top-0 h-[34rem]" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 pt-16 pb-32 md:px-8 md:pt-24">

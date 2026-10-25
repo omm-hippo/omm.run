@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getGuideLinks } from "@/components/install/guides";
+import Install from "@/components/Install";
 import {
   OG_LOCALE,
   alternatesFor,
@@ -43,9 +44,8 @@ export default async function InstallChooser({
   const [beforeLink, linkLabel, afterLink] = installChooser.shortcut;
 
   return (
-    <main className="relative border-b border-line-0 bg-bg-0">
-      <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
-      <div className="relative mx-auto w-full max-w-page px-5 pt-16 pb-32 md:px-8">
+    <main className="document-page install-page relative border-b border-line-0 bg-bg-0">
+      <div className="relative mx-auto w-full max-w-page px-5 pt-12 pb-12 md:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8 lg:col-start-4">
             <p className="text-label">{installChooser.label}</p>
@@ -72,7 +72,7 @@ export default async function InstallChooser({
             <p className="text-small mt-8 max-w-[62ch]">
               {beforeLink}
               <Link
-                href={localeHref("/#install", locale)}
+                href="#quick-install"
                 className="border-b border-line-1 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
                 prefetch={false}
               >
@@ -83,6 +83,7 @@ export default async function InstallChooser({
           </div>
         </div>
       </div>
+      <div id="quick-install" className="scroll-mt-24"><Install locale={locale} /></div>
     </main>
   );
 }

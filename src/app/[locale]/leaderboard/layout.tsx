@@ -1,3 +1,4 @@
+import SectionNav from "@/components/SectionNav";
 import { notFound } from "next/navigation";
 
 import Footer from "@/components/Footer";
@@ -15,7 +16,7 @@ export default async function LeaderboardLayout({
   if (!isLocale(locale)) notFound();
   return (
     <>
-      <Nav locale={locale} />
+      <Nav locale={locale} /><SectionNav locale={locale} group="models" />
       {children}
       <Footer locale={locale} />
     </>
