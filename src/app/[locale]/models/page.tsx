@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ModelRecommender from "@/components/models/ModelRecommender";
+import { getRecommendationDictionary } from "@/i18n/model-recommendation";
 import ModelExplorer from "@/components/models/ModelExplorer";
 import { OG_LOCALE, alternatesFor, isLocale, localeHref } from "@/i18n/config";
 import { getModelDictionary } from "@/i18n/models";
@@ -16,6 +18,8 @@ export default async function ModelsPage({ params }: PageProps<"/[locale]/models
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getModelDictionary(locale);
+  const r = getRecommendationDictionary(locale);
+  const models = WIKI_MODELS.map((model) => localizeModel(model, locale));
   return <main className="document-page flex-1">
     <div className="mx-auto w-full max-w-page px-5 pt-8 pb-20 md:px-8 md:pt-16">
       <div className="border-b border-line-1 pb-6 md:pb-8">
@@ -26,7 +30,8 @@ export default async function ModelsPage({ params }: PageProps<"/[locale]/models
           <p className="shrink-0 text-[12px] text-ink-2"><span className="font-mono text-ink-0">{WIKI_MODELS.length}</span> {t.checkpoints}<br className="hidden sm:block" /><span className="sm:hidden"> · </span>{t.reviewed} <time className="font-mono" dateTime={MODEL_WIKI_REVIEWED_AT}>{MODEL_WIKI_REVIEWED_AT}</time></p>
         </div>
       </div>
-      <div className="mt-8"><ModelExplorer locale={locale} models={WIKI_MODELS.map((model) => localizeModel(model, locale))} /></div>
+      <div className="mt-8"><ModelRecommender locale={locale} models={models} /></div>
+      <details className="mt-10" id="all-models"><summary className="cursor-pointer text-[22px] font-medium text-ink-0">{r.catalog}</summary><div className="mt-8"><ModelExplorer locale={locale} models={models} /></div></details>
       <div className="mt-12 grid gap-6 border-t border-line-1 pt-8 lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-10">
         <h2 className="text-[18px] font-medium text-ink-0">{t.evidenceTitle}</h2>
         <div className="max-w-[76ch] text-small text-ink-2"><p>{t.evidenceNote}</p><p className="mt-3">{t.sizeNote}</p>
