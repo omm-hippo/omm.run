@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import AssistantIcon, { AssistantMark, type AssistantIconName } from "./AssistantIcon";
 import CommandCard from "@/components/assistant/CommandCard";
 import type {
   AssistantCommandCard,
@@ -116,6 +117,8 @@ export default function AssistantClient({
 }) {
   const t = getDictionary(locale).assistant;
   const resultSection = useRef<HTMLElement>(null);
+  const activeRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => activeRequest.current?.abort(), []);
   const questionInput = useRef<HTMLTextAreaElement>(null);
   useEffect(() => { if (compact && !questionInput.current?.closest("[hidden]")) questionInput.current?.focus(); }, [compact]);
   const [question, setQuestion] = useState("");
@@ -139,7 +142,7 @@ export default function AssistantClient({
   const trimmed = question.trim();
   const turnLimitReached = turnCount >= MAX_TURNS;
   const privateInput = result?.reason === "sensitive_input" || result?.reason === "unsafe_input";
-  const searchHref = privateInput ? localeHref("/commands", locale) : `${localeHref("/commands", locale)}?q=${encodeURIComponent(trimmed)}`;
+  const searchHref = privateInput ? localeHref("/commands", locale) : `${localeHref("/commands", locale)}?q=${encodeURIComponent(submittedQuestion || trimmed)}`;
 
   async function submitQuestion(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -155,6 +158,7 @@ export default function AssistantClient({
     setError(null);
     setResult(null);
     const controller = new AbortController();
+    activeRequest.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
@@ -170,6 +174,7 @@ export default function AssistantClient({
       if (!parsed) throw new Error("assistant_invalid_response");
 
       setResult(parsed);
+      setQuestion("");
       setTurnCount((current) => Math.min(current + 1, MAX_TURNS));
     } catch {
       setError(t.unavailable);
@@ -180,6 +185,7 @@ export default function AssistantClient({
   }
 
   function reset() {
+    activeRequest.current?.abort();
     setQuestion("");
     setSubmittedQuestion("");
     setTurnCount(0);
@@ -199,85 +205,39 @@ export default function AssistantClient({
         ? t.fallbackLabel
         : t.resultLabel;
 
+  const copy = locale === "ko" ? {
+    welcome: "무엇을 도와드릴까요?", placeholder: "OMM AI에게 질문하기", mode: "명령어 안내", privacy: "개인정보 안내", search: "명령어 검색",
+    suggestions: [
+      { label: "내 컴퓨터에 맞는 모델 찾기", question: "이 컴퓨터에 맞는 모델을 추천받으려면?", icon: "model" },
+      { label: "모델 설치하기", question: "모델을 설치하려면 어떤 명령어를 쓰나요?", icon: "install" },
+      { label: "로컬 AI 연결하기", question: "Codex를 로컬 Ollama 모델에 연결하려면?", icon: "connect" },
+      { label: "문제 진단하기", question: "설치한 러너를 찾지 못하는 이유를 어떻게 확인하나요?", icon: "check" },
+    ],
+  } : {
+    welcome: "How can I help?", placeholder: "Ask OMM AI anything", mode: "Command guide", privacy: "Privacy information", search: "Search commands",
+    suggestions: [
+      { label: "Find a model for my computer", question: "Which command recommends a model that fits this computer?", icon: "model" },
+      { label: "Install a model", question: "Which command installs a model?", icon: "install" },
+      { label: "Connect local AI", question: "How do I connect Codex to local Ollama?", icon: "connect" },
+      { label: "Diagnose a problem", question: "Why is an installed runner not detected?", icon: "check" },
+    ],
+  };
+
   return (
-    <div className={compact ? "assistant-compact" : "mx-auto max-w-3xl"}>
-      <div>
-        <form onSubmit={submitQuestion} noValidate>
-          <label htmlFor="assistant-question" className="text-h3 block">
-            {t.formLabel}
-          </label>
-          <div className="mt-5 rounded-lg border border-line-1 bg-bg-1 focus-within:border-accent-line">
-            <textarea
-              ref={questionInput}
-              id="assistant-question"
-              value={question}
-              onChange={(event) => {
-                setQuestion(Array.from(event.target.value).slice(0, MAX_QUESTION_LENGTH).join(""));
-                if (error) setError(null);
-              }}
-              placeholder={t.placeholder}
-              onKeyDown={(event) => {
-                if (compact && event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
-                  event.preventDefault(); event.currentTarget.form?.requestSubmit();
-                }
-              }}
-              rows={compact ? 3 : 6}
-              aria-describedby="assistant-privacy assistant-counter"
-              disabled={turnLimitReached || status === "loading"}
-              className="block w-full resize-y bg-transparent px-4 pt-4 text-[16px] leading-7 text-ink-0 outline-none placeholder:text-ink-3 disabled:cursor-not-allowed disabled:text-ink-3"
-            />
-            <div className="flex items-center justify-between border-t border-line-0 px-4 py-3">
-              <span id="assistant-counter" className="text-label">
-                {fill(t.counter, {
-                  count: String(Array.from(question).length),
-                  max: String(MAX_QUESTION_LENGTH),
-                })}
-              </span>
-              <button
-                type="submit"
-                disabled={status === "loading" || turnLimitReached}
-                className="focus-ring-neutral rounded-md bg-accent px-5 py-2 text-small font-medium text-accent-ink transition-colors duration-[120ms] ease-micro hover:bg-accent-press disabled:cursor-not-allowed disabled:bg-bg-3 disabled:text-ink-3"
-              >
-                {status === "loading" ? t.submitting : t.submit}
-              </button>
-            </div>
-          </div>
-
-          <p id="assistant-privacy" className="text-small mt-4 max-w-[62ch]">
-            {t.privacy}
-          </p>
-          {turnLimitReached ? (
-            <p className="text-small mt-3 border-l border-accent-line pl-3 text-ink-1">
-              {t.turnLimit}
-            </p>
-          ) : null}
-
-          {(!compact || (!result && status === "idle")) ? <div className="mt-8 border-t border-line-0 pt-6">
-            <p className="text-label">{t.quickLabel}</p>
-            <div className="mt-3 flex flex-col items-start gap-2">
-              {t.quickQuestions.map((example) => (
-                <button
-                  key={example}
-                  type="button"
-                  disabled={turnLimitReached}
-                  onClick={() => {
-                    setQuestion(example);
-                    setError(null);
-                  }}
-                  className="text-left text-small text-ink-2 transition-colors duration-[120ms] ease-micro hover:text-ink-0 disabled:cursor-not-allowed disabled:text-ink-3"
-                >
-                  {example}
-                </button>
-              ))}
-            </div>
-          </div> : null}
-        </form>
-      </div>
-
-      {(status !== "idle" || error || !compact) ? <section ref={resultSection}
+    <div className="assistant-chat">
+      {status === "idle" && !error ? <div className="assistant-welcome">
+        <div className="assistant-welcome-mark"><AssistantMark /></div>
+        <h3>{copy.welcome}</h3>
+        <div className="assistant-suggestions" aria-label={t.quickLabel}>
+          {copy.suggestions.map((suggestion) => <button key={suggestion.icon} type="button" onClick={() => {
+            setQuestion(suggestion.question); setError(null); questionInput.current?.focus();
+          }}><AssistantIcon name={suggestion.icon as AssistantIconName} /><span>{suggestion.label}</span></button>)}
+        </div>
+      </div> : null}
+      {(status !== "idle" || error) ? <section ref={resultSection}
         aria-live="polite"
         aria-busy={status === "loading"}
-        className="mt-10 min-h-80 border-t border-line-1 pt-8"
+        className="assistant-response-scroll"
       >
         {compact && submittedQuestion ? <p className="assistant-question-echo">{submittedQuestion}</p> : null}
         {status === "loading" ? (
@@ -352,15 +312,41 @@ export default function AssistantClient({
           </div>
         ) : null}
 
-        {status === "idle" && !error && !result ? (
-          <div className="flex min-h-64 items-center border-y border-line-0">
-            <div>
-              <p className="font-mono text-[13px] text-accent">$ omm help</p>
-              <p className="text-small mt-4 max-w-[52ch]">{t.scope}</p>
-            </div>
-          </div>
-        ) : null}
       </section> : null}
+      <form onSubmit={submitQuestion} noValidate className="assistant-composer-form">
+        {turnLimitReached ? <p className="assistant-turn-limit">{t.turnLimit}</p> : null}
+        <div className="assistant-composer">
+          <label htmlFor="assistant-question" className="sr-only">{t.formLabel}</label>
+          <textarea
+            ref={questionInput}
+            id="assistant-question"
+            value={question}
+            onChange={(event) => {
+              setQuestion(Array.from(event.target.value).slice(0, MAX_QUESTION_LENGTH).join(""));
+              if (error) setError(null);
+            }}
+            placeholder={copy.placeholder}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing && event.nativeEvent.keyCode !== 229) {
+                event.preventDefault(); event.currentTarget.form?.requestSubmit();
+              }
+            }}
+            rows={3}
+            aria-describedby="assistant-privacy assistant-counter"
+            disabled={turnLimitReached || status === "loading"}
+          />
+          <div className="assistant-composer-toolbar">
+            <Link href={localeHref("/commands", locale)} prefetch={false} aria-label={copy.search} title={copy.search} className="assistant-tool-button"><AssistantIcon name="search" /></Link>
+            <details className="assistant-privacy">
+              <summary aria-label={copy.privacy} title={copy.privacy} className="assistant-tool-button"><AssistantIcon name="shield" /></summary>
+              <p id="assistant-privacy">{t.privacy}</p>
+            </details>
+            <span id="assistant-counter" className={question ? "assistant-counter" : "sr-only"}>{fill(t.counter, { count: String(Array.from(question).length), max: String(MAX_QUESTION_LENGTH) })}</span>
+            <span className="assistant-composer-mode">{copy.mode}</span>
+            <button type="submit" className="assistant-send" aria-label={status === "loading" ? t.submitting : t.submit} title={t.submit} disabled={!trimmed || status === "loading" || turnLimitReached}><AssistantIcon name="send" /></button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

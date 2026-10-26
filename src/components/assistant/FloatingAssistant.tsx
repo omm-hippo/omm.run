@@ -6,11 +6,12 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { canonicalPath, localeHref, type Locale } from '@/i18n/config';
 import type { AssistantCommandCard } from './types';
+import AssistantIcon, { AssistantMark } from './AssistantIcon';
 
 const AssistantClient = dynamic(() => import('./AssistantClient'), { ssr: false, loading: () => <p role="status">…</p> });
 const COPY = {
-  ko: { open: 'OMM AI 도우미 열기', close: '도우미 닫기', title: 'OMM AI 도우미', subtitle: 'OMM에서 할 일을 물어보세요.', loading: '명령어 문서 불러오는 중…', error: '문서를 불러오지 못했습니다.', retry: '다시 불러오기', search: '명령어 검색', page: '현재 문서' },
-  en: { open: 'Open OMM AI assistant', close: 'Close assistant', title: 'OMM AI assistant', subtitle: 'Ask what you want to do with OMM.', loading: 'Loading command documentation…', error: 'Documentation could not be loaded.', retry: 'Try again', search: 'Search commands', page: 'Current document' },
+  ko: { open: 'OMM AI 도우미 열기', close: '도우미 닫기', title: 'OMM AI 도우미', newChat: '새 AI 채팅', expand: '크게 보기', collapse: '작게 보기', loading: '명령어 문서 불러오는 중…', error: '문서를 불러오지 못했습니다.', retry: '다시 불러오기', search: '명령어 검색', page: '현재 문서' },
+  en: { open: 'Open OMM AI assistant', close: 'Close assistant', title: 'OMM AI assistant', newChat: 'New AI chat', expand: 'Expand assistant', collapse: 'Compact assistant', loading: 'Loading command documentation…', error: 'Documentation could not be loaded.', retry: 'Try again', search: 'Search commands', page: 'Current document' },
 };
 
 function validCards(value: unknown): value is { cards: AssistantCommandCard[] } {
@@ -21,15 +22,13 @@ function validCards(value: unknown): value is { cards: AssistantCommandCard[] } 
     && Number.isInteger(card.remainingOptionCount) && card.remainingOptionCount >= 0 && [null,'inspect','caution','high-impact'].includes(card.risk));
 }
 
-function AssistantMark() {
-  return <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M10 29v-7a14 14 0 0 1 28 0v7M9 25H6v10h7V24H9Zm30 0h3v10h-7V24h4ZM36 35c0 5-5 7-10 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 31c-3-2-4-5-4-8a11 11 0 0 1 22 0c0 3-1 6-4 8h-4l2-4a6 6 0 1 0-10 0l2 4h-4Z" fill="currentColor"/><circle cx="20" cy="21" r="1.4" fill="var(--bg-0)"/><circle cx="28" cy="21" r="1.4" fill="var(--bg-0)"/></svg>;
-}
-
 export default function FloatingAssistant({ locale }: { locale: Locale }) {
   const t = COPY[locale];
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [conversation, setConversation] = useState(0);
   const [cards, setCards] = useState<readonly AssistantCommandCard[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -64,7 +63,7 @@ export default function FloatingAssistant({ locale }: { locale: Locale }) {
     if (url.hash === '#omm-assistant') { url.hash = ''; changed = true; }
     if (url.searchParams.get('assistant') === 'open') { url.searchParams.delete('assistant'); changed = true; }
     if (changed) history.replaceState(history.state, '', url.pathname + url.search + url.hash);
-    launcher.current?.focus();
+    requestAnimationFrame(() => launcher.current?.focus());
   };
   useEffect(() => {
     const handleLink = () => {
@@ -85,15 +84,22 @@ export default function FloatingAssistant({ locale }: { locale: Locale }) {
   const slug = canonicalPath(pathname).match(/^\/commands\/([a-z0-9-]+)$/u)?.[1];
   const context = cards?.find((card) => card.id === slug);
   return <div className="assistant-dock">
-    {mounted ? <section ref={panel} id="omm-assistant-panel" role="dialog" aria-label={t.title} hidden={!open} className="assistant-dock-panel" onKeyDown={(event) => { if (event.key === 'Escape') { event.stopPropagation(); closeDock(); } }}>
-      <header className="assistant-dock-header"><div><h2>{t.title}</h2><p>{t.subtitle}</p></div><button type="button" onClick={closeDock} aria-label={t.close}>×</button></header>
+    {mounted ? <section ref={panel} id="omm-assistant-panel" role="dialog" aria-label={t.title} hidden={!open} className={`assistant-dock-panel${expanded ? " assistant-dock-expanded" : ""}`} onKeyDown={(event) => { if (event.key === 'Escape') { event.stopPropagation(); closeDock(); } }}>
+      <header className="assistant-dock-header">
+        <div className="assistant-dock-title"><AssistantMark /><h2>{t.newChat}</h2></div>
+        <div className="assistant-header-actions">
+          <button type="button" onClick={() => setConversation((current) => current + 1)} aria-label={t.newChat} title={t.newChat} disabled={!cards}><AssistantIcon name="new" /></button>
+          <button type="button" className="assistant-expand-control" onClick={() => setExpanded((current) => !current)} aria-label={expanded ? t.collapse : t.expand} title={expanded ? t.collapse : t.expand} aria-pressed={expanded}><AssistantIcon name={expanded ? 'collapse' : 'expand'} /></button>
+          <button type="button" onClick={closeDock} aria-label={t.close} title={t.close}><AssistantIcon name="close" /></button>
+        </div>
+      </header>
       <div className="assistant-dock-content">
         {context ? <p className="assistant-page-context">{t.page} · {context.name}</p> : null}
         {loading ? <p role="status">{t.loading}</p> : null}
         {failed ? <div role="status"><p>{t.error}</p><button type="button" onClick={() => void loadCatalog()} className="home-inline-link">{t.retry}</button><Link href={localeHref('/commands', locale)} prefetch={false} className="home-inline-link">{t.search} →</Link></div> : null}
-        {cards ? <AssistantClient cards={cards} locale={locale} compact contextCommand={context?.id} /> : null}
+        {cards ? <AssistantClient key={conversation} cards={cards} locale={locale} compact contextCommand={context?.id} /> : null}
       </div>
     </section> : null}
-    <button ref={launcher} id="omm-assistant" type="button" className="assistant-launcher" aria-label={open ? t.close : t.open} aria-expanded={open} aria-controls={mounted ? "omm-assistant-panel" : undefined} onClick={() => open ? closeDock() : openDock()}><AssistantMark /><span>OMM AI</span></button>
+    <button ref={launcher} id="omm-assistant" type="button" hidden={open} className="assistant-launcher" aria-label={open ? t.close : t.open} aria-expanded={open} aria-controls={mounted ? "omm-assistant-panel" : undefined} onClick={() => open ? closeDock() : openDock()}><AssistantMark /><span>OMM AI</span></button>
   </div>;
 }
