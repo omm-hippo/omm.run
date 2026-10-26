@@ -2,11 +2,11 @@ import type { Locale } from "./config";
 
 const en = {
   metaTitle: "Model wiki — omm",
-  metaDescription: "Compare open-weight LLMs by use case, strengths, limitations and official sources. A model-selection reference for people and applications.",
+  metaDescription: "Enter your PC specifications and use case to shortlist open-weight LLMs, then compare model details and official sources.",
   eyebrow: "MODEL WIKI",
-  heading: "Choose a model by what it does.",
-  lede: "Coding, agents, reasoning or vision. See what each checkpoint is designed for, what to check, and where the information comes from.",
-  mobileLede: "Compare use cases, strengths and limits, with official sources.",
+  heading: "Find a model for your PC.",
+  lede: "Start with your PC specifications and what you want to do. See model candidates, memory allowances and what to check before running them.",
+  mobileLede: "Enter your PC specifications and find models to try.",
   checkpoints: "checkpoints", reviewed: "Sources reviewed", taskHeading: "What are you building?", all: "All models",
   tasks: { agents: "Agents & tools", coding: "Coding", reasoning: "Reasoning & math", vision: "Image understanding", multilingual: "Multilingual", compact: "Smaller models" },
   search: "Search models", searchPlaceholder: "Model, publisher or task…", publisher: "Publisher", allPublishers: "All publishers",
@@ -34,10 +34,10 @@ const en = {
 
 const ko: typeof en = {
   metaTitle: "모델 위키 — omm",
-  metaDescription: "오픈 웨이트 LLM의 추천 용도, 특징, 한계, 공식 출처를 비교하세요. 사용자와 애플리케이션을 위한 모델 선택 자료입니다.",
-  eyebrow: "MODEL WIKI", heading: "어떤 모델을 쓸지, 특징부터 비교하세요.",
-  lede: "코딩, 에이전트, 추론, 이미지 이해. 각 체크포인트가 어떤 작업을 목표로 하는지, 무엇을 확인해야 하는지 근거와 함께 정리했습니다.",
-  mobileLede: "모델별 용도·특징·한계를 공식 출처와 함께 비교합니다.",
+  metaDescription: "PC 사양과 사용 목적을 입력해 오픈 웨이트 LLM 후보를 추천받고, 모델별 특징과 공식 출처를 확인하세요.",
+  eyebrow: "MODEL WIKI", heading: "내 PC에 맞는 모델을 찾아보세요.",
+  lede: "PC 사양과 하고 싶은 작업을 알려주세요. 메모리 여유와 용도를 바탕으로 모델을 추천하고, 실행 전에 확인할 점을 함께 안내합니다.",
+  mobileLede: "PC 사양과 사용 목적을 입력하고 모델을 추천받으세요.",
   checkpoints: "체크포인트", reviewed: "출처 확인", taskHeading: "어떤 작업에 쓰나요?", all: "전체 모델",
   tasks: { agents: "에이전트·도구 사용", coding: "코딩", reasoning: "추론·수학", vision: "이미지 이해", multilingual: "다국어", compact: "소형 모델" },
   search: "모델 검색", searchPlaceholder: "모델명, 개발사, 용도 검색…", publisher: "개발사", allPublishers: "전체 개발사",
