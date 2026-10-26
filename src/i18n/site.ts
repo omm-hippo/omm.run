@@ -38,7 +38,7 @@ const ko = {
   docsSections: [
     { title: '처음 시작하기', body: '설치 방법을 고르고, 사용할 앱과 첫 모델을 준비합니다.', links: [{ href: '/install', label: '운영체제별 설치' }, { href: '/commands/setup', label: '처음 설정하기' }, { href: '/use-cases/local-chat', label: '첫 대화 시작하기' }] },
     { title: '사용 중에 찾아보기', body: '명령어의 입력 방법과 옵션, 파일 저장 위치를 확인합니다.', links: [{ href: '/commands', label: '전체 명령어' }, { href: '/docs/storage-location', label: '모델 저장 위치' }, { href: '/docs/supported-platforms', label: '지원 환경' }] },
-    { title: '막힌 부분 해결하기', body: '현재 상태를 점검하고, 오류에 맞는 해결 방법을 찾습니다.', links: [{ href: '/commands/doctor', label: '상태 점검' }, { href: '/docs/troubleshooting', label: '문제 해결 가이드' }, { href: '/docs/faq', label: '자주 묻는 질문' }, { href: '/assistant', label: '하고 싶은 일로 명령어 찾기' }] },
+    { title: '막힌 부분 해결하기', body: '현재 상태를 점검하고, 오류에 맞는 해결 방법을 찾습니다.', links: [{ href: '/commands/doctor', label: '상태 점검' }, { href: '/docs/troubleshooting', label: '문제 해결 가이드' }, { href: '/docs/faq', label: '자주 묻는 질문' }, { href: '#omm-assistant', label: '하고 싶은 일로 명령어 찾기' }] },
   ],
   newsTitle: 'OMM의 변경 사항을 확인하세요.',
   newsIntro: '새 버전의 변경 사항과 알려진 문제를 확인하고, 개선 의견을 남길 수 있습니다.',
@@ -83,7 +83,7 @@ const en: typeof ko = {
   docsSections: [
     { title: 'Get started', body: 'Choose an installation method, then prepare an app and your first model.', links: [{ href: '/install', label: 'Install for your OS' }, { href: '/commands/setup', label: 'First-time setup' }, { href: '/use-cases/local-chat', label: 'Start a conversation' }] },
     { title: 'Look something up', body: 'Find command usage, options and model storage locations.', links: [{ href: '/commands', label: 'All commands' }, { href: '/docs/storage-location', label: 'Storage locations' }, { href: '/docs/supported-platforms', label: 'Supported platforms' }] },
-    { title: 'Fix a problem', body: 'Check the current state and find the guide for your issue.', links: [{ href: '/commands/doctor', label: 'Run diagnostics' }, { href: '/docs/troubleshooting', label: 'Troubleshooting guide' }, { href: '/docs/faq', label: 'Frequently asked questions' }, { href: '/assistant', label: 'Find a command for your task' }] },
+    { title: 'Fix a problem', body: 'Check the current state and find the guide for your issue.', links: [{ href: '/commands/doctor', label: 'Run diagnostics' }, { href: '/docs/troubleshooting', label: 'Troubleshooting guide' }, { href: '/docs/faq', label: 'Frequently asked questions' }, { href: '#omm-assistant', label: 'Find a command for your task' }] },
   ],
   newsTitle: 'Keep up with OMM.',
   newsIntro: 'Read release notes, check known issues and share suggestions.',

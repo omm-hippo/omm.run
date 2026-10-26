@@ -10,6 +10,7 @@ export default function SectionNav({ locale, group }: { locale: Locale; group: '
   return <nav className="section-nav" aria-label={locale === 'ko' ? `${group === 'docs' ? '문서' : '모델'} 하위 메뉴` : `${group} sections`}>
     <div>{sectionNavigation(group, locale).map((item) => {
       const active = path === item.href || (item.href !== '/docs' && path.startsWith(`${item.href}/`));
+      if (item.href.startsWith("#")) return <a key={item.href} href={item.href}>{item.label}</a>;
       return <Link key={item.href} href={localeHref(item.href, locale)} prefetch={false} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
     })}</div>
   </nav>;
