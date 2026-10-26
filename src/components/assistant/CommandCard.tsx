@@ -33,7 +33,7 @@ export default function CommandCard({
                 {card.example}
               </code>
             </div>
-            <div className="min-w-0 bg-bg-1 p-4">
+            {(card.options.length > 0 || card.remainingOptionCount > 0) ? <div className="min-w-0 bg-bg-1 p-4">
               <p className="text-label">{t.options}</p>
               <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 font-mono text-[12px] leading-5 text-ink-1">
                 {card.options.length > 0 ? (
@@ -49,7 +49,7 @@ export default function CommandCard({
                   </span>
                 ) : null}
               </div>
-            </div>
+            </div> : null}
           </div>
 
           <div className="mt-4 border-l border-accent-line pl-4">

@@ -6,6 +6,7 @@ import { COMMAND_ORDER, type Slug } from "../../i18n/commands/base";
 import type { Locale } from "../../i18n/config";
 import { getEntry, ownOptions, subEntries } from "../commands/reference";
 import { COMMAND_IDS, REFERENCE_ONLY_IDS, type CommandId } from "./catalog";
+import { taskIntentScores } from "./intents";
 import { ASSISTANT_LIMITS, type Candidate } from "./types";
 
 const LATIN_STOP_WORDS = new Set([
@@ -80,12 +81,13 @@ function searchableSections(
 ): readonly [string, string, string] {
   const command = getCommand(slug, locale);
   return [
-    [command.name, summary, command.lede, command.overviewBody].join(" "),
+    [command.name, summary, command.lede].join(" "),
     [
       ...command.options.flatMap((option) => [option.name, option.description]),
       ...command.examples.flatMap((example) => [example.command, example.caption]),
     ].join(" "),
     [
+      command.overviewBody,
       ...command.trouble.flatMap((entry) => [entry.why, entry.fix]),
       ...command.related.flatMap((entry) => [entry.label, entry.blurb]),
     ].join(" "),
@@ -309,9 +311,10 @@ export function narrowCandidates(question: string, locale: Locale): readonly Can
   if (queryTokens.length === 0) return [];
 
   const boosts = intentBoosts(question);
+  const taskScores = taskIntentScores(question);
 
   const ranked = searchDocs(locale).map((doc) => {
-    let score = boosts.get(doc.id) ?? 0;
+    let score = (boosts.get(doc.id) ?? 0) + (taskScores.get(doc.id) ?? 0);
 
     if (queryTokens.includes(doc.id)) score += 30;
     score += sectionScore(queryTokens, doc.sections[0], 4);
