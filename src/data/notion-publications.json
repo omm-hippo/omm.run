@@ -1,8 +1,8 @@
 {
-  "hubUrl": null,
+  "hubUrl": "https://tundra-iguana-012.notion.site/OMM-404ac1371c3f80b8bb28df5d641f4f8f",
   "articles": [
-    { "id": "why-omm", "url": null },
-    { "id": "choosing-models", "url": null },
+    { "id": "why-omm", "url": "https://tundra-iguana-012.notion.site/OMM-9418aa322c804c9ba6606230b740bf8a" },
+    { "id": "choosing-models", "url": "https://tundra-iguana-012.notion.site/6ff5f63d638c451da529d76cb3bf4cd8" },
     { "id": "runners-and-omm", "url": null },
     { "id": "document-search", "url": null },
     { "id": "mac-cluster", "url": null },
