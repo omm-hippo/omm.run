@@ -57,9 +57,10 @@ command instructions on this site. To connect the future `omm.hippo` workspace:
 | `dev-notes` | OMM 개발 노트 | Dated changes, reasons, release links and unverified work |
 
 Configured articles appear on `/news` and matching use-case pages. Publishing
-edits in Notion updates the Notion page; it does not replace site copy. No links
-are configured until the owner supplies published URLs. Do not infer a public
-URL from the account or workspace name.
+edits in Notion updates the Notion page; it does not replace site copy. The owner’s
+public handbook and reviewed `why-omm` and `choosing-models` articles are
+configured. The other four article URLs remain null until reviewed. Do not infer
+a public URL from the account or workspace name.
 
 ## Command reference
 

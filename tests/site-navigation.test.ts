@@ -28,10 +28,24 @@ test('nested and translated destinations keep the correct primary section active
 });
 
 test('missing Notion publication settings expose no empty or fabricated links', () => {
-  assert.deepEqual(getNotionPublications(), { hubUrl: null, articles: [] });
+  const publications = getNotionPublications({ hubUrl: null, articles: [] });
+  assert.deepEqual(publications, { hubUrl: null, articles: [] });
   for (const locale of ['ko', 'en'] as const) {
-    assert.equal(renderToStaticMarkup(createElement(NotionReading, { locale })), '');
+    assert.equal(renderToStaticMarkup(createElement(NotionReading, { locale, publications })), '');
   }
+});
+
+test('published configuration exposes only the reviewed handbook and two articles', () => {
+  const publications = getNotionPublications();
+  assert.equal(publications.hubUrl, 'https://tundra-iguana-012.notion.site/OMM-404ac1371c3f80b8bb28df5d641f4f8f');
+  assert.deepEqual(publications.articles.map(({ id }) => id), ['why-omm', 'choosing-models']);
+  const news = renderToStaticMarkup(createElement(NotionReading, { locale: 'ko' }));
+  assert.equal((news.match(/<a /gu) ?? []).length, 3);
+  assert.match(news, /OMM은 어떤 문제를 해결하나요/);
+  assert.match(news, /내 컴퓨터에 맞는 모델 고르기/);
+  const unrelated = renderToStaticMarkup(createElement(NotionReading, { locale: 'ko', ids: ['document-search'] }));
+  assert.equal((unrelated.match(/<a /gu) ?? []).length, 1);
+  assert.match(unrelated, /OMM 안내서 전체 보기/);
 });
 
 test('Notion link configuration accepts HTTPS publication hosts and rejects unsafe lookalikes', () => {
