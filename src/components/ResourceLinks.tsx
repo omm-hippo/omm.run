@@ -11,7 +11,7 @@ export default function ResourceLinks({ locale, compact = false }: { locale: Loc
     { href: `/resources/omm-model-checklist-${locale}.md`, file: true },
     { href: `/api/models?locale=${locale}`, file: true, name: `omm-model-wiki-${locale}.json` },
     { href: '#omm-assistant', file: false },
-    { href: localeHref('/arena', locale), file: false },
+    { href: localeHref('/leaderboard', locale), file: false },
   ];
   return <section id={compact ? undefined : 'resources'} className={compact ? 'related-resources' : 'home-resources'} aria-label={t.resources}>
     <h2>{compact ? t.fileLinks : t.resources}</h2><p>{t.resourceBody}</p>

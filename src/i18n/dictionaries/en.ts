@@ -185,9 +185,8 @@ export const en = {
 
   install: {
     label: "Install",
-    heading:
-      "Choose an installation path for your computer.",
-    lede: "On Windows 10 22H2/11, macOS or Linux, the Git-source script sets up Python 3.10+ and an isolated pipx CLI. Already use Node.js 22.14+? Choose npm for a standalone command without Python.",
+    heading: "Install OMM with one command.",
+    lede: "Paste the command below into a terminal. The tab for your operating system is already selected. Already use Node.js 22.14+? Choose npm for a standalone command without Python.",
     whatItDoes: "What the Git-source installer does",
     /** README "Supported platforms" — the three things the one-liner does. */
     steps: [
@@ -210,8 +209,8 @@ export const en = {
       copyAria: "the {what} install command",
       needThemFirst: "Need them first?",
       methods: {
-        curl: "curl",
-        irm: "irm",
+        curl: "macOS · Linux",
+        irm: "Windows",
         brew: "Homebrew",
         pipx: "pipx",
         npm: "npm",
@@ -248,7 +247,6 @@ export const en = {
         ],
       },
       /** `{os}` is the guide's OS name. */
-      guideLink: "{os} install guide",
     },
     quickStart: {
       heading: "After installation: get your first model running",
@@ -273,9 +271,7 @@ export const en = {
     docs: {
       title: "Docs",
       links: [
-        "Windows install guide",
-        "macOS install guide",
-        "Linux install guide",
+        "Install",
         "README",
         "Supported platforms",
         "Storage location",
@@ -358,15 +354,10 @@ export const en = {
   installChooser: {
     metaTitle: "Install omm",
     metaDescription:
-      "Pick your operating system for a step-by-step omm install guide: which terminal application to open, the exact command, what the installer verifies, and what every error message means.",
-    label: "Install",
-    heading: "Pick the system you are installing on.",
-    lede: "Each guide starts by naming the exact application to open, because the install command for one system does not run on another. After that: the command, what it verifies before installing anything, what to run first, and every message the installer can print with what to do about it.",
-    shortcut: [
-      "Already comfortable at a terminal? The one-line commands are on the ",
-      "landing page",
-      ".",
-    ],
+      "Install omm with one command. Per-OS commands, first steps after installing, and step-by-step guides for when you get stuck.",
+    label: "Step-by-step guides",
+    heading: "Stuck? Read the guide for your system.",
+    lede: "Which terminal application to open, what the installer checks, and what to do about every error message it can print.",
   },
 
   guide: {

@@ -18,7 +18,7 @@ const en = {
   cpuNote: 'Plan for CPU execution. Speed depends on your CPU and memory bandwidth; partial GPU offload has not been evaluated.',
   gpuNote: 'Check the exact GPU, driver, runner and model format before choosing a GPU backend.',
   unifiedNote: 'Unified memory is counted once. Check Metal support and the exact model format in your runner.',
-  details: 'Model details & sources', fit: 'Check the actual file with omm fit',
+  details: 'Official model card', fit: 'Check the actual file with omm fit',
   noResults: 'No candidates within these settings.', noResultsHint: 'Try a shorter context or 4-bit weights, or change the use case. The wiki covers a selection of models; this does not mean your PC cannot run any model.',
   invalid: 'Check the highlighted specification:', issues: { system: 'Choose an operating system.', accelerator: 'Choose graphics compatible with your OS. Apple Silicon requires macOS.', ram: 'Enter RAM from 4 to 2,048 GB.', vram: 'Enter dedicated VRAM from 1 to 512 GB.', disk: 'Enter free space from 0 to 100,000 GB, or leave it blank.', task: 'Choose a listed use case.', bits: 'Choose 4-bit or 8-bit.', context: 'Choose a listed context size.' },
   order: 'Sorted by GPU use, memory headroom, then total parameter size. This is a shortlist, not a quality or speed benchmark.',
@@ -26,7 +26,7 @@ const en = {
   method: 'How the shortlist is calculated', formula: 'Decimal GB: weight allowance = total parameters (billions) × bits ÷ 8 × 1.2. Memory allowance = weights + 2 GB runtime + 1 GB per 4,096 context tokens + 2 GB for multimodal checkpoints. The 20% weight margin and fixed allowances are editorial assumptions, not measured KV-cache sizes; some models need more.',
   reserves: 'RAM reserves the larger of 4 GB or 25%. Dedicated VRAM reserves the larger of 1 GB or 10%; it is never added to RAM. GPU candidates also require at least 8 GB RAM. If free disk space is provided, it must cover 110% of the weight allowance. Driver and runner compatibility are not inferred from memory capacity.',
   contextNote: 'Only checkpoints whose documented base context covers your selection are included. A smaller context can reduce cache memory.',
-  catalog: 'Browse and compare all models', sourceCache: 'KV-cache memory', sourceBackend: 'Hardware backends',
+  leaderboard: 'See which models people pick in blind tests', sourceCache: 'KV-cache memory', sourceBackend: 'Hardware backends',
 };
 const ko: typeof en = {
   title: '내 PC 사양부터 알려주세요.', intro: '메모리와 그래픽, 사용할 목적을 입력하면 먼저 살펴볼 모델을 추려드립니다.',
@@ -46,7 +46,7 @@ const ko: typeof en = {
   cpuNote: 'CPU 실행을 기준으로 검토하세요. 속도는 CPU와 메모리 대역폭에 따라 달라지며, GPU 일부 사용은 계산하지 않았습니다.',
   gpuNote: '정확한 GPU 기종·드라이버·러너·모델 형식의 호환성을 확인하세요.',
   unifiedNote: '통합 메모리는 한 번만 계산했습니다. 러너의 Metal 지원과 모델 형식을 확인하세요.',
-  details: '모델 설명과 출처 보기', fit: '실제 파일은 omm fit으로 확인',
+  details: '공식 모델 카드 보기', fit: '실제 파일은 omm fit으로 확인',
   noResults: '이 조건 안에서 추려진 모델이 없습니다.', noResultsHint: '컨텍스트를 줄이거나 4비트 가중치, 다른 용도를 선택해 보세요. 위키에 담긴 모델만 확인하므로 PC에서 실행할 모델이 전혀 없다는 뜻은 아닙니다.',
   invalid: '입력한 사양을 확인해 주세요:', issues: { system: '운영체제를 선택하세요.', accelerator: '운영체제에 맞는 그래픽을 선택하세요. Apple Silicon은 macOS에서 선택할 수 있습니다.', ram: 'RAM은 4~2,048 GB로 입력하세요.', vram: '전용 VRAM은 1~512 GB로 입력하세요.', disk: '남은 공간은 0~100,000 GB로 입력하거나 비워 두세요.', task: '목록에 있는 용도를 선택하세요.', bits: '4비트 또는 8비트를 선택하세요.', context: '목록에 있는 컨텍스트를 선택하세요.' },
   order: 'GPU 사용 가능성 → 메모리 여유 → 전체 파라미터 규모 순으로 정렬합니다. 품질·속도 실측 순위가 아닙니다.',
@@ -54,6 +54,6 @@ const ko: typeof en = {
   method: '어떤 기준으로 추천하나요?', formula: '십진 GB 기준: 가중치 예산 = 전체 파라미터(십억 개) × 비트 ÷ 8 × 1.2. 메모리 예산 = 가중치 + 런타임 2 GB + 컨텍스트 4,096토큰당 1 GB + 멀티모달 모델 2 GB. 가중치 20% 여유분과 고정 예산은 편집상의 가정이며, 실제 KV 캐시 크기를 측정한 값이 아닙니다. 모델에 따라 더 필요할 수 있습니다.',
   reserves: 'RAM은 4 GB와 전체의 25% 중 큰 값을, 전용 VRAM은 1 GB와 전체의 10% 중 큰 값을 남깁니다. VRAM과 RAM은 합산하지 않습니다. GPU 후보도 RAM 8 GB 이상을 요구합니다. 저장 공간을 입력했다면 가중치 예산의 110% 이상인 모델만 남깁니다. 메모리 용량으로 드라이버·러너 호환성을 판정하지 않습니다.',
   contextNote: '공식 기본 컨텍스트가 선택한 길이 이상인 모델만 포함합니다. 컨텍스트를 줄이면 캐시 메모리를 줄일 수 있습니다.',
-  catalog: '전체 모델 찾아보기·비교', sourceCache: 'KV 캐시와 메모리', sourceBackend: '하드웨어 백엔드',
+  leaderboard: '블라인드 비교에서 사람들이 고른 모델 보기', sourceCache: 'KV 캐시와 메모리', sourceBackend: '하드웨어 백엔드',
 };
 export function getRecommendationDictionary(locale: Locale) { return locale === 'ko' ? ko : en; }

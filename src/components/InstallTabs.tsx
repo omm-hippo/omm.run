@@ -1,10 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useId, useRef, useState, useSyncExternalStore } from "react";
 
 import CommandBlock from "@/components/install/CommandBlock";
-import type { Slug } from "@/components/install/guides";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 
 type Method = "curl" | "irm" | "brew" | "pipx" | "npm";
@@ -39,14 +37,9 @@ const isWindowsServer = () => false;
 type Props = {
   readonly t: Dictionary["install"]["tabs"];
   readonly ui: Dictionary["ui"];
-  readonly guides: readonly {
-    readonly slug: Slug;
-    readonly href: string;
-    readonly label: string;
-  }[];
 };
 
-export default function InstallTabs({ t, ui, guides }: Props) {
+export default function InstallTabs({ t, ui }: Props) {
   const baseId = useId();
   const [manualMethod, setManualMethod] = useState<Method | null>(null);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -164,18 +157,6 @@ export default function InstallTabs({ t, ui, guides }: Props) {
         })}
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-left">
-        {guides.map((guide) => (
-          <Link
-            key={guide.href}
-            href={guide.href}
-            className="text-small border-b border-line-1 pb-0.5 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
-            prefetch={false}
-          >
-            {guide.label} →
-          </Link>
-        ))}
-      </div>
     </div>
   );
 }

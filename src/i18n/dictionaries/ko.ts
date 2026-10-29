@@ -188,8 +188,8 @@ export const ko = {
 
   install: {
     label: "설치",
-    heading: "내 컴퓨터에 맞는 설치 방법을 고르세요.",
-    lede: "Windows 10 22H2·11, macOS, Linux에서는 Git 소스 스크립트가 Python 3.10+와 격리된 pipx CLI를 준비합니다. Node.js 22.14 이상을 쓴다면 Python이 필요 없는 npm 설치도 가능합니다.",
+    heading: "한 줄로 OMM 설치하기.",
+    lede: "터미널에 아래 명령을 붙여 넣으세요. 지금 쓰는 운영체제의 명령이 먼저 선택돼 있습니다. Node.js 22.14 이상을 쓴다면 Python이 필요 없는 npm 설치도 가능합니다.",
     whatItDoes: "Git 소스 설치 스크립트가 하는 일",
     steps: [
       {
@@ -210,8 +210,8 @@ export const ko = {
       copyAria: "{what} 설치 명령",
       needThemFirst: "먼저 설치해야 하나요?",
       methods: {
-        curl: "curl",
-        irm: "irm",
+        curl: "macOS · Linux",
+        irm: "Windows",
         brew: "Homebrew",
         pipx: "pipx",
         npm: "npm",
@@ -247,7 +247,6 @@ export const ko = {
           "omm --version으로 확인하세요. 업데이트는 npm update --global @omm-hippo/omm, 제거는 npm uninstall --global @omm-hippo/omm으로 하며 OMM_HOME의 모델과 설정은 보존합니다.",
         ],
       },
-      guideLink: "{os} 설치 가이드",
     },
     quickStart: {
       heading: "설치 후, 첫 모델 실행까지",
@@ -272,9 +271,7 @@ export const ko = {
     docs: {
       title: "문서",
       links: [
-        "Windows 설치 가이드",
-        "macOS 설치 가이드",
-        "Linux 설치 가이드",
+        "설치",
         "README",
         "지원 플랫폼",
         "저장 위치",
@@ -345,15 +342,10 @@ export const ko = {
   installChooser: {
     metaTitle: "omm 설치",
     metaDescription:
-      "운영체제를 고르면 단계별 omm 설치 가이드로 이어집니다. 어떤 터미널 앱을 열어야 하는지, 정확한 명령은 무엇인지, 설치 스크립트가 무엇을 검증하는지, 오류 메시지마다 무슨 뜻인지까지 한 번에 설명합니다.",
-    label: "설치",
-    heading: "설치할 시스템을 고르세요.",
-    lede: "각 가이드는 어떤 앱을 열어야 하는지부터 정확히 짚어 줍니다. 한 시스템의 설치 명령이 다른 시스템에서는 동작하지 않기 때문입니다. 이어서 명령, 설치 전에 검증하는 항목, 가장 먼저 해야 할 일, 그리고 설치 스크립트가 출력할 수 있는 모든 메시지와 그 대처법까지 다룹니다.",
-    shortcut: [
-      "터미널이 이미 익숙하다면 한 줄짜리 명령은 ",
-      "랜딩 페이지",
-      "에서 바로 볼 수 있습니다.",
-    ],
+      "한 줄 명령으로 omm을 설치하세요. 운영체제별 명령, 설치 후 첫 단계, 막혔을 때 볼 단계별 가이드를 한곳에 모았습니다.",
+    label: "운영체제별 자세한 안내",
+    heading: "설치가 막히면 운영체제별 가이드를 보세요.",
+    lede: "어떤 터미널 앱을 열어야 하는지, 설치 스크립트가 무엇을 확인하는지, 오류 메시지마다 어떻게 대처하는지 단계별로 설명합니다.",
   },
 
   guide: {

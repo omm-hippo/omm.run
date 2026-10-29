@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ModelRecommender from "@/components/models/ModelRecommender";
 import { getRecommendationDictionary } from "@/i18n/model-recommendation";
-import ModelExplorer from "@/components/models/ModelExplorer";
 import { OG_LOCALE, alternatesFor, isLocale, localeHref } from "@/i18n/config";
 import { getModelDictionary } from "@/i18n/models";
 import { MODEL_WIKI_REVIEWED_AT, WIKI_MODELS, localizeModel } from "@/lib/models/catalog";
@@ -31,7 +31,7 @@ export default async function ModelsPage({ params }: PageProps<"/[locale]/models
         </div>
       </div>
       <div className="mt-8"><ModelRecommender locale={locale} models={models} /></div>
-      <details className="mt-10" id="all-models"><summary className="cursor-pointer text-[22px] font-medium text-ink-0">{r.catalog}</summary><div className="mt-8"><ModelExplorer locale={locale} models={models} /></div></details>
+      <Link href={localeHref("/leaderboard", locale)} prefetch={false} className="mt-10 inline-block border-b border-line-1 pb-0.5 text-small text-ink-1 hover:border-accent hover:text-ink-0">{r.leaderboard} →</Link>
       <div className="mt-12 grid gap-6 border-t border-line-1 pt-8 lg:grid-cols-[210px_minmax(0,1fr)] lg:gap-10">
         <h2 className="text-[18px] font-medium text-ink-0">{t.evidenceTitle}</h2>
         <div className="max-w-[76ch] text-small text-ink-2"><p>{t.evidenceNote}</p><p className="mt-3">{t.sizeNote}</p>

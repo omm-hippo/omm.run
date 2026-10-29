@@ -22,19 +22,3 @@ export function primaryNavigation(locale: Locale) {
     label: labels[index],
   }));
 }
-
-export function sectionNavigation(group: 'docs' | 'models', locale: Locale) {
-  const ko = locale === 'ko';
-  return group === 'docs' ? [
-    { href: '/docs', label: ko ? '문서 첫 화면' : 'Documentation' },
-    { href: '/install', label: ko ? '설치' : 'Installation' },
-    { href: '/commands', label: ko ? '명령어' : 'Commands' },
-    { href: '/docs/troubleshooting', label: ko ? '문제 해결' : 'Troubleshooting' },
-    { href: '/docs/faq', label: ko ? '자주 묻는 질문' : 'FAQ' },
-    { href: '#omm-assistant', label: ko ? '명령어 찾기' : 'Find a command' },
-  ] : [
-    { href: '/models', label: ko ? '모델 위키' : 'Model wiki' },
-    { href: '/arena', label: ko ? '공개 리더보드' : 'Public leaderboard' },
-    { href: '/leaderboard', label: ko ? '성능 분석' : 'Performance analysis' },
-  ];
-}

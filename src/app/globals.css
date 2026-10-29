@@ -5,11 +5,7 @@
 @source "../../src";
 
 /* Purpose-based pages retain the existing dark/amber design system. */
-.section-nav { border-bottom: 1px solid var(--line-0); background: var(--bg-0); }
-.section-nav > div { max-width: 1184px; margin-inline: auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 0 26px; }
-.section-nav a { padding: 13px 0 11px; border-bottom: 2px solid transparent; font-size: 14px; line-height: 1.7; color: var(--ink-2); }
-.section-nav a[aria-current] { color: var(--ink-0); border-color: var(--accent); }
-.section-nav a:hover, .reading-sidebar a:hover { color: var(--ink-0); }
+.reading-sidebar a:hover { color: var(--ink-0); }
 .site-index { width: 100%; max-width: 1184px; margin-inline: auto; padding: 56px 32px 80px; flex: 1; }
 .site-page-heading h1, .reading-article h1 { font-size: 38px; line-height: 1.35; letter-spacing: -0.035em; font-weight: 650; color: var(--ink-0); text-wrap: balance; }
 .site-page-heading > p { max-width: 46rem; margin-top: 18px; font-size: 17px; line-height: 1.85; color: var(--ink-1); }
@@ -76,8 +72,6 @@
   .docs-directory { grid-template-columns: 1fr; gap: 36px; }
 }
 @media (max-width: 640px) {
-  .section-nav > div { padding-inline: 20px; gap: 0 20px; }
-  .section-nav a { font-size: 13px; padding-block: 10px 8px; }
   .site-index, .site-reading { padding: 32px 20px 56px; }
   .site-page-heading h1, .reading-article h1 { font-size: 30px; }
   .reading-article .reading-intro { font-size: 17px; }

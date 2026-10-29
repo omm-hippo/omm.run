@@ -1,4 +1,3 @@
-import SectionNav from "@/components/SectionNav";
 import { notFound } from "next/navigation";
 
 import Footer from "@/components/Footer";
@@ -14,7 +13,7 @@ export default async function DocsLayout({
 
   return (
     <>
-      <Nav locale={locale} /><SectionNav locale={locale} group="docs" />
+      <Nav locale={locale} />
       {children}
       <Footer locale={locale} />
     </>
