@@ -188,19 +188,71 @@ accuracy or a new live Workers AI score. Additional task paraphrases, negative
 recommendation wording and validated-context cases are covered by unit tests.
 No paid inference was called for this revision.
 
-### Mac mini option — recommendation, not a configured provider
+## Accuracy, speed and self-hosted gateway revision — 2026-10-29
 
-A self-hosted option can use `browser → OMM Worker → authenticated gateway →
-Mac mini Ollama`. Keep gateway credentials in server-side secrets, restrict the
-backend to the approved command-selection schema, and retain bounded input,
-queueing, timeouts and per-client/daily budgets. Ollama normally listens on
-loopback; serving remote callers requires an explicitly configured access path.
-The self-hosted choice means inference on the operator's Mac mini, not on each
-visitor's device. Do not silently resend a self-hosted question to a cloud model
-on failure; make that routing choice explicit.
+Live probes of omm.run showed two problems: `how fast is my model` returned
+`no_match` because the ranker found no words for it and the route skipped the
+model, and a correct Workers AI pick (`recommend`) was shown next to three
+unrelated ranker cards. Changes:
 
-Before enabling it, identify the actual Mac mini/model, network endpoint,
-authentication and expected concurrency, then compare latency and answer
-selection on a fresh evaluation set. This revision does not expose a port,
-create a tunnel, change a runtime, or add an unverified provider switch.
-Primary reference: https://docs.ollama.com/faq#how-can-i-expose-ollama-on-my-network
+- **The model is consulted even when the ranker is empty.** Only input with no
+  letters or digits stops at `no_match`. Off-topic questions now cost one
+  bounded attempt and normally return `clarify`; the 200/day cap still holds.
+- **Confident questions skip the model.** When an intent rule scores ≥200
+  and at least twice the runner-up, the ranker's pick is returned at once
+  (`source: deterministic`). On the 51 + 52 regression questions and 20 fresh
+  ones this was right 65/65 times, covering about half of them.
+- **Related cards only when they agree.** After a model pick, the ranker's
+  list is returned as "related" only if it contains that pick; the client
+  renders the pick as the full card and the rest as small links.
+- **Cacheable prompt.** The full command list now sits, in catalog order, at
+  the start of the user message, and the question and the ranker's top four
+  (`likely`, with context) follow it. Everything before the question is the
+  same bytes for every question in a locale. Cache namespace is now v5.
+- **Ranker paraphrases.** `tests/fixtures/assistant-paraphrase.json` (52
+  short everyday questions) went from top-1 32 to 52 after new intent rules,
+  and 20 fresh questions written after that went from 10 to 12. Both sets
+  were inspected, so these are regression floors, not held-out accuracy.
+
+The Workers AI model is unchanged (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`).
+No paid Workers AI call was made for this revision; the new prompt layout was
+measured only against a local Ollama, below.
+
+### Self-hosted gateway (school PC)
+
+`browser → OMM Worker → Cloudflare Tunnel + Access → school PC Ollama`. It is
+off unless all four Worker settings exist; `ASSISTANT_GATEWAY_URL` must be
+https:
+
+| Setting | Kind | Value |
+| --- | --- | --- |
+| `ASSISTANT_GATEWAY_URL` | secret or var | tunnel hostname, e.g. `https://assistant-ollama.omm.run` |
+| `ASSISTANT_GATEWAY_MODEL` | var | Ollama tag, e.g. `qwen3:4b-instruct` |
+| `ASSISTANT_GATEWAY_ACCESS_ID` | secret | Cloudflare Access service token client ID |
+| `ASSISTANT_GATEWAY_ACCESS_SECRET` | secret | Cloudflare Access service token secret |
+
+When configured, the gateway is tried first with a 2.5 s timeout. On any
+failure (PC off, tunnel down, Access redirect, timeout, invalid JSON) the same
+question goes once to Workers AI with a 3.5 s timeout, so the browser's 7 s
+budget holds. This fallback was an explicit operator decision (2026-10-29):
+a question can therefore reach both the school PC and Workers AI, and the
+privacy notice says so. Both use the same prompt, JSON schema, output
+validation and budget; one question consumes one daily attempt whichever
+provider answers. Ollama gets `think: false` so reasoning models do not spend
+the token budget thinking, and `keep_alive: 30m`.
+
+Measured on 2026-10-29 with `qwen3:4b-instruct` on an Apple M5 / 26 GB Mac
+(not the school PC), through `gatewayBinding` with `scripts/assistant-eval.ts`
+style calls:
+
+| Prompt layout | fresh 20 | paraphrase 52 | regression 51 | median latency |
+| --- | --- | --- | --- | --- |
+| ranked candidates, question first (before) | 19 | 49 | 44 | 2.0–4.1 s |
+| fixed catalog first, question last (now) | 18 | 50 | 46 | 0.9–1.2 s |
+
+A cold 1,480-token prompt took 2.4 s to prefill and a cached prefix 36 ms.
+Re-measure on the actual school PC before enabling the gateway:
+`npx tsx scripts/assistant-eval.ts --mode hybrid --ollama http://127.0.0.1:11434 --fixture tests/fixtures/assistant-paraphrase.json`.
+Setup steps are in [assistant-school-pc.md](assistant-school-pc.md). This
+revision creates no tunnel, Access application, secret or deployment.
+

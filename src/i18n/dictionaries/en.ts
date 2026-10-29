@@ -466,7 +466,7 @@ export const en = {
     submitting: "Checking the command reference…",
     counter: "{count} / {max}",
     privacy:
-      "Do not paste API keys, tokens, passwords, private paths, model names, or terminal output containing personal data. A question may be processed by Workers AI.",
+      "Do not paste API keys, tokens, passwords, private paths, model names, or terminal output containing personal data. A question may be processed by Workers AI or by a model the OMM team runs on its own computer.",
     quickLabel: "Try a focused question",
     quickQuestions: [
       "Why is an installed runner not detected?",
@@ -478,6 +478,7 @@ export const en = {
     fallbackLabel: "Command search fallback",
     source: {
       "workers-ai": "Selection: Workers AI classifier",
+      "self-hosted": "Selection: OMM's own local model",
       deterministic: "Selection: documented lookup",
     },
     messages: {
@@ -533,6 +534,7 @@ export const en = {
     openReference: "Open full command reference",
     searchAll: "Search all commands",
     askAgain: "Ask another question",
+    relatedLabel: "Related",
     turnLimit: "Three questions reached. Start over to ask another.",
     empty:
       "Write a focused question about installing omm, diagnosing it, managing a model, or using a runner.",

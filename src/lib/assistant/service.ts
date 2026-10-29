@@ -10,6 +10,7 @@ import { inspectInput, privateHash } from "./security";
 import {
   ASSISTANT_LIMITS,
   type AssistantReason,
+  type Candidate,
   type AssistantRequest,
   type AssistantResponse,
   type ModelSelection,
@@ -22,6 +23,8 @@ import {
 
 export type AssistantDependencies = {
   readonly ai?: WorkersAiBinding;
+  /** The school-PC Ollama gateway; tried before Workers AI when present. */
+  readonly gateway?: { readonly binding: WorkersAiBinding; readonly model: string };
   readonly store?: AssistantStore;
   readonly model?: string;
   readonly hashSalt?: string;
@@ -51,9 +54,20 @@ function fromSelection(
   source: AssistantResponse["source"],
 ): AssistantResponse {
   if (selection.action === "command") {
-    return response("command", "matched", candidates, selection.commandId, source);
+    // The ranker's list is only worth showing as "related" when it agreed
+    // with the model; otherwise it is the noise the model just overruled.
+    const related = candidates.includes(selection.commandId) ? candidates : [];
+    return response("command", "matched", related, selection.commandId, source);
   }
   return response("clarify", "ambiguous", candidates, null, source);
+}
+
+function isConfident([top, next]: readonly Candidate[]): boolean {
+  return (
+    top !== undefined &&
+    top.score >= ASSISTANT_LIMITS.confidentScore &&
+    top.score >= ASSISTANT_LIMITS.confidentMargin * (next?.score ?? 0)
+  );
 }
 
 function utcDay(now: number): string {
@@ -98,15 +112,30 @@ export async function answerAssistantQuestion(
   }
   const explicit = explicitCommand(request.question);
   if (explicit) return response("command", "matched", [explicit], explicit);
-  // No overlap with any command at all: off-topic, so spend no inference.
-  if (candidates.length === 0) return response("fallback", "no_match", []);
+  // A strong intent rule is answered instantly, without spending inference.
+  if (isConfident(candidates)) {
+    return response("command", "matched", [candidates[0].id], candidates[0].id);
+  }
+  // Nothing to read at all (punctuation, emoji): no inference either. A real
+  // question the ranker found no words for still goes to the model, which
+  // sees every command — that was the "how fast is my model" miss.
+  if (!/[\p{L}\p{N}]/u.test(request.question)) {
+    return response("fallback", "no_match", []);
+  }
   // The ranker only orders and details the list; the model sees every command.
   const offered = modelCandidates(candidates, request.locale);
   const offeredIds = offered.map(({ id }) => id);
 
-  const { ai, store, hashSalt } = dependencies;
+  const { ai, gateway, store, hashSalt } = dependencies;
   const model = resolveWorkersAiModel(dependencies.model);
-  if (!ai || !store || !hashSalt || hashSalt.length < 16 || !model) {
+  const providers: {
+    readonly binding: WorkersAiBinding;
+    readonly model: string;
+    readonly source: AssistantResponse["source"];
+  }[] = [];
+  if (gateway) providers.push({ ...gateway, source: "self-hosted" });
+  if (ai && model) providers.push({ binding: ai, model, source: "workers-ai" });
+  if (providers.length === 0 || !store || !hashSalt || hashSalt.length < 16) {
     return response("fallback", "not_configured", candidateIds);
   }
 
@@ -147,13 +176,32 @@ export async function answerAssistantQuestion(
     return response("fallback", "not_configured", candidateIds);
   }
 
-  const inference = await selectWithWorkersAi(
-    ai,
-    model,
-    request.locale,
-    request.question,
-    offered,
-  );
+  // One attempt per provider, no retries: the school PC first, then Workers
+  // AI if it is off, asleep or too slow. The daily cap counts the question
+  // once whichever provider answers it.
+  let inference: Awaited<ReturnType<typeof selectWithWorkersAi>> = {
+    ok: false,
+    reason: "provider_unavailable",
+  };
+  let source: AssistantResponse["source"] = "workers-ai";
+  for (const [index, provider] of providers.entries()) {
+    const timeoutMs =
+      provider.source === "self-hosted"
+        ? ASSISTANT_LIMITS.gatewayTimeoutMs
+        : index > 0
+          ? ASSISTANT_LIMITS.fallbackInferenceTimeoutMs
+          : ASSISTANT_LIMITS.inferenceTimeoutMs;
+    inference = await selectWithWorkersAi(
+      provider.binding,
+      provider.model,
+      request.locale,
+      request.question,
+      offered,
+      timeoutMs,
+    );
+    source = provider.source;
+    if (inference.ok) break;
+  }
   if (!inference.ok) return response("fallback", inference.reason, candidateIds);
   const { selection } = inference;
 
@@ -166,5 +214,5 @@ export async function answerAssistantQuestion(
   } catch {
     // Cache failure must not change a validated, already-computed selection.
   }
-  return fromSelection(selection, candidateIds, "workers-ai");
+  return fromSelection(selection, candidateIds, source);
 }

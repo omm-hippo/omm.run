@@ -11,14 +11,23 @@ export const ASSISTANT_LIMITS = {
   maxSuggestions: 3,
   maxCompletionTokens: 48,
   inferenceTimeoutMs: 5_000,
+  /** School-PC gateway first, then Workers AI with what is left of the
+   *  browser's 7-second budget. */
+  gatewayTimeoutMs: 2_500,
+  fallbackInferenceTimeoutMs: 3_500,
+  /** An intent rule this strong, and this far ahead of the runner-up, was
+   *  right on every regression and fresh question (2026-10-29), so the model
+   *  is skipped for an instant answer. */
+  confidentScore: 200,
+  confidentMargin: 2,
   clientWindowSeconds: 10 * 60,
   clientRequestsPerWindow: 10,
   dailyRequests: 200,
   cacheSeconds: 15 * 60,
-  cacheNamespace: "assistant-v4",
+  cacheNamespace: "assistant-v5",
 } as const;
 
-export type AssistantSource = "workers-ai" | "deterministic";
+export type AssistantSource = "workers-ai" | "self-hosted" | "deterministic";
 export type AssistantKind = "command" | "clarify" | "fallback";
 export type AssistantReason =
   | "matched"

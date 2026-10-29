@@ -21,7 +21,7 @@ const MAX_QUESTION_LENGTH = ASSISTANT_LIMITS.maxQuestionCharacters;
 const MAX_TURNS = ASSISTANT_LIMITS.maxTurns;
 const REQUEST_TIMEOUT_MS = 7_000;
 const KINDS = new Set<AssistantKind>(["command", "clarify", "fallback"]);
-const SOURCES = new Set<AssistantSource>(["workers-ai", "deterministic"]);
+const SOURCES = new Set<AssistantSource>(["workers-ai", "self-hosted", "deterministic"]);
 const REASONS = new Set<AssistantReason>([
   "matched",
   "ambiguous",
@@ -276,9 +276,26 @@ export default function AssistantClient({
 
             {selectedCards.length > 0 ? (
               <div className="py-6">
-                {selectedCards.map((card) => (
+                {/* A chosen command gets the full card; the rest are pointers,
+                    not equal answers. Clarify/fallback lists stay full cards. */}
+                {(result.kind === "command" ? selectedCards.slice(0, 1) : selectedCards).map((card) => (
                   <CommandCard key={card.id} card={card} locale={locale} />
                 ))}
+                {result.kind === "command" && selectedCards.length > 1 ? (
+                  <p className="text-small mt-2 flex flex-wrap gap-x-4 gap-y-1">
+                    <span className="text-label">{t.relatedLabel}</span>
+                    {selectedCards.slice(1).map((card) => (
+                      <Link
+                        key={card.id}
+                        href={localeHref(card.href, locale)}
+                        prefetch={false}
+                        className="font-mono text-ink-1 transition-colors duration-[120ms] ease-micro hover:text-ink-0"
+                      >
+                        {card.name}
+                      </Link>
+                    ))}
+                  </p>
+                ) : null}
               </div>
             ) : (
               <div className="border-b border-line-0 py-8">

@@ -4,10 +4,14 @@ import {
   D1AssistantStore,
   type D1DatabaseLike,
 } from "../../../lib/assistant/budget";
+import { gatewayBinding, resolveGatewayConfig } from "../../../lib/assistant/gateway";
 import { parseAssistantRequest } from "../../../lib/assistant/request";
 import { rateLimitIdentity } from "../../../lib/assistant/security";
 import { answerAssistantQuestion } from "../../../lib/assistant/service";
-import type { AssistantResponse } from "../../../lib/assistant/types";
+import {
+  ASSISTANT_LIMITS,
+  type AssistantResponse,
+} from "../../../lib/assistant/types";
 import type { WorkersAiBinding } from "../../../lib/assistant/workers-ai";
 
 type AssistantEnv = CloudflareEnv & {
@@ -15,6 +19,10 @@ type AssistantEnv = CloudflareEnv & {
   readonly ASSISTANT_DB?: D1DatabaseLike;
   readonly ASSISTANT_HASH_SALT?: string;
   readonly WORKERS_AI_MODEL?: string;
+  readonly ASSISTANT_GATEWAY_URL?: string;
+  readonly ASSISTANT_GATEWAY_MODEL?: string;
+  readonly ASSISTANT_GATEWAY_ACCESS_ID?: string;
+  readonly ASSISTANT_GATEWAY_ACCESS_SECRET?: string;
 };
 
 function invalidRequest(): AssistantResponse {
@@ -49,8 +57,15 @@ export async function POST(request: Request): Promise<Response> {
     // `next dev` without Cloudflare bindings intentionally takes the fallback.
   }
 
+  const gateway = env ? resolveGatewayConfig(env) : null;
   const result = await answerAssistantQuestion(parsed.value, {
     ai: env?.AI,
+    gateway: gateway
+      ? {
+          binding: gatewayBinding(gateway, ASSISTANT_LIMITS.gatewayTimeoutMs),
+          model: gateway.model,
+        }
+      : undefined,
     store: env?.ASSISTANT_DB ? new D1AssistantStore(env.ASSISTANT_DB) : undefined,
     model: env?.WORKERS_AI_MODEL,
     hashSalt: env?.ASSISTANT_HASH_SALT,
