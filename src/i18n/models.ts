@@ -2,8 +2,8 @@ import type { Locale } from "./config";
 
 const en = {
   metaTitle: "Model wiki — omm",
-  metaDescription: "Enter your PC specifications and use case to shortlist open-weight LLMs, then compare model details and official sources.",
-  eyebrow: "MODEL WIKI",
+  metaDescription: "Enter your PC specifications and use case to shortlist open-weight LLMs, then check each model's official card.",
+  eyebrow: "MODEL FINDER",
   heading: "Find a model for your PC.",
   lede: "Start with your PC specifications and what you want to do. See model candidates, memory allowances and what to check before running them.",
   mobileLede: "Enter your PC specifications and find models to try.",
@@ -35,7 +35,7 @@ const en = {
 const ko: typeof en = {
   metaTitle: "모델 위키 — omm",
   metaDescription: "PC 사양과 사용 목적을 입력해 오픈 웨이트 LLM 후보를 추천받고, 모델별 특징과 공식 출처를 확인하세요.",
-  eyebrow: "MODEL WIKI", heading: "내 PC에 맞는 모델을 찾아보세요.",
+  eyebrow: "모델 추천", heading: "내 PC에 맞는 모델을 찾아보세요.",
   lede: "PC 사양과 하고 싶은 작업을 알려주세요. 메모리 여유와 용도를 바탕으로 모델을 추천하고, 실행 전에 확인할 점을 함께 안내합니다.",
   mobileLede: "PC 사양과 사용 목적을 입력하고 모델을 추천받으세요.",
   checkpoints: "체크포인트", reviewed: "출처 확인", taskHeading: "어떤 작업에 쓰나요?", all: "전체 모델",

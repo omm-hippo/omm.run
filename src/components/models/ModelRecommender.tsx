@@ -99,12 +99,12 @@ export default function ModelRecommender({ models, locale }: { models: readonly 
           {candidates.length === 0 ? <div className="mt-6 border-y border-line-1 py-6"><h3 className="font-medium text-ink-0">{t.noResults}</h3><p className="mt-3 text-small text-ink-2">{t.noResultsHint}</p></div> : <ol className="mt-5">{candidates.slice(0, 3).map((candidate, index) => <li key={candidate.model.id} data-recommendation-id={candidate.model.id} className="border-t border-line-1 py-6">
             <div className="flex items-start gap-4"><span aria-hidden="true" className="pt-1 font-mono text-small text-accent">0{index + 1}</span><div className="min-w-0 flex-1">
               <p className="text-[12px] text-ink-2">{candidate.model.publisher} · {candidate.model.sizeLabel}</p>
-              <h3 className="mt-2 break-words text-[22px] leading-snug font-medium text-ink-0"><Link href={localeHref(`/models/${candidate.model.id}`, locale)} prefetch={false} className="hover:text-accent">{candidate.model.name}</Link></h3>
+              <h3 className="mt-2 break-words text-[22px] leading-snug font-medium text-ink-0">{candidate.model.name}</h3>
               <p className="mt-3 text-small text-ink-1">{candidate.model.chooseWhen}</p>
               <p className="mt-4 text-small text-accent">{t[candidate.headroom]} · {t.routes[candidate.route]}</p>
               <dl className="mt-3 grid grid-cols-2 gap-3 text-[12px]"><div><dt className="text-ink-2">{t.estimated}</dt><dd className="mt-1 font-mono text-ink-0">~{gb(candidate.planningGB)}</dd></div><div><dt className="text-ink-2">{t.budget}</dt><dd className="mt-1 font-mono text-ink-0">{gb(candidate.budgetGB)}</dd></div></dl>
               <p className="mt-3 text-[12px] leading-relaxed text-ink-2">{candidate.route === 'gpu' ? t.gpuNote : candidate.route === 'unified' ? t.unifiedNote : t.cpuNote}</p>
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-small"><Link href={localeHref(`/models/${candidate.model.id}`, locale)} prefetch={false} className="text-accent">{t.details} →</Link><Link href={localeHref('/commands/fit', locale)} prefetch={false} className="text-ink-1 underline underline-offset-4">{t.fit}</Link></div>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-small">{candidate.model.sources[0] ? <a href={candidate.model.sources[0].url} target="_blank" rel="noreferrer" className="text-accent">{t.details} ↗</a> : null}<Link href={localeHref('/commands/fit', locale)} prefetch={false} className="text-ink-1 underline underline-offset-4">{t.fit}</Link></div>
             </div></div>
           </li>)}</ol>}
           <p className="mt-4 text-[12px] leading-relaxed text-ink-2">{t.order}</p>

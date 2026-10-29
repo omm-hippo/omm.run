@@ -14,7 +14,12 @@ const nextConfig: NextConfig = {
       source: `${prefix}/assistant`,
       destination: `${prefix || "/"}?assistant=open`,
       permanent: true,
-    }))];
+    })), ...["", "/en", "/ko"].flatMap((prefix) => [
+      // Arena and leaderboard showed the same votes; one page remains.
+      { source: `${prefix}/arena`, destination: `${prefix}/leaderboard`, permanent: true },
+      // Per-checkpoint wiki pages were folded into the /models recommender.
+      { source: `${prefix}/models/:slug`, destination: `${prefix}/models`, permanent: true },
+    ])];
   },
   // Cloudflare bindings are supplied by the Worker. Plain `next dev` uses the
   // assistant route's deterministic fallback without opening remote sessions.

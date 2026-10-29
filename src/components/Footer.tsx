@@ -9,9 +9,7 @@ const REPO = "https://github.com/omm-hippo/omm";
 /** Every href points at a file, section, or tab that exists in the omm repo.
  *  Labels live in the dictionary, in this order. */
 const DOCS_HREFS = [
-  { href: "/install/windows", internal: true },
-  { href: "/install/macos", internal: true },
-  { href: "/install/linux", internal: true },
+  { href: "/install", internal: true },
   { href: "/docs/readme", internal: true },
   { href: "/docs/supported-platforms", internal: true },
   { href: "/docs/storage-location", internal: true },
