@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import DocumentText from "@/components/DocumentText";
 
 import CommandBlock from "@/components/install/CommandBlock";
@@ -162,14 +162,13 @@ export default function GuidePage({
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">
-            <Link href={localeHref("/", locale)} className="hover:text-ink-1" prefetch={false}>
+            <Link href={localeHref("/", locale)} className="hover:text-ink-1">
               omm
             </Link>
             <span className="text-ink-3"> / </span>
             <Link
               href={localeHref("/install", locale)}
               className="hover:text-ink-1"
-              prefetch={false}
             >
               install
             </Link>
@@ -620,7 +619,6 @@ export default function GuidePage({
                       <Link
                         href={localeHref(other.href, locale)}
                         className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
-                        prefetch={false}
                       >
                         <span className="text-ink-0">
                           {fill(t.installOn, { os: other.os })}

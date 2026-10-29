@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { notFound } from 'next/navigation';
 import { isLocale, localeHref } from '@/i18n/config';
 import { pageMetadata } from '@/lib/page-metadata';
@@ -37,7 +37,7 @@ export default async function TroubleshootingPage({ params }: PageProps<'/[local
   return <main className="site-reading reading-single"><article className="reading-article">
     <h1>{t.title}</h1><p className="reading-intro">{t.intro}</p>
     <nav className="reading-toc" aria-label={locale === 'ko' ? '문제별 바로가기' : 'Troubleshooting topics'}>{t.topics.map((topic, index) => <a key={topic.href} href={`#issue-${index + 1}`}>{topic.title}</a>)}</nav>
-    {t.topics.map((topic, index) => <section key={topic.href} id={`issue-${index + 1}`}><h2>{topic.title}</h2><p>{topic.body}</p><Link className="home-inline-link" href={localeHref(topic.href, locale)} prefetch={false}>{topic.link} →</Link></section>)}
+    {t.topics.map((topic, index) => <section key={topic.href} id={`issue-${index + 1}`}><h2>{topic.title}</h2><p>{topic.body}</p><Link className="home-inline-link" href={localeHref(topic.href, locale)}>{topic.link} →</Link></section>)}
     <section><h2>{t.report}</h2><p>{t.reportBody}</p><a className="home-inline-link" href="https://github.com/omm-hippo/omm/issues/new" target="_blank" rel="noreferrer">{t.reportLink} ↗</a></section>
   </article></main>;
 }

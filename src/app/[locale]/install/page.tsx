@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { notFound } from "next/navigation";
 
 import { getGuideLinks } from "@/components/install/guides";
@@ -58,7 +58,6 @@ export default async function InstallChooser({
                   <Link
                     href={localeHref(link.href, locale)}
                     className="grid grid-cols-1 gap-2 px-2 py-6 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
-                    prefetch={false}
                   >
                     <span className="text-h3">{link.os}</span>
                     <span className="text-small max-w-[62ch]">
@@ -74,7 +73,6 @@ export default async function InstallChooser({
               <Link
                 href="#quick-install"
                 className="border-b border-line-1 text-ink-1 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
-                prefetch={false}
               >
                 {linkLabel}
               </Link>

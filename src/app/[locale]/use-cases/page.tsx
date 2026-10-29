@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { notFound } from 'next/navigation';
 import UseCaseMenu from '@/components/UseCaseMenu';
 import { isLocale, localeHref } from '@/i18n/config';
@@ -21,7 +21,7 @@ export default async function UseCasesPage({ params }: PageProps<'/[locale]/use-
     <article className="reading-article">
       <h1>{t.useCasesTitle}</h1><p className="reading-intro">{t.useCasesIntro}</p>
       <ul className="topic-list">{getUseCases(locale).map((guide) => <li key={guide.slug}>
-        <Link href={localeHref(`/use-cases/${guide.slug}`, locale)} prefetch={false}><h2>{guide.title}</h2><p>{guide.summary}</p><span aria-hidden>→</span></Link>
+        <Link href={localeHref(`/use-cases/${guide.slug}`, locale)}><h2>{guide.title}</h2><p>{guide.summary}</p><span aria-hidden>→</span></Link>
       </li>)}</ul>
       <p className="reading-note">{t.versionNote}</p>
     </article>

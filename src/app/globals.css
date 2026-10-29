@@ -470,6 +470,31 @@
       transform: none;
     }
   }
+
+  /* Navigation progress — PrefetchLink sets `data-nav-pending` on <html> while
+     a click waits on the server. The 120ms delay keeps prefetched (instant)
+     navigations from flashing it. `body::after` is the grain, so this is
+     `::before`. */
+  @keyframes omm-nav-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(0.85);
+    }
+  }
+
+  html[data-nav-pending] body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left;
+    pointer-events: none;
+    animation: omm-nav-progress 2s var(--ease-entrance) 120ms both;
+  }
 }
 
 /* Document reading system: aligned properties, a stable measure and quiet sections.

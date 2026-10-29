@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { canonicalPath, localeHref, type Locale } from '@/i18n/config';
@@ -96,7 +96,7 @@ export default function FloatingAssistant({ locale }: { locale: Locale }) {
       <div className="assistant-dock-content">
         {context ? <p className="assistant-page-context">{t.page} · {context.name}</p> : null}
         {loading ? <p role="status">{t.loading}</p> : null}
-        {failed ? <div role="status"><p>{t.error}</p><button type="button" onClick={() => void loadCatalog()} className="home-inline-link">{t.retry}</button><Link href={localeHref('/commands', locale)} prefetch={false} className="home-inline-link">{t.search} →</Link></div> : null}
+        {failed ? <div role="status"><p>{t.error}</p><button type="button" onClick={() => void loadCatalog()} className="home-inline-link">{t.retry}</button><Link href={localeHref('/commands', locale)} className="home-inline-link">{t.search} →</Link></div> : null}
         {cards ? <AssistantClient key={conversation} cards={cards} locale={locale} compact contextCommand={context?.id} /> : null}
       </div>
     </section> : null}

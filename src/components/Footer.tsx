@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 
 import { fill, getDictionary } from "@/i18n/dictionaries";
 import { localeHref, type Locale } from "@/i18n/config";
@@ -73,7 +73,7 @@ export default function Footer({ locale }: { locale: Locale }) {
     <footer className="border-t border-line-0 bg-bg-0 py-16">
       <div className="mx-auto w-full max-w-page px-5 md:px-8">
         <nav aria-label={locale === 'ko' ? '사이트 전체 메뉴' : 'Site sections'} className="footer-site-links">
-          {primaryNavigation(locale).map((item) => <Link key={item.id} href={localeHref(item.href, locale)} prefetch={false}>{item.label}</Link>)}
+          {primaryNavigation(locale).map((item) => <Link key={item.id} href={localeHref(item.href, locale)}>{item.label}</Link>)}
         </nav>
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
           <div className="shrink-0 lg:w-64">
@@ -92,7 +92,6 @@ export default function Footer({ locale }: { locale: Locale }) {
                     <Link
                       href={localeHref(entry.href, locale)}
                       className={LINK_CLASS}
-                      prefetch={false}
                     >
                       {t.docs.links[index]}
                     </Link>
@@ -112,7 +111,6 @@ export default function Footer({ locale }: { locale: Locale }) {
                     <Link
                       href={localeHref(command.href, locale)}
                       className={`${LINK_CLASS} font-mono`}
-                      prefetch={false}
                     >
                       {command.label}
                     </Link>

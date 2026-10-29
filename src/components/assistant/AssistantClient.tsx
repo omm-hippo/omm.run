@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import AssistantIcon, { AssistantMark, type AssistantIconName } from "./AssistantIcon";
@@ -252,7 +252,6 @@ export default function AssistantClient({
             <p className="mt-4 max-w-[62ch] text-ink-1">{error}</p>
             <Link
               href={searchHref}
-              prefetch={false}
               className="mt-6 inline-flex border-b border-line-1 pb-0.5 text-small font-medium text-ink-1 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0"
             >
               {t.searchAll}
@@ -284,7 +283,6 @@ export default function AssistantClient({
               <div className="border-b border-line-0 py-8">
                 <Link
                   href={searchHref}
-                  prefetch={false}
                   className="inline-flex border-b border-line-1 pb-0.5 text-small font-medium text-ink-1 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0"
                 >
                   {t.searchAll}
@@ -295,7 +293,6 @@ export default function AssistantClient({
             {result.kind === "fallback" && selectedCards.length > 0 ? (
               <Link
                 href={searchHref}
-                prefetch={false}
                 className="mt-1 inline-flex border-b border-line-1 pb-0.5 text-small font-medium text-ink-1 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0"
               >
                 {t.searchAll}
@@ -336,7 +333,7 @@ export default function AssistantClient({
             disabled={turnLimitReached || status === "loading"}
           />
           <div className="assistant-composer-toolbar">
-            <Link href={localeHref("/commands", locale)} prefetch={false} aria-label={copy.search} title={copy.search} className="assistant-tool-button"><AssistantIcon name="search" /></Link>
+            <Link href={localeHref("/commands", locale)} aria-label={copy.search} title={copy.search} className="assistant-tool-button"><AssistantIcon name="search" /></Link>
             <details className="assistant-privacy">
               <summary aria-label={copy.privacy} title={copy.privacy} className="assistant-tool-button"><AssistantIcon name="shield" /></summary>
               <p id="assistant-privacy">{t.privacy}</p>

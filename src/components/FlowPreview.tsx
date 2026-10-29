@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
 import { localeHref, type Locale } from '@/i18n/config';
 import { getExperience } from '@/i18n/experience';
@@ -27,8 +27,8 @@ export default function FlowPreview({ locale }: { locale: Locale }) {
       {t.tabs.map((tab, index) => <div role="tabpanel" id={`${id}-panel-${index}`} aria-labelledby={`${id}-tab-${index}`} hidden={active !== index} key={tab} className="flow-panel" tabIndex={0}>
         <h2>{tab}</h2><p className="flow-panel-intro">{t.previewIntro[index]}</p>
         {index === 0 ? <div className="flow-model-table"><div className="flow-model-header"><span>{t.previewModel}</span><span>{t.previewUse}</span><span>{t.previewSize}</span></div>
-          {[['Qwen3-8B', 'qwen3-8b', '8.2B'], ['Gemma 3 4B IT', 'gemma-3-4b-it', '4B']].map(([name, slug, size], row) => <div className="flow-model-row" key={slug}><div><strong>{name}</strong><Link href={localeHref(`/models/${slug}`, locale)} prefetch={false}>{t.viewWiki}</Link></div><span>{t.uses[row]}</span><span className="font-mono">{size}</span></div>)}
-        </div> : <><ol className="flow-stage-list">{(index === 1 ? t.installPreview : t.chatPreview).map((label, stage) => <li key={label}><span>0{stage + 1}</span>{label}</li>)}</ol><Link className="flow-next-link" href={localeHref(index === 1 ? '/install' : '/commands/web', locale)} prefetch={false}>{index === 1 ? t.steps[1].link : t.steps[2].link}</Link></>}
+          {[['Qwen3-8B', 'qwen3-8b', '8.2B'], ['Gemma 3 4B IT', 'gemma-3-4b-it', '4B']].map(([name, slug, size], row) => <div className="flow-model-row" key={slug}><div><strong>{name}</strong><Link href={localeHref(`/models/${slug}`, locale)}>{t.viewWiki}</Link></div><span>{t.uses[row]}</span><span className="font-mono">{size}</span></div>)}
+        </div> : <><ol className="flow-stage-list">{(index === 1 ? t.installPreview : t.chatPreview).map((label, stage) => <li key={label}><span>0{stage + 1}</span>{label}</li>)}</ol><Link className="flow-next-link" href={localeHref(index === 1 ? '/install' : '/commands/web', locale)}>{index === 1 ? t.steps[1].link : t.steps[2].link}</Link></>}
       </div>)}
     </div>
   </div>;

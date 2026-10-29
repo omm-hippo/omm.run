@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 
 import Terminal from "@/components/Terminal";
 import { localeHref, type Locale } from "@/i18n/config";
@@ -36,7 +36,6 @@ export default function Hero({ locale }: { locale: Locale }) {
             </a>
             <Link
               href={localeHref("/assistant", locale)}
-              prefetch={false}
               className="inline-flex items-center gap-2 border-b border-line-1 py-2 text-small font-medium text-ink-1 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0"
             >
               {t.assistantCta}

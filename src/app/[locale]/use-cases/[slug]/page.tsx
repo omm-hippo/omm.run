@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { notFound } from 'next/navigation';
 import Disclosure from '@/components/Disclosure';
 import Features from '@/components/Features';
@@ -44,7 +44,7 @@ export default async function UseCasePage({ params }: PageProps<'/[locale]/use-c
       <section id="requirements"><h2>{t.requirementsTitle}</h2><p>{guide.requirement}</p></section>
       <section id="steps"><h2>{t.stepsTitle}</h2><ol className="reading-steps">{guide.steps.map((step) => <li key={step}>{step}</li>)}</ol></section>
       <section id="result"><h2>{t.resultTitle}</h2><p>{guide.result}</p></section>
-      <section><h2>{t.nextTitle}</h2><code className="reading-command">{guide.command}</code><Link className="home-inline-link" href={localeHref(guide.href, locale)} prefetch={false}>{guide.link} →</Link></section>
+      <section><h2>{t.nextTitle}</h2><code className="reading-command">{guide.command}</code><Link className="home-inline-link" href={localeHref(guide.href, locale)}>{guide.link} →</Link></section>
       {slug === 'model-management' ? <div className="reading-technical">
         <Disclosure title={experience.advanced}><Features locale={locale} /></Disclosure>
         <Disclosure title={experience.runners}><Runners locale={locale} /></Disclosure>

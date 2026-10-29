@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import Disclosure from "@/components/Disclosure";
 import DocumentText from "@/components/DocumentText";
 
@@ -28,7 +28,7 @@ export default function Workspace({ locale }: { locale: Locale }) {
                 <code className="text-terminal text-ink-2">{command}</code>
                 <DocumentText text={t[id].body} locale={locale} className="mt-4" />
                 <DocumentText text={t[id].requirement} locale={locale} className="document-caption mt-3" />
-                <Link href={localeHref(href, locale)} prefetch={false} className="home-inline-link">{t[id].link} →</Link>
+                <Link href={localeHref(href, locale)} className="home-inline-link">{t[id].link} →</Link>
               </Disclosure>
             </li>
           ))}

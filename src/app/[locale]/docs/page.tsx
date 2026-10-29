@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { notFound } from 'next/navigation';
 import ResourceLinks from '@/components/ResourceLinks';
 import { isLocale, localeHref } from '@/i18n/config';
@@ -20,7 +20,7 @@ export default async function DocsIndex({ params }: PageProps<'/[locale]/docs'>)
     <header className="site-page-heading"><h1>{t.docsTitle}</h1><p>{t.docsIntro}</p></header>
     <div className="docs-directory">{t.docsSections.map((section) => <section key={section.title}>
       <h2>{section.title}</h2><p>{section.body}</p>
-      <ul>{section.links.map((link) => <li key={link.href}>{link.href.startsWith("#") ? <a href={link.href}>{link.label} <span aria-hidden>→</span></a> : <Link href={localeHref(link.href, locale)} prefetch={false}>{link.label} <span aria-hidden>→</span></Link>}</li>)}</ul>
+      <ul>{section.links.map((link) => <li key={link.href}>{link.href.startsWith("#") ? <a href={link.href}>{link.label} <span aria-hidden>→</span></a> : <Link href={localeHref(link.href, locale)}>{link.label} <span aria-hidden>→</span></Link>}</li>)}</ul>
     </section>)}</div>
     <ResourceLinks locale={locale} compact />
   </main>;

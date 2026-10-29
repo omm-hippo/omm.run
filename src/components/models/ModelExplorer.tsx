@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { useEffect, useRef, useState } from "react";
 import { localeHref, type Locale } from "@/i18n/config";
 import { getModelDictionary } from "@/i18n/models";
@@ -39,7 +39,7 @@ function Comparison({ models, locale, onClose }: { models: readonly ModelView[];
           <caption className="sr-only">{t.comparison}</caption>
           <thead className="bg-bg-2">
             <tr><th scope="col" className="w-36 p-4 text-ink-2">{t.model}</th>
-              {models.map((model) => <th key={model.id} scope="col" className="p-4 align-top font-medium text-ink-0"><Link href={localeHref(`/models/${model.id}`, locale)} prefetch={false} className="hover:text-accent">{model.name} ↗</Link></th>)}
+              {models.map((model) => <th key={model.id} scope="col" className="p-4 align-top font-medium text-ink-0"><Link href={localeHref(`/models/${model.id}`, locale)} className="hover:text-accent">{model.name} ↗</Link></th>)}
             </tr>
           </thead>
           <tbody>{rows.map((row) => <tr key={row.label} className="border-t border-line-0">
@@ -115,9 +115,9 @@ export default function ModelExplorer({ models, locale }: { models: readonly Mod
           {visible.length === 0 ? <div className="border-b border-line-0 py-16 text-center"><p className="text-ink-0">{t.empty}</p><p className="text-small mt-2 text-ink-2">{t.emptyHint}</p><button type="button" onClick={clear} className="mt-5 text-small text-accent">{t.clear} ↗</button></div> : visible.map((model) => <article key={model.id} data-model-id={model.id} className="grid gap-4 border-b border-line-0 py-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.5fr)_130px_52px] lg:gap-5">
             <div className="min-w-0">
               <p className="text-label mb-2">{model.publisher}</p>
-              <h3 className="text-[19px] leading-tight font-medium text-ink-0"><Link href={localeHref(`/models/${model.id}`, locale)} prefetch={false} className="hover:text-accent">{model.name}</Link></h3>
+              <h3 className="text-[19px] leading-tight font-medium text-ink-0"><Link href={localeHref(`/models/${model.id}`, locale)} className="hover:text-accent">{model.name}</Link></h3>
               <p className="text-small mt-3 text-ink-2">{model.summary}</p>
-              <Link href={localeHref(`/models/${model.id}`, locale)} prefetch={false} className="text-small mt-3 inline-block text-accent">{t.details} ↗</Link>
+              <Link href={localeHref(`/models/${model.id}`, locale)} className="text-small mt-3 inline-block text-accent">{t.details} ↗</Link>
             </div>
             <div className="min-w-0">
               <p className="text-small text-ink-1">{model.chooseWhen}</p>

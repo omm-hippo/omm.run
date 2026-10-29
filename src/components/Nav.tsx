@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { usePathname } from "next/navigation";
 import { useRef, useState, useSyncExternalStore } from "react";
 
@@ -190,7 +190,6 @@ export default function Nav({ locale }: { locale: Locale }) {
           href={localeHref("/", locale)}
           className="flex shrink-0 items-center gap-2"
           onClick={goHome}
-          prefetch={false}
         >
           <span className="font-mono text-[15px] font-medium lowercase text-ink-0">omm</span>
           {version ? (
@@ -201,7 +200,7 @@ export default function Nav({ locale }: { locale: Locale }) {
         </Link>
 
         <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="ml-8 hidden items-center gap-6 xl:flex">
-          {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} prefetch={false}
+          {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)}
             aria-current={activeGroup === item.id ? 'page' : undefined}
             className={activeGroup === item.id ? "border-b border-accent pb-0.5 text-small text-ink-0" : LINK}>
             {item.label}
@@ -216,7 +215,6 @@ export default function Nav({ locale }: { locale: Locale }) {
           <Link
             href={localeHref("/install", locale)}
             className="focus-ring-neutral rounded-md bg-accent px-4 py-1.5 text-small font-medium text-accent-ink transition-colors duration-[120ms] ease-micro hover:bg-accent-press"
-            prefetch={false}
           >
             {t.install}
           </Link>
@@ -239,7 +237,7 @@ export default function Nav({ locale }: { locale: Locale }) {
         <div id="nav-panel" className="border-t border-line-0 bg-bg-0 xl:hidden">
           <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="mx-auto flex max-w-page flex-col px-5 py-2">
             {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} onClick={close}
-              prefetch={false} aria-current={activeGroup === item.id ? 'page' : undefined}
+ aria-current={activeGroup === item.id ? 'page' : undefined}
               className={`border-b border-line-0 py-3 text-small ${activeGroup === item.id ? 'text-accent' : 'text-ink-2'}`}>
               {item.label}
             </Link>)}
@@ -262,7 +260,6 @@ export default function Nav({ locale }: { locale: Locale }) {
               href={localeHref("/install", locale)}
               onClick={close}
               className="focus-ring-neutral mt-4 mb-2 rounded-md bg-accent px-4 py-2 text-center text-small font-medium text-accent-ink"
-              prefetch={false}
             >
               {t.install}
             </Link>

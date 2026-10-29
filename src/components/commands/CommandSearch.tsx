@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { useMemo, useState } from "react";
 
 import type { CommandLink } from "@/components/commands/commands";
@@ -110,7 +110,6 @@ export default function CommandSearch({
                     <li key={link.slug} className="border-b border-line-0">
                       <Link
                         href={localeHref(link.href, locale)}
-                        prefetch={false}
                         className="grid grid-cols-1 gap-2 px-2 py-6 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
                       >
                         <span className="text-h3 font-mono">{link.name}</span>

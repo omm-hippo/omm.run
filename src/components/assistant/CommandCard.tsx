@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 
 import type { AssistantCommandCard } from "@/components/assistant/types";
 import { localeHref, type Locale } from "@/i18n/config";
@@ -65,7 +65,6 @@ export default function CommandCard({
 
           <Link
             href={localeHref(card.href, locale)}
-            prefetch={false}
             className="mt-5 inline-flex items-center gap-2 border-b border-line-1 pb-0.5 text-small font-medium text-ink-1 transition-colors duration-[120ms] ease-micro hover:border-accent hover:text-ink-0"
           >
             {t.openReference}

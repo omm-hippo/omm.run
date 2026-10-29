@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { notFound } from "next/navigation";
 
 import { subcommandLabel } from "@/components/commands/CommandReference";
@@ -109,7 +109,6 @@ export default async function CommandsChooser({
                     <li key={row.name} className="border-b border-line-0">
                       <Link
                         href={localeHref(`/commands/${row.name}`, locale)}
-                        prefetch={false}
                         className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,24ch)_minmax(0,1fr)] sm:gap-6"
                       >
                         <span>

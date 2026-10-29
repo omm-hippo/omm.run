@@ -10,7 +10,7 @@
  */
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/PrefetchLink";
 import { notFound } from "next/navigation";
 
 import CommandReference from "@/components/commands/CommandReference";
@@ -81,14 +81,13 @@ export default async function CommandReferencePage({
         <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
           <nav aria-label={t.breadcrumbAria} className="text-label">
-            <Link href={localeHref("/", locale)} className="hover:text-ink-1" prefetch={false}>
+            <Link href={localeHref("/", locale)} className="hover:text-ink-1">
               omm
             </Link>
             <span className="text-ink-3"> / </span>
             <Link
               href={localeHref("/commands", locale)}
               className="hover:text-ink-1"
-              prefetch={false}
             >
               commands
             </Link>
@@ -120,7 +119,6 @@ export default async function CommandReferencePage({
               <Link
                 href={localeHref("/commands", locale)}
                 className="border-b border-line-0 pb-0.5 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:border-accent hover:text-ink-0"
-                prefetch={false}
               >
                 {t.backToIndex}
               </Link>

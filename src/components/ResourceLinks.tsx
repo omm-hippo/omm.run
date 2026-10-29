@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '@/components/PrefetchLink';
 import { localeHref, type Locale } from '@/i18n/config';
 import { getExperience } from '@/i18n/experience';
 
@@ -17,7 +17,7 @@ export default function ResourceLinks({ locale, compact = false }: { locale: Loc
     <h2>{compact ? t.fileLinks : t.resources}</h2><p>{t.resourceBody}</p>
     <ul>{rows.slice(compact ? 2 : 0, compact ? 5 : undefined).map((row, index) => {
       const position = compact ? index + 2 : index;
-      return <li key={row.href}>{row.file ? <a href={row.href} download={row.name ?? true}><span>{t.resourceTitles[position]}</span><span aria-hidden>↓</span></a> : row.href.startsWith("#") ? <a href={row.href}><span>{t.resourceTitles[position]}</span><span aria-hidden>↗</span></a> : <Link href={row.href} prefetch={false}><span>{t.resourceTitles[position]}</span><span aria-hidden>↗</span></Link>}{!compact ? <p>{t.resourceBodies[position]}</p> : null}</li>;
+      return <li key={row.href}>{row.file ? <a href={row.href} download={row.name ?? true}><span>{t.resourceTitles[position]}</span><span aria-hidden>↓</span></a> : row.href.startsWith("#") ? <a href={row.href}><span>{t.resourceTitles[position]}</span><span aria-hidden>↗</span></a> : <Link href={row.href}><span>{t.resourceTitles[position]}</span><span aria-hidden>↗</span></Link>}{!compact ? <p>{t.resourceBodies[position]}</p> : null}</li>;
     })}</ul>
   </section>;
 }
