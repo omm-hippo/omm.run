@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 
-import { localeHref, type Locale } from "@/i18n/config";
+import { type Locale } from "@/i18n/config";
+import { getSiteCopy } from "@/i18n/site";
 import { fill, getDictionary, type Dictionary } from "@/i18n/dictionaries";
 
 import DocBody from "./DocBody";
 import type { DocSource } from "@/lib/omm-docs/source";
 import DocSkeleton from "./DocSkeleton";
+import DocsMenu from "./DocsMenu";
 
 const GITHUB_README = "https://github.com/omm-hippo/omm#readme";
 const SYNC_SOURCE = "raw.githubusercontent.com";
@@ -13,9 +15,9 @@ const SYNC_SOURCE = "raw.githubusercontent.com";
 export type DocSlug = keyof Dictionary["docs"]["pages"];
 
 /**
- * Shared shell for every `/docs/*` page: `.grid-bg` header with a breadcrumb
- * and the "synced from GitHub" line, then the streamed README body in a
- * reading-width column.
+ * Shared shell for the README-mirror `/docs/*` pages: the docs sidebar, then
+ * the heading, an "English source, synced from GitHub" line and the streamed
+ * README body.
  */
 export default function DocPage({
   locale,
@@ -34,35 +36,20 @@ export default function DocPage({
 }) {
   const t = getDictionary(locale).docs;
   const page = t.pages[slug];
+  const site = getSiteCopy(locale);
 
   return (
-    <main className="document-page">
-      <section className="document-header relative border-b border-line-0 bg-bg-0 pt-24 pb-16">
-        <div
-          className="grid-bg pointer-events-none absolute inset-0"
-          aria-hidden
-        />
-        <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
-          <nav aria-label={t.breadcrumbAria} className="text-label">
-            <a href={localeHref("/", locale)} className="hover:text-ink-1">
-              omm
-            </a>
-            <span className="text-ink-3"> / </span>
-            <span className="text-ink-1">docs</span>
-            <span className="text-ink-3"> / </span>
-            <span className="text-ink-1">{slug}</span>
-          </nav>
+    <main className="document-page site-reading">
+      <DocsMenu locale={locale} current={`/docs/${slug}`} />
+      <article className="min-w-0">
+        <h1 className="text-h2">{page.heading}</h1>
+        <p className="text-lede mt-5 max-w-[62ch]">{page.lede}</p>
+        <p className="text-label mt-6">
+          <span className="docs-menu-tag ml-0 mr-2">{site.englishTag}</span>
+          {fill(t.syncedFrom, { source: SYNC_SOURCE })}
+        </p>
 
-          <h1 className="text-h2 mt-8">{page.heading}</h1>
-          <p className="text-lede mt-5 max-w-[62ch]">{page.lede}</p>
-          <p className="text-label mt-8">
-            {fill(t.syncedFrom, { source: SYNC_SOURCE })}
-          </p>
-        </div>
-      </section>
-
-      <div className="mx-auto w-full max-w-page px-5 pb-24 md:px-8">
-        <div className={`mt-12 ${wide ? "max-w-[94ch]" : "max-w-[72ch]"}`}>
+        <div className={`mt-10 border-t border-line-0 pt-8 ${wide ? "max-w-[94ch]" : "max-w-[72ch]"}`}>
           <Suspense fallback={<DocSkeleton />}>
             <DocBody locale={locale} section={section} source={source} />
           </Suspense>
@@ -78,7 +65,7 @@ export default function DocPage({
             {t.sourceLink}
           </a>
         </p>
-      </div>
+      </article>
     </main>
   );
 }

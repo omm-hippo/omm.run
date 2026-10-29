@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
       { source: `${prefix}/arena`, destination: `${prefix}/leaderboard`, permanent: true },
       // Per-checkpoint wiki pages were folded into the /models recommender.
       { source: `${prefix}/models/:slug`, destination: `${prefix}/models`, permanent: true },
+      // The FAQ now lives at the bottom of the troubleshooting page.
+      { source: `${prefix}/docs/faq`, destination: `${prefix}/docs/troubleshooting#faq`, permanent: true },
     ])];
   },
   // Cloudflare bindings are supplied by the Worker. Plain `next dev` uses the
