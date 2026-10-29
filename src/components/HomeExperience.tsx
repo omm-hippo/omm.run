@@ -26,7 +26,7 @@ export default function HomeExperience({ locale }: { locale: Locale }) {
       <div className="home-shortcuts">
         <Link id="workspace" href={localeHref('/use-cases', locale)} prefetch={false}>{locale === 'ko' ? '활용법' : 'Use cases'}</Link>
         <Link id="runners" href={localeHref('/docs/local-ai-runners', locale)} prefetch={false}>{locale === 'ko' ? '지원 앱' : 'Supported apps'}</Link>
-        <Link id="faq" href={localeHref('/docs/faq', locale)} prefetch={false}>{locale === 'ko' ? '자주 묻는 질문' : 'FAQ'}</Link>
+        <Link id="faq" href={localeHref('/docs/troubleshooting#faq', locale)} prefetch={false}>{locale === 'ko' ? '자주 묻는 질문' : 'FAQ'}</Link>
       </div>
     </section>
   </main>;

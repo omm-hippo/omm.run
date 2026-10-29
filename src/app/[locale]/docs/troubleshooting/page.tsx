@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Disclosure from '@/components/Disclosure';
+import DocumentText from '@/components/DocumentText';
+import DocsMenu from '@/components/docs/DocsMenu';
 import { isLocale, localeHref } from '@/i18n/config';
+import { getExperience } from '@/i18n/experience';
 import { pageMetadata } from '@/lib/page-metadata';
 
 function content(ko: boolean) {
@@ -34,10 +38,13 @@ export default async function TroubleshootingPage({ params }: PageProps<'/[local
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = content(locale === 'ko');
-  return <main className="site-reading reading-single"><article className="reading-article">
+  const faq = getExperience(locale);
+  return <main className="site-reading"><DocsMenu locale={locale} current="/docs/troubleshooting" /><article className="reading-article">
     <h1>{t.title}</h1><p className="reading-intro">{t.intro}</p>
-    <nav className="reading-toc" aria-label={locale === 'ko' ? '문제별 바로가기' : 'Troubleshooting topics'}>{t.topics.map((topic, index) => <a key={topic.href} href={`#issue-${index + 1}`}>{topic.title}</a>)}</nav>
+    <nav className="reading-toc" aria-label={locale === 'ko' ? '문제별 바로가기' : 'Troubleshooting topics'}>{t.topics.map((topic, index) => <a key={topic.href} href={`#issue-${index + 1}`}>{topic.title}</a>)}<a href="#faq">{faq.faq}</a></nav>
     {t.topics.map((topic, index) => <section key={topic.href} id={`issue-${index + 1}`}><h2>{topic.title}</h2><p>{topic.body}</p><Link className="home-inline-link" href={localeHref(topic.href, locale)} prefetch={false}>{topic.link} →</Link></section>)}
+    <section id="faq"><h2>{faq.faq}</h2>{faq.questions.map((question, index) => <Disclosure key={question.title} id={`faq-${index + 1}`} title={question.title}><DocumentText text={question.body} locale={locale} /></Disclosure>)}
+      <p className="mt-4"><a className="home-inline-link" href="https://github.com/omm-hippo/omm/blob/main/PRIVACY.md" target="_blank" rel="noreferrer">{locale === 'ko' ? '개인정보 문서' : 'Privacy document'} ↗</a></p></section>
     <section><h2>{t.report}</h2><p>{t.reportBody}</p><a className="home-inline-link" href="https://github.com/omm-hippo/omm/issues/new" target="_blank" rel="noreferrer">{t.reportLink} ↗</a></section>
   </article></main>;
 }

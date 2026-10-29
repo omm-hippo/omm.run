@@ -162,8 +162,8 @@ test("all docs routes exist and mirrored documents have matching dictionary entr
     slugs.add(entry.name);
   }
 
-  // FAQ and troubleshooting are local guides, not sections fetched from OMM's README.
-  assert.deepEqual([...slugs].sort(), [...Object.keys(PAGES), 'faq', 'troubleshooting'].sort());
+  // Troubleshooting (with the FAQ) is a local guide, not a section fetched from OMM's README.
+  assert.deepEqual([...slugs].sort(), [...Object.keys(PAGES), 'troubleshooting'].sort());
 
   const en = await readFile(
     path.join(REPO_ROOT, "src/i18n/dictionaries/en.ts"),

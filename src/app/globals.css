@@ -739,3 +739,12 @@
   .assistant-suggestions button { min-height: 36px; font-size: 14px; }
   .assistant-composer textarea { height: 66px; }
 }
+
+/* Docs sidebar: grouped variant of .reading-sidebar. */
+.docs-menu-group { margin-top: 12px; }
+.docs-menu-group > p { padding: 6px 16px 2px; font-size: 12px; line-height: 1.6; color: var(--ink-3); }
+.docs-menu-tag { display: inline-block; margin-left: 6px; padding: 0 5px; border: 1px solid var(--line-1); border-radius: 3px; font-size: 11px; line-height: 1.6; color: var(--ink-3); vertical-align: 1px; }
+@media (max-width: 900px) {
+  .docs-menu-group { margin-top: 0; display: contents; }
+  .docs-menu-group > p { display: none; }
+}
