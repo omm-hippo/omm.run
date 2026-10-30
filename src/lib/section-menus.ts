@@ -11,7 +11,8 @@ import { getGuideLinks } from '../components/install/guides';
 import { COMMAND_GROUPS, COMMAND_ORDER } from '../i18n/commands/base';
 import type { Locale } from '../i18n/config';
 import { getDictionary } from '../i18n/dictionaries';
-import { getSiteCopy, getUseCases } from '../i18n/site';
+import { getSiteCopy } from '../i18n/site';
+import { getUseCases } from '../i18n/use-cases';
 import { topLevelEntries } from './commands/reference';
 import { navigationGroup, type ShellSection } from './site-navigation';
 
