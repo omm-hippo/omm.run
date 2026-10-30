@@ -716,6 +716,19 @@
 .page-toc a { display: block; padding: 4px 0; color: var(--ink-2); }
 .page-toc a:hover { color: var(--ink-0); }
 .reading-callout { margin-top: 24px; padding: 14px 18px; border: 1px solid var(--accent-line); background: var(--accent-wash); font-size: 15px; line-height: 1.8; }
+.guide-list { list-style: disc; padding-left: 22px; margin-top: 12px; }
+.guide-list li { padding-left: 4px; margin-top: 8px; }
+.guide-step { margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--line-0); scroll-margin-top: 80px; }
+.guide-step h2 { margin-top: 6px; }
+.guide-step-meta { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-3); }
+.guide-where { padding: 0 8px; border: 1px solid var(--accent-line); border-radius: 4px; font-size: 12px; line-height: 1.8; color: var(--accent); }
+.guide-check { margin-top: 16px; padding-left: 14px; border-left: 2px solid var(--line-1); font-size: 15px; color: var(--ink-1); }
+.guide-check strong, .guide-trouble dt { color: var(--ink-0); font-weight: 600; }
+.guide-trouble > div { padding: 16px 0; border-bottom: 1px solid var(--line-0); }
+.guide-trouble > div:first-child { border-top: 1px solid var(--line-0); }
+.guide-trouble dt code { display: block; font-size: 13.5px; line-height: 1.7; overflow-wrap: anywhere; }
+.reading-article p code, .reading-article li code, .reading-article dd code { padding: 1px 5px; border: 1px solid var(--line-0); border-radius: 4px; background: var(--bg-1); font-size: 0.86em; color: var(--ink-0); overflow-wrap: anywhere; }
+.guide-trouble dd { margin-top: 6px; font-size: 15px; }
 @media (max-width: 1200px) {
   .section-page:has(> .page-toc) { grid-template-columns: minmax(0,1fr); }
   .page-toc { display: none; }

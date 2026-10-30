@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, localeHref } from '@/i18n/config';
-import { getSiteCopy, getUseCases } from '@/i18n/site';
+import { getSiteCopy } from '@/i18n/site';
+import { getUseCases } from '@/i18n/use-cases';
 import { pageMetadata } from '@/lib/page-metadata';
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/use-cases'>) {

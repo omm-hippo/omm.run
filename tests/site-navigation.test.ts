@@ -5,7 +5,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import NotionReading from '../src/components/NotionReading';
 import { navigationGroup, primaryNavigation } from '../src/lib/site-navigation';
 import { getNotionPublications, publicNotionUrl } from '../src/lib/notion-publications';
-import { getUseCases, getSiteCopy } from '../src/i18n/site';
+import { getSiteCopy } from '../src/i18n/site';
+import { getUseCases } from '../src/i18n/use-cases';
 
 test('nested and translated destinations keep the correct primary section active', () => {
   for (const [path, group] of [
@@ -20,8 +21,7 @@ test('nested and translated destinations keep the correct primary section active
     assert.equal(new Set(primaryNavigation(locale).map((item) => item.href)).size, 6);
     assert.equal(getUseCases(locale).length, 5);
     for (const guide of getUseCases(locale)) {
-      assert.ok(guide.requirement && guide.result && guide.steps.length);
-      assert.ok(guide.href.startsWith('/commands/'));
+      assert.ok(guide.requirements.length && guide.verify.length && guide.steps.length);
     }
   }
   assert.deepEqual(Object.keys(getSiteCopy('ko').articles), Object.keys(getSiteCopy('en').articles));
