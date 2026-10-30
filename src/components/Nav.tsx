@@ -200,7 +200,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           ) : null}
         </Link>
 
-        <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="ml-8 hidden items-center gap-6 xl:flex">
+        <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="ml-5 hidden items-center gap-4 md:flex lg:ml-8 lg:gap-6">
           {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} prefetch={false}
             aria-current={activeGroup === item.id ? 'page' : undefined}
             className={activeGroup === item.id ? "border-b border-accent pb-0.5 text-small text-ink-0" : LINK}>
@@ -208,8 +208,8 @@ export default function Nav({ locale }: { locale: Locale }) {
           </Link>)}
         </nav>
 
-        <div className="ml-auto hidden items-center gap-6 xl:flex">
-          <a href={REPO} className={LINK} target="_blank" rel="noreferrer">
+        <div className="ml-auto hidden items-center gap-4 md:flex lg:gap-6">
+          <a href={REPO} className={`${LINK} hidden lg:inline`} target="_blank" rel="noreferrer">
             {t.github}
           </a>
           <LanguageToggle locale={locale} label={t.language} />
@@ -228,7 +228,7 @@ export default function Nav({ locale }: { locale: Locale }) {
           aria-expanded={open}
           aria-controls="nav-panel"
           onClick={() => setOpen((v) => !v)}
-          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 xl:hidden"
+          className="ml-auto rounded-md border border-line-1 px-3 py-2 text-label text-ink-2 md:hidden"
         >
           {open ? t.close : t.menu}
         </button>
@@ -236,7 +236,7 @@ export default function Nav({ locale }: { locale: Locale }) {
 
       {/* Mobile: plain full-width panel. No slide, no hamburger morph. */}
       {open ? (
-        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 xl:hidden">
+        <div id="nav-panel" className="border-t border-line-0 bg-bg-0 md:hidden">
           <nav aria-label={locale === 'ko' ? '주 메뉴' : 'Main navigation'} className="mx-auto flex max-w-page flex-col px-5 py-2">
             {items.map((item) => <Link key={item.id} href={localeHref(item.href, locale)} onClick={close}
               prefetch={false} aria-current={activeGroup === item.id ? 'page' : undefined}
