@@ -3,17 +3,12 @@
  *
  *   npx tsx scripts/assistant-eval.ts --mode narrowed --limit 2
  *   npx tsx scripts/assistant-eval.ts --mode hybrid
- *   npx tsx scripts/assistant-eval.ts --mode hybrid --ollama http://127.0.0.1:11434 --model qwen3:4b-instruct
  *   npx tsx scripts/assistant-eval.ts --fixture tests/fixtures/assistant-paraphrase.json
  *
  * COSTS MONEY: every question is one Workers AI call billed to the account in
  * wrangler.jsonc, sharing the daily free allocation with production traffic.
  * It needs `wrangler login`. It reads tests/fixtures/assistant-eval.json and
  * never touches the D1 budget, the cache, or the deployed Worker.
- *
- * `--ollama <url>` asks a self-hosted Ollama (the school PC, or this
- * machine) through the same `gatewayBinding` production uses instead —
- * free, no wrangler login. Point it at the PC itself, not the public tunnel.
  *
  * Modes:
  *   narrowed — the previous production path: only the token-overlap
@@ -26,7 +21,6 @@ import { getPlatformProxy } from "wrangler";
 
 import { readFileSync } from "node:fs";
 
-import { gatewayBinding } from "../src/lib/assistant/gateway";
 import {
   explicitCommand,
   modelCandidates,
@@ -53,8 +47,7 @@ const fixture = JSON.parse(
   readFileSync(arg("fixture") ?? "tests/fixtures/assistant-eval.json", "utf8"),
 ) as { questions: { q: string; locale: string; accept: string[] }[] };
 const limit = Number(arg("limit") ?? fixture.questions.length);
-const ollama = arg("ollama");
-const model = arg("model") ?? (ollama ? "qwen3:4b-instruct" : DEFAULT_WORKERS_AI_MODEL);
+const model = arg("model") ?? DEFAULT_WORKERS_AI_MODEL;
 
 function candidatesFor(question: string, locale: "en" | "ko"): readonly Candidate[] {
   const narrowed = narrowCandidates(question, locale);
@@ -62,13 +55,8 @@ function candidatesFor(question: string, locale: "en" | "ko"): readonly Candidat
 }
 
 async function main(): Promise<void> {
-  const proxy = ollama ? null : await getPlatformProxy<{ AI: WorkersAiBinding }>();
-  const ai: WorkersAiBinding = proxy
-    ? proxy.env.AI
-    : gatewayBinding(
-        { url: ollama ?? "", model, accessClientId: "local", accessClientSecret: "local" },
-        30_000,
-      );
+  const proxy = await getPlatformProxy<{ AI: WorkersAiBinding }>();
+  const ai = proxy.env.AI;
 
   let correct = 0;
   let clarified = 0;
@@ -107,7 +95,7 @@ async function main(): Promise<void> {
     rows.push(`${ok ? "OK  " : "MISS"} ${accept.join("/").padEnd(14)} ${picked.padEnd(16)} ${q}`);
   }
 
-  await proxy?.dispose();
+  await proxy.dispose();
 
   const asked = Math.min(limit, fixture.questions.length);
   console.log(rows.join("\n"));

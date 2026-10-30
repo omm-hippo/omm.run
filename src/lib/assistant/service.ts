@@ -23,8 +23,6 @@ import {
 
 export type AssistantDependencies = {
   readonly ai?: WorkersAiBinding;
-  /** The school-PC Ollama gateway; tried before Workers AI when present. */
-  readonly gateway?: { readonly binding: WorkersAiBinding; readonly model: string };
   readonly store?: AssistantStore;
   readonly model?: string;
   readonly hashSalt?: string;
@@ -126,16 +124,9 @@ export async function answerAssistantQuestion(
   const offered = modelCandidates(candidates, request.locale);
   const offeredIds = offered.map(({ id }) => id);
 
-  const { ai, gateway, store, hashSalt } = dependencies;
+  const { ai, store, hashSalt } = dependencies;
   const model = resolveWorkersAiModel(dependencies.model);
-  const providers: {
-    readonly binding: WorkersAiBinding;
-    readonly model: string;
-    readonly source: AssistantResponse["source"];
-  }[] = [];
-  if (gateway) providers.push({ ...gateway, source: "self-hosted" });
-  if (ai && model) providers.push({ binding: ai, model, source: "workers-ai" });
-  if (providers.length === 0 || !store || !hashSalt || hashSalt.length < 16) {
+  if (!ai || !store || !hashSalt || hashSalt.length < 16 || !model) {
     return response("fallback", "not_configured", candidateIds);
   }
 
@@ -176,32 +167,13 @@ export async function answerAssistantQuestion(
     return response("fallback", "not_configured", candidateIds);
   }
 
-  // One attempt per provider, no retries: the school PC first, then Workers
-  // AI if it is off, asleep or too slow. The daily cap counts the question
-  // once whichever provider answers it.
-  let inference: Awaited<ReturnType<typeof selectWithWorkersAi>> = {
-    ok: false,
-    reason: "provider_unavailable",
-  };
-  let source: AssistantResponse["source"] = "workers-ai";
-  for (const [index, provider] of providers.entries()) {
-    const timeoutMs =
-      provider.source === "self-hosted"
-        ? ASSISTANT_LIMITS.gatewayTimeoutMs
-        : index > 0
-          ? ASSISTANT_LIMITS.fallbackInferenceTimeoutMs
-          : ASSISTANT_LIMITS.inferenceTimeoutMs;
-    inference = await selectWithWorkersAi(
-      provider.binding,
-      provider.model,
-      request.locale,
-      request.question,
-      offered,
-      timeoutMs,
-    );
-    source = provider.source;
-    if (inference.ok) break;
-  }
+  const inference = await selectWithWorkersAi(
+    ai,
+    model,
+    request.locale,
+    request.question,
+    offered,
+  );
   if (!inference.ok) return response("fallback", inference.reason, candidateIds);
   const { selection } = inference;
 
@@ -214,5 +186,5 @@ export async function answerAssistantQuestion(
   } catch {
     // Cache failure must not change a validated, already-computed selection.
   }
-  return fromSelection(selection, candidateIds, source);
+  return fromSelection(selection, candidateIds, "workers-ai");
 }

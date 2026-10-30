@@ -14,7 +14,6 @@ import {
   privateHash,
   rateLimitIdentity,
 } from "../src/lib/assistant/security";
-import { gatewayBinding, resolveGatewayConfig } from "../src/lib/assistant/gateway";
 import { answerAssistantQuestion } from "../src/lib/assistant/service";
 import {
   ASSISTANT_LIMITS,
@@ -568,82 +567,4 @@ test("a question the ranker finds no words for still reaches the model", async (
     { clientIdentity: "198.51.100.21" },
   );
   assert.equal(empty.reason, "no_match");
-});
-
-test("the school-PC gateway answers first and Workers AI covers it when it fails", async () => {
-  const calls: string[] = [];
-  const pick = (who: string, ok: boolean): WorkersAiBinding => ({
-    async run() {
-      calls.push(who);
-      if (!ok) throw new Error("offline");
-      return { response: { action: "command", commandId: "install" } };
-    },
-  });
-  const base = {
-    clientIdentity: "198.51.100.22",
-    hashSalt: "sixteen-byte-salt",
-    now: 1_788_019_200,
-  };
-  const request = { locale: "en" as const, question: "I need a model on this machine", turnCount: 0 };
-
-  const viaGateway = await answerAssistantQuestion(request, {
-    ...base,
-    store: new MemoryStore(),
-    ai: pick("workers-ai", true),
-    gateway: { binding: pick("gateway", true), model: "qwen3:4b" },
-  });
-  assert.equal(viaGateway.source, "self-hosted");
-  assert.deepEqual(calls, ["gateway"]);
-
-  calls.length = 0;
-  const store = new MemoryStore();
-  const viaFallback = await answerAssistantQuestion(request, {
-    ...base,
-    store,
-    ai: pick("workers-ai", true),
-    gateway: { binding: pick("gateway", false), model: "qwen3:4b" },
-  });
-  assert.equal(viaFallback.source, "workers-ai");
-  assert.equal(viaFallback.commandId, "install");
-  assert.deepEqual(calls, ["gateway", "workers-ai"]);
-  // One question, one daily attempt, whichever provider answered.
-  assert.equal([...store.uses].find(([key]) => key.startsWith("daily:"))?.[1], 1);
-});
-
-test("the gateway stays off unless fully configured over https", () => {
-  const full = {
-    ASSISTANT_GATEWAY_URL: "https://ollama.example.org/",
-    ASSISTANT_GATEWAY_MODEL: "qwen3:4b",
-    ASSISTANT_GATEWAY_ACCESS_ID: "id",
-    ASSISTANT_GATEWAY_ACCESS_SECRET: "secret",
-  };
-  assert.equal(resolveGatewayConfig(full)?.url, "https://ollama.example.org");
-  assert.equal(resolveGatewayConfig({ ...full, ASSISTANT_GATEWAY_ACCESS_SECRET: "" }), null);
-  assert.equal(resolveGatewayConfig({ ...full, ASSISTANT_GATEWAY_URL: "http://10.0.0.5:11434" }), null);
-  assert.equal(resolveGatewayConfig({}), null);
-});
-
-test("the gateway sends Ollama's chat format with Access headers and no thinking", async () => {
-  let sent: { url: string; init: RequestInit } | undefined;
-  const fakeFetch = (async (url: string, init: RequestInit) => {
-    sent = { url, init };
-    return Response.json({ message: { content: '{"action":"command","commandId":"install"}' } });
-  }) as unknown as typeof fetch;
-  const binding = gatewayBinding(
-    { url: "https://ollama.example.org", model: "qwen3:4b", accessClientId: "id", accessClientSecret: "secret" },
-    1_000,
-    fakeFetch,
-  );
-  const candidates = narrowCandidates("I need to install a model", "en");
-  const result = await selectWithWorkersAi(binding, "qwen3:4b", "en", "I need to install a model", candidates);
-  assert.deepEqual(result, { ok: true, selection: { action: "command", commandId: "install" } });
-  assert.equal(sent?.url, "https://ollama.example.org/api/chat");
-  const headers = sent?.init.headers as Record<string, string>;
-  assert.equal(headers["cf-access-client-id"], "id");
-  assert.equal(headers["cf-access-client-secret"], "secret");
-  const body = JSON.parse(String(sent?.init.body)) as Record<string, unknown>;
-  assert.equal(body.think, false);
-  assert.equal(body.stream, false);
-  assert.equal((body.options as { num_predict: number }).num_predict, ASSISTANT_LIMITS.maxCompletionTokens);
-  assert.ok(typeof body.format === "object");
 });

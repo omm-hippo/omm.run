@@ -21,7 +21,7 @@ const MAX_QUESTION_LENGTH = ASSISTANT_LIMITS.maxQuestionCharacters;
 const MAX_TURNS = ASSISTANT_LIMITS.maxTurns;
 const REQUEST_TIMEOUT_MS = 7_000;
 const KINDS = new Set<AssistantKind>(["command", "clarify", "fallback"]);
-const SOURCES = new Set<AssistantSource>(["workers-ai", "self-hosted", "deterministic"]);
+const SOURCES = new Set<AssistantSource>(["workers-ai", "deterministic"]);
 const REASONS = new Set<AssistantReason>([
   "matched",
   "ambiguous",

@@ -102,8 +102,6 @@ requires an approved D1 `ASSISTANT_DB` binding and a server-side
 `ASSISTANT_HASH_SALT`; without both, the route fails closed to deterministic
 search. See [the backend contract](docs/assistant-backend.md) before configuring
 or deploying it.
-An optional self-hosted Ollama (the school PC) can answer first, with
-Workers AI as the fallback; see [docs/assistant-school-pc.md](docs/assistant-school-pc.md).
 
 ## Verification
 

@@ -38,10 +38,11 @@ function selectionSchema(candidateIds: readonly string[]): Record<string, unknow
   };
 }
 
-/** Catalog order, independent of the question, so the system message is a
- *  byte-identical prefix for every question in a locale. A self-hosted
- *  Ollama then reuses its prompt cache: 1,480 prompt tokens took 2.4 s on a
- *  cold prefix and 36 ms on a cached one (qwen3:4b, Apple M5, 2026-10-29). */
+/** Catalog order, independent of the question, so everything before the
+ *  question is a byte-identical prefix for every question in a locale and a
+ *  provider's prompt cache can reuse it. Measured with a local Ollama: 1,480
+ *  prompt tokens took 2.4 s on a cold prefix and 36 ms on a cached one
+ *  (qwen3:4b, Apple M5, 2026-10-29). */
 function catalogOrder(candidates: readonly Candidate[]): readonly Candidate[] {
   const rank = new Map(COMMAND_IDS.map((id, index) => [id, index]));
   return [...candidates].sort(

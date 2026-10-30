@@ -445,7 +445,7 @@ export const ko = {
     submitting: "명령어 레퍼런스 확인 중…",
     counter: "{count} / {max}",
     privacy:
-      "API 키, 토큰, 비밀번호, 비공개 경로·모델 이름, 개인정보가 담긴 터미널 출력을 붙여넣지 마세요. 질문은 Workers AI 또는 OMM 팀이 직접 운영하는 컴퓨터의 모델에서 처리될 수 있습니다.",
+      "API 키, 토큰, 비밀번호, 비공개 경로·모델 이름, 개인정보가 담긴 터미널 출력을 붙여넣지 마세요. 질문은 Workers AI에서 처리될 수 있습니다.",
     quickLabel: "이런 질문으로 시작해 보세요",
     quickQuestions: [
       "설치한 러너를 찾지 못하는 이유를 어떻게 확인하나요?",
@@ -457,7 +457,6 @@ export const ko = {
     fallbackLabel: "일반 명령어 검색으로 전환",
     source: {
       "workers-ai": "선택 방식: Workers AI 분류기",
-      "self-hosted": "선택 방식: OMM 자체 로컬 모델",
       deterministic: "선택 방식: 문서 기반 검색",
     },
     messages: {

@@ -188,7 +188,7 @@ accuracy or a new live Workers AI score. Additional task paraphrases, negative
 recommendation wording and validated-context cases are covered by unit tests.
 No paid inference was called for this revision.
 
-## Accuracy, speed and self-hosted gateway revision — 2026-10-29
+## Accuracy and speed revision — 2026-10-29
 
 Live probes of omm.run showed two problems: `how fast is my model` returned
 `no_match` because the ranker found no words for it and the route skipped the
@@ -215,35 +215,9 @@ unrelated ranker cards. Changes:
   were inspected, so these are regression floors, not held-out accuracy.
 
 The Workers AI model is unchanged (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`).
-No paid Workers AI call was made for this revision; the new prompt layout was
-measured only against a local Ollama, below.
-
-### Self-hosted gateway (school PC)
-
-`browser → OMM Worker → Cloudflare Tunnel + Access → school PC Ollama`. It is
-off unless all four Worker settings exist; `ASSISTANT_GATEWAY_URL` must be
-https:
-
-| Setting | Kind | Value |
-| --- | --- | --- |
-| `ASSISTANT_GATEWAY_URL` | secret or var | tunnel hostname, e.g. `https://assistant-ollama.omm.run` |
-| `ASSISTANT_GATEWAY_MODEL` | var | Ollama tag, e.g. `qwen3:4b-instruct` |
-| `ASSISTANT_GATEWAY_ACCESS_ID` | secret | Cloudflare Access service token client ID |
-| `ASSISTANT_GATEWAY_ACCESS_SECRET` | secret | Cloudflare Access service token secret |
-
-When configured, the gateway is tried first with a 2.5 s timeout. On any
-failure (PC off, tunnel down, Access redirect, timeout, invalid JSON) the same
-question goes once to Workers AI with a 3.5 s timeout, so the browser's 7 s
-budget holds. This fallback was an explicit operator decision (2026-10-29):
-a question can therefore reach both the school PC and Workers AI, and the
-privacy notice says so. Both use the same prompt, JSON schema, output
-validation and budget; one question consumes one daily attempt whichever
-provider answers. Ollama gets `think: false` so reasoning models do not spend
-the token budget thinking, and `keep_alive: 30m`.
-
-Measured on 2026-10-29 with `qwen3:4b-instruct` on an Apple M5 / 26 GB Mac
-(not the school PC), through `gatewayBinding` with `scripts/assistant-eval.ts`
-style calls:
+The new prompt layout was first measured against a local Ollama
+(`qwen3:4b-instruct`, Apple M5 / 26 GB Mac), using the same prompt, schema and
+output validation:
 
 | Prompt layout | fresh 20 | paraphrase 52 | regression 51 | median latency |
 | --- | --- | --- | --- | --- |
@@ -251,8 +225,13 @@ style calls:
 | fixed catalog first, question last (now) | 18 | 50 | 46 | 0.9–1.2 s |
 
 A cold 1,480-token prompt took 2.4 s to prefill and a cached prefix 36 ms.
-Re-measure on the actual school PC before enabling the gateway:
-`npx tsx scripts/assistant-eval.ts --mode hybrid --ollama http://127.0.0.1:11434 --fixture tests/fixtures/assistant-paraphrase.json`.
-Setup steps are in [assistant-school-pc.md](assistant-school-pc.md). This
-revision creates no tunnel, Access application, secret or deployment.
 
+On 2026-10-30 eleven questions were sent to the branch preview deployment.
+Instant (deterministic) answers took 0.75–1.3 s and Workers AI answers
+2.2–3.6 s end to end. Weak live picks to revisit: "다운로드가 중간에 멈췄어"
+→ `cleanup`, `my gpu is not being used` → `setup`, "응답이 너무 느려" →
+`benchmark`.
+
+A self-hosted Ollama gateway was prototyped in the same branch and dropped
+before merge (operator decision, 2026-10-30); Workers AI stays the only model
+provider.

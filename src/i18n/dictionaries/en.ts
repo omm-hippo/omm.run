@@ -466,7 +466,7 @@ export const en = {
     submitting: "Checking the command reference…",
     counter: "{count} / {max}",
     privacy:
-      "Do not paste API keys, tokens, passwords, private paths, model names, or terminal output containing personal data. A question may be processed by Workers AI or by a model the OMM team runs on its own computer.",
+      "Do not paste API keys, tokens, passwords, private paths, model names, or terminal output containing personal data. A question may be processed by Workers AI.",
     quickLabel: "Try a focused question",
     quickQuestions: [
       "Why is an installed runner not detected?",
@@ -478,7 +478,6 @@ export const en = {
     fallbackLabel: "Command search fallback",
     source: {
       "workers-ai": "Selection: Workers AI classifier",
-      "self-hosted": "Selection: OMM's own local model",
       deterministic: "Selection: documented lookup",
     },
     messages: {
