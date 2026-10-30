@@ -11,46 +11,37 @@ export default function Install({ locale }: { locale: Locale }) {
   const t = dictionary.install;
 
   return (
-    <section
-      id="install"
-      className="relative bg-bg-0 pt-12 pb-16 md:pt-16"
-    >
-      <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
-
-      <div className="relative mx-auto w-full max-w-page px-5 md:px-8">
-        <div className="mx-auto max-w-[880px]">
-          <div className="text-center">
-            <p className="text-label">{t.label}</p>
-            <h1 className="text-h2 mt-4">{t.heading}</h1>
-            <p className="text-lede mx-auto mt-6 max-w-[640px]">{t.lede}</p>
-          </div>
-
-          <div className="mt-10">
-            <InstallTabs t={t.tabs} ui={dictionary.ui} />
-          </div>
-
-          <QuickStart locale={locale} />
-
-          <Disclosure id="installer-details" title={getExperience(locale).technical} className="mt-10">
-            <ol className="mt-6 flex flex-col">
-              {t.steps.map((item, index) => (
-                <li
-                  key={item.title}
-                  className="grid grid-cols-[auto_minmax(0,1fr)] gap-4 border-b border-line-0 py-4 first:border-t"
-                >
-                  <span className="text-terminal text-ink-3" aria-hidden>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-terminal text-left">
-                    <span className="text-ink-0">{item.title}</span>
-                    <span className="text-ink-2"> — {item.body}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </Disclosure>
-        </div>
+    <section id="install" className="pb-16">
+      <div>
+        <p className="text-label">{t.label}</p>
+        <h1 className="text-h2 mt-4">{t.heading}</h1>
+        <p className="text-lede mt-6 max-w-[640px]">{t.lede}</p>
       </div>
+
+      <div className="mt-10">
+        <InstallTabs t={t.tabs} ui={dictionary.ui} />
+      </div>
+
+      <QuickStart locale={locale} />
+
+      <Disclosure id="installer-details" title={getExperience(locale).technical} className="mt-10">
+        <ol className="mt-6 flex flex-col">
+          {t.steps.map((item, index) => (
+            <li
+              key={item.title}
+              className="grid grid-cols-[auto_minmax(0,1fr)] gap-4 border-b border-line-0 py-4 first:border-t"
+            >
+              <span className="text-terminal text-ink-3" aria-hidden>
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span className="text-terminal text-left">
+                <span className="text-ink-0">{item.title}</span>
+                <span className="text-ink-2"> — {item.body}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </Disclosure>
     </section>
   );
 }

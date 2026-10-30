@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Disclosure from '@/components/Disclosure';
 import Features from '@/components/Features';
 import Runners from '@/components/Runners';
-import UseCaseMenu from '@/components/UseCaseMenu';
+import PageToc from '@/components/shell/PageToc';
 import NotionReading from '@/components/NotionReading';
 import { isLocale, localeHref } from '@/i18n/config';
 import { getSiteCopy, getUseCase, USE_CASE_SLUGS } from '@/i18n/site';
@@ -34,13 +34,9 @@ export default async function UseCasePage({ params }: PageProps<'/[locale]/use-c
   if (!guide) notFound();
   const t = getSiteCopy(locale);
   const experience = getExperience(locale);
-  return <main className="site-reading">
-    <UseCaseMenu locale={locale} current={slug} />
+  return <main className="section-page">
     <article className="reading-article">
       <h1>{guide.title}</h1><p className="reading-intro">{guide.summary}</p>
-      <nav className="reading-toc" aria-label={locale === 'ko' ? '이 페이지 목차' : 'On this page'}>
-        <a href="#requirements">{t.requirementsTitle}</a><a href="#steps">{t.stepsTitle}</a><a href="#result">{t.resultTitle}</a>
-      </nav>
       <section id="requirements"><h2>{t.requirementsTitle}</h2><p>{guide.requirement}</p></section>
       <section id="steps"><h2>{t.stepsTitle}</h2><ol className="reading-steps">{guide.steps.map((step) => <li key={step}>{step}</li>)}</ol></section>
       <section id="result"><h2>{t.resultTitle}</h2><p>{guide.result}</p></section>
@@ -52,5 +48,8 @@ export default async function UseCasePage({ params }: PageProps<'/[locale]/use-c
       <NotionReading locale={locale} ids={RELATED[slug] ?? []} />
       <p className="reading-note">{t.versionNote}</p>
     </article>
+    <PageToc label={locale === 'ko' ? '이 페이지' : 'On this page'} items={[
+      { id: 'requirements', title: t.requirementsTitle }, { id: 'steps', title: t.stepsTitle }, { id: 'result', title: t.resultTitle },
+    ]} />
   </main>;
 }

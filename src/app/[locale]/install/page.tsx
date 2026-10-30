@@ -43,32 +43,34 @@ export default async function InstallChooser({
   const links = getGuideLinks(locale);
 
   return (
-    <main className="document-page install-page relative border-b border-line-0 bg-bg-0">
-      <Install locale={locale} />
-      <section id="guides" className="relative mx-auto w-full max-w-page border-t border-line-0 px-5 pt-12 pb-16 md:px-8">
-        <div className="mx-auto max-w-[880px]">
-          <p className="text-label">{installChooser.label}</p>
-          <h2 className="text-h3 mt-4">{installChooser.heading}</h2>
-          <p className="text-small mt-4 max-w-[62ch]">{installChooser.lede}</p>
+    <main className="document-page install-page section-page">
+      <article className="min-w-0">
+        <Install locale={locale} />
+        <section id="guides" className="border-t border-line-0 pt-12 pb-16">
+          <div>
+            <p className="text-label">{installChooser.label}</p>
+            <h2 className="text-h3 mt-4">{installChooser.heading}</h2>
+            <p className="text-small mt-4 max-w-[62ch]">{installChooser.lede}</p>
 
-          <ul className="mt-8 flex flex-col border-t border-line-0">
-            {links.map((link) => (
-              <li key={link.slug} className="border-b border-line-0">
-                <Link
-                  href={localeHref(link.href, locale)}
-                  className="grid grid-cols-1 gap-2 px-2 py-5 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
-                  prefetch={false}
-                >
-                  <span className="text-small font-medium text-ink-0">{link.os} →</span>
-                  <span className="text-small max-w-[62ch]">
-                    {link.summary}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+            <ul className="mt-8 flex flex-col border-t border-line-0">
+              {links.map((link) => (
+                <li key={link.slug} className="border-b border-line-0">
+                  <Link
+                    href={localeHref(link.href, locale)}
+                    className="grid grid-cols-1 gap-2 px-2 py-5 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,16ch)_minmax(0,1fr)] sm:gap-6"
+                    prefetch={false}
+                  >
+                    <span className="text-small font-medium text-ink-0">{link.os} →</span>
+                    <span className="text-small max-w-[62ch]">
+                      {link.summary}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      </article>
     </main>
   );
 }

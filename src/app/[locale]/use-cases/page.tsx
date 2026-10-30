@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import UseCaseMenu from '@/components/UseCaseMenu';
 import { isLocale, localeHref } from '@/i18n/config';
 import { getSiteCopy, getUseCases } from '@/i18n/site';
 import { pageMetadata } from '@/lib/page-metadata';
@@ -16,8 +15,7 @@ export default async function UseCasesPage({ params }: PageProps<'/[locale]/use-
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const t = getSiteCopy(locale);
-  return <main className="site-reading">
-    <UseCaseMenu locale={locale} />
+  return <main className="section-page">
     <article className="reading-article">
       <h1>{t.useCasesTitle}</h1><p className="reading-intro">{t.useCasesIntro}</p>
       <ul className="topic-list">{getUseCases(locale).map((guide) => <li key={guide.slug}>

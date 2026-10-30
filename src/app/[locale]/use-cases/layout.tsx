@@ -1,10 +1,13 @@
-import { notFound } from 'next/navigation';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
-import { isLocale } from '@/i18n/config';
+import { notFound } from "next/navigation";
 
-export default async function UseCasesLayout({ children, params }: LayoutProps<'/[locale]/use-cases'>) {
+import SectionLayout from "@/components/shell/SectionLayout";
+import { isLocale } from "@/i18n/config";
+
+export default async function UseCasesLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]/use-cases">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return <><Nav locale={locale} />{children}<Footer locale={locale} /></>;
+  return <SectionLayout section="use-cases" locale={locale}>{children}</SectionLayout>;
 }

@@ -11,13 +11,13 @@ test('nested and translated destinations keep the correct primary section active
   for (const [path, group] of [
     ['/', 'intro'], ['/en', 'intro'], ['/en/use-cases/local-chat', 'use-cases'],
     ['/ko/models/qwen3-8b', 'models'], ['/arena', 'models'], ['/leaderboard', 'models'],
-    ['/install/macos', 'docs'], ['/en/commands/setting#agent', 'docs'],
+    ['/install/macos', 'docs'], ['/en/commands/setting#agent', 'commands'], ['/commands', 'commands'],
     ['/docs/troubleshooting', 'docs'], ['/assistant', 'docs'], ['/news', 'news'],
     ['/models-other', null], ['/documentation', null],
   ] as const) assert.equal(navigationGroup(path), group, path);
   for (const locale of ['ko', 'en'] as const) {
-    assert.equal(primaryNavigation(locale).length, 5);
-    assert.equal(new Set(primaryNavigation(locale).map((item) => item.href)).size, 5);
+    assert.equal(primaryNavigation(locale).length, 6);
+    assert.equal(new Set(primaryNavigation(locale).map((item) => item.href)).size, 6);
     assert.equal(getUseCases(locale).length, 5);
     for (const guide of getUseCases(locale)) {
       assert.ok(guide.requirement && guide.result && guide.steps.length);

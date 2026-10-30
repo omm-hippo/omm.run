@@ -7,7 +7,6 @@ import { fill, getDictionary, type Dictionary } from "@/i18n/dictionaries";
 import DocBody from "./DocBody";
 import type { DocSource } from "@/lib/omm-docs/source";
 import DocSkeleton from "./DocSkeleton";
-import DocsMenu from "./DocsMenu";
 
 const GITHUB_README = "https://github.com/omm-hippo/omm#readme";
 const SYNC_SOURCE = "raw.githubusercontent.com";
@@ -39,8 +38,7 @@ export default function DocPage({
   const site = getSiteCopy(locale);
 
   return (
-    <main className="document-page site-reading">
-      <DocsMenu locale={locale} current={`/docs/${slug}`} />
+    <main className="document-page section-page">
       <article className="min-w-0">
         <h1 className="text-h2">{page.heading}</h1>
         <p className="text-lede mt-5 max-w-[62ch]">{page.lede}</p>
