@@ -59,7 +59,7 @@ test("nested commands remain reachable with unique anchors and their real option
     }
   }
   for (const [group, path, flag] of [
-    ["setting", "setting agent local", "--model"],
+    ["agent", "agent local", "--model"],
     ["rag", "rag remote set", "--token"],
     ["cluster", "cluster status", "--json"],
   ]) {

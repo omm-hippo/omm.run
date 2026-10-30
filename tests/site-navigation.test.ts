@@ -12,7 +12,7 @@ test('nested and translated destinations keep the correct primary section active
   for (const [path, group] of [
     ['/', 'intro'], ['/en', 'intro'], ['/en/use-cases/local-chat', 'use-cases'],
     ['/ko/models/qwen3-8b', 'models'], ['/arena', 'models'], ['/leaderboard', 'models'],
-    ['/install/macos', 'docs'], ['/en/commands/setting#agent', 'commands'], ['/commands', 'commands'],
+    ['/install/macos', 'docs'], ['/en/commands/setting#upload', 'commands'], ['/commands', 'commands'],
     ['/docs/troubleshooting', 'docs'], ['/assistant', 'docs'], ['/news', 'news'],
     ['/models-other', null], ['/documentation', null],
   ] as const) assert.equal(navigationGroup(path), group, path);
