@@ -188,19 +188,50 @@ accuracy or a new live Workers AI score. Additional task paraphrases, negative
 recommendation wording and validated-context cases are covered by unit tests.
 No paid inference was called for this revision.
 
-### Mac mini option — recommendation, not a configured provider
+## Accuracy and speed revision — 2026-10-29
 
-A self-hosted option can use `browser → OMM Worker → authenticated gateway →
-Mac mini Ollama`. Keep gateway credentials in server-side secrets, restrict the
-backend to the approved command-selection schema, and retain bounded input,
-queueing, timeouts and per-client/daily budgets. Ollama normally listens on
-loopback; serving remote callers requires an explicitly configured access path.
-The self-hosted choice means inference on the operator's Mac mini, not on each
-visitor's device. Do not silently resend a self-hosted question to a cloud model
-on failure; make that routing choice explicit.
+Live probes of omm.run showed two problems: `how fast is my model` returned
+`no_match` because the ranker found no words for it and the route skipped the
+model, and a correct Workers AI pick (`recommend`) was shown next to three
+unrelated ranker cards. Changes:
 
-Before enabling it, identify the actual Mac mini/model, network endpoint,
-authentication and expected concurrency, then compare latency and answer
-selection on a fresh evaluation set. This revision does not expose a port,
-create a tunnel, change a runtime, or add an unverified provider switch.
-Primary reference: https://docs.ollama.com/faq#how-can-i-expose-ollama-on-my-network
+- **The model is consulted even when the ranker is empty.** Only input with no
+  letters or digits stops at `no_match`. Off-topic questions now cost one
+  bounded attempt and normally return `clarify`; the 200/day cap still holds.
+- **Confident questions skip the model.** When an intent rule scores ≥200
+  and at least twice the runner-up, the ranker's pick is returned at once
+  (`source: deterministic`). On the 51 + 52 regression questions and 20 fresh
+  ones this was right 65/65 times, covering about half of them.
+- **Related cards only when they agree.** After a model pick, the ranker's
+  list is returned as "related" only if it contains that pick; the client
+  renders the pick as the full card and the rest as small links.
+- **Cacheable prompt.** The full command list now sits, in catalog order, at
+  the start of the user message, and the question and the ranker's top four
+  (`likely`, with context) follow it. Everything before the question is the
+  same bytes for every question in a locale. Cache namespace is now v5.
+- **Ranker paraphrases.** `tests/fixtures/assistant-paraphrase.json` (52
+  short everyday questions) went from top-1 32 to 52 after new intent rules,
+  and 20 fresh questions written after that went from 10 to 12. Both sets
+  were inspected, so these are regression floors, not held-out accuracy.
+
+The Workers AI model is unchanged (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`).
+The new prompt layout was first measured against a local Ollama
+(`qwen3:4b-instruct`, Apple M5 / 26 GB Mac), using the same prompt, schema and
+output validation:
+
+| Prompt layout | fresh 20 | paraphrase 52 | regression 51 | median latency |
+| --- | --- | --- | --- | --- |
+| ranked candidates, question first (before) | 19 | 49 | 44 | 2.0–4.1 s |
+| fixed catalog first, question last (now) | 18 | 50 | 46 | 0.9–1.2 s |
+
+A cold 1,480-token prompt took 2.4 s to prefill and a cached prefix 36 ms.
+
+On 2026-10-30 eleven questions were sent to the branch preview deployment.
+Instant (deterministic) answers took 0.75–1.3 s and Workers AI answers
+2.2–3.6 s end to end. Weak live picks to revisit: "다운로드가 중간에 멈췄어"
+→ `cleanup`, `my gpu is not being used` → `setup`, "응답이 너무 느려" →
+`benchmark`.
+
+A self-hosted Ollama gateway was prototyped in the same branch and dropped
+before merge (operator decision, 2026-10-30); Workers AI stays the only model
+provider.

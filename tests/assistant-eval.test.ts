@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import fixture from "./fixtures/assistant-eval.json";
+import paraphraseFixture from "./fixtures/assistant-paraphrase.json";
 import { isCommandId } from "../src/lib/assistant/catalog";
 import {
   modelCandidates,
@@ -58,4 +59,32 @@ test("the first three deterministic suggestions retain regression-set coverage",
   for (const {q,locale,accept} of QUESTIONS) {
     assert.ok(narrowCandidates(q,locale).slice(0,3).some(({id}) => accept.includes(id)), q);
   }
+});
+
+const PARAPHRASES = paraphraseFixture.questions as readonly Question[];
+
+/**
+ * Short everyday paraphrases, measured 2026-10-29: top-1 went from 32/52 to
+ * 52/52 after the intent rules for them were added. Tuned on this set, so
+ * it guards against regressions only; 20 fresh questions written after the
+ * tuning went from 10/20 to 12/20, which is why the model still decides
+ * whenever the ranker is not confident.
+ */
+const PARAPHRASE_TOP1_FLOOR = 50;
+
+test("every paraphrase question accepts only real, selectable commands", () => {
+  assert.ok(PARAPHRASES.length >= 50);
+  for (const { q, accept } of PARAPHRASES) {
+    for (const id of accept) assert.ok(isCommandId(id), `${q}: ${id} is not a command`);
+  }
+});
+
+test("the ranker's first pick on the paraphrase set does not regress", () => {
+  const misses = PARAPHRASES.filter(
+    ({ q, locale, accept }) => !accept.includes(narrowCandidates(q, locale)[0]?.id ?? ""),
+  );
+  assert.ok(
+    PARAPHRASES.length - misses.length >= PARAPHRASE_TOP1_FLOOR,
+    `misses: ${misses.map(({ q }) => q).join(" | ")}`,
+  );
 });

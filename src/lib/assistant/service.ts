@@ -10,6 +10,7 @@ import { inspectInput, privateHash } from "./security";
 import {
   ASSISTANT_LIMITS,
   type AssistantReason,
+  type Candidate,
   type AssistantRequest,
   type AssistantResponse,
   type ModelSelection,
@@ -51,9 +52,20 @@ function fromSelection(
   source: AssistantResponse["source"],
 ): AssistantResponse {
   if (selection.action === "command") {
-    return response("command", "matched", candidates, selection.commandId, source);
+    // The ranker's list is only worth showing as "related" when it agreed
+    // with the model; otherwise it is the noise the model just overruled.
+    const related = candidates.includes(selection.commandId) ? candidates : [];
+    return response("command", "matched", related, selection.commandId, source);
   }
   return response("clarify", "ambiguous", candidates, null, source);
+}
+
+function isConfident([top, next]: readonly Candidate[]): boolean {
+  return (
+    top !== undefined &&
+    top.score >= ASSISTANT_LIMITS.confidentScore &&
+    top.score >= ASSISTANT_LIMITS.confidentMargin * (next?.score ?? 0)
+  );
 }
 
 function utcDay(now: number): string {
@@ -98,8 +110,16 @@ export async function answerAssistantQuestion(
   }
   const explicit = explicitCommand(request.question);
   if (explicit) return response("command", "matched", [explicit], explicit);
-  // No overlap with any command at all: off-topic, so spend no inference.
-  if (candidates.length === 0) return response("fallback", "no_match", []);
+  // A strong intent rule is answered instantly, without spending inference.
+  if (isConfident(candidates)) {
+    return response("command", "matched", [candidates[0].id], candidates[0].id);
+  }
+  // Nothing to read at all (punctuation, emoji): no inference either. A real
+  // question the ranker found no words for still goes to the model, which
+  // sees every command — that was the "how fast is my model" miss.
+  if (!/[\p{L}\p{N}]/u.test(request.question)) {
+    return response("fallback", "no_match", []);
+  }
   // The ranker only orders and details the list; the model sees every command.
   const offered = modelCandidates(candidates, request.locale);
   const offeredIds = offered.map(({ id }) => id);

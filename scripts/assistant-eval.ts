@@ -3,6 +3,7 @@
  *
  *   npx tsx scripts/assistant-eval.ts --mode narrowed --limit 2
  *   npx tsx scripts/assistant-eval.ts --mode hybrid
+ *   npx tsx scripts/assistant-eval.ts --fixture tests/fixtures/assistant-paraphrase.json
  *
  * COSTS MONEY: every question is one Workers AI call billed to the account in
  * wrangler.jsonc, sharing the daily free allocation with production traffic.
@@ -18,7 +19,8 @@
 
 import { getPlatformProxy } from "wrangler";
 
-import fixture from "../tests/fixtures/assistant-eval.json";
+import { readFileSync } from "node:fs";
+
 import {
   explicitCommand,
   modelCandidates,
@@ -41,6 +43,9 @@ function arg(name: string): string | undefined {
 
 const mode = (arg("mode") ?? "narrowed") as Mode;
 if (mode !== "narrowed" && mode !== "hybrid") throw new Error(`unknown --mode ${mode}`);
+const fixture = JSON.parse(
+  readFileSync(arg("fixture") ?? "tests/fixtures/assistant-eval.json", "utf8"),
+) as { questions: { q: string; locale: string; accept: string[] }[] };
 const limit = Number(arg("limit") ?? fixture.questions.length);
 const model = arg("model") ?? DEFAULT_WORKERS_AI_MODEL;
 
@@ -66,7 +71,7 @@ async function main(): Promise<void> {
     const candidates = candidatesFor(q, loc);
     if (explicit) {
       picked = explicit;
-    } else if (candidates.length === 0) {
+    } else if (candidates.length === 0 && mode === "narrowed") {
       picked = "(no candidates)";
     } else {
       const output = (await ai.run(model, buildWorkersAiInput(loc, q, candidates))) as {

@@ -504,6 +504,7 @@ export const ko = {
     openReference: "전체 명령어 레퍼런스 열기",
     searchAll: "모든 명령어 검색",
     askAgain: "다른 질문하기",
+    relatedLabel: "관련 명령어",
     turnLimit: "질문 3회를 모두 사용했습니다. 다시 시작해 새 질문을 적어 주세요.",
     empty: "omm 설치·진단·모델 관리·러너 사용에 관한 구체적인 질문을 적어 주세요.",
     tooShort: "알맞은 명령어를 좁힐 수 있도록 상황을 조금 더 설명해 주세요.",

@@ -524,6 +524,7 @@ export const en = {
     openReference: "Open full command reference",
     searchAll: "Search all commands",
     askAgain: "Ask another question",
+    relatedLabel: "Related",
     turnLimit: "Three questions reached. Start over to ask another.",
     empty:
       "Write a focused question about installing omm, diagnosing it, managing a model, or using a runner.",
