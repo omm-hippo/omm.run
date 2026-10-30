@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
-import Footer from "@/components/Footer";
-import Nav from "@/components/Nav";
+import SectionLayout from "@/components/shell/SectionLayout";
 import { isLocale } from "@/i18n/config";
 
 export default async function CommandsLayout({
@@ -10,12 +9,5 @@ export default async function CommandsLayout({
 }: LayoutProps<"/[locale]/commands">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-
-  return (
-    <>
-      <Nav locale={locale} />
-      {children}
-      <Footer locale={locale} />
-    </>
-  );
+  return <SectionLayout section="commands" locale={locale}>{children}</SectionLayout>;
 }
