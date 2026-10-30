@@ -1,5 +1,5 @@
 {
-  "about": "Second regression set for the OMM assistant ranker, written 2026-10-29 as short everyday paraphrases (no doc wording) after live misses such as \"how fast is my model\" returning no_match. Inspected while tuning src/lib/assistant/intents.ts, so it is a regression floor, not held-out accuracy. Used by tests/assistant-eval.test.ts.",
+  "about": "Second regression set for the OMM assistant ranker, written 2026-10-29 as short everyday paraphrases (no doc wording) after live misses such as \"how fast is my model\" returning no_match; the last six added 2026-10-30 from weak live Workers AI picks. Inspected while tuning src/lib/assistant/intents.ts, so it is a regression floor, not held-out accuracy. Used by tests/assistant-eval.test.ts.",
   "questions": [
     { "locale": "en", "q": "how do I download llama 3", "accept": ["install"] },
     { "locale": "en", "q": "find a small coding model", "accept": ["search"] },
@@ -52,6 +52,12 @@
     { "locale": "ko", "q": "처음 설정", "accept": ["setup"] },
     { "locale": "ko", "q": "내 하드웨어 사양 보기", "accept": ["scan"] },
     { "locale": "ko", "q": "올라마 설치", "accept": ["engine"] },
-    { "locale": "ko", "q": "모델 정보 자세히", "accept": ["info"] }
+    { "locale": "ko", "q": "모델 정보 자세히", "accept": ["info"] },
+    { "locale": "ko", "q": "다운로드가 중간에 멈췄어", "accept": ["install"] },
+    { "locale": "en", "q": "my model download got stuck halfway", "accept": ["install"] },
+    { "locale": "en", "q": "my gpu is not being used", "accept": ["tune"] },
+    { "locale": "ko", "q": "그래픽카드를 안 쓰고 CPU로만 돌아가", "accept": ["tune"] },
+    { "locale": "ko", "q": "응답이 너무 느려", "accept": ["tune"] },
+    { "locale": "en", "q": "answers are really slow", "accept": ["tune"] }
   ]
 }

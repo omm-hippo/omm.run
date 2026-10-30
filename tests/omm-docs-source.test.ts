@@ -72,7 +72,9 @@ test("the README request has a deadline that also cancels an incomplete body", a
     }));
   });
   const pending = assert.rejects(fetchReadme(), OmmDocsUnavailable);
-  // Let the response headers arrive before the download deadline passes.
+  // Let the revision lookup finish and the response headers arrive before the
+  // download deadline passes.
+  while (!requestSignal) await new Promise<void>((resolve) => setImmediate(resolve));
   await Promise.resolve();
   mock.timers.tick(5_000);
   await pending;
@@ -112,4 +114,28 @@ test('moved install sections use the installation document with a distinct cache
   assert.equal(upstream.mock.callCount(), 1);
   assert.equal(readmeCacheKey().url, README_URL);
   assert.equal(readmeCacheKey('install').url, INSTALL_GUIDE_URL);
+});
+
+test("a recorded commit pins both documents to immutable raw URLs", async () => {
+  const { isCommitSha, readmeCacheKey, sourceUrl } = await import("../src/lib/omm-docs/source");
+  const sha = "0123456789abcdef0123456789abcdef01234567";
+  assert.equal(sourceUrl("readme", sha), `https://raw.githubusercontent.com/omm-hippo/omm/${sha}/README.md`);
+  assert.equal(sourceUrl("install", sha), `https://raw.githubusercontent.com/omm-hippo/omm/${sha}/docs/install.md`);
+  assert.equal(readmeCacheKey("readme", sha).url, sourceUrl("readme", sha));
+  // Anything but a full lowercase SHA reads main, never an arbitrary path.
+  for (const bad of ["main", "../evil", sha.slice(0, 7), sha.toUpperCase(), null]) {
+    assert.equal(isCommitSha(bad), false);
+    assert.equal(sourceUrl("readme", bad), "https://raw.githubusercontent.com/omm-hippo/omm/main/README.md");
+  }
+});
+
+test("setRevision stores the commit with a one-day expiry", async () => {
+  const { REVISION_TTL_SECONDS, setRevision } = await import("../src/lib/omm-docs/source");
+  const writes: unknown[] = [];
+  await setRevision(
+    { async get() { return null; }, async put(...args: unknown[]) { writes.push(args); } },
+    "0123456789abcdef0123456789abcdef01234567",
+  );
+  assert.deepEqual(writes, [["revision", "0123456789abcdef0123456789abcdef01234567", { expirationTtl: REVISION_TTL_SECONDS }]]);
+  assert.equal(REVISION_TTL_SECONDS, 86_400);
 });

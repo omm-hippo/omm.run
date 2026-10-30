@@ -1,13 +1,20 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-import { edgeCache, readmeCacheKey } from "@/lib/omm-docs/source";
+import {
+  fetchFromGitHub,
+  isCommitSha,
+  revisionStore,
+  setRevision,
+} from "@/lib/omm-docs/source";
 
 /**
- * Drops the cached README and installation guide so the next `/docs/*` render pulls it fresh.
+ * Points every `/docs/*` page at a new upstream commit.
  *
- * Called by a GitHub Action in `omm-hippo/omm` on any push to `main` that
- * touches `README.md`. `caches.default` is per-colo, so this refreshes the
- * colo that serves the request; the rest expire on the one-hour `s-maxage`.
+ * Called by `.github/workflows/omm-site-docs-refresh.yml` in `omm-hippo/omm`
+ * on any push to `main` that touches `README.md` or `docs/install.md`, with
+ * body `{"sha": "<40-hex commit>"}`. The commit is stored in the `OMM_DOCS`
+ * KV namespace, so every colo switches within about a minute; see
+ * `src/lib/omm-docs/source.ts`.
  */
 
 export const dynamic = "force-dynamic";
@@ -56,8 +63,29 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const cache = edgeCache();
-  const results = cache ? await Promise.all([cache.delete(readmeCacheKey()), cache.delete(readmeCacheKey("install"))]) : [];
-  const purged = results.some(Boolean);
-  return Response.json({ purged }, { headers: NO_STORE });
+  let sha: unknown;
+  try {
+    sha = ((await request.json()) as { sha?: unknown }).sha;
+  } catch {
+    sha = undefined;
+  }
+  if (!isCommitSha(sha)) {
+    return Response.json({ error: "invalid_sha" }, { status: 400, headers: NO_STORE });
+  }
+
+  const store = await revisionStore();
+  if (!store) {
+    return Response.json({ error: "not_provisioned" }, { status: 501, headers: NO_STORE });
+  }
+
+  // Only switch to a commit whose README GitHub actually serves; a typo or a
+  // commit from another repo would otherwise break the docs for a day.
+  try {
+    await fetchFromGitHub("readme", sha);
+  } catch {
+    return Response.json({ error: "unknown_commit" }, { status: 422, headers: NO_STORE });
+  }
+
+  await setRevision(store, sha);
+  return Response.json({ revision: sha }, { headers: NO_STORE });
 }

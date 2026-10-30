@@ -23,6 +23,14 @@
 			"migrations_dir": "migrations"
 		}
 	],
+	"kv_namespaces": [
+		{
+			// Upstream omm commit the /docs pages read from; written by
+			// POST /api/omm-docs/refresh (see src/lib/omm-docs/source.ts).
+			"binding": "OMM_DOCS",
+			"id": "71834a8624854473b7445ff4d4d1c23b"
+		}
+	],
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name

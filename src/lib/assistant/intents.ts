@@ -53,5 +53,11 @@ export function taskIntentScores(question: string): ReadonlyMap<CommandId, numbe
   if (/what did omm|command history|recent commands|yesterday.{0,20}fail|(?:실행|명령).{0,10}기록|어제.{0,10}(?:실패|작업)|로그/u.test(q)) add('log', 230);
   if (model && /usb|external drive|removable|이동식|외장/u.test(q)) add('export', 245);
   if (/lost.{0,20}models?.{0,25}(?:moved|folders)|모델.{0,10}(?:사라|안 보).{0,20}(?:폴더|옮)/u.test(q)) add('link', 250);
+  // Weak live Workers AI picks (2026-10-30). A stalled download resumes by
+  // re-running install (cli.py "Re-run the same install command to resume");
+  // clearing the leftovers is cleanup, so that wording stays out.
+  if (/\b(?:download|install)\w*\b.{0,20}\b(?:stuck|stall\w*|froze|frozen|stopped|interrupted|hung|hangs)\b|(?:다운로드|설치|받다가|받는 중).{0,10}(?:멈|끊|중단|안 끝)/u.test(q) && !/정리|지우|clean|leftover|half.?finished|disk/u.test(q)) add('install', 245);
+  if (/\b(?:gpu|graphics card|vram)\b.{0,20}(?:\bnot\b|\bisn ?t\b|\bunused\b|\bidle\b)|\bcpu only\b|(?:gpu|그래픽\s*카드|그래픽카드|vram).{0,12}(?:안 (?:쓰|써|잡)|사용.{0,4}(?:안|못)|놀)|cpu로만/u.test(q)) add('tune', 240);
+  if (/\b(?:answers?|responses?|replies|generation|output)\b.{0,15}\bslow\b|\bslow\b.{0,15}\b(?:answers?|responses?|replies|generation)\b|(?:응답|답변|대답|생성).{0,6}(?:너무 |넘 |좀 |많이 )?(?:느려|느림|느리|늦)/u.test(q)) add('tune', 230);
   return scores;
 }

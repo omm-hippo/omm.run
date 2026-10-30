@@ -63,18 +63,29 @@ docs routes; the per-request Worker invocation is acceptable.
 
 `src/app/api/omm-docs/refresh/route.ts`
 
-- `POST`, `Authorization: Bearer <OMM_DOCS_REFRESH_TOKEN>`.
-- Deletes the `caches.default` entry, returns `{ purged: boolean }`.
-- `401` on a bad/absent token; `501` when `OMM_DOCS_REFRESH_TOKEN` is unset in
-  the environment (feature not provisioned — the hourly fallback still
-  covers sync).
-- `caches.default` is per-colo, so a purge clears the colo that served the
-  request; other colos refresh within the hour. Near-instant where the
-  traffic is, one hour worst case.
+- `POST`, `Authorization: Bearer <OMM_DOCS_REFRESH_TOKEN>`, body
+  `{"sha": "<40-hex commit>"}`.
+- Checks GitHub serves `README.md` at that commit, then stores the SHA in the
+  `OMM_DOCS` KV namespace (key `revision`, one-day expiry) and returns
+  `{ revision }`.
+- `400` on a missing/invalid SHA, `401` on a bad/absent token, `422` when the
+  commit has no README, `501` when the token or the KV binding is missing (the
+  hourly fallback still covers sync).
 
-**omm repo GitHub Action** (applied separately, in `omm-hippo/omm`): on a
-push to `main` that touches `README.md`, `curl -X POST` the refresh route
-with the shared token. Documented in this spec; not part of this repo's PR.
+**Revision (2026-10-30).** The first version deleted the `caches.default`
+entry, which only clears the colo that served the Action's request, and
+re-fetching `main` right after a push can still get GitHub's ~5-minute CDN
+copy. Pages now read `raw.githubusercontent.com/omm-hippo/omm/<sha>/...`
+while a revision is stored: a new URL, so every colo misses at once (KV reads
+are edge-cached for 60 s), and immutable, so no CDN copy can be stale. When
+the KV entry expires, reads go back to `main`, which is current by then even
+if a later Action run failed.
+
+**omm repo GitHub Action** (`omm-hippo/omm`
+`.github/workflows/omm-site-docs-refresh.yml`): on a push to `main` that
+touches `README.md` or `docs/install.md`, `curl -X POST` the refresh route
+with `{"sha": "${{ github.sha }}"}` and the shared token (repo secret
+`OMM_DOCS_REFRESH_TOKEN`).
 
 **Failure mode:** `OmmDocsUnavailable` or `OmmDocsSectionMissing` thrown
 during render → the page shows its chrome (nav, heading, breadcrumb) plus a
