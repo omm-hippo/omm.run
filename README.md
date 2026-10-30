@@ -71,7 +71,7 @@ A command the CLI exports but this site has no hand-written page for still gets
 a reference-only page from `src/app/[locale]/commands/[name]`.
 
 Nested groups and their descendants share the top-level page. CLI help links
-such as `/commands/setting#agent` remain valid; deeper entries also have unique
+such as `/commands/setting#upload` remain valid; deeper entries also have unique
 anchors such as `#agent-local`. The retired `/commands/compare` route redirects
 permanently to `/commands/info` in both languages.
 

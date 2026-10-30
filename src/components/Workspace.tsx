@@ -8,7 +8,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 const DESTINATIONS = [
   { id: "web", command: "omm web --open", href: "/commands/web" },
   { id: "rag", command: "omm rag", href: "/commands/rag" },
-  { id: "agent", command: "omm setting agent", href: "/commands/setting#agent" },
+  { id: "agent", command: "omm agent", href: "/commands/agent" },
   { id: "cluster", command: "omm cluster", href: "/commands/cluster" },
 ] as const;
 
