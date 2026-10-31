@@ -78,7 +78,7 @@ const ko: Guide[] = [
         body: '`omm recommend`는 먼저 이 컴퓨터를 모델과 얼마나 나눠 쓸지(Dedicated, Balanced, Minimal) 묻고, 그 기준에 맞는 모델을 보여 줍니다. 목록에서 고르면 바로 설치로 넘어갑니다. 이름을 알고 있다면 `omm search`로 찾으세요. 번호가 붙은 목록이 나오고, 이 컴퓨터에 맞지 않는 모델에는 `(won\'t fit)`이 붙습니다.',
         commands: ['omm recommend', 'omm search <검색어>'],
         check: "search 결과 끝에 `Install with: omm install <number>` 안내가 나옵니다. 번호를 기억해 두세요.",
-        ref: { href: '/models', label: '모델 위키에서 용도 비교하기' },
+        ref: { href: '/models', label: '모델 추천에서 용도 비교하기' },
       },
       {
         title: '메모리에 맞는지 확인',
@@ -292,8 +292,8 @@ const ko: Guide[] = [
     steps: [
       {
         title: '도구 호출을 지원하는 모델 준비',
-        body: 'Ollama에 모델을 받으세요(`ollama pull <tag>`). 이미 쓰던 모델이면 `ollama list`로 정확한 태그를 확인하세요. 어떤 모델이 맞는지 모르겠다면 모델 위키에서 코딩 용도를 비교하세요.',
-        ref: { href: '/models', label: '모델 위키' },
+        body: 'Ollama에 모델을 받으세요(`ollama pull <tag>`). 이미 쓰던 모델이면 `ollama list`로 정확한 태그를 확인하세요. 어떤 모델이 맞는지 모르겠다면 모델 추천에서 코딩 용도로 골라 보세요.',
+        ref: { href: '/models', label: '모델 추천' },
       },
       {
         title: '에이전트 연결',
@@ -461,7 +461,7 @@ const en: Guide[] = [
         body: '`omm recommend` first asks how this computer should be shared with the model (Dedicated, Balanced or Minimal), then lists models that fit. Picking one goes straight to installation. If you know the name, use `omm search`: it prints a numbered list and marks models that do not fit with `(won\'t fit)`.',
         commands: ['omm recommend', 'omm search <query>'],
         check: 'Search ends with `Install with: omm install <number>`. Note the number.',
-        ref: { href: '/models', label: 'Compare uses in the model wiki' },
+        ref: { href: '/models', label: 'Compare uses in the model finder' },
       },
       {
         title: 'Check that it fits in memory',
@@ -675,8 +675,8 @@ const en: Guide[] = [
     steps: [
       {
         title: 'Prepare a tool-calling model',
-        body: 'Download a model into Ollama (`ollama pull <tag>`). For a model you already use, check its exact tag with `ollama list`. If you are unsure which one suits coding, compare in the model wiki.',
-        ref: { href: '/models', label: 'Model wiki' },
+        body: 'Download a model into Ollama (`ollama pull <tag>`). For a model you already use, check its exact tag with `ollama list`. If you are unsure which one suits coding, compare in the model finder.',
+        ref: { href: '/models', label: 'Model finder' },
       },
       {
         title: 'Connect the agent',

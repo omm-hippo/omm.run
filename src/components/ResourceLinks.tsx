@@ -9,7 +9,7 @@ export default function ResourceLinks({ locale, compact = false }: { locale: Loc
     { href: localeHref('/install', locale), file: false },
     { href: `/resources/omm-first-steps-${locale}.txt`, file: true },
     { href: `/resources/omm-model-checklist-${locale}.md`, file: true },
-    { href: `/api/models?locale=${locale}`, file: true, name: `omm-model-wiki-${locale}.json` },
+    { href: `/api/models?locale=${locale}`, file: true, name: `omm-models-${locale}.json` },
     { href: '#omm-assistant', file: false },
     { href: localeHref('/leaderboard', locale), file: false },
   ];

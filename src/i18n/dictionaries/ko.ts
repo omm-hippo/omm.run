@@ -36,7 +36,7 @@ export const ko = {
     sections: ["사용 흐름", "기능", "러너"],
     installGuides: "가이드",
     commands: "명령어",
-    models: "모델 위키",
+    models: "모델 추천",
     assistant: "OMM AI 도우미",
     github: "GitHub",
     install: "설치",
@@ -286,7 +286,7 @@ export const ko = {
     },
     source: {
       title: "소스",
-      links: ["저장소", "이슈", "릴리스", "Wiki"],
+      links: ["저장소", "이슈", "릴리스"],
     },
     license: "MIT 라이선스",
     build: "빌드 {sha}",
@@ -388,10 +388,6 @@ export const ko = {
     repo: {
       title: "소스와 README",
       body: "github.com/omm-hippo/omm — 이슈, 릴리스, 그리고 이 페이지에서 인용한 설치 스크립트가 모두 여기에 있습니다.",
-    },
-    wiki: {
-      title: "Wiki",
-      body: "호환 프로그램 목록과 더 긴 형식의 문서.",
     },
   },
 
