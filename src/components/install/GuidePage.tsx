@@ -14,7 +14,6 @@ import { localeHref, type Locale } from "@/i18n/config";
 import { fill, getDictionary, type Dictionary } from "@/i18n/dictionaries";
 
 const REPO = "https://github.com/omm-hippo/omm";
-const WIKI = `${REPO}/wiki`;
 
 /** Anchor ids are part of the URL, so they stay English in every locale. */
 const SECTION_IDS = [
@@ -580,17 +579,6 @@ export default function GuidePage({
                 >
                   <span className="text-ink-0">{t.repo.title}</span>
                   <span className="text-small">{t.repo.body}</span>
-                </a>
-              </li>
-              <li className="border-b border-line-0">
-                <a
-                  href={WIKI}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="grid grid-cols-1 gap-1 py-4 transition-colors duration-[120ms] ease-[var(--ease-micro)] hover:bg-bg-1 sm:grid-cols-[minmax(0,20ch)_minmax(0,1fr)] sm:gap-6"
-                >
-                  <span className="text-ink-0">{t.wiki.title}</span>
-                  <span className="text-small">{t.wiki.body}</span>
                 </a>
               </li>
             </ul>

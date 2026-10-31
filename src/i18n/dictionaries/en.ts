@@ -31,7 +31,7 @@ export const en = {
     sections: ["How it works", "Features", "Runners"],
     installGuides: "Guide",
     commands: "Commands",
-    models: "Model wiki",
+    models: "Model finder",
     assistant: "OMM AI assistant",
     github: "GitHub",
     install: "Install",
@@ -293,7 +293,7 @@ export const en = {
     },
     source: {
       title: "Source",
-      links: ["Repository", "Issues", "Releases", "Wiki"],
+      links: ["Repository", "Issues", "Releases"],
     },
     license: "MIT license",
     /** `{sha}` is the build's commit short-SHA, injected by Vercel. */
@@ -402,10 +402,6 @@ export const en = {
     repo: {
       title: "Source and README",
       body: "github.com/omm-hippo/omm — issues, releases, and the installer scripts quoted on this page.",
-    },
-    wiki: {
-      title: "Wiki",
-      body: "Compatible programs and the longer-form documentation.",
     },
   },
 

@@ -40,7 +40,6 @@ const SOURCE_HREFS = [
   REPO,
   `${REPO}/issues`,
   `${REPO}/releases`,
-  `${REPO}/wiki`,
 ] as const;
 
 const LINK_CLASS =

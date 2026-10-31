@@ -1,7 +1,7 @@
 import type { Locale } from "./config";
 
 const en = {
-  metaTitle: "Model wiki — omm",
+  metaTitle: "Model finder — omm",
   metaDescription: "Enter your PC specifications and use case to shortlist open-weight LLMs, then check each model's official card.",
   eyebrow: "MODEL FINDER",
   heading: "Find a model for your PC.",
@@ -24,16 +24,16 @@ const en = {
   evaluation: "OMM evaluation", notMeasured: "Not yet measured by OMM", back: "All models", repository: "Official model card",
   evidenceTitle: "Capabilities need context.",
   evidenceNote: "Use cases are editorial starting points. Published strengths are developer reports, not OMM measurements. Local speed, Korean quality and tool reliability still need testing with your runner and quantization.",
-  openWeightsNote: "This wiki includes open-weight models. Licenses vary; open weights do not always mean an open-source license.",
+  openWeightsNote: "Includes open-weight models. Licenses vary; open weights do not always mean an open-source license.",
   sizeNote: "Size labels follow the checkpoint’s published class. Active MoE parameters do not represent the full weight footprint. Context tokens are not a RAM estimate.",
   handoffHeading: "Try it in your environment.",
-  handoffBody: "Find a compatible model file, check memory fit, then measure the exact model and runner. A wiki entry does not guarantee an OMM-compatible download.",
+  handoffBody: "Find a compatible model file, check memory fit, then measure the exact model and runner. Being listed here does not guarantee an OMM-compatible download.",
   searchCommand: "Search with OMM", fitCommand: "Check memory fit", benchmarkCommand: "Measure performance",
   json: "Model data (JSON)", contribution: "Suggest a correction", contributionBody: "Include the exact checkpoint, a primary source, and the claim to change.",
 };
 
 const ko: typeof en = {
-  metaTitle: "모델 위키 — omm",
+  metaTitle: "모델 추천 — omm",
   metaDescription: "PC 사양과 사용 목적을 입력해 오픈 웨이트 LLM 후보를 추천받고, 모델별 특징과 공식 출처를 확인하세요.",
   eyebrow: "모델 추천", heading: "내 PC에 맞는 모델을 찾아보세요.",
   lede: "PC 사양과 하고 싶은 작업을 알려주세요. 메모리 여유와 용도를 바탕으로 모델을 추천하고, 실행 전에 확인할 점을 함께 안내합니다.",
@@ -58,7 +58,7 @@ const ko: typeof en = {
   openWeightsNote: "오픈 웨이트 모델을 포함합니다. 가중치 공개와 오픈소스 라이선스는 다를 수 있으므로 모델별 이용 조건을 확인하세요.",
   sizeNote: "크기는 체크포인트의 공개 표기를 따릅니다. MoE의 활성 파라미터는 전체 가중치 크기가 아니며, 컨텍스트 토큰 수는 RAM 요구량이 아닙니다.",
   handoffHeading: "내 환경에서 확인하고 선택하세요.",
-  handoffBody: "호환되는 모델 파일을 찾고, 메모리 적합성을 확인한 뒤 정확한 모델과 러너로 측정하세요. 위키 등록만으로 OMM에서 내려받아 실행할 수 있음이 입증되지는 않습니다.",
+  handoffBody: "호환되는 모델 파일을 찾고, 메모리 적합성을 확인한 뒤 정확한 모델과 러너로 측정하세요. 여기 실린 모델이라고 해서 OMM에서 내려받아 실행할 수 있음이 입증되지는 않습니다.",
   searchCommand: "OMM으로 검색", fitCommand: "메모리 적합성 확인", benchmarkCommand: "성능 측정",
   json: "모델 데이터 (JSON)", contribution: "내용 수정 제안", contributionBody: "정확한 체크포인트, 공식 출처, 수정할 내용을 함께 알려주세요.",
 };

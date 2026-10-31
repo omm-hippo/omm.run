@@ -12,4 +12,4 @@
 
 Raw weight calculations are not measured RAM/VRAM. Installation, linking, generation and task quality require separate checks.
 
-Model wiki: https://omm.run/en/models
+Model finder: https://omm.run/en/models

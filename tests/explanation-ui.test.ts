@@ -38,7 +38,7 @@ test('all advertised reference downloads exist and are readable in both locales'
       assert.ok(text.length > 300);
       assert.ok(text.includes('omm'));
     }
-    assert.ok(html.includes(`omm-model-wiki-${locale}.json`));
+    assert.ok(html.includes(`omm-models-${locale}.json`));
     assert.equal(getExperience(locale).tabs.length, 3);
     assert.equal(getExperience(locale).questions.length, 5);
   }

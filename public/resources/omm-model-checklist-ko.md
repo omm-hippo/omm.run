@@ -12,4 +12,4 @@
 
 가중치 계산 예시와 RAM/VRAM 실측은 다릅니다. 설치·연결·생성·작업 품질도 각각 확인해야 합니다.
 
-공식 위키: https://omm.run/models
+모델 추천: https://omm.run/models
