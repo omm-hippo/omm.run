@@ -50,7 +50,10 @@ export type Slug =
   | "evaluate"
   | "arena"
   | "bug-report"
-  | "web";
+  | "web"
+  | "agent"
+  | "rag"
+  | "cluster";
 
 export const COMMAND_ORDER: readonly Slug[] = [
   "search",
@@ -86,6 +89,9 @@ export const COMMAND_ORDER: readonly Slug[] = [
   "arena",
   "bug-report",
   "web",
+  "agent",
+  "rag",
+  "cluster",
 ];
 
 /**
@@ -97,6 +103,7 @@ export type CommandGroup =
   | "start"
   | "models"
   | "hardware"
+  | "documents"
   | "quality"
   | "maintenance"
   | "config";
@@ -105,6 +112,7 @@ export const COMMAND_GROUPS: readonly CommandGroup[] = [
   "start",
   "models",
   "hardware",
+  "documents",
   "quality",
   "maintenance",
   "config",
@@ -144,6 +152,9 @@ export const COMMAND_GROUP = {
   arena: "quality",
   "bug-report": "maintenance",
   web: "models",
+  agent: "config",
+  rag: "documents",
+  cluster: "maintenance",
 } as const satisfies Record<Slug, CommandGroup>;
 
 /**
@@ -188,6 +199,9 @@ export const COMMAND_RISK = {
   arena: "high-impact",
   "bug-report": "inspect",
   web: "high-impact",
+  agent: "high-impact",
+  rag: "high-impact",
+  cluster: "high-impact",
 } as const satisfies Record<Slug, CommandRisk>;
 
 export type Option = {
@@ -1872,6 +1886,202 @@ Press Ctrl+C to stop. Model operations and files stay on this computer.`,
     related: [
       { label: "omm install", href: "/commands/install", internal: true },
       { label: "omm list", href: "/commands/list", internal: true },
+    ],
+  },
+  agent: {
+    slug: "agent",
+    name: "omm agent",
+    href: "/commands/agent",
+
+    options: [
+      { name: "agent", argument: null, default: "interactive picker on a terminal" },
+      { name: "agent local <claude|codex|pi>", argument: null, default: "harness asked on a terminal" },
+      { name: "--model", argument: "TAG", default: "picked from installed Ollama models" },
+      { name: "--base-url", argument: "URL", default: "http://127.0.0.1:11434" },
+      { name: "agent cluster <claude|codex|pi> --model ID", argument: null, default: "model id asked on a terminal" },
+      { name: "agent cloud <claude|codex|pi>", argument: null, default: "—" },
+      { name: "agent status <claude|codex|pi>", argument: null, default: "—" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm agent" },
+      { prompt: "$", command: "omm agent local claude --model qwen3:8b" },
+      { prompt: "$", command: "omm agent status claude" },
+      { prompt: "$", command: "omm agent cloud claude" },
+      { prompt: "$", command: "omm agent cluster codex --model mlx-community/Qwen3.5-9B-4bit" },
+    ],
+
+    capture: {
+      title: "omm agent local claude --model llama3.1:latest",
+      text: `Saved local routing settings for claude. Start a new harness session.
+Tool calling and context were checked from model metadata; the actual agent workflow is not verified.
+Project, managed or shell settings may override this user configuration. 64K+ runtime context is recommended.`,
+    },
+
+    trouble: [
+      {
+        see: "An OMM connection backup already exists. Restore with agent cloud before switching again.",
+        source: "src/omm/agent_connection.py:217, src/omm/agent_cluster.py:115",
+      },
+      {
+        see: "This model does not advertise tool calling. Choose a tool-capable model with omm recommend.",
+        source: "src/omm/agent_connection.py:148",
+      },
+      {
+        see: "Ollama model inspection failed. Start Ollama and check the installed model tag.",
+        source: "src/omm/agent_connection.py:145",
+      },
+      {
+        see: "codex is not installed or is not on PATH. Install the harness first.",
+        source: "src/omm/agent_connection.py:212, src/omm/agent_cluster.py:109",
+      },
+      {
+        see: "Set the cluster head and your employee token first: omm rag remote set <head address>",
+        source: "src/omm/agent_cluster.py:43",
+      },
+    ],
+
+    related: [
+      { label: "omm recommend", href: "/commands/recommend", internal: true },
+      { label: "omm rag", href: "/commands/rag", internal: true },
+      { label: "omm cluster", href: "/commands/cluster", internal: true },
+    ],
+  },
+  rag: {
+    slug: "rag",
+    name: "omm rag",
+    href: "/commands/rag",
+
+    options: [
+      { name: "rag collection create|list|delete", argument: null, default: "a 기본 (default) collection exists" },
+      { name: "rag add <collection> <paths…> --replace", argument: null, default: "--replace off" },
+      { name: "rag search <question> --collection NAME --limit 1-10", argument: null, default: "all collections, 3 passages" },
+      { name: "rag remove <collection> <name>", argument: null, default: "asks first" },
+      { name: "rag status", argument: null, default: "—" },
+      { name: "rag embedding-model [set MODEL --base-url URL --keep-alive T]", argument: null, default: "bge-m3, keep-alive 5m" },
+      { name: "rag reindex --collection NAME --all", argument: null, default: "documents that need it" },
+      { name: "rag connect|disconnect <claude-code|codex|pi|cursor>", argument: null, default: "this PC's documents" },
+      { name: "rag remote [set URL --token T | clear]", argument: null, default: "no head — this PC" },
+      { name: "rag share|unshare <collection> [person] --team TEAM", argument: null, default: "owner only" },
+      { name: "rag team create|delete|add|remove|list", argument: null, default: "no teams" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm rag collection create 인사규정" },
+      { prompt: "$", command: "omm rag add 인사규정 ~/Documents/hr" },
+      { prompt: "$", command: "omm rag search \"연차는 며칠 받아?\" --collection 인사규정" },
+      { prompt: "$", command: "omm rag status" },
+      { prompt: "$", command: "omm rag connect claude-code" },
+      { prompt: "$", command: "omm rag remote set 192.168.0.10" },
+    ],
+
+    capture: {
+      title: "omm rag search \"연차는 며칠 받아?\"",
+      text: `검색 방식: 단어만
+의미 검색 색인이 없어서 단어 검색만 했어요. \`omm rag reindex\`로 의미 색인을 만들 수 있어요.
+
+[1] vacation.md (인사규정) · 1쪽 · 0-129자
+# 연차 규정
+
+입사 1년 미만 직원은 한 달 개근 시 1일의 유급휴가를 받는다.
+입사 1년 이상 직원은 연 15일의 연차휴가를 받으며, 3년 이상 근속 시 2년마다 1일씩 늘어난다.
+연차는 사용일 3일 전까지 팀장에게 신청한다.`,
+    },
+
+    trouble: [
+      {
+        see: "'인사' 컬렉션을 찾지 못했어요. `omm rag collection list`로 이름을 확인해 주세요.",
+        source: "src/omm/documents.py:404, src/omm/cli.py:1114",
+      },
+      {
+        see: "확인이 필요해요. 다시 실행할 때 --yes를 붙여 주세요.",
+        source: "src/omm/cli.py:1006",
+      },
+      {
+        see: "의미 검색 색인이 없어서 단어 검색만 했어요. `omm rag reindex`로 의미 색인을 만들 수 있어요.",
+        source: "src/omm/documents.py:662",
+      },
+      {
+        see: "등록된 문서에서 질문의 근거를 찾지 못했어요. 질문에 문서의 핵심 단어를 포함해 보세요.",
+        source: "src/omm/documents.py:32",
+      },
+      {
+        see: "Choose claude-code, codex, pi, cursor.",
+        source: "src/omm/rag_connect.py:52",
+      },
+      {
+        see: "'kim' 직원 토큰이 없어요. 토큰 이름(`omm cluster token list`)으로 정해 주세요.",
+        source: "src/omm/rag_acl.py:222",
+      },
+    ],
+
+    related: [
+      { label: "omm agent", href: "/commands/agent", internal: true },
+      { label: "omm cluster", href: "/commands/cluster", internal: true },
+    ],
+  },
+  cluster: {
+    slug: "cluster",
+    name: "omm cluster",
+    href: "/commands/cluster",
+
+    options: [
+      { name: "cluster", argument: null, default: "shows this Mac's next step" },
+      { name: "cluster init", argument: null, default: "—" },
+      { name: "cluster join <omm-name>", argument: null, default: "required" },
+      { name: "cluster status", argument: null, default: "—" },
+      { name: "cluster token add|list|revoke <name>", argument: null, default: "head Mac only" },
+      { name: "cluster search|recommend|list|info", argument: null, default: "—" },
+      { name: "cluster install|uninstall <models>", argument: null, default: "head Mac only" },
+      { name: "cluster load <model> --sharding tensor|pipeline --macs N --on MAC", argument: null, default: "omm picks the placement" },
+      { name: "cluster unload <model>", argument: null, default: "head Mac only" },
+      { name: "cluster run|benchmark <model>", argument: null, default: "—" },
+      { name: "cluster restart|handover <mac>|leave", argument: null, default: "—" },
+    ],
+
+    examples: [
+      { prompt: "$", command: "omm cluster" },
+      { prompt: "$", command: "omm cluster init" },
+      { prompt: "$", command: "omm cluster token add kim" },
+      { prompt: "$", command: "omm cluster recommend" },
+      { prompt: "$", command: "omm cluster load mlx-community/Qwen3.5-9B-4bit" },
+      { prompt: "$", command: "omm cluster status" },
+    ],
+
+    capture: {
+      title: "omm cluster",
+      text: `This Mac: not in a cluster
+Next steps:
+  1. [on this Mac] RDMA over Thunderbolt is off. To turn it on: 1. Shut down your Mac. 2. Hold down the power button for 10 seconds until the boot menu appears. 3. Select "Options" to enter Recovery mode. 4. When the Recovery UI appears, open the Terminal from the Utilities menu. 5. In the Terminal, type: rdma_ctl enable  and press Enter. 6. Reboot your Mac. Every Mac must run the exact same macOS build, and each Mac must be cabled to every other Mac with TB5 cables.
+Then run omm cluster join <name> (the name is shown by omm cluster on the head Mac), or omm cluster init to start a new cluster.`,
+    },
+
+    trouble: [
+      {
+        see: "Set the cluster head and your token first: omm rag remote set <head address>",
+        source: "src/omm/cluster/chat.py:26, :57",
+      },
+      {
+        see: "this Mac is not in a cluster; run omm cluster init or join first",
+        source: "src/omm/cluster/commands.py:571, :705",
+      },
+      {
+        see: "tokens are managed on the head Mac",
+        source: "src/omm/cluster/commands.py:684",
+      },
+      {
+        see: "the cluster name is omm- followed by 32 letters and digits; copy it from omm cluster init on the head Mac",
+        source: "src/omm/cluster/commands.py:197-198",
+      },
+      {
+        see: "this Mac already joined a cluster as a member; run omm cluster leave first",
+        source: "src/omm/cluster/commands.py:140",
+      },
+    ],
+
+    related: [
+      { label: "omm rag", href: "/commands/rag", internal: true },
+      { label: "omm agent", href: "/commands/agent", internal: true },
     ],
   },
 } as const satisfies Record<

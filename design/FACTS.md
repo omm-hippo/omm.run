@@ -868,6 +868,91 @@ real `--help`. With this batch `scripts/check-omm-sync.mjs` passes against
   models.
 
 
+### `agent`, `rag`, `cluster`
+
+These three were reference-only pages (the `[name]` fallback) until
+2026-11-01. Everything below was read from omm-hippo/omm `main` at
+`aaaa069a` (pyproject 0.4.95; `docs/commands.json` 0.4.93), checked out as a
+detached worktree — the local `~/Project/Localfit` checkout was 54 commits
+behind at the time and lacked parts of all three. Line numbers are from that
+commit. Every capture ran through `PYTHONPATH=<worktree>/src` with a
+throwaway `OMM_HOME`; harness config dirs were redirected with
+`CLAUDE_CONFIG_DIR`, `CODEX_HOME` and `PI_CODING_AGENT_DIR`, so no real
+harness settings were touched. Chooser buckets: `agent` → config (it used to
+be `omm setting agent`), `cluster` → maintenance (where `omm help --all`
+lists it), `rag` → a new `documents` bucket (`omm help --all` gives it its
+own "Documents" heading).
+
+#### `agent`
+- Commands: `src/omm/cli.py:783-945` (`agent_app`, picker callback, `local`,
+  `cluster`, `cloud`, `status`); bare-command picker `cli.py:11337`.
+- Config files written: `agent_connection.py:28-37` (Claude Code
+  `$CLAUDE_CONFIG_DIR/settings.json`, Codex `$CODEX_HOME/config.toml`, pi
+  `models.json` + `settings.json`); backup journal
+  `OMM_HOME/agent-connections/<harness>.json`, mode 0600
+  (`agent_connection.py:174-199`).
+- Local preflight (`agent_connection.py:129-159`): Ollama ≥ 0.14.0, `tools`
+  in capabilities, context ≥ 32768, cloud tags and `remote_host`/
+  `remote_model`/`cloud` metadata refused. Cluster preflight
+  (`agent_cluster.py:37-84`) needs `omm rag remote set`, checks the
+  gateway's `/v1/models` for a loaded model with ≥ 32768 context.
+- Capture: real `omm agent local claude --model llama3.1:latest`,
+  2026-11-01, Ollama 0.40.12 on this machine. The written scratch
+  `settings.json` held `model` plus `ANTHROPIC_BASE_URL`,
+  `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_API_KEY`, the three
+  `ANTHROPIC_DEFAULT_*_MODEL` keys and `CLAUDE_CODE_SUBAGENT_MODEL`;
+  `omm agent cloud claude` restored it byte-for-byte. Run at 80 columns;
+  the two wrapped lines are joined on the page (each is one
+  `console.print` in `cli.py:886-888`).
+- Trouble strings, each seen in a real run except where noted: backup
+  exists `agent_connection.py:217` (also `agent_cluster.py:115`, not run);
+  no tool calling `agent_connection.py:148` (tinyllama); inspection failed
+  `agent_connection.py:145` (seen after Ollama stopped mid-session); harness
+  not on PATH `agent_connection.py:212` (codex); no remote
+  `agent_cluster.py:43`.
+
+#### `rag`
+- Commands: `src/omm/cli.py:948-1314` (status, collection, add, remove,
+  search, reindex, embedding-model) and `src/omm/rag_cli.py` (mcp, connect,
+  disconnect, share, unshare, team, remote). Most output is Korean in the
+  CLI itself; the page quotes it as printed.
+- Defaults: embedding model `bge-m3`, keep-alive `5m`, base URL
+  `http://127.0.0.1:11434` (seen in a real `omm rag status`); a `기본`
+  collection exists on a fresh `OMM_HOME`. `connect` harnesses:
+  `rag_connect.py:41` (`claude-code`, `codex`, `pi`, `cursor`).
+- Capture: real sequence 2026-11-01 — `collection create 인사규정`,
+  `add 인사규정 hr` on two sample files written for the capture
+  (`vacation.md`, `remote.txt`), then the captured search. `bge-m3` was not
+  pulled, so the search is lexical-only and prints the fallback notice.
+- Trouble strings: collection not found `documents.py:404` (real run with
+  `인사`) / `cli.py:1114` (delete); confirm needed `cli.py:1006` (real, from
+  `rag remove` off a terminal); lexical notice `documents.py:662` (real);
+  no evidence `documents.py:32` (real); bad harness `rag_connect.py:52`
+  (real); unknown employee token `rag_acl.py:222` (real, local ACL).
+- `rag connect claude-code` / `disconnect` were also really run against the
+  scratch `CLAUDE_CONFIG_DIR` (`.claude.json` there), not on the page.
+
+#### `cluster`
+- Commands: `src/omm/cli.py:1324-1338` (groups), bare-command guide
+  `cli.py:2639-2667`, subcommands from `cluster_init_cmd` onward; logic in
+  `src/omm/cluster/commands.py`. `init` (`commands.py:136-175`): exo install
+  if missing, Thunderbolt network, idle sleep off, firewall, app-firewall
+  allow, CA, service; asks for the Mac password (`commands.py:67-68`).
+  Gateway port `52440` (`cluster/gateway.py:32`). Firewall scope:
+  `HIGH_PORTS_HINT`, `commands.py:130-133`.
+- Requirements in the overview come from the CLI's own text: macOS 26.2+
+  (`commands.py:29`, `preflight.py:54`), same macOS build, TB5 cabling and
+  RDMA via `rdma_ctl enable` (the real capture's step line).
+- Capture: real bare `omm cluster`, 2026-11-01, this Mac (macOS 27.2, never
+  in a cluster), non-interactive shell, so steps were printed and nothing
+  ran. `init`, `join`, `load` etc. were **not** run — they change the
+  machine and need several Thunderbolt-linked Macs.
+- Trouble strings (all real runs on this Mac unless noted): no remote
+  `cluster/chat.py:26, :57` (`list`, `recommend`, `search`, `run`, `info`);
+  not in a cluster `commands.py:571, :705` (`load`); tokens on head
+  `commands.py:684` (`token list`); bad join name `commands.py:197-198`
+  (source only); member can't init `commands.py:140` (source only).
+
 ## Current product refresh — 2026-10-20
 
 The following facts supersede older installation/runner coverage above. Source:
