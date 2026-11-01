@@ -863,13 +863,13 @@ export const COMMANDS_EN: CommandTextSet = {
   setting: {
     metaTitle: "omm setting — view or change omm's settings",
     metaDescription:
-      "OMM settings and complete subcommand reference: sharing policies, memory protection, agent connection and restoration, automatic import and local web auto-start.",
+      "OMM settings and complete subcommand reference: sharing policies, memory protection, automatic import and local web auto-start.",
     heading: "omm setting",
     lede: "View or change telemetry, what anonymous data may leave this machine, memory protection, the update channel, the color theme, calibration, and signed-catalog trust — interactively, or one subcommand at a time.",
     summary: "View or change omm's settings — telemetry, outbound data, theme, update channel, and more.",
 
     overviewBody:
-      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting. Everything omm may ever send is now grouped under one subcommand, omm setting upload, with a separate policy per channel: benchmark results, anonymous usage stats, and crash reports. Usage stats and crash reports are off until you turn them on. Arena votes have a separate votes sharing policy too. Use agent local, status and cloud to manage local Ollama routing for Claude Code, Codex or pi and restore the original routing. Here cloud means restoring prior settings; it does not change account authentication. web-autostart controls login startup without opening a browser. See the CLI reference below for every argument and flag.",
+      "Reach for setting any time you want to see or change how omm behaves outside of a single command. Bare omm setting opens an interactive menu covering the same ground as every subcommand below; each subcommand also works directly, prints a small table of its current value either way, and every write here stays local — nothing is uploaded just by changing a setting. Everything omm may ever send is now grouped under one subcommand, omm setting upload, with a separate policy per channel: benchmark results, anonymous usage stats, and crash reports. Usage stats and crash reports are off until you turn them on. Arena votes have a separate votes sharing policy too. Connecting Claude Code, Codex or pi to a local model has moved to its own command, omm agent. web-autostart controls login startup without opening a browser. See the CLI reference below for every argument and flag.",
 
     optionDescriptions: [
       "Configure where benchmark telemetry is sent, or clear it with --endpoint none.",
@@ -1450,6 +1450,201 @@ export const COMMANDS_EN: CommandTextSet = {
     relatedBlurbs: [
       "The same install, from the terminal.",
       "Check from the terminal what the page shows as installed.",
+    ],
+  },
+  agent: {
+    metaTitle: "omm agent — point Claude Code, Codex or pi at a local model",
+    metaDescription:
+      "Full reference for omm agent: route Claude Code, Codex or pi to a local Ollama model or the company cluster, check the saved state, and restore the original settings. Five examples, a real captured run, and the errors it actually prints.",
+    heading: "omm agent",
+    lede: "Point a coding agent — Claude Code, Codex or pi — at a model on this computer's Ollama or on the company cluster, and put its original settings back with one command.",
+    summary: "Route Claude Code, Codex or pi to local Ollama or the company cluster, and restore the original settings.",
+
+    overviewBody:
+      "omm agent edits the harness's own user configuration — Claude Code's settings.json, Codex's config.toml, pi's models.json and settings.json — and keeps a private backup of the original under OMM_HOME/agent-connections before it writes anything. local checks the model through Ollama first: Ollama must be 0.14.0 or newer, the model must advertise tool calling, its context must be at least 32,768 tokens, and a cloud tag or a model that points to a remote service is refused. cluster does the same against the company cluster gateway, which needs omm rag remote set first; the settings file then holds your employee token and is made readable only by you, and Codex and pi print the launch line that makes them trust the cluster's certificate. cloud restores the backed-up original and leaves unrelated edits alone; it does not touch your account login. Only one connection is kept per harness, so run cloud before switching. status reads the backup without loading a model. Bare omm agent opens the same four actions as a picker on a terminal. omm checks tool calling and context from model metadata only; whether the agent workflow actually works with that model is not verified, and project, managed or shell settings can still override the user configuration.",
+
+    optionDescriptions: [
+      "On a terminal, opens a picker for the four actions below. Off a terminal it prints the help instead.",
+      "Route this harness to a downloaded model on local Ollama. The harness is asked for on a terminal when left out.",
+      "An installed, tool-capable Ollama model tag with 32K+ context. On a terminal you pick it from the installed list when left out.",
+      "Local Ollama's address. Only an HTTP(S) loopback origin with no path or credentials is accepted.",
+      "Route this harness to a model the company cluster is serving. Needs omm rag remote set first; the model must already be loaded on the cluster.",
+      "Restore the original routing from the backup and keep unrelated settings edits.",
+      "Show whether the harness is unmanaged or connected, and whether it is installed. Never prints credentials.",
+    ],
+
+    exampleCaptions: [
+      "Pick the action, harness and model from menus.",
+      "Route Claude Code to a local Ollama model in one line.",
+      "Check what is connected right now.",
+      "Put Claude Code's original settings back.",
+      "Route Codex to a model the company cluster serves.",
+    ],
+
+    captureFootnote:
+      "Real omm agent local claude --model llama3.1:latest run, 2026-11-01, this dev machine, against omm-hippo/omm main (aaaa069a), with a throwaway OMM_HOME and CLAUDE_CONFIG_DIR pointing at a scratch folder, so the real Claude Code settings were never touched. The 80-column terminal wrapped two lines; they are joined here, otherwise the text is verbatim. A follow-up omm agent cloud claude printed \"Original routing restored. Start a new harness session.\" and the scratch settings.json was back to its original contents.",
+
+    trouble: [
+      {
+        why: "This harness is already connected through omm. omm keeps only one backup per harness, so a second connection would overwrite the original settings it needs to restore.",
+        fix: "Run omm agent cloud <harness> first, then connect again with the new model.",
+      },
+      {
+        why: "Ollama's metadata for this model does not list tool calling, which coding agents need.",
+        fix: "Pick a tool-capable model; omm recommend shows candidates for this machine.",
+      },
+      {
+        why: "omm could not ask Ollama about the model — Ollama is not running, or the tag is not installed.",
+        fix: "Start Ollama, check the exact tag with ollama list, and run the command again.",
+      },
+      {
+        why: "The harness command (claude, codex or pi) is not on PATH, so there is nothing to connect.",
+        fix: "Install the harness first, then re-run.",
+      },
+      {
+        why: "agent cluster needs to know the cluster head and your employee token, and neither is set on this PC yet.",
+        fix: "Run omm rag remote set <head address> with the token your admin gave you, then try again.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Find a tool-capable model that fits this machine before connecting it.",
+      "Give the same agent search over your documents through an MCP server.",
+      "Where agent cluster's models come from.",
+    ],
+  },
+  rag: {
+    metaTitle: "omm rag — search your own documents, locally",
+    metaDescription:
+      "Full reference for omm rag: collections, adding documents, hybrid search, the local embedding model, MCP connections for coding agents, and sharing on the company cluster. A real captured search and the messages it actually prints.",
+    heading: "omm rag",
+    lede: "Put your own documents into collections and search them by meaning and by words, on this computer — then let a coding agent use the same search through a local MCP server.",
+    summary: "Search your own documents locally and serve that search to coding agents over MCP.",
+
+    overviewBody:
+      "Create a collection, add files to it, and search it: omm rag reads text PDF, TXT, Markdown, HTML and HWPX files, folders included, and stores their text and index under OMM_HOME. The original files are never moved or deleted — remove and collection delete only drop the stored text and index. Search is hybrid: words plus meaning, with the meaning half using an embedding model on local Ollama only (bge-m3 by default, unloaded after 5 minutes). When that model is missing or Ollama is off, adding and searching still work on words alone, and every result says so. Pull the model later and run omm rag reindex to build the meaning index from the stored text. Each result shows the file, collection, page and character range with the passage itself. omm rag connect registers this search as an MCP server for Claude Code, Codex, pi or Cursor, backing up their settings first; disconnect removes only that entry. On a company cluster, omm rag remote set points the same commands at the head's collections instead, after checking its certificate and your employee token; share, unshare and team then decide who can search what. Text and questions stay on this computer unless a remote head is set. Most messages here print in Korean.",
+
+    optionDescriptions: [
+      "Make, list or delete a named collection. A 기본 (default) collection always exists; delete asks first and keeps the original files.",
+      "Add files or whole folders (searched recursively) to an existing collection. --replace swaps in a document with the same file name; unchanged files are skipped.",
+      "Find passages for a question. --collection limits the search to one collection; --limit shows 1-10 passages.",
+      "Drop one document's stored text and index. It asks first; off a terminal add --yes. The original file stays.",
+      "Show every collection, the embedding model, whether meaning search is ready, and which documents need reindexing.",
+      "Show the embedding model, or set a different Ollama embedding model, address and keep-alive time. Existing documents then need reindex.",
+      "Rebuild the meaning index from stored text with the current embedding model. --all rebuilds documents that are already current too.",
+      "Register (or remove) this search as an MCP server in a coding agent. connect --remote registers the cluster head's search instead.",
+      "Show, set or forget the cluster head. set checks the head's certificate and your token; leave --token out to type it hidden.",
+      "Let one employee (by token name) or a team search a collection, or stop it. Only the collection's owner or the head admin can.",
+      "Manage the teams that share uses.",
+    ],
+
+    exampleCaptions: [
+      "Make a collection for HR rules.",
+      "Add every supported file in a folder.",
+      "Ask a question against that collection only.",
+      "Check the embedding model and which documents need reindexing.",
+      "Let Claude Code search these documents through MCP.",
+      "Use the company cluster head's shared collections from this PC.",
+    ],
+
+    captureFootnote:
+      "Real run, 2026-11-01, this dev machine, against omm-hippo/omm main (aaaa069a) with a throwaway OMM_HOME: omm rag collection create 인사규정, then omm rag add 인사규정 hr on a folder holding two small sample files written for this capture (vacation.md, remote.txt), then this search. bge-m3 was not pulled on this machine, so the search ran on words only and says so in its second line — that fallback is what a first run without the embedding model looks like. Verbatim.",
+
+    trouble: [
+      {
+        why: "No collection has that exact name — usually a typo, or the collection lives on the cluster head while this PC is not pointed at it (or the reverse).",
+        fix: "Run omm rag collection list and use the name it prints, or create it with omm rag collection create.",
+      },
+      {
+        why: "remove and collection delete ask before deleting stored text, and this run was not on a terminal that could answer.",
+        fix: "Re-run with --yes once you are sure.",
+      },
+      {
+        why: "Not an error: the documents have no meaning index yet, usually because the embedding model was missing when they were added, so search used words only.",
+        fix: "Pull the embedding model (ollama pull bge-m3), then run omm rag reindex.",
+      },
+      {
+        why: "Nothing in the searched documents matched the question well enough to quote.",
+        fix: "Use words that actually appear in the document, or check the collection with omm rag status.",
+      },
+      {
+        why: "rag connect and disconnect take only these four harness names — note it is claude-code here, not claude as in omm agent.",
+        fix: "Use claude-code, codex, pi or cursor.",
+      },
+      {
+        why: "Sharing goes to an employee token name, and no token has that name.",
+        fix: "Check the names with omm cluster token list on the head Mac.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Point the same coding agent at a local model too.",
+      "The company cluster that rag remote, share and team work against.",
+    ],
+  },
+  cluster: {
+    metaTitle: "omm cluster — join Macs into one exo cluster",
+    metaDescription:
+      "Full reference for omm cluster: make a head Mac, join others over Thunderbolt, give employees tokens, and install, load and run models across the cluster. A real captured run and the errors it actually prints.",
+    heading: "omm cluster",
+    lede: "Join Thunderbolt-linked Macs into one exo cluster that serves bigger models than any one of them could, and let employees reach it through a token-checked gateway.",
+    summary: "Join Thunderbolt-linked Macs into one exo cluster that employees reach with a token.",
+
+    overviewBody:
+      "Every Mac in the cluster needs macOS 26.2 or later, the exact same macOS build, RDMA over Thunderbolt turned on in Recovery, and a Thunderbolt 5 cable to every other Mac. Bare omm cluster checks this Mac and prints its next step, then runs it after a yes; from a script or a pipe it only prints. omm cluster init makes this Mac the head: it installs exo if missing, sets up the Thunderbolt network, turns off idle sleep, installs a firewall and starts the employee gateway on HTTPS port 52440 — it asks for this Mac's password to do so. The firewall blocks TCP ports 49153-65535 from the office network for every app on that Mac, not only exo. init prints the omm cluster join line to run on every other Mac, and the address and certificate fingerprint employees should see. omm cluster token add <name> creates one employee's token and shows it only once; revoke takes effect at once. Models are managed from the head: install downloads to every Mac without loading, load puts a model into memory (omm picks tensor or pipeline sharding and how many Macs unless you say), unload frees the memory, uninstall deletes the files. An employee's PC uses omm rag remote set <head address> with its token, then omm cluster list, run and benchmark, or omm agent cluster for a coding agent. Benchmarks are never uploaded. leave removes this Mac's firewall, services and settings; handover moves the head role to another Mac.",
+
+    optionDescriptions: [
+      "Check this Mac and show the next step; on a terminal, run it after a yes. Scripts and pipes only get the steps printed.",
+      "Make this Mac the head: exo, Thunderbolt network, firewall, idle sleep off and the employee gateway. Asks for the Mac's password.",
+      "Add this Mac to the head's cluster, using the omm-… name init printed.",
+      "Show nodes, memory, RDMA, firewall, gateway and document search, and list any problems.",
+      "Create a token for one employee (shown once), list tokens by name and time, or revoke one. Head Mac only.",
+      "Find MLX models exo can run on Hugging Face, see the biggest that fit free cluster memory, list what is on the cluster, or show one model's details and placements.",
+      "Download models to every Mac without loading them, or delete their files (unloading first). Comma-separate several. Head Mac only.",
+      "Load a model into cluster memory so employees can use it. --sharding and --macs choose the split; --on puts it on one Mac. Head Mac only.",
+      "Free a loaded model's memory; its files stay. Head Mac only.",
+      "Chat with a cluster model in the terminal, loading it first if installed, or measure first-token time and tokens/sec (never uploaded).",
+      "Restart exo when status lists Macs that are on but missing, move the head role to another Mac, or take this Mac out of the cluster.",
+    ],
+
+    exampleCaptions: [
+      "See what this Mac needs next.",
+      "Make this Mac the head.",
+      "Give one employee a token.",
+      "See which models fit the cluster's free memory.",
+      "Load a model so employees can use it.",
+      "Check nodes, gateway and any problems.",
+    ],
+
+    captureFootnote:
+      "Real omm cluster run, 2026-11-01, on this dev machine (a single Mac on macOS 27.2, not part of any cluster), against omm-hippo/omm main (aaaa069a) with a throwaway OMM_HOME. Run from a non-interactive shell, so it only printed the step and asked nothing. RDMA had never been enabled on this Mac, which is why that is the first step. Nothing was installed or changed. Verbatim; the long step line is one line in the terminal too.",
+
+    trouble: [
+      {
+        why: "This PC is not a cluster Mac and has no head address or employee token saved, so commands that talk to the cluster have nowhere to go.",
+        fix: "Run omm rag remote set <head address> with your token, or run the command on a cluster Mac.",
+      },
+      {
+        why: "This Mac has not run init or join, so there is no cluster to load models into.",
+        fix: "Run omm cluster init on the head Mac or omm cluster join <name> here — bare omm cluster tells you which.",
+      },
+      {
+        why: "Tokens live on the head Mac's gateway, and this Mac is not the head.",
+        fix: "Run omm cluster token on the head Mac.",
+      },
+      {
+        why: "The name passed to join is not the omm-… name the head printed — often a partial copy.",
+        fix: "Copy the whole name from omm cluster init (or bare omm cluster) on the head Mac.",
+      },
+      {
+        why: "This Mac is already a member of a cluster, so it cannot become a head as well.",
+        fix: "Run omm cluster leave first, then init.",
+      },
+    ],
+
+    relatedBlurbs: [
+      "Point omm rag at the head and share document collections with employees.",
+      "Connect a coding agent to a model the cluster serves.",
     ],
   },
 };

@@ -8,7 +8,7 @@ const GROUP_SUMMARIES: Record<string, Record<Locale, string>> = {
   rag: { ko: '등록한 문서를 검색하고 컬렉션·MCP 연결·공유 권한을 관리합니다.', en: 'Search registered documents and manage collections, MCP connections and sharing.' },
   cluster: { ko: '여러 Mac을 묶어 모델을 제공하고 노드·모델·게이트웨이 토큰을 관리합니다.', en: 'Serve models across multiple Macs and manage nodes, model placement and gateway tokens.' },
   engine: { ko: 'Ollama·LM Studio 같은 실행 앱의 설치·상태·업데이트·제거를 관리합니다.', en: 'Manage installation, status, updates and removal of local runner applications.' },
-  setting: { ko: '공유 정책·메모리 보호·에이전트 연결·자동 실행 등 OMM 설정을 관리합니다.', en: 'Manage sharing policies, memory protection, agent connections and startup settings.' },
+  setting: { ko: '공유 정책·메모리 보호·자동 가져오기·자동 실행 등 OMM 설정을 관리합니다.', en: 'Manage sharing policies, memory protection, automatic import and startup settings.' },
 };
 
 /** One authoritative compact projection for both the dock and API consumers. */

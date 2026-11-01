@@ -404,6 +404,7 @@ export const ko = {
       start: "모델 실행하기",
       models: "설치한 모델 관리",
       hardware: "하드웨어와 적합성 확인",
+      documents: "내 문서 검색",
       quality: "품질과 속도 측정",
       maintenance: "복구와 유지보수",
       config: "omm 설정",

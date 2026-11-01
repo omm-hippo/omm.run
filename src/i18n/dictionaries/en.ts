@@ -420,6 +420,7 @@ export const en = {
       start: "Get a model running",
       models: "Manage installed models",
       hardware: "Check hardware & fit",
+      documents: "Search your documents",
       quality: "Measure quality & speed",
       maintenance: "Fix & maintain",
       config: "Configure omm",
