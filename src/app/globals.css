@@ -577,7 +577,7 @@
   .flow-step-number { display: none; }
   .flow-panel { padding: 20px 16px; }
   .flow-panel h2 { font-size: 21px; }
-  .flow-model-header, .flow-model-row { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr) 42px; gap: 8px; font-size: 12px; }
+  .flow-model-header, .flow-model-row { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr) 56px; gap: 8px; font-size: 12px; }
   .flow-model-header { font-size: 11px; }
   .flow-model-row a { font-size: 11px; }
   .home-steps, .home-story, .home-resources, .home-faq, .home-reading-details, .home-experience section#workspace { margin-inline: 20px; }
@@ -602,6 +602,7 @@
 
 .footer-site-links { display: flex; flex-wrap: wrap; gap: 16px 32px; padding-bottom: 28px; margin-bottom: 32px; border-bottom: 1px solid var(--line-0); font-size: 15px; color: var(--ink-1); }
 .footer-site-links a:hover { color: var(--accent); }
+@media (max-width: 640px) { .footer-site-links { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; } }
 
 /* Persistent assistant: quiet canvas, bottom-aligned welcome and composer.
    The reference's rounded input is scoped here; site-wide tokens stay intact. */
@@ -670,8 +671,10 @@
 .assistant-question-echo { width: fit-content; max-width: 95%; margin: 0 0 28px auto; padding: 10px 14px; border-radius: 15px; background: #292929; color: #ededed; font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
 @media (max-width: 760px) {
   .assistant-dock { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); }
-  .assistant-launcher { min-height: 54px; padding: 5px 11px 5px 7px; }
-  .assistant-launcher svg { width: 38px; height: 38px; }
+  /* Icon only on phones: the labelled pill covered a third of a text line. */
+  .assistant-launcher { width: 52px; height: 52px; min-height: 0; padding: 0; justify-content: center; border-radius: 50%; box-shadow: 0 6px 24px #0008; }
+  .assistant-launcher svg { width: 34px; height: 34px; }
+  .assistant-launcher > span { display: none; }
   .assistant-dock-panel { inset: 0; width: 100%; max-width: none; height: 100dvh; border: 0; border-radius: 0; padding-top: env(safe-area-inset-top); }
   .assistant-dock-content { padding-bottom: max(10px,env(safe-area-inset-bottom)); }
   .assistant-dock-header { padding-block: 12px; }

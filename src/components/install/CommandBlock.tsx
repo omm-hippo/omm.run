@@ -26,6 +26,7 @@ type Props = {
  * The command + copy control from the landing page's InstallTabs, extracted so
  * the guide pages present commands in exactly the same block rather than in a
  * second, docs-flavoured style. Same 1.2s `copied` label, no toast, no icon.
+ * Below `sm` the command wraps instead of scrolling, so a phone shows it whole.
  */
 export default function CommandBlock({
   prompt,
@@ -63,7 +64,7 @@ export default function CommandBlock({
         secondary ? "bg-bg-0 p-3" : "bg-bg-1 p-4"
       }`}
     >
-      <pre className="text-terminal min-w-0 flex-1 overflow-x-auto py-2 text-left">
+      <pre className="text-terminal min-w-0 flex-1 overflow-x-auto py-2 text-left max-sm:whitespace-pre-wrap max-sm:[overflow-wrap:anywhere]">
         <code>
           <span className={secondary ? "text-ink-3 select-none" : "text-accent select-none"}>
             {prompt}{" "}
