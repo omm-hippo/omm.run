@@ -69,12 +69,14 @@ export default function InstallTabs({ t, ui }: Props) {
 
   return (
     <div>
-      <div className="flex justify-center">
+      {/* One row at every width: on phones the strip scrolls sideways instead
+          of wrapping two tabs onto a centred second line. */}
+      <div className="flex sm:justify-center">
         <div
           role="tablist"
           aria-label={t.aria}
           onKeyDown={onTabListKeyDown}
-          className="inline-flex max-w-full flex-wrap justify-center gap-1 rounded-md border border-line-1 bg-bg-0 p-1"
+          className="flex max-w-full gap-1 overflow-x-auto overscroll-x-contain rounded-md border border-line-1 bg-bg-0 p-1 [scrollbar-width:none] sm:inline-flex sm:flex-wrap sm:justify-center [&::-webkit-scrollbar]:hidden"
         >
           {METHODS.map((id) => {
             const active = id === method;
@@ -90,8 +92,11 @@ export default function InstallTabs({ t, ui }: Props) {
                 aria-selected={active}
                 aria-controls={panelId(id)}
                 tabIndex={active ? 0 : -1}
-                onClick={() => setManualMethod(id)}
-                className={`text-small rounded-md border-b-2 px-4 py-2 transition-colors duration-[120ms] ease-[var(--ease-micro)] ${
+                onClick={(event) => {
+                  setManualMethod(id);
+                  event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+                }}
+                className={`text-small shrink-0 whitespace-nowrap rounded-md border-b-2 px-3 py-2 transition-colors sm:px-4 duration-[120ms] ease-[var(--ease-micro)] ${
                   active
                     ? "border-accent bg-bg-2 text-ink-0"
                     : "border-transparent text-ink-2 hover:bg-bg-3 hover:text-ink-0"

@@ -179,7 +179,7 @@ export default function Nav({ locale }: { locale: Locale }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92" onKeyDown={(event) => {
+    <header className="sticky top-0 z-50 border-b border-line-0 bg-bg-0/92 backdrop-blur-md" onKeyDown={(event) => {
       if (event.key === 'Escape' && open) {
         setOpen(false);
         menuButton.current?.focus();
